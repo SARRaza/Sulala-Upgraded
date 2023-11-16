@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import '../../theme/colors/colors.dart';
-import 'package:sulala_app/src/theme/fonts/fonts.dart';
-import 'package:sulala_app/src/widgets/controls_and_buttons/buttons/primary_button.dart';
-import 'package:sulala_app/src/widgets/controls_and_buttons/checkbox/checkbox_active.dart';
-import 'package:sulala_app/src/widgets/controls_and_buttons/checkbox/checkbox_desabled.dart';
-import 'package:sulala_app/src/widgets/controls_and_buttons/tags/tags.dart';
-import 'package:sulala_app/src/widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
-import 'package:sulala_app/src/widgets/inputs/draw_ups/draw_up_widget.dart';
-import 'package:sulala_app/src/screens/create_animal/showdialogdraf.dart';
-import 'package:sulala_app/src/screens/create_animal/user_list_of_animals.dart';
-import 'package:sulala_app/src/data/globals.dart' as globals;
+
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+
+import '../../theme/fonts/fonts.dart';
+import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
+import '../../widgets/controls_and_buttons/checkbox/checkbox_active.dart';
+import '../../widgets/controls_and_buttons/checkbox/checkbox_desabled.dart';
+import '../../widgets/controls_and_buttons/tags/tags.dart';
+import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
+import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
+import 'showdialogdraf.dart';
+import 'user_list_of_animals.dart';
 
 class AnimalFilters extends StatefulWidget {
   const AnimalFilters({super.key});

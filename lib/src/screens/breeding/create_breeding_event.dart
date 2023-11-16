@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:sulala_app/src/widgets/controls_and_buttons/buttons/primary_button.dart';
-import 'package:sulala_app/src/screens/breeding/list_of_breeding_events.dart';
-import 'package:sulala_app/src/screens/breeding/search_breeding_partner.dart';
-import 'package:sulala_app/src/screens/breeding/search_children.dart';
-import 'package:sulala_app/src/screens/breeding/search_father.dart';
-import 'package:sulala_app/src/screens/breeding/search_mother.dart';
+
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
+import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
 import '../../widgets/inputs/date_fields/primary_date_field.dart';
 import '../../widgets/inputs/paragraph_text_fields/paragraph_text_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
-import 'package:sulala_app/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
+import 'list_of_breeding_events.dart';
+import 'search_breeding_partner.dart';
+import 'search_children.dart';
+import 'search_father.dart';
+import 'search_mother.dart';
 // ignore: depend_on_referenced_packages
 
 class CreateBreedingEvents extends StatefulWidget {

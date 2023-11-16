@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:sulala_app/src/screens/breeding/list_of_breeding_events.dart';
-import 'package:sulala_app/src/screens/breeding/search_children.dart';
-import 'package:sulala_app/src/widgets/controls_and_buttons/buttons/navigate_button.dart';
-import 'package:sulala_app/src/widgets/controls_and_buttons/buttons/primary_button.dart';
-import 'package:sulala_app/src/widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
+
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
+import '../../widgets/controls_and_buttons/buttons/navigate_button.dart';
+import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
+import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
 import '../../widgets/inputs/date_fields/primary_date_field.dart';
 import '../../widgets/inputs/paragraph_text_fields/paragraph_text_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
-import 'package:sulala_app/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+
+import 'list_of_breeding_events.dart';
+import 'search_children.dart';
 
 class EditBreedingEventDetails extends StatefulWidget {
   final BreedingEventVariables

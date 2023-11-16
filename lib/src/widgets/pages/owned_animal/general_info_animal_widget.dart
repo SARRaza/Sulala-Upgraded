@@ -3,7 +3,7 @@ import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 import '../../lists/table_lsit/table_textbutton.dart';
 import '../../other/three_information_block.dart';
-import 'package:sulala_app/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 class GeneralInfoAnimalWidget extends StatefulWidget {
   final VoidCallback onDateOfBirthPressed;
@@ -33,31 +33,6 @@ class GeneralInfoAnimalWidget extends StatefulWidget {
 }
 
 class _GeneralInfoAnimalWidgetState extends State<GeneralInfoAnimalWidget> {
-  // List<String> _uploadedFiles = [
-  //   'File 1',
-
-  //   // Add more items as needed
-  // ];
-
-  // List<Icon> get fileIcons {
-  //   // Generate icons based on _uploadedFiles
-  //   return List.generate(
-  //     _uploadedFiles.length,
-  //     (index) => Icon(Icons.insert_drive_file),
-  //   );
-  // }
-
-  // List<Widget> get fileWidgets {
-  //   // Generate widgets based on _uploadedFiles
-  //   return List.generate(
-  //     _uploadedFiles.length,
-  //     (index) => ListTile(
-  //       leading: fileIcons[index],
-  //       title: Text(_uploadedFiles[index]),
-  //     ),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Column(
