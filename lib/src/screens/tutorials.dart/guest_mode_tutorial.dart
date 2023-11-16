@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:showcaseview/showcaseview.dart';
-import 'package:sulala_app/src/widgets/pages/main_widgets/navigation_bar_guest_mode.dart';
+
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
 import '../../widgets/pages/homepage_widgets/card.dart';
 import '../../widgets/pages/homepage_widgets/title_text.dart';
-import 'package:sulala_app/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+
+import '../../widgets/pages/main_widgets/navigation_bar_guest_mode.dart';
 
 class GuestModeTutorial extends StatefulWidget {
   const GuestModeTutorial({super.key});

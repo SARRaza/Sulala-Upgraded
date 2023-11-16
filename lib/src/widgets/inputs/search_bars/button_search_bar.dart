@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sulala_app/src/theme/colors/colors.dart';
-import 'package:sulala_app/src/theme/fonts/fonts.dart';
+
+import '../../../theme/colors/colors.dart';
+import '../../../theme/fonts/fonts.dart';
 
 class ButtonSearchBar extends StatefulWidget {
   final ValueChanged<String> onChange;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sulala_app/src/theme/colors/colors.dart';
-import 'package:sulala_app/src/theme/fonts/fonts.dart';
+
+import '../../../theme/colors/colors.dart';
+import '../../../theme/fonts/fonts.dart';
 
 class LabelDateField extends StatefulWidget {
   final String hintText;

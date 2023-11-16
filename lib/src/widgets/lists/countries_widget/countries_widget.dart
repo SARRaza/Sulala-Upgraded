@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sulala_app/src/data/countries_data.dart';
-import 'package:sulala_app/src/theme/colors/colors.dart';
-import 'package:sulala_app/src/theme/fonts/fonts.dart';
-import 'package:sulala_app/src/widgets/inputs/search_bars/search_bar.dart';
+
+import '../../../data/countries_data.dart';
+import '../../../theme/colors/colors.dart';
+import '../../../theme/fonts/fonts.dart';
+import '../../inputs/search_bars/search_bar.dart';
 
 class CountriesWidget extends StatefulWidget {
   final CountrySelectionCallback onCountrySelected;

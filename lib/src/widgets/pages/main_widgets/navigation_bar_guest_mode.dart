@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import '../../../screens/create_animal/user_list_of_animals.dart';
 import '../../../screens/guest_mode/homescreen_guest_mode.dart';
 import '../../../screens/profile/profile_page.dart';
-import '../../../../test/testing_pages.dart';
+
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
-import 'package:sulala_app/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 class NavigationBarGuestMode extends StatefulWidget {
   const NavigationBarGuestMode({Key? key}) : super(key: key);
@@ -17,7 +18,9 @@ class _NavigationBarGuestModeState extends State<NavigationBarGuestMode> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
     const HomeScreenGuestMode(),
-    const ExamplePage(),
+    const UserListOfAnimals(
+      selectedFilters: [],
+    ),
     const ProfilePage(),
   ];
 

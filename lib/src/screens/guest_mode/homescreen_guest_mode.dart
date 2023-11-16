@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:sulala_app/src/screens/guest_mode/search_page.dart';
-import 'package:sulala_app/src/screens/guest_mode/search_page_animals.dart';
-import 'package:sulala_app/src/screens/guest_mode/search_page_house_farm.dart';
-import 'package:sulala_app/src/screens/guest_mode/shimmer_homescreen.dart';
-import 'package:sulala_app/src/screens/sign_in/sign_in.dart';
-import 'package:sulala_app/src/screens/sign_up/join_now.dart';
+
 import '../../theme/colors/colors.dart';
-import 'package:sulala_app/src/theme/fonts/fonts.dart';
-import 'package:sulala_app/src/widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
+import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
+import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
 import '../../widgets/pages/homepage_widgets/card.dart';
 import '../../widgets/pages/homepage_widgets/title_text.dart';
-import 'package:sulala_app/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+
+import '../sign_in/sign_in.dart';
+import '../sign_up/join_now.dart';
+import 'search_page.dart';
+import 'search_page_animals.dart';
+import 'search_page_house_farm.dart';
+import 'shimmer_homescreen.dart';
 
 class HomeScreenGuestMode extends StatefulWidget {
   const HomeScreenGuestMode({Key? key}) : super(key: key);

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sulala_app/src/screens/create_animal/user_list_of_animals.dart';
+
+import '../../../screens/create_animal/user_list_of_animals.dart';
 import '../../../screens/profile/profile_page.dart';
 import '../../../screens/reg_mode/reg_home_page.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
-import 'package:sulala_app/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 class NavigationBarRegMode extends StatefulWidget {
   const NavigationBarRegMode({Key? key}) : super(key: key);
