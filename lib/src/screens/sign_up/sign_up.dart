@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/apple_button.dart';
@@ -10,16 +12,17 @@ import '../../widgets/inputs/phone_number_field.dart/phone_number_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 import 'otp_page.dart';
 
-class SignUp extends StatefulWidget {
+class SignUp extends ConsumerStatefulWidget {
   const SignUp({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  ConsumerState<SignUp> createState() => _SignUpState();
 }
 
-class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
+class _SignUpState extends ConsumerState<SignUp>
+    with SingleTickerProviderStateMixin {
   TextEditingController phoneController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   PrimaryButtonStatus buttonStatus = PrimaryButtonStatus.idle;
@@ -36,25 +39,6 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-  String? savedEmailAddress;
-  String? savedPhoneNumber;
-
-  void saveEmailAddress(String emailAddress) {
-    if (isValidEmail(emailAddress)) {
-      setState(() {
-        savedEmailAddress = emailAddress;
-      });
-    }
-  }
-
-  void savePhoneNumber(String phoneNumber) {
-    if (isValidPhoneNumber(phoneNumber)) {
-      setState(() {
-        savedPhoneNumber = phoneNumber;
-      });
-    }
-  }
-
   bool isValidEmail(String email) {
     final emailRegExp = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
     return emailRegExp.hasMatch(email);
@@ -69,9 +53,7 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => OTPPage(
-          phoneNumber: savedPhoneNumber.toString(),
-        ),
+        builder: (context) => const OTPPage(),
       ),
     );
   }
@@ -80,15 +62,15 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => OTPPage(
-          emailAddress: savedEmailAddress.toString(),
-        ),
+        builder: (context) => const OTPPage(),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final phoneNumber = ref.watch(phoneNumberProvider);
+    final email = ref.watch(emailAdressProvider);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -173,12 +155,19 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
                               SizedBox(
                                 height: 8 * globals.heightMediaQuery,
                               ),
-                              Text(
-                                "Enter your phone number, and we will send you confirmation code",
-                                style: AppFonts.headline4(
-                                  color: AppColors.grayscale90,
-                                ),
-                              ),
+                              showEmailField
+                                  ? Text(
+                                      "Enter your Email Address, and we will send you confirmation code",
+                                      style: AppFonts.headline4(
+                                        color: AppColors.grayscale90,
+                                      ),
+                                    )
+                                  : Text(
+                                      "Enter your Phone Number, and we will send you confirmation code",
+                                      style: AppFonts.headline4(
+                                        color: AppColors.grayscale90,
+                                      ),
+                                    ),
                               SizedBox(
                                 height: 40 * globals.heightMediaQuery,
                               ),
@@ -190,10 +179,9 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
                                       ? 'Invalid email address'
                                       : null,
                                   onChanged: (value) {
-                                    setState(() {
-                                      savedEmailAddress = value;
-                                      emailHasError = false;
-                                    });
+                                    ref
+                                        .read(emailAdressProvider.notifier)
+                                        .update((state) => value);
                                   },
                                   onErrorChanged: (hasError) {
                                     setState(() {
@@ -203,11 +191,7 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
                                   },
                                 )
                               else
-                                PhoneNumberField(onSave: (value) {
-                                  setState(() {
-                                    savedPhoneNumber = value;
-                                  });
-                                }),
+                                const PhoneNumberField(),
                               SizedBox(
                                 height: globals.heightMediaQuery * 24,
                               ),
@@ -220,30 +204,22 @@ class _SignUpState extends State<SignUp> with SingleTickerProviderStateMixin {
                                   onPressed: () {
                                     setState(() {
                                       if (showEmailField == false) {
-                                        if (savedPhoneNumber == null) {
+                                        if (phoneNumber.isEmpty) {
                                           PrimaryButtonStatus.idle;
                                         } else {
                                           buttonStatus =
                                               PrimaryButtonStatus.loading;
                                           navigateToPhoneOTPPage(
-                                            {
-                                              "phoneNumber": savedPhoneNumber,
-                                              "emailAddress": null,
-                                            },
+                                            {},
                                           );
                                         }
                                       } else {
-                                        if (isValidEmail(
-                                                savedEmailAddress.toString()) ==
-                                            true) {
+                                        if (isValidEmail(email) == true) {
                                           emailHasError = false;
                                           buttonStatus =
                                               PrimaryButtonStatus.loading;
                                           navigateToEmailOTPPage(
-                                            {
-                                              "emailAddress": savedEmailAddress,
-                                              "phoneNumber": null,
-                                            },
+                                            {},
                                           );
                                         } else {
                                           emailHasError = true;

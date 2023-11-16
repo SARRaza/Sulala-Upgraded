@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../../data/countries_data.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 import '../../lists/countries_widget/countries_widget.dart';
 import '../draw_ups/draw_up_widget.dart';
 
-class PhoneNumberField extends StatefulWidget {
+class PhoneNumberField extends ConsumerStatefulWidget {
   final String? label;
   final Function(String)? onSave;
 
@@ -17,13 +19,10 @@ class PhoneNumberField extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<PhoneNumberField> createState() => _PhoneNumberFieldState();
+  ConsumerState<PhoneNumberField> createState() => _PhoneNumberFieldState();
 }
 
-class _PhoneNumberFieldState extends State<PhoneNumberField> {
-  String countryCode = "+966";
-  String countryFlag = "assets/icons/flags/Country=SA.png";
-  String phoneNumber = "";
+class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
   Color _borderColor = AppColors.grayscale20;
   Color _backgroundColor = AppColors.grayscale0;
   final FocusNode _focusNode = FocusNode();
@@ -39,17 +38,6 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
       _borderColor = AppColors.grayscale20;
       _backgroundColor = AppColors.grayscale0;
     });
-  }
-
-  void _onCountrySelected(CountryInfo countryInfo) {
-    setState(
-      () {
-        selectedCountry = countryInfo;
-        countryCode = countryInfo.countryCode;
-        countryFlag = countryInfo.flagImagePath;
-      },
-    );
-    Navigator.pop(context);
   }
 
   void _validatePhoneNumber(String value) {
@@ -68,6 +56,7 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
   @override
   void initState() {
     super.initState();
+    _textEditingController.text = ref.read(phoneNumberProvider);
     _focusNode.addListener(_onFocusChange);
   }
 
@@ -120,6 +109,9 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
   }
 
   Widget _buildPhoneNumberField() {
+    final countryFlag = ref.watch(selectedCountryFlagProvider);
+    final countryCode = ref.watch(selectedCountryCodeProvider);
+    var phoneNumber = ref.watch(phoneNumberProvider);
     return ElevatedButton(
       onPressed: null,
       style: ElevatedButton.styleFrom(
@@ -181,6 +173,9 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
                   child: TextField(
                     controller: _textEditingController,
                     onChanged: (value) {
+                      ref
+                          .read(phoneNumberProvider.notifier)
+                          .update((state) => value);
                       _validatePhoneNumber(value);
                       setState(() {
                         phoneNumber = value;
@@ -235,9 +230,7 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
               children: [
                 SizedBox(
                   height: globals.heightMediaQuery * 772,
-                  child: CountriesWidget(
-                    onCountrySelected: _onCountrySelected,
-                  ),
+                  child: const CountriesWidget(),
                 ),
               ],
             ),

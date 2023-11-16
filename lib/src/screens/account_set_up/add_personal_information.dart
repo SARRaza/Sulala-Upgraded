@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
@@ -10,14 +12,15 @@ import '../../widgets/inputs/phone_number_field.dart/phone_number_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 import 'add_some_details.dart';
 
-class AddPersonalInfoPage extends StatefulWidget {
+class AddPersonalInfoPage extends ConsumerStatefulWidget {
   const AddPersonalInfoPage({super.key});
 
   @override
-  State<AddPersonalInfoPage> createState() => _AddPersonalInfoPageState();
+  ConsumerState<AddPersonalInfoPage> createState() =>
+      _AddPersonalInfoPageState();
 }
 
-class _AddPersonalInfoPageState extends State<AddPersonalInfoPage> {
+class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController farmNameController = TextEditingController();
@@ -33,6 +36,15 @@ class _AddPersonalInfoPageState extends State<AddPersonalInfoPage> {
   bool emailHasError = false;
 
   PrimaryButtonStatus buttonStatus = PrimaryButtonStatus.idle;
+  @override
+  void initState() {
+    super.initState();
+    // Initialize text controllers with widget values
+    farmNameController.text = ref.read(whatIsTheNameOfYourFarmProvider);
+    ownerNameController.text = ref.read(whoOwnTheFarmProvider);
+    phoneController.text = ref.read(phoneNumberProvider);
+    emailController.text = ref.read(emailAdressProvider);
+  }
 
   void saveEmailAddress(String emailAddress) {
     if (isValidEmail(emailAddress)) {
@@ -119,9 +131,9 @@ class _AddPersonalInfoPageState extends State<AddPersonalInfoPage> {
                   controller: nameController,
                   hintText: "Enter First Name",
                   onChanged: (value) {
-                    setState(() {
-                      firstName = value;
-                    });
+                    ref
+                        .read(firstNameProvider.notifier)
+                        .update((state) => value);
                   },
                 ),
                 SizedBox(height: globals.heightMediaQuery * 16),
@@ -129,9 +141,9 @@ class _AddPersonalInfoPageState extends State<AddPersonalInfoPage> {
                   controller: lastNameController,
                   hintText: "Enter Last Name",
                   onChanged: (value) {
-                    setState(() {
-                      lastName = value;
-                    });
+                    ref
+                        .read(lastNameProvider.notifier)
+                        .update((state) => value);
                   },
                 ),
                 SizedBox(height: globals.heightMediaQuery * 40),
@@ -140,11 +152,11 @@ class _AddPersonalInfoPageState extends State<AddPersonalInfoPage> {
                 SizedBox(height: globals.heightMediaQuery * 24),
                 PrimaryTextField(
                   controller: farmNameController,
-                  hintText: "Farm Name",
+                  hintText: 'Farm Name',
                   onChanged: (value) {
-                    setState(() {
-                      farmName = value;
-                    });
+                    ref
+                        .read(whatIsTheNameOfYourFarmProvider.notifier)
+                        .update((state) => value);
                   },
                 ),
                 SizedBox(height: globals.heightMediaQuery * 40),
@@ -155,9 +167,9 @@ class _AddPersonalInfoPageState extends State<AddPersonalInfoPage> {
                   controller: ownerNameController,
                   hintText: "Owner Name",
                   onChanged: (value) {
-                    setState(() {
-                      ownerName = value;
-                    });
+                    ref
+                        .read(whoOwnTheFarmProvider.notifier)
+                        .update((state) => value);
                   },
                 ),
                 SizedBox(height: globals.heightMediaQuery * 40),
@@ -177,12 +189,15 @@ class _AddPersonalInfoPageState extends State<AddPersonalInfoPage> {
                 PrimaryTextField(
                   hintText: 'Enter Email',
                   controller: emailController,
-                  errorMessage:
-                      emailHasError == true ? 'Invalid email address' : null,
+                  // errorMessage:
+                  //     emailHasError == true ? 'Invalid email address' : null,
                   onChanged: (value) {
                     setState(() {
-                      savedEmail = value;
-                      emailHasError = false;
+                      ref
+                          .read(emailAdressProvider.notifier)
+                          .update((state) => value);
+
+                      // emailHasError = false;
                     });
                   },
                   onErrorChanged: (hasError) {
@@ -199,34 +214,13 @@ class _AddPersonalInfoPageState extends State<AddPersonalInfoPage> {
                     status: buttonStatus,
                     text: 'Continue',
                     onPressed: () {
-                      setState(
-                        () {
-                          if (isValidEmail(savedEmail.toString()) == true ||
-                              isValidPhoneNumber(savedPhoneNumber.toString()) ==
-                                  true) {
-                            emailHasError = false;
-                            buttonStatus = PrimaryButtonStatus.loading;
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const AddSomeDetailsPage()),
-                            );
-                          } else {
-                            emailHasError = true;
-                            buttonStatus = PrimaryButtonStatus.disabled;
-                          }
-                        },
+                      buttonStatus = PrimaryButtonStatus.loading;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const AddSomeDetailsPage()),
                       );
                     },
-                    // onPressed: () {
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => AddSomeDetailsPage()),
-                    //   );
-                    //   // Add your continue button logic here
-                    // },
                   ),
                 ),
                 SizedBox(height: globals.heightMediaQuery * 20),

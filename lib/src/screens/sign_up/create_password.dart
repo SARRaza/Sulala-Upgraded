@@ -1,31 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
+import 'package:sulala_upgrade/src/screens/account_set_up/add_personal_information.dart';
 
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/inputs/password_fields/password_field.dart';
-import '../../widgets/pages/main_widgets/navigation_bar_reg_mode.dart';
 
-class CreatePassword extends StatefulWidget {
+class CreatePassword extends ConsumerStatefulWidget {
   const CreatePassword({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<CreatePassword> createState() => _CreatePasswordState();
+  ConsumerState<CreatePassword> createState() => _CreatePasswordState();
 }
 
 String errorMessage = "";
-String? enteredPassword;
-String? enteredConfirmPassword;
+
 bool isPasswordValid = false;
 bool doesPasswordMatch = false;
 PrimaryButtonStatus buttonStatus = PrimaryButtonStatus.idle;
 
-class _CreatePasswordState extends State<CreatePassword> {
+class _CreatePasswordState extends ConsumerState<CreatePassword> {
   @override
   Widget build(BuildContext context) {
+    final enteredPassword = ref.watch(passwordProvider);
+    final enteredConfirmPassword = ref.watch(passwrodConfirmProvider);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -65,8 +68,9 @@ class _CreatePasswordState extends State<CreatePassword> {
                         ? 'Password should be at least 8 characters long and contain at least one number'
                         : null,
                 onChanged: (value) {
+                  ref.read(passwordProvider.notifier).update((state) => value);
                   setState(() {
-                    enteredPassword = value;
+                    // enteredPassword = value;
                     isPasswordValid = false;
                     doesPasswordMatch = false;
                   });
@@ -80,8 +84,11 @@ class _CreatePasswordState extends State<CreatePassword> {
                         ? 'Password should be at least 8 characters long and contain at least one number'
                         : null,
                 onChanged: (value) {
+                  ref
+                      .read(passwrodConfirmProvider.notifier)
+                      .update((state) => value);
                   setState(() {
-                    enteredConfirmPassword = value;
+                    // enteredConfirmPassword = value;
                     isPasswordValid = false;
                     doesPasswordMatch = false;
                   });
@@ -106,12 +113,12 @@ class _CreatePasswordState extends State<CreatePassword> {
                     text: "Confirm",
                     status: buttonStatus,
                     onPressed: () {
-                      if (enteredPassword != null) {
+                      if (enteredPassword.isNotEmpty) {
                         if (enteredPassword == enteredConfirmPassword) {
                           isPasswordValid = false;
                           // print("Passwords match");
-                          if (enteredPassword!.length >= 8 &&
-                              enteredPassword!.contains(RegExp(r'[0-9]'))) {
+                          if (enteredPassword.length >= 8 &&
+                              enteredPassword.contains(RegExp(r'[0-9]'))) {
                             doesPasswordMatch = false;
                             // print("Password is valid");
                             setState(() {
@@ -121,7 +128,7 @@ class _CreatePasswordState extends State<CreatePassword> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      const NavigationBarRegMode(),
+                                      const AddPersonalInfoPage(),
                                 ));
                           } else {
                             setState(() {

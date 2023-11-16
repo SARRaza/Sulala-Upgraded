@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 
 import '../../../data/countries_data.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 import '../../inputs/search_bars/search_bar.dart';
 
-class CountriesWidget extends StatefulWidget {
-  final CountrySelectionCallback onCountrySelected;
-
-  const CountriesWidget({Key? key, required this.onCountrySelected})
-      : super(key: key);
+class CountriesWidget extends ConsumerStatefulWidget {
+  const CountriesWidget({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  State<CountriesWidget> createState() => _CountriesWidgetState();
+  ConsumerState<CountriesWidget> createState() => _CountriesWidgetState();
 }
 
-class _CountriesWidgetState extends State<CountriesWidget> {
+class _CountriesWidgetState extends ConsumerState<CountriesWidget> {
   List<CountryInfo> filteredCountries = countriesData;
   String searchQuery = "";
 
@@ -61,8 +62,13 @@ class _CountriesWidgetState extends State<CountriesWidget> {
                 title: Text(filteredCountries[index].countryName),
                 subtitle: Text(filteredCountries[index].countryCode),
                 onTap: () {
-                  // Pass the selected country info back to the parent widget
-                  widget.onCountrySelected(filteredCountries[index]);
+                  ref
+                      .read(selectedCountryCodeProvider.notifier)
+                      .update((state) => filteredCountries[index].countryCode);
+
+                  ref.read(selectedCountryFlagProvider.notifier).update(
+                      (state) => filteredCountries[index].flagImagePath);
+                  Navigator.pop(context);
                 },
               );
             },

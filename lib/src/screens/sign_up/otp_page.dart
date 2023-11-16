@@ -1,30 +1,32 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
 import '../../widgets/inputs/otp_fields/otp_field.dart';
 
-class OTPPage extends StatefulWidget {
-  final String? phoneNumber;
-  final String? emailAddress;
+class OTPPage extends ConsumerStatefulWidget {
+  // final String? phoneNumber;
+  // final String? emailAddress;
 
   const OTPPage({
     Key? key,
-    this.phoneNumber,
-    this.emailAddress,
+    // this.phoneNumber,
+    // this.emailAddress,
   }) : super(key: key);
 
   @override
-  State<OTPPage> createState() => _OTPPageState();
+  ConsumerState<OTPPage> createState() => _OTPPageState();
 }
 
 PrimaryButtonStatus buttonStatus = PrimaryButtonStatus.idle;
 TextStatus textStatus = TextStatus.idle;
 
-class _OTPPageState extends State<OTPPage> {
+class _OTPPageState extends ConsumerState<OTPPage> {
   late int _remainingSeconds;
   late Timer _timer;
   bool isResendButtonVisible = false;
@@ -117,6 +119,9 @@ class _OTPPageState extends State<OTPPage> {
   }
 
   Widget _buildContent() {
+    final phoneNumber = ref.watch(phoneNumberProvider);
+    final email = ref.watch(emailAdressProvider);
+    final countryCode = ref.watch(selectedCountryCodeProvider);
     return Padding(
       padding: EdgeInsets.only(
         left: globals.widthMediaQuery * 19,
@@ -137,15 +142,17 @@ class _OTPPageState extends State<OTPPage> {
             TextSpan(
               children: [
                 TextSpan(
-                  text: widget.phoneNumber != null
+                  text: phoneNumber.isNotEmpty
                       ? "We sent a verification code on the following\nPhone number: "
                       : "We sent a verification code on the following\nEmail address: ",
                   style: AppFonts.body2(color: AppColors.grayscale70),
                 ),
                 TextSpan(
-                  text: widget.phoneNumber != null
-                      ? widget.phoneNumber!
-                      : widget.emailAddress,
+                  text: phoneNumber.isNotEmpty ? countryCode : countryCode,
+                  style: AppFonts.body2(color: AppColors.primary50),
+                ),
+                TextSpan(
+                  text: phoneNumber.isNotEmpty ? phoneNumber : email,
                   style: AppFonts.body2(color: AppColors.primary50),
                 ),
               ],
@@ -227,9 +234,7 @@ class _OTPPageState extends State<OTPPage> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => OTPPage(
-          phoneNumber: widget.phoneNumber,
-        ),
+        builder: (context) => const OTPPage(),
       ),
     );
   }
