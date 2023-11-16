@@ -1,7 +1,7 @@
 // ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
 
-import 'package:sulala_app/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';

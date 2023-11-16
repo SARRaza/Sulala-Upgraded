@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sulala_app/src/widgets/controls_and_buttons/buttons/primary_button.dart';
-import 'package:sulala_app/src/screens/breeding/breeding_event_detail.dart';
-import 'package:sulala_app/src/screens/breeding/create_breeding_event.dart';
-import 'package:sulala_app/src/data/globals.dart' as globals;
+
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
+import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
+import 'breeding_event_detail.dart';
+import 'create_breeding_event.dart';
 
 class BreedingEventVariables {
   final String eventNumber;

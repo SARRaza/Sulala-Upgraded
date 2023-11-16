@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:sulala_app/src/theme/colors/colors.dart';
-import 'package:sulala_app/src/theme/fonts/fonts.dart';
+
+import '../../../theme/colors/colors.dart';
+import '../../../theme/fonts/fonts.dart';
 
 class FileUploaderField extends StatefulWidget {
   const FileUploaderField({Key? key}) : super(key: key);

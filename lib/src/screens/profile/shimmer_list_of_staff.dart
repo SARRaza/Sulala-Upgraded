@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
-import 'package:sulala_app/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 class ShimmerListOfStaff extends StatelessWidget {
   const ShimmerListOfStaff({super.key});

@@ -9,7 +9,7 @@ import '../../widgets/lists/table_lsit/table_clickable_link.dart';
 import '../../widgets/other/custom_snack_bar.dart';
 import 'list_of_staff.dart';
 import 'manage_permissions.dart';
-import 'package:sulala_app/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 class StaffDetailsPage extends StatefulWidget {
   final String imagePath;

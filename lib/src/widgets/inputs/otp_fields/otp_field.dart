@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:sulala_app/src/theme/colors/colors.dart';
-import 'package:sulala_app/src/theme/fonts/fonts.dart';
+
+import '../../../theme/colors/colors.dart';
+import '../../../theme/fonts/fonts.dart';
 
 class OTPField extends StatefulWidget {
   final void Function(String) onFilled;

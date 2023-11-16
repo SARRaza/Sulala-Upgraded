@@ -5,7 +5,7 @@ import '../../widgets/controls_and_buttons/buttons/navigate_button.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/inputs/date_fields/primary_date_field.dart';
 import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
-import 'package:sulala_app/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 

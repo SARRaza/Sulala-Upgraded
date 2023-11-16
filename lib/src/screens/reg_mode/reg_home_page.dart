@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:badges/badges.dart' as badges;
-import 'package:sulala_app/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../../providers/animal_counts.dart';
 import '../../theme/colors/colors.dart';

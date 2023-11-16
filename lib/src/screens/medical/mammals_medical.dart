@@ -7,7 +7,7 @@ import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/paragraph_text_fields/paragraph_text_field.dart';
 import '../../widgets/other/one_information_block.dart';
 import '../../widgets/other/two_information_block.dart';
-import 'package:sulala_app/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import 'add_medical_checkup.dart';
 import 'add_surgeries.dart';
 import 'add_vaccination.dart';

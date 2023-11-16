@@ -14,7 +14,7 @@ import 'list_of_staff.dart';
 import 'notifications_pause.dart';
 import 'privacy_security.dart';
 import 'shimmer_profile_page.dart';
-import 'package:sulala_app/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import 'reg_home_page.dart';
-import 'package:sulala_app/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 class SmallCardWidget extends StatefulWidget {
   final Image icon;

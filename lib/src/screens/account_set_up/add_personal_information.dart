@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import '../../theme/colors/colors.dart';
-import 'package:sulala_app/src/theme/fonts/fonts.dart';
-import 'package:sulala_app/src/widgets/controls_and_buttons/buttons/primary_button.dart';
-import 'package:sulala_app/src/widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
-import 'package:sulala_app/src/widgets/inputs/phone_number_field.dart/phone_number_field.dart';
-import 'package:sulala_app/src/widgets/inputs/text_fields/primary_text_field.dart';
-import 'package:sulala_app/src/screens/account_set_up/add_some_details.dart';
-import 'package:sulala_app/src/data/globals.dart' as globals;
+
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+
+import '../../theme/fonts/fonts.dart';
+import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
+import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
+import '../../widgets/inputs/phone_number_field.dart/phone_number_field.dart';
+import '../../widgets/inputs/text_fields/primary_text_field.dart';
+import 'add_some_details.dart';
 
 class AddPersonalInfoPage extends StatefulWidget {
   const AddPersonalInfoPage({super.key});

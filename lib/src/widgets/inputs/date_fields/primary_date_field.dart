@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sulala_app/src/theme/colors/colors.dart';
-import 'package:sulala_app/src/theme/fonts/fonts.dart';
-import 'package:sulala_app/src/data/globals.dart' as globals;
+
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+
+import '../../../theme/colors/colors.dart';
+import '../../../theme/fonts/fonts.dart';
 
 class PrimaryDateField extends StatefulWidget {
   final String hintText;

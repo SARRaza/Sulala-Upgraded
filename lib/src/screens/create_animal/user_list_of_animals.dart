@@ -5,7 +5,7 @@ import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/inputs/search_bars/button_search_bar.dart';
 import 'animal_filters.dart';
 import 'create_animal.dart';
-import 'package:sulala_app/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 import 'owned_animal_detail_reg_mode.dart';
 

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sulala_app/src/data/globals.dart' as globals;
-import 'package:sulala_app/src/widgets/pages/main_widgets/navigation_bar_reg_mode.dart';
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/inputs/password_fields/password_field.dart';
+import '../../widgets/pages/main_widgets/navigation_bar_reg_mode.dart';
 
 class CreatePassword extends StatefulWidget {
   const CreatePassword({

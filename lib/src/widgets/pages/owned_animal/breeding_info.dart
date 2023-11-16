@@ -9,7 +9,7 @@ import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 import '../../other/one_information_block.dart';
 import '../../other/two_information_block.dart';
-import 'package:sulala_app/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 class BreedingInfo extends StatelessWidget {
   const BreedingInfo({

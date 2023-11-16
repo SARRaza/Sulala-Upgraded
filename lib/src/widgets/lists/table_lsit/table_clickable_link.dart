@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sulala_app/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import 'package:url_launcher/url_launcher_string.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';

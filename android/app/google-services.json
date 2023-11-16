@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "340932825346",
+    "project_id": "sulala-app",
+    "storage_bucket": "sulala-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:340932825346:android:7d0ce5abd55f17574f721b",
+        "android_client_info": {
+          "package_name": "com.example.sulala_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "340932825346-ed6ulipb0j7h2j2hl0njtr6m1792v5db.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8mFs-tH5OFqao3GXbdscVge5jyDuKZe8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "340932825346-ed6ulipb0j7h2j2hl0njtr6m1792v5db.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
