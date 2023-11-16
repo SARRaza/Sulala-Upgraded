@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 
-class PrimaryTextField extends StatefulWidget {
+class PrimaryTextField extends ConsumerStatefulWidget {
   final String hintText;
   final String? labelText;
   final String? errorMessage;
@@ -22,10 +23,10 @@ class PrimaryTextField extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<PrimaryTextField> createState() => _PrimaryTextFieldState();
+  ConsumerState<PrimaryTextField> createState() => _PrimaryTextFieldState();
 }
 
-class _PrimaryTextFieldState extends State<PrimaryTextField> {
+class _PrimaryTextFieldState extends ConsumerState<PrimaryTextField> {
   late FocusNode _focusNode;
   bool isFocused = false;
 

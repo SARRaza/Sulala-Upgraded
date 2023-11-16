@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 import 'sign_up.dart';
 
-class JoinNow extends StatefulWidget {
+class JoinNow extends ConsumerStatefulWidget {
   const JoinNow({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<JoinNow> createState() => _JoinNowState();
+  ConsumerState<JoinNow> createState() => _JoinNowState();
 }
 
-class _JoinNowState extends State<JoinNow> with SingleTickerProviderStateMixin {
-  String? whoOwnTheFarm;
-  String? whatIsTheNameOfYourFarm;
+class _JoinNowState extends ConsumerState<JoinNow>
+    with SingleTickerProviderStateMixin {
   bool hasError = false;
 
   TextEditingController whoOwnTheFarmController = TextEditingController();
@@ -113,7 +114,7 @@ class _JoinNowState extends State<JoinNow> with SingleTickerProviderStateMixin {
                               ? Column(
                                   children: [
                                     Text(
-                                      "What is the name of your farm?",
+                                      'What Is The Name Of Your Farm?',
                                       style: AppFonts.title2(
                                         color: AppColors.grayscale90,
                                       ),
@@ -129,9 +130,11 @@ class _JoinNowState extends State<JoinNow> with SingleTickerProviderStateMixin {
                                           ? 'Field cannot be empty'
                                           : null,
                                       onChanged: (value) {
-                                        setState(() {
-                                          whatIsTheNameOfYourFarm = value;
-                                        });
+                                        ref
+                                            .read(
+                                                whatIsTheNameOfYourFarmProvider
+                                                    .notifier)
+                                            .update((state) => value);
                                       },
                                       onErrorChanged: (value) {
                                         hasError = value;
@@ -146,7 +149,10 @@ class _JoinNowState extends State<JoinNow> with SingleTickerProviderStateMixin {
                                       child: PrimaryButton(
                                         text: "Continue",
                                         onPressed: () {
-                                          if (whatIsTheNameOfYourFarm != null) {
+                                          if (ref
+                                              .read(
+                                                  whatIsTheNameOfYourFarmProvider)
+                                              .isNotEmpty) {
                                             setState(() {
                                               whatIsTheNameOfYourFarmController
                                                   .clear();
@@ -181,9 +187,10 @@ class _JoinNowState extends State<JoinNow> with SingleTickerProviderStateMixin {
                                           ? 'Field cannot be empty'
                                           : null,
                                       onChanged: (value) {
-                                        setState(() {
-                                          whoOwnTheFarm = value;
-                                        });
+                                        ref
+                                            .read(
+                                                whoOwnTheFarmProvider.notifier)
+                                            .update((state) => value);
                                       },
                                     ),
                                     SizedBox(
@@ -195,7 +202,9 @@ class _JoinNowState extends State<JoinNow> with SingleTickerProviderStateMixin {
                                       child: PrimaryButton(
                                         text: "Continue",
                                         onPressed: () {
-                                          if (whoOwnTheFarm != null) {
+                                          if (ref
+                                              .read(whoOwnTheFarmProvider)
+                                              .isNotEmpty) {
                                             setState(() {
                                               // whoOwnTheFarmController.clear();
                                               hasError = false;

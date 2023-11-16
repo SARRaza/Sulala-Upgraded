@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sulala_upgrade/src/screens/guest_mode/guest_mode_user_list_of_animals.dart';
-import '../../../screens/create_animal/user_list_of_animals.dart';
+
 import '../../../screens/guest_mode/homescreen_guest_mode.dart';
 import '../../../screens/profile/profile_page.dart';
 

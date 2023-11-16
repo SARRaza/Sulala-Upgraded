@@ -6,7 +6,6 @@ import 'src/screens/reg_mode/notifications_list.dart';
 import 'src/screens/reg_mode/reg_home_page.dart';
 import 'src/screens/sign_up/create_password.dart';
 import 'src/theme/colors/colors.dart';
-import 'src/widgets/pages/main_widgets/navigation_bar_reg_mode.dart';
 
 void main() {
   runApp(const ProviderScope(

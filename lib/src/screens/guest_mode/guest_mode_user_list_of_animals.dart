@@ -3,13 +3,9 @@ import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
-import '../../widgets/inputs/search_bars/button_search_bar.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
-import '../../widgets/pages/homepage_widgets/title_text.dart';
-import '../create_animal/animal_filters.dart';
-import '../create_animal/create_animal.dart';
 import '../create_animal/owned_animal_detail_reg_mode.dart';
 import '../sign_in/sign_in.dart';
 import '../sign_up/join_now.dart';
@@ -33,12 +29,6 @@ class _GuestModeUserListOfAnimals extends State<GuestModeUserListOfAnimals> {
   void initState() {
     super.initState();
     _updateFilteredMammals();
-  }
-
-  void _filterMammals(String query) {
-    setState(() {
-      _updateFilteredMammals(query: query);
-    });
   }
 
   void _updateFilteredMammals({String? query}) {
