@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../theme/colors/colors.dart';
+import '../../../theme/fonts/fonts.dart';
 
 class CustomTag extends StatelessWidget {
   final String label;
@@ -20,17 +21,13 @@ class CustomTag extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.0),
-          color: selected
-              ? AppColors.secondary40
-              : const Color.fromARGB(255, 234, 234, 234),
+          borderRadius: BorderRadius.circular(24.0),
+          color: selected ? AppColors.secondary30 : AppColors.grayscale10,
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-          child: Text(
-            label,
-            style: const TextStyle(fontSize: 15),
-          ),
+          child:
+              Text(label, style: AppFonts.body2(color: AppColors.grayscale90)),
         ),
       ),
     );

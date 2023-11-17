@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 
-class PrimaryDateField extends StatefulWidget {
+class PrimaryDateField extends ConsumerStatefulWidget {
   final String hintText;
   final String? labelText;
   final String? errorMessage;
@@ -22,10 +24,10 @@ class PrimaryDateField extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<PrimaryDateField> createState() => _PrimaryDateFieldState();
+  ConsumerState<PrimaryDateField> createState() => _PrimaryDateFieldState();
 }
 
-class _PrimaryDateFieldState extends State<PrimaryDateField> {
+class _PrimaryDateFieldState extends ConsumerState<PrimaryDateField> {
   DateTime? _selectedDate;
   late FocusNode _focusNode;
   bool isFocused = false;
@@ -46,6 +48,7 @@ class _PrimaryDateFieldState extends State<PrimaryDateField> {
   void dispose() {
     _focusNode.dispose();
     _textEditingController.dispose();
+
     super.dispose();
   }
 
@@ -94,7 +97,9 @@ class _PrimaryDateFieldState extends State<PrimaryDateField> {
         _selectedDate = pickedDate;
         _textEditingController.text = _formatDate(pickedDate);
       });
-
+      ref
+          .read(dateOfBirthProvider.notifier)
+          .update((state) => _formatDate(pickedDate));
       if (widget.onChanged != null) {
         widget.onChanged!(pickedDate);
       }

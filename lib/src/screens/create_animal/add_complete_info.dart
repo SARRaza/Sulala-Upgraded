@@ -9,10 +9,12 @@ import 'package:intl/intl.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
+import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/buttons/sar_buttonwidget.dart';
 import '../../widgets/controls_and_buttons/tags/custom_tags.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
 import '../../widgets/controls_and_buttons/toggles/toggle_active.dart';
+import '../../widgets/inputs/date_fields/primary_date_field.dart';
 import '../../widgets/inputs/date_fields/sar_datetextfield.dart';
 import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
@@ -376,6 +378,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
   void _animalTagsModalSheet() async {
     final result = await showModalBottomSheet(
       context: context,
+      backgroundColor: Colors.white,
       isScrollControlled: true,
       showDragHandle: true,
       builder: (BuildContext context) {
@@ -391,22 +394,18 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text(
-                        'Current State',
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Text(
+                        'Tags',
+                        style: AppFonts.title2(color: AppColors.grayscale90),
                       ),
                       const SizedBox(height: 25),
-                      const Text(
+                      Text(
                         'Current State',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: AppFonts.headline3(color: AppColors.grayscale90),
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(
+                        height: globals.heightMediaQuery * 10,
+                      ),
                       Wrap(
                         spacing: 8.0,
                         runSpacing: 8.0,
@@ -541,15 +540,16 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                           // Add more chips here
                         ],
                       ),
-                      const SizedBox(height: 10),
-                      const Text(
-                        'Medical State',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      SizedBox(
+                        height: globals.heightMediaQuery * 20,
                       ),
-                      const SizedBox(height: 10),
+                      Text(
+                        'Medical State',
+                        style: AppFonts.headline3(color: AppColors.grayscale90),
+                      ),
+                      SizedBox(
+                        height: globals.heightMediaQuery * 10,
+                      ),
                       Wrap(
                         spacing: 8.0,
                         runSpacing: 8.0,
@@ -705,7 +705,9 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                           // Add more chips here
                         ],
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(
+                        height: globals.heightMediaQuery * 20,
+                      ),
                       const Text(
                         'Other',
                         style: TextStyle(
@@ -713,7 +715,9 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(
+                        height: globals.heightMediaQuery * 10,
+                      ),
                       Wrap(
                         spacing: 8.0,
                         runSpacing: 8.0,
@@ -763,28 +767,18 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                           // Add more chips here
                         ],
                       ),
-                      const SizedBox(height: 40.0),
+                      const SizedBox(height: 77.0),
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: Row(children: [
                           Expanded(
-                            child: ElevatedButton(
+                            child: PrimaryButton(
                               onPressed: () {
-                                // Handle the button press here
-                                Navigator.of(context).pop(ref.read(
-                                    selectedOviChipsProvider)); // Close the modal
+                                Navigator.of(context)
+                                    .pop(ref.read(selectedOviChipsProvider));
                               },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color.fromARGB(
-                                    255, 36, 86, 38), // Button color
-                                foregroundColor: Colors.white, // Text color
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                              ),
-                              child: const Text('Save'), // Button text
+                              status: PrimaryButtonStatus.idle,
+                              text: 'Save',
                             ),
                           ),
                         ]),
@@ -807,14 +801,16 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
   }
 
   void _showOviFieldNameModal(BuildContext context) {
+    TextEditingController fieldname = TextEditingController();
     showModalBottomSheet(
       context: context,
+      backgroundColor: Colors.white,
       showDragHandle: true,
       builder: (BuildContext context) {
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.35,
+            height: MediaQuery.of(context).size.height * 0.7,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -828,30 +824,16 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                 const SizedBox(
                   height: 35,
                 ),
-                TextField(
-                  onChanged: (value) {
-                    ref
-                        .read(fieldNameProvider.notifier)
-                        .update((state) => value);
-                  },
-                  decoration: InputDecoration(
+                PrimaryTextField(
+                    hintText: 'Enter Custom Field Name',
                     labelText: 'Enter Field Name',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(50.0),
-                      borderSide: const BorderSide(
-                        color: Colors.grey,
-                        width: 2.0,
-                      ),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      vertical: 12.0,
-                      horizontal: 16.0,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 35,
-                ),
+                    onChanged: (value) {
+                      ref
+                          .read(fieldNameProvider.notifier)
+                          .update((state) => value);
+                    },
+                    controller: fieldname),
+                SizedBox(height: globals.heightMediaQuery * 130),
                 ButtonWidget(
                   onPressed: () {
                     Navigator.pop(context);
@@ -986,8 +968,19 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 10),
-              Text(fieldName,
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(fieldName,
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    onPressed: () {
+                      ref.read(customOviTextFieldsProvider).removeLast();
+                    },
+                  ),
+                ],
+              ),
               const SizedBox(height: 10),
               TextField(
                 decoration: InputDecoration(
@@ -1094,6 +1087,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
     final name = ref.watch(animalNameProvider);
     final chips = ref.watch(selectedOviChipsProvider);
     final customFields = ref.watch(customOviTextFieldsProvider);
+    final dob = ref.watch(dateOfBirthProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -1719,44 +1713,41 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                     ],
                   ),
                 ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.019),
+              SizedBox(height: globals.heightMediaQuery * 16),
               Text(
                 "Dates",
                 style: AppFonts.headline2(color: AppColors.grayscale90),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-              Text(
-                "Date Of Birth",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+              SizedBox(height: globals.heightMediaQuery * 24),
+              const PrimaryDateField(
+                hintText: 'DD.MM.YYYY',
+                labelText: 'Date of Birth',
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-              DateTextField(
-                onDateSelected: dateOfBirth,
-              ),
+
               SizedBox(height: MediaQuery.of(context).size.height * 0.029),
               _buildOviDateFields(),
-              TextButton(
-                onPressed: () {
-                  _showDateSelectionSheet(context);
-                },
-                child: Text(
-                  'Add Date +',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 36, 86, 38),
+              Row(
+                children: [
+                  PrimaryTextButton(
+                    onPressed: () {
+                      _showDateSelectionSheet(context);
+                    },
+                    status: TextStatus.idle,
+                    text: 'Add Date',
                   ),
-                ),
+                  const Icon(Icons.add_rounded,
+                      color: AppColors.primary40, size: 20),
+                ],
               ),
-              const Divider(),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.019),
+              const Divider(
+                color: AppColors.grayscale20,
+              ),
+              SizedBox(height: globals.heightMediaQuery * 16),
               Text(
                 "Add Tag",
                 style: AppFonts.headline2(color: AppColors.grayscale90),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.019),
+              SizedBox(height: globals.heightMediaQuery * 16),
               Wrap(
                 spacing: 8.0,
                 runSpacing: 8.0,
@@ -1772,40 +1763,51 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                   );
                 }).toList(),
               ),
-              TextButton(
-                onPressed: () {
-                  _animalTagsModalSheet();
-                },
-                child: Text(
-                  'Add Tags +',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 36, 86, 38),
+              Row(
+                children: [
+                  PrimaryTextButton(
+                    onPressed: () {
+                      _animalTagsModalSheet();
+                    },
+                    status: TextStatus.idle,
+                    text: 'Add Tags',
                   ),
-                ),
+                  const Icon(Icons.add_rounded,
+                      color: AppColors.primary40, size: 20),
+                ],
               ),
-              const Divider(),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.019),
+
+              const Divider(
+                color: AppColors.grayscale20,
+              ),
+              SizedBox(height: globals.heightMediaQuery * 16),
               Text(
-                "Add Custom Fields",
+                "Custom Fields",
                 style: AppFonts.headline2(color: AppColors.grayscale90),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.019),
+              Text(
+                "Add Custom Fields If Needed",
+                style: AppFonts.body2(color: AppColors.grayscale60),
+              ),
+              SizedBox(height: globals.heightMediaQuery * 16),
               Column(
                 children: customFields,
               ),
-              TextButton(
-                onPressed: () {
-                  _showOviFieldNameModal(context);
-                },
-                child: Text(
-                  'Add Custom Field +',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 36, 86, 38),
+              Row(
+                children: [
+                  PrimaryTextButton(
+                    onPressed: () {
+                      _showOviFieldNameModal(context);
+                    },
+                    status: TextStatus.idle,
+                    text: 'Add Custom Fields',
                   ),
-                ),
+                  SizedBox(width: globals.widthMediaQuery * 8),
+                  const Icon(Icons.add_rounded,
+                      color: AppColors.primary40, size: 20),
+                ],
               ),
+
               const Divider(),
               SizedBox(height: MediaQuery.of(context).size.height * 0.019),
               Text(
@@ -1922,53 +1924,71 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
             children: [
               Text(
                 dateType,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                style: AppFonts.caption2(
+                  color: AppColors.grayscale90,
                 ),
               ),
               const SizedBox(height: 10),
               Row(
                 children: [
                   Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'DD:MM:YYYY',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(50.0),
-                          borderSide: const BorderSide(
-                            color: Colors.grey,
-                            width: 2.0,
-                          ),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 12.0, horizontal: 16.0),
-                        suffixIcon: GestureDetector(
-                          onTap: () {
-                            _showOviDatePicker(context, dateType);
-                          },
-                          child: const Icon(
-                            Icons.calendar_today,
-                            color: Color.fromARGB(255, 36, 86, 38),
-                          ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.grayscale00,
+                        borderRadius: BorderRadius.circular(50.0),
+                        border: Border.all(
+                          color: AppColors.primary30,
+                          width: 1.0,
                         ),
                       ),
-                      readOnly: true,
-                      controller: TextEditingController(
-                        text: DateFormat('dd-MM-yyyy').format(selectedDate),
+                      child: GestureDetector(
+                        onTap: () {
+                          _showOviDatePicker(context, dateType);
+                        },
+                        child: TextFormField(
+                          enabled: false,
+                          style: AppFonts.body2(color: AppColors.grayscale90),
+                          decoration: InputDecoration(
+                            hintText: 'DD:MM:YYYY',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(50.0),
+                              borderSide: const BorderSide(
+                                width: 0.2,
+                              ),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 12.0, horizontal: 16.0),
+                            suffixIcon: GestureDetector(
+                              onTap: () {
+                                _showOviDatePicker(context, dateType);
+                              },
+                              child: const Icon(
+                                Icons.calendar_today_outlined,
+                                color: Color.fromARGB(255, 36, 86, 38),
+                              ),
+                            ),
+                          ),
+                          readOnly: true,
+                          controller: TextEditingController(
+                            text: DateFormat('dd-MM-yyyy').format(selectedDate),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    ),
-                    onPressed: () {
+                  SizedBox(
+                    width: 5,
+                  ),
+                  InkWell(
+                    onTap: () {
                       setState(() {
                         ref.read(selectedOviDatesProvider)[dateType] = null;
                       });
                     },
+                    child: const Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
                   ),
                 ],
               ),

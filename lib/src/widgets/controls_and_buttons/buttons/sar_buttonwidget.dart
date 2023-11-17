@@ -12,7 +12,7 @@ class ButtonWidget extends StatelessWidget {
     Key? key,
     required this.onPressed,
     required this.buttonText,
-    this.buttonColor = const Color.fromARGB(255, 36, 86, 38),
+    this.buttonColor = AppColors.primary40,
     this.textColor = Colors.white,
   }) : super(key: key);
 
@@ -23,7 +23,7 @@ class ButtonWidget extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary50,
+          backgroundColor: AppColors.primary40,
           foregroundColor: Colors.white, // Text color
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(

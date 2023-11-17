@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 class DateTextField extends StatefulWidget {
   final Function(String) onDateSelected;
 
-  DateTextField({required this.onDateSelected});
+  const DateTextField({super.key, required this.onDateSelected});
 
   @override
+  // ignore: library_private_types_in_public_api
   _DateTextFieldState createState() => _DateTextFieldState();
 }
 
