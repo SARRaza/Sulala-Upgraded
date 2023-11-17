@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/navigate_button.dart';
@@ -16,14 +18,14 @@ import 'privacy_security.dart';
 import 'shimmer_profile_page.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
-class ProfilePage extends StatefulWidget {
+class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  ConsumerState<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends ConsumerState<ProfilePage> {
   bool isLoading = true;
 
   @override
@@ -43,6 +45,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final firstName = ref.watch(firstNameProvider);
+    final lastName = ref.watch(lastNameProvider);
+    final profilePicture = ref.watch(proflePictureProvider);
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
@@ -92,17 +97,39 @@ class _ProfilePageState extends State<ProfilePage> {
                       children: [
                         SizedBox(height: 40 * globals.heightMediaQuery),
                         CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          radius: 60 * globals.widthMediaQuery,
-                          backgroundImage: const AssetImage(
-                              'assets/avatars/120px/Staff1.png'),
+                          radius: MediaQuery.of(context).size.width * 0.16,
+                          backgroundColor: AppColors.grayscale10,
+                          backgroundImage: profilePicture != null
+                              ? FileImage(profilePicture)
+                              : null,
+                          child: profilePicture == null
+                              ? CircleAvatar(
+                                  radius: 60 * globals.widthMediaQuery,
+                                  backgroundImage: const AssetImage(
+                                      'assets/avatars/120px/Staff1.png'),
+                                )
+                              : null,
                         ),
                         SizedBox(
                           height: 16 * globals.heightMediaQuery,
                         ),
-                        Text(
-                          'John Smith',
-                          style: AppFonts.title4(color: AppColors.grayscale90),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              firstName,
+                              style:
+                                  AppFonts.title4(color: AppColors.grayscale90),
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              lastName,
+                              style:
+                                  AppFonts.title4(color: AppColors.grayscale90),
+                            ),
+                          ],
                         ),
                         Text(
                           '123-456-7890',

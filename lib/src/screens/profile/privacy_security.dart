@@ -1,13 +1,15 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/toggles/toggle_active.dart';
 import '../../widgets/controls_and_buttons/toggles/toggle_disabled.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
-class PrivacySecurityPage extends StatefulWidget {
+class PrivacySecurityPage extends ConsumerStatefulWidget {
   const PrivacySecurityPage({super.key});
 
   @override
@@ -15,13 +17,11 @@ class PrivacySecurityPage extends StatefulWidget {
   _PrivacySecurityPage createState() => _PrivacySecurityPage();
 }
 
-class _PrivacySecurityPage extends State<PrivacySecurityPage> {
+class _PrivacySecurityPage extends ConsumerState<PrivacySecurityPage> {
   bool _AllowCollab = true;
   bool _ShowListOfAnimals = false;
   bool _ShowFamilyTree = false;
   bool _ShowContactInfo = false;
-  bool _PhoneNumber = false;
-  bool _EmailAddress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -133,11 +133,7 @@ class _PrivacySecurityPage extends State<PrivacySecurityPage> {
                   onChanged: (value) {
                     setState(() {
                       _ShowContactInfo = value;
-                      if (!value) {
-                        // Reset the values of Phone Number and Email Address switches
-                        _PhoneNumber = false;
-                        _EmailAddress = false;
-                      }
+                      if (!value) {}
                     });
                   },
                 ),
@@ -146,39 +142,55 @@ class _PrivacySecurityPage extends State<PrivacySecurityPage> {
                 visible: _ShowContactInfo,
                 child: Column(
                   children: [
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(
-                        'Phone Number',
-                        style: AppFonts.body2(color: AppColors.grayscale90),
-                      ),
-                      trailing: ToggleActive(
-                        value: _PhoneNumber,
-                        onChanged: _ShowContactInfo
-                            ? (value) {
-                                setState(() {
-                                  _PhoneNumber = value;
-                                });
-                              }
-                            : null,
-                      ),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final phoneNumberVisibility =
+                            ref.watch(phoneNumberVisibilityProvider);
+
+                        return ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(
+                            'Phone Number',
+                            style: AppFonts.body2(color: AppColors.grayscale90),
+                          ),
+                          trailing: ToggleActive(
+                            value: phoneNumberVisibility,
+                            onChanged: _ShowContactInfo
+                                ? (value) {
+                                    ref
+                                        .read(phoneNumberVisibilityProvider
+                                            .notifier)
+                                        .update((state) => value);
+                                  }
+                                : null,
+                          ),
+                        );
+                      },
                     ),
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(
-                        'Email Address',
-                        style: AppFonts.body2(color: AppColors.grayscale90),
-                      ),
-                      trailing: ToggleActive(
-                        value: _EmailAddress,
-                        onChanged: _ShowContactInfo
-                            ? (value) {
-                                setState(() {
-                                  _EmailAddress = value;
-                                });
-                              }
-                            : null,
-                      ),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final emailAddressVisibility =
+                            ref.watch(emailAddressVisibilityProvider);
+
+                        return ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(
+                            'Email Address',
+                            style: AppFonts.body2(color: AppColors.grayscale90),
+                          ),
+                          trailing: ToggleActive(
+                            value: emailAddressVisibility,
+                            onChanged: _ShowContactInfo
+                                ? (value) {
+                                    ref
+                                        .read(emailAddressVisibilityProvider
+                                            .notifier)
+                                        .update((state) => value);
+                                  }
+                                : null,
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),

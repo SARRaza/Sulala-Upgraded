@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 
 import 'dart:io';
@@ -10,21 +13,20 @@ import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
 import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
+import '../../widgets/pages/main_widgets/navigation_bar_reg_mode.dart';
 
-class AddSomeDetailsPage extends StatefulWidget {
+class AddSomeDetailsPage extends ConsumerStatefulWidget {
   const AddSomeDetailsPage({super.key});
 
   @override
-  State<AddSomeDetailsPage> createState() => _AddSomeDetailsPageState();
+  ConsumerState<AddSomeDetailsPage> createState() => _AddSomeDetailsPageState();
 }
 
-class _AddSomeDetailsPageState extends State<AddSomeDetailsPage> {
-  TextEditingController country = TextEditingController();
-  TextEditingController city = TextEditingController();
-  String? countryName;
-  String? cityName;
+class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
+  TextEditingController countrycontroller = TextEditingController();
+  TextEditingController citycontroller = TextEditingController();
+
   final ImagePicker _picker = ImagePicker();
-  File? _selectedImage;
 
 // PrimaryButtonStatus buttonStatus = PrimaryButtonStatus.idle;
 
@@ -57,9 +59,10 @@ class _AddSomeDetailsPageState extends State<AddSomeDetailsPage> {
                     final pickedImage =
                         await _picker.pickImage(source: ImageSource.gallery);
                     if (pickedImage != null) {
-                      setState(() {
-                        _selectedImage = File(pickedImage.path);
-                      });
+                      ref
+                          .read(proflePictureProvider.notifier)
+                          .update((state) => File(pickedImage.path));
+                      setState(() {});
                     }
                   },
                 ),
@@ -79,9 +82,10 @@ class _AddSomeDetailsPageState extends State<AddSomeDetailsPage> {
                     final pickedImage =
                         await _picker.pickImage(source: ImageSource.camera);
                     if (pickedImage != null) {
-                      setState(() {
-                        _selectedImage = File(pickedImage.path);
-                      });
+                      ref
+                          .read(proflePictureProvider.notifier)
+                          .update((state) => File(pickedImage.path));
+                      setState(() {});
                     }
                   },
                 ),
@@ -115,6 +119,7 @@ class _AddSomeDetailsPageState extends State<AddSomeDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final profilePicture = ref.watch(proflePictureProvider);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -144,7 +149,7 @@ class _AddSomeDetailsPageState extends State<AddSomeDetailsPage> {
               padding: const EdgeInsets.only(right: 8),
               child: PrimaryTextButton(
                 status: TextStatus.idle,
-                text: "Skip for now",
+                text: 'Skip For Now',
                 onPressed: () => Navigator.pop(context),
               ),
             )
@@ -169,16 +174,16 @@ class _AddSomeDetailsPageState extends State<AddSomeDetailsPage> {
                 Center(
                   child: GestureDetector(
                     child: CircleAvatar(
-                      radius: globals.widthMediaQuery * 60,
+                      radius: MediaQuery.of(context).size.width * 0.16,
                       backgroundColor: AppColors.grayscale10,
-                      backgroundImage: _selectedImage != null
-                          ? FileImage(_selectedImage!)
+                      backgroundImage: profilePicture != null
+                          ? FileImage(profilePicture)
                           : null,
-                      child: _selectedImage == null
-                          ? Icon(
-                              Icons.camera_alt_outlined,
-                              size: globals.widthMediaQuery * 24,
-                              color: Colors.black,
+                      child: profilePicture == null
+                          ? const Icon(
+                              Icons.camera_alt,
+                              size: 50,
+                              color: Colors.grey,
                             )
                           : null,
                     ),
@@ -201,22 +206,18 @@ class _AddSomeDetailsPageState extends State<AddSomeDetailsPage> {
                 ),
                 SizedBox(height: globals.heightMediaQuery * 24),
                 PrimaryTextField(
-                  controller: country,
+                  controller: countrycontroller,
                   hintText: 'Country',
                   onChanged: (value) {
-                    setState(() {
-                      countryName = value;
-                    });
+                    ref.read(countryProvider.notifier).update((state) => value);
                   },
                 ),
                 SizedBox(height: globals.heightMediaQuery * 16),
                 PrimaryTextField(
-                  controller: country,
+                  controller: citycontroller,
                   hintText: 'City',
                   onChanged: (value) {
-                    setState(() {
-                      cityName = value;
-                    });
+                    ref.read(cityProvider.notifier).update((state) => value);
                   },
                 ),
                 SizedBox(height: globals.heightMediaQuery * 122),
@@ -225,7 +226,11 @@ class _AddSomeDetailsPageState extends State<AddSomeDetailsPage> {
                   height: globals.heightMediaQuery * 52,
                   child: PrimaryButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const NavigationBarRegMode()),
+                      );
                     },
                     text: 'Save',
                   ),
