@@ -4,6 +4,7 @@ import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
+import 'add_complete_info.dart';
 import 'complete_info.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
@@ -117,7 +118,7 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
             ),
             SizedBox(height: globals.heightMediaQuery * 8),
             const Divider(
-              color: AppColors.grayscale70,
+              color: AppColors.grayscale50,
             ),
             SizedBox(height: globals.heightMediaQuery * 8),
             Row(
@@ -141,7 +142,7 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
             ),
             SizedBox(height: globals.heightMediaQuery * 8),
             const Divider(
-              color: AppColors.grayscale70,
+              color: AppColors.grayscale50,
             ),
             SizedBox(height: globals.heightMediaQuery * 8),
             Row(
@@ -174,7 +175,7 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const CompleteInfo(),
+                  builder: (context) => CreateOviCumMammal(),
                 ),
               );
             },
