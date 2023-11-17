@@ -15,19 +15,21 @@ import '../../widgets/controls_and_buttons/tags/custom_tags.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
 import '../../widgets/controls_and_buttons/toggles/toggle_active.dart';
 import '../../widgets/inputs/date_fields/primary_date_field.dart';
-import '../../widgets/inputs/date_fields/sar_datetextfield.dart';
+
 import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
+import '../../widgets/inputs/paragraph_text_fields/paragraph_text_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
+import 'sar_listofanimals.dart';
 
 class CreateOviCumMammal extends ConsumerStatefulWidget {
+  const CreateOviCumMammal({super.key});
+
   @override
   // ignore: library_private_types_in_public_api
   _CreateOviCumMammal createState() => _CreateOviCumMammal();
 }
 
 class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
-  final TextEditingController _notesController = TextEditingController();
-  final TextEditingController _medicalController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _frequencyEggsController =
       TextEditingController();
@@ -39,11 +41,12 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
   // String selectedDate = '';
   String selectedBreedingStage = '';
 
-  void dateOfBirth(String DateOfBirth) {
-    setState(() {
-      ref.read(dateOfBirthProvider.notifier).update((state) => DateOfBirth);
-    });
-  }
+  // ignore: non_constant_identifier_names
+  // void dateOfBirth(String DateOfBirth) {
+  //   setState(() {
+  //     ref.read(dateOfBirthProvider.notifier).update((state) => DateOfBirth);
+  //   });
+  // }
 
   Map<String, DateTime?> selectedMammalDates = {};
   List<String> selectedOviChips = [];
@@ -271,11 +274,13 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
 
   void _showDateSelectionSheet(BuildContext context) async {
     final selectedAnimalType = ref.watch(selectedAnimalTypeProvider);
+    // ignore: non_constant_identifier_names
     List<String> OvidateTypes = [
       'Date Of Hatching',
       'Date Of Death',
       'Date Of Sale',
     ];
+    // ignore: non_constant_identifier_names
     List<String> MammaldateTypes = [
       'Date Of Weaning',
       'Date Of Mating',
@@ -1004,79 +1009,79 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
         );
   }
 
-  void _showMammalDateSelectionSheet(BuildContext context) async {
-    List<String> MammaldateTypes = [
-      'Date Of Weaning',
-      'Date Of Mating',
-      'Date Of Death',
-      'Date Of Sale',
-    ];
+  // void _showMammalDateSelectionSheet(BuildContext context) async {
+  //   List<String> MammaldateTypes = [
+  //     'Date Of Weaning',
+  //     'Date Of Mating',
+  //     'Date Of Death',
+  //     'Date Of Sale',
+  //   ];
 
-    await showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return SizedBox(
-          height: MediaQuery.of(context).size.height * 0.40,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 10),
-              const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  'Add Date ',
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: MammaldateTypes.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Column(
-                      children: [
-                        ListTile(
-                          title: Text(MammaldateTypes[index]),
-                          dense: true,
-                          minVerticalPadding: double.minPositive,
-                          trailing: const Icon(Icons.arrow_right_alt_rounded),
-                          onTap: () {
-                            Navigator.pop(context);
-                            _showMammalDatePicker(
-                                context, MammaldateTypes[index]);
-                          },
-                        ),
-                        const Divider(),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  //   await showModalBottomSheet(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return SizedBox(
+  //         height: MediaQuery.of(context).size.height * 0.40,
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             const SizedBox(height: 10),
+  //             const Padding(
+  //               padding: EdgeInsets.all(16.0),
+  //               child: Text(
+  //                 'Add Date ',
+  //                 style: TextStyle(
+  //                   fontSize: 30,
+  //                   fontWeight: FontWeight.bold,
+  //                 ),
+  //               ),
+  //             ),
+  //             const SizedBox(height: 10),
+  //             Expanded(
+  //               child: ListView.builder(
+  //                 shrinkWrap: true,
+  //                 itemCount: MammaldateTypes.length,
+  //                 itemBuilder: (BuildContext context, int index) {
+  //                   return Column(
+  //                     children: [
+  //                       ListTile(
+  //                         title: Text(MammaldateTypes[index]),
+  //                         dense: true,
+  //                         minVerticalPadding: double.minPositive,
+  //                         trailing: const Icon(Icons.arrow_right_alt_rounded),
+  //                         onTap: () {
+  //                           Navigator.pop(context);
+  //                           _showMammalDatePicker(
+  //                               context, MammaldateTypes[index]);
+  //                         },
+  //                       ),
+  //                       const Divider(),
+  //                     ],
+  //                   );
+  //                 },
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
-  void _showMammalDatePicker(BuildContext context, String dateType) async {
-    final DateTime? selectedDate = await showDatePicker(
-      context: context,
-      initialDate: selectedMammalDates[dateType] ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
+  // void _showMammalDatePicker(BuildContext context, String dateType) async {
+  //   final DateTime? selectedDate = await showDatePicker(
+  //     context: context,
+  //     initialDate: selectedMammalDates[dateType] ?? DateTime.now(),
+  //     firstDate: DateTime(2000),
+  //     lastDate: DateTime(2101),
+  //   );
 
-    if (selectedDate != null) {
-      setState(() {
-        selectedMammalDates[dateType] = selectedDate;
-      });
-    }
-  }
+  //   if (selectedDate != null) {
+  //     setState(() {
+  //       selectedMammalDates[dateType] = selectedDate;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -1084,10 +1089,8 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
     final selectedAnimalImage = ref.watch(selectedAnimalImageProvider);
     final animalDam = ref.watch(animalDamDetailsProvider);
     final animalSire = ref.watch(animalSireDetailsProvider);
-    final name = ref.watch(animalNameProvider);
     final chips = ref.watch(selectedOviChipsProvider);
     final customFields = ref.watch(customOviTextFieldsProvider);
-    final dob = ref.watch(dateOfBirthProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -1205,7 +1208,6 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                   labelText: 'Name',
                   hintText: 'Enter Name',
                   controller: _nameController),
-
               SizedBox(height: globals.heightMediaQuery * 32),
               Text(
                 "Family Tree",
@@ -1723,7 +1725,6 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                 hintText: 'DD.MM.YYYY',
                 labelText: 'Date of Birth',
               ),
-
               SizedBox(height: MediaQuery.of(context).size.height * 0.029),
               _buildOviDateFields(),
               Row(
@@ -1776,7 +1777,6 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                       color: AppColors.primary40, size: 20),
                 ],
               ),
-
               const Divider(
                 color: AppColors.grayscale20,
               ),
@@ -1807,35 +1807,25 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                       color: AppColors.primary40, size: 20),
                 ],
               ),
-
-              const Divider(),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.019),
+              const Divider(
+                color: AppColors.grayscale20,
+              ),
+              SizedBox(height: globals.heightMediaQuery * 16),
               Text(
                 'Additional Notes',
                 style: AppFonts.headline2(color: AppColors.grayscale90),
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-              TextFormField(
+              ParagraphTextField(
+                hintText: 'Add Any Additional Notes if Needed',
+                maxLines: 8,
                 onChanged: (value) {
                   ref
                       .read(additionalnotesProvider.notifier)
                       .update((state) => value);
                 },
-                maxLines: 6, // Set the maximum number of lines
-                controller: _notesController,
-                decoration: InputDecoration(
-                  hintText:
-                      'Add Additional Information If Needed', // Add your hint text here
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 12.0, horizontal: 16.0),
-                ),
-                textInputAction:
-                    TextInputAction.done, // Change the keyboard action
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+              SizedBox(height: globals.heightMediaQuery * 16),
               SizedBox(
                 height: 270,
                 width: double.infinity,
@@ -1843,38 +1833,6 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                   onFocusChange: (hasFocus) {}, // Dummy onFocusChange callback
                   child: const FileUploaderField(),
                 ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.09),
-              // SizedBox(
-              //   height: 20,
-              // ),
-              Text(
-                'Medical Needs Notes',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextFormField(
-                onChanged: (value) {
-                  ref
-                      .read(medicalNeedsProvider.notifier)
-                      .update((state) => value);
-                },
-                maxLines: 6, // Set the maximum number of lines
-                controller: _medicalController,
-                decoration: InputDecoration(
-                  hintText:
-                      'Add Medical Notes If Needed', // Add your hint text here
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 12.0, horizontal: 16.0),
-                ),
-                textInputAction:
-                    TextInputAction.done, // Change the keyboard action
               ),
             ],
           ),
@@ -1884,13 +1842,13 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
         padding: const EdgeInsets.all(16),
         child: ElevatedButton(
           onPressed: () {
-            // Navigator.of(context).push(
-            //   MaterialPageRoute(
-            //     builder: (context) => ListOfAnimals(
-            //       shouldAddAnimal: true,
-            //     ),
-            //   ),
-            // );
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const UserListOfAnimals(
+                  shouldAddAnimal: true,
+                ),
+              ),
+            );
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color.fromARGB(255, 36, 86, 38),
@@ -1899,7 +1857,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
               borderRadius: BorderRadius.circular(50),
             ),
           ),
-          child: Text(
+          child: const Text(
             'Save',
             style: TextStyle(color: Colors.white),
           ),
@@ -1976,7 +1934,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 5,
                   ),
                   InkWell(

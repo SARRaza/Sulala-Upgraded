@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../screens/create_animal/user_list_of_animals.dart';
+import '../../../screens/create_animal/sar_listofanimals.dart';
+
 import '../../../screens/profile/profile_page.dart';
 import '../../../screens/reg_mode/reg_home_page.dart';
 import '../../../theme/colors/colors.dart';
@@ -19,7 +20,7 @@ class _NavigationBarRegModeState extends State<NavigationBarRegMode> {
   final List<Widget> _pages = [
     const HomeScreenRegMode(),
     const UserListOfAnimals(
-      selectedFilters: [],
+      shouldAddAnimal: false,
     ),
     const ProfilePage(),
   ];

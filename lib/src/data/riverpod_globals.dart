@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../screens/breeding/list_of_breeding_events.dart';
+import '../screens/create_animal/sar_listofanimals.dart';
+
 // Join Now Global Variables
 final whoOwnTheFarmProvider = StateProvider<String>((ref) => '');
 final whatIsTheNameOfYourFarmProvider = StateProvider<String>((ref) => '');
@@ -75,20 +78,25 @@ final breedingDateProvider = StateProvider<String>((ref) => '');
 final deliveryDateProvider = StateProvider<String>((ref) => '');
 final breedingnotesProvider = StateProvider<String>((ref) => '');
 final shoudlAddEventProvider = StateProvider<bool>((ref) => false);
-// final ovianimalsProvider = StateProvider<List<OviVariables>>((ref) => []);
-// final breedingEventsProvider =
-//     StateProvider<List<BreedingEventVariables>>((ref) => []);
-// final mammalCountProvider = Provider<int>((ref) {
-//   return ref
-//       .watch(ovianimalsProvider)
-//       .where((animal) => animal.selectedAnimalType.toLowerCase() == 'mammal')
-//       .length;
+final ovianimalsProvider = StateProvider<List<OviVariables>>((ref) => []);
+final breedingEventsProvider =
+    StateProvider<List<BreedingEventVariables>>((ref) => []);
+final mammalCountProvider = Provider<int>((ref) {
+  return ref
+      .watch(ovianimalsProvider)
+      .where((animal) => animal.selectedAnimalType.toLowerCase() == 'mammal')
+      .length;
+});
+
+final oviparousCountProvider = Provider<int>((ref) {
+  return ref
+      .watch(ovianimalsProvider)
+      .where((animal) => animal.selectedAnimalType.toLowerCase() == 'oviparous')
+      .length;
+});
+final listOfBreedingEventsProvider = Provider<List<String>>((ref) => []);
+// final animalFiltersProvider = Provider<Map<String, String?>>((ref) {
+//   // This provider will store the selected filters
+//   return {};
 // });
 
-// final oviparousCountProvider = Provider<int>((ref) {
-//   return ref
-//       .watch(ovianimalsProvider)
-//       .where((animal) => animal.selectedAnimalType.toLowerCase() == 'oviparous')
-//       .length;
-// });
-final listOfBreedingEventsProvider = Provider<List<String>>((ref) => []);

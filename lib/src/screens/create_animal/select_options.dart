@@ -5,7 +5,7 @@ import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import 'add_complete_info.dart';
-import 'complete_info.dart';
+
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 class SelectedOptionsPage extends ConsumerStatefulWidget {
@@ -175,7 +175,7 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CreateOviCumMammal(),
+                  builder: (context) => const CreateOviCumMammal(),
                 ),
               );
             },
