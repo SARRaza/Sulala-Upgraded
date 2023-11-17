@@ -1,16 +1,19 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
 import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
+import '../../widgets/inputs/phone_number_field.dart/phone_number_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 import '../../widgets/other/custom_snack_bar.dart';
 
-class EditProfileInformation extends StatefulWidget {
+class EditProfileInformation extends ConsumerStatefulWidget {
   const EditProfileInformation({super.key});
 
   @override
@@ -18,39 +21,39 @@ class EditProfileInformation extends StatefulWidget {
   _EditProfileInformation createState() => _EditProfileInformation();
 }
 
-class _EditProfileInformation extends State<EditProfileInformation> {
-  String firstname = 'John';
-  String secondname = 'Smith';
-  String phonenum = '+12-345678';
-  String city = 'New York';
-  String email = 'johnsmith@example.com';
-  String address = 'United Arab Emirates';
-  String country = 'Abu Dhabi';
-
+class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
   final _firstnameController = TextEditingController();
-  final _secondnameController = TextEditingController();
+  final _lastnameController = TextEditingController();
   final _phonenumController = TextEditingController();
   final _cityController = TextEditingController();
   final _emailController = TextEditingController();
   final _addressController = TextEditingController();
   final _countryController = TextEditingController();
 
+  TextEditingController farmNameController = TextEditingController();
+  TextEditingController ownerNameController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
-    _firstnameController.text = firstname;
-    _secondnameController.text = secondname;
-    _phonenumController.text = phonenum;
-    _cityController.text = city;
-    _emailController.text = email;
-    _addressController.text = address;
-    _countryController.text = country;
+    _firstnameController.text = ref.read(firstNameProvider);
+    _lastnameController.text = ref.read(lastNameProvider);
+    _phonenumController.text = ref.read(phoneNumberProvider);
+    _cityController.text = ref.read(cityProvider);
+
+    _emailController.text = ref.read(emailAdressProvider);
+
+    _addressController.text = ref.read(countryProvider);
+
+    _countryController.text = ref.read(countryProvider);
+    farmNameController.text = ref.read(whatIsTheNameOfYourFarmProvider);
+    ownerNameController.text = ref.read(whoOwnTheFarmProvider);
   }
 
   @override
   void dispose() {
     _firstnameController.dispose();
-    _secondnameController.dispose();
+    _lastnameController.dispose();
     _phonenumController.dispose();
     _cityController.dispose();
     _emailController.dispose();
@@ -60,10 +63,15 @@ class _EditProfileInformation extends State<EditProfileInformation> {
   }
 
   final ImagePicker _picker = ImagePicker();
-  File? _selectedImage;
+  void _deleteAvatar() {
+    // Implement the logic to delete/reset the avatar
+    ref.read(proflePictureProvider.notifier).update((state) => null);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
+    final profilePicture = ref.watch(proflePictureProvider);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -102,19 +110,19 @@ class _EditProfileInformation extends State<EditProfileInformation> {
                 SizedBox(
                   height: 40 * globals.heightMediaQuery,
                 ),
-                GestureDetector(
-                  child: Center(
+                Center(
+                  child: GestureDetector(
                     child: CircleAvatar(
-                      radius: 60 * globals.widthMediaQuery,
-                      backgroundColor: AppColors.grayscale10,
-                      backgroundImage: _selectedImage != null
-                          ? FileImage(_selectedImage!)
+                      radius: 70,
+                      backgroundColor: Colors.grey[100],
+                      backgroundImage: profilePicture != null
+                          ? FileImage(profilePicture)
                           : null,
-                      child: _selectedImage == null
+                      child: profilePicture == null
                           ? const Icon(
-                              Icons.camera_alt_outlined,
-                              size: 30,
-                              color: AppColors.grayscale90,
+                              Icons.camera_alt,
+                              size: 50,
+                              color: Colors.grey,
                             )
                           : null,
                     ),
@@ -137,46 +145,67 @@ class _EditProfileInformation extends State<EditProfileInformation> {
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 PrimaryTextField(
-                    hintText: 'Enter your first name',
+                    onChanged: (value) {
+                      ref
+                          .read(firstNameProvider.notifier)
+                          .update((state) => value);
+                    },
+                    hintText: 'Enter Your First Name',
                     controller: _firstnameController,
                     labelText: 'First Name'),
                 SizedBox(height: 16 * globals.heightMediaQuery),
                 PrimaryTextField(
-                    hintText: 'Enter your first name',
-                    controller: _secondnameController,
-                    labelText: 'Second Name'),
+                    onChanged: (value) {
+                      ref
+                          .read(lastNameProvider.notifier)
+                          .update((state) => value);
+                    },
+                    hintText: 'Enter Your Last Name',
+                    controller: _lastnameController,
+                    labelText: 'Last Name'),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 Text(
                   "Farm Name",
                   style: AppFonts.headline3(color: AppColors.grayscale90),
                 ),
-                SizedBox(height: 24 * globals.heightMediaQuery),
+                SizedBox(height: 16 * globals.heightMediaQuery),
                 PrimaryTextField(
-                  hintText: 'Enter your first name',
-                  controller: _firstnameController,
+                  onChanged: (value) {
+                    ref
+                        .read(whatIsTheNameOfYourFarmProvider.notifier)
+                        .update((state) => value);
+                  },
+                  hintText: 'Enter Your Farm Name',
+                  controller: farmNameController,
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 Text(
                   "Farm Owner",
                   style: AppFonts.headline3(color: AppColors.grayscale90),
                 ),
-                SizedBox(height: 24 * globals.heightMediaQuery),
+                SizedBox(height: 16 * globals.heightMediaQuery),
                 PrimaryTextField(
-                  hintText: 'Enter your first name',
-                  controller: _firstnameController,
+                  onChanged: (value) {
+                    ref
+                        .read(whoOwnTheFarmProvider.notifier)
+                        .update((state) => value);
+                  },
+                  hintText: 'Enter Farm Owner Name',
+                  controller: ownerNameController,
                 ),
                 SizedBox(height: 32 * globals.heightMediaQuery),
                 Text("Contact Details",
                     style: AppFonts.headline3(color: AppColors.grayscale90)),
                 SizedBox(height: 24 * globals.heightMediaQuery),
-                PrimaryTextField(
-                  hintText: 'Enter your first name',
-                  controller: _phonenumController,
-                  labelText: 'Phone Number',
-                ),
+                const PhoneNumberField(),
                 SizedBox(height: 16 * globals.heightMediaQuery),
                 PrimaryTextField(
-                  hintText: 'Enter your first name',
+                  onChanged: (value) {
+                    ref
+                        .read(emailAdressProvider.notifier)
+                        .update((state) => value);
+                  },
+                  hintText: 'Enter Your Email Address',
                   controller: _emailController,
                   labelText: 'Email Address',
                 ),
@@ -185,17 +214,26 @@ class _EditProfileInformation extends State<EditProfileInformation> {
                     style: AppFonts.headline3(color: AppColors.grayscale90)),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 PrimaryTextField(
+                  onChanged: (value) {
+                    ref.read(cityProvider.notifier).update((state) => value);
+                  },
                   hintText: 'Enter Address',
                   controller: _addressController,
                 ),
                 SizedBox(height: 16 * globals.heightMediaQuery),
                 PrimaryTextField(
-                  hintText: 'Enter your first name',
+                  onChanged: (value) {
+                    ref.read(cityProvider.notifier).update((state) => value);
+                  },
+                  hintText: 'Enter Your City',
                   controller: _cityController,
                 ),
                 SizedBox(height: 16 * globals.heightMediaQuery),
                 PrimaryTextField(
-                  hintText: 'Enter your first name',
+                  onChanged: (value) {
+                    ref.read(countryProvider.notifier).update((state) => value);
+                  },
+                  hintText: 'Enter Your Country',
                   controller: _countryController,
                 ),
                 SizedBox(height: 100 * globals.heightMediaQuery),
@@ -259,9 +297,10 @@ class _EditProfileInformation extends State<EditProfileInformation> {
                   final pickedImage =
                       await _picker.pickImage(source: ImageSource.camera);
                   if (pickedImage != null) {
-                    setState(() {
-                      _selectedImage = File(pickedImage.path);
-                    });
+                    ref
+                        .read(proflePictureProvider.notifier)
+                        .update((state) => File(pickedImage.path));
+                    setState(() {});
                   }
                 },
               ),
@@ -287,9 +326,10 @@ class _EditProfileInformation extends State<EditProfileInformation> {
                   final pickedImage =
                       await _picker.pickImage(source: ImageSource.gallery);
                   if (pickedImage != null) {
-                    setState(() {
-                      _selectedImage = File(pickedImage.path);
-                    });
+                    ref
+                        .read(proflePictureProvider.notifier)
+                        .update((state) => File(pickedImage.path));
+                    setState(() {});
                   }
                 },
               ),
@@ -310,15 +350,9 @@ class _EditProfileInformation extends State<EditProfileInformation> {
                     )
                   ],
                 ),
-                onTap: () async {
+                onTap: () {
                   Navigator.pop(context);
-                  final pickedImage =
-                      await _picker.pickImage(source: ImageSource.gallery);
-                  if (pickedImage != null) {
-                    setState(() {
-                      _selectedImage = File(pickedImage.path);
-                    });
-                  }
+                  _deleteAvatar(); // Call a function to delete the avatar
                 },
               ),
             ],

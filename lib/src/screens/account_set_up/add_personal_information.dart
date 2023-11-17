@@ -27,10 +27,7 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
   TextEditingController ownerNameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  String? firstName;
-  String? lastName;
-  String? farmName;
-  String? ownerName;
+
   String? savedPhoneNumber;
   String? savedEmail;
   bool emailHasError = false;
@@ -180,10 +177,7 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                     'Add contact details to help other people contact you for collaboration',
                     style: AppFonts.body2(color: AppColors.grayscale70)),
                 SizedBox(height: globals.heightMediaQuery * 24),
-                PhoneNumberField(
-                  label: 'Phone Number',
-                  onSave: (value) => savePhoneNumber,
-                ),
+                const PhoneNumberField(),
                 SizedBox(height: globals.heightMediaQuery * 20),
                 const SizedBox(height: 8),
                 PrimaryTextField(

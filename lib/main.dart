@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'src/screens/account_set_up/add_personal_information.dart';
+import 'package:sulala_upgrade/src/widgets/pages/main_widgets/navigation_bar_guest_mode.dart';
 import 'src/screens/reg_mode/notifications_list.dart';
 import 'src/screens/reg_mode/reg_home_page.dart';
 import 'src/screens/sign_up/create_password.dart';
@@ -30,7 +29,7 @@ class MyApp extends StatelessWidget {
       ),
       title: 'Sulala App',
       routes: {
-        '/': (context) => const AddPersonalInfoPage(),
+        '/': (context) => const NavigationBarGuestMode(),
         '/create_password': (context) => const CreatePassword(),
         '/reg_home_page': (context) => const HomeScreenRegMode(),
         '/notifications': (context) => NotificationList(),
