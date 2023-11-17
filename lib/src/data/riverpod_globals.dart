@@ -33,3 +33,8 @@ final proflePictureProvider = StateProvider<File?>((ref) => null);
 // Privacy & Security Global Variables
 final emailAddressVisibilityProvider = StateProvider<bool>((ref) => false);
 final phoneNumberVisibilityProvider = StateProvider<bool>((ref) => false);
+
+// Create Animal Global Variables
+final selectedAnimalTypeProvider = StateProvider<String>((ref) => '');
+final selectedAnimalSpeciesProvider = StateProvider<String>((ref) => '');
+final selectedAnimalBreedsProvider = StateProvider<String>((ref) => '');

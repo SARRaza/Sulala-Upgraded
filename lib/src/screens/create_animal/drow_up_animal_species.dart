@@ -1,13 +1,15 @@
 // ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
 import '../../widgets/inputs/search_bars/search_bar.dart';
 
-class DrowupAnimalSpecies extends StatefulWidget {
+class DrowupAnimalSpecies extends ConsumerStatefulWidget {
   TextEditingController searchValue = TextEditingController();
   List<String> filteredModalList = [];
   List<String> modalAnimalSpeciesList = [];
@@ -21,7 +23,8 @@ class DrowupAnimalSpecies extends StatefulWidget {
       required this.setState});
 
   @override
-  State<DrowupAnimalSpecies> createState() => _DrowupAnimalSpeciesState();
+  ConsumerState<DrowupAnimalSpecies> createState() =>
+      _DrowupAnimalSpeciesState();
 
   void resetSelection() {
     setState(() {
@@ -32,7 +35,7 @@ class DrowupAnimalSpecies extends StatefulWidget {
 
 int _selectedItemIndex = -1;
 
-class _DrowupAnimalSpeciesState extends State<DrowupAnimalSpecies> {
+class _DrowupAnimalSpeciesState extends ConsumerState<DrowupAnimalSpecies> {
   @override
   Widget build(BuildContext context) {
     return DrowupWidget(
@@ -103,8 +106,15 @@ class _DrowupAnimalSpeciesState extends State<DrowupAnimalSpecies> {
         text: 'Confirm',
         onPressed: () {
           if (_selectedItemIndex != -1) {
-            Navigator.pop(
-                context, widget.filteredModalList[_selectedItemIndex]);
+            final selectedSpecies =
+                widget.filteredModalList[_selectedItemIndex];
+
+            // Use the ref parameter to read and update the Riverpod provider
+            ref
+                .read(selectedAnimalSpeciesProvider.notifier)
+                .update((state) => selectedSpecies);
+
+            Navigator.pop(context, selectedSpecies);
           } else {
             Navigator.pop(context);
           }

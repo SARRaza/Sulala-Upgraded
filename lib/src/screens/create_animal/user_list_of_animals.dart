@@ -3,6 +3,7 @@ import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/inputs/search_bars/button_search_bar.dart';
+
 import 'animal_filters.dart';
 import 'create_animal.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
@@ -134,7 +135,10 @@ class _UserListOfAnimalsState extends State<UserListOfAnimals> {
                     shape: BoxShape.circle,
                     color: AppColors.primary50,
                   ),
-                  child: const Icon(Icons.add),
+                  child: const Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
                 ),
                 onPressed: () {
                   Navigator.push(

@@ -1,29 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import 'complete_info.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
-class SelectedOptionsPage extends StatefulWidget {
-  final String selectedAnimalType;
-  final String selectedAnimalSpecies;
-  final String selectedAnimalBreed;
-
-  const SelectedOptionsPage({
-    super.key,
-    required this.selectedAnimalType,
-    required this.selectedAnimalSpecies,
-    required this.selectedAnimalBreed,
-  });
+class SelectedOptionsPage extends ConsumerStatefulWidget {
+  const SelectedOptionsPage({super.key});
 
   @override
-  State<SelectedOptionsPage> createState() => _SelectedOptionsPageState();
+  ConsumerState<SelectedOptionsPage> createState() =>
+      _SelectedOptionsPageState();
 }
 
-class _SelectedOptionsPageState extends State<SelectedOptionsPage> {
+class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
   @override
   Widget build(BuildContext context) {
+    final selectedAnimalType = ref.watch(selectedAnimalTypeProvider);
+    final selectedAnimalSpecies = ref.watch(selectedAnimalSpeciesProvider);
+    final selectedAnimalBreeds = ref.watch(selectedAnimalBreedsProvider);
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
@@ -107,7 +104,7 @@ class _SelectedOptionsPageState extends State<SelectedOptionsPage> {
                 ),
                 const Spacer(),
                 Text(
-                  widget.selectedAnimalType,
+                  selectedAnimalType,
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
                 SizedBox(
@@ -131,7 +128,7 @@ class _SelectedOptionsPageState extends State<SelectedOptionsPage> {
                 ),
                 const Spacer(),
                 Text(
-                  widget.selectedAnimalSpecies,
+                  selectedAnimalSpecies,
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
                 SizedBox(
@@ -155,7 +152,7 @@ class _SelectedOptionsPageState extends State<SelectedOptionsPage> {
                 ),
                 const Spacer(),
                 Text(
-                  widget.selectedAnimalBreed,
+                  selectedAnimalBreeds,
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
                 SizedBox(

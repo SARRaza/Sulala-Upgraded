@@ -1,15 +1,17 @@
 // ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
+import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
 import '../../widgets/inputs/search_bars/search_bar.dart';
 
-class DrowupAnimalBreed extends StatefulWidget {
+class DrowupAnimalBreed extends ConsumerStatefulWidget {
   TextEditingController searchValue = TextEditingController();
   List<String> filteredBreedList = [];
   List<String> modalAnimalBreedList = [];
@@ -23,7 +25,7 @@ class DrowupAnimalBreed extends StatefulWidget {
       required this.setState});
 
   @override
-  State<DrowupAnimalBreed> createState() => _DrowupAnimalBreedState();
+  ConsumerState<DrowupAnimalBreed> createState() => _DrowupAnimalBreedState();
 
   void resetSelection() {
     setState(() {
@@ -34,7 +36,7 @@ class DrowupAnimalBreed extends StatefulWidget {
 
 int _selectedItemIndex = -1;
 
-class _DrowupAnimalBreedState extends State<DrowupAnimalBreed> {
+class _DrowupAnimalBreedState extends ConsumerState<DrowupAnimalBreed> {
   @override
   Widget build(BuildContext context) {
     return DrowupWidget(
@@ -97,8 +99,14 @@ class _DrowupAnimalBreedState extends State<DrowupAnimalBreed> {
         text: 'Confirm',
         onPressed: () {
           if (_selectedItemIndex != -1) {
-            Navigator.pop(
-                context, widget.filteredBreedList[_selectedItemIndex]);
+            final selectedBreeds = widget.filteredBreedList[_selectedItemIndex];
+
+            // Use the ref parameter to read and update the Riverpod provider
+            ref
+                .read(selectedAnimalBreedsProvider.notifier)
+                .update((state) => selectedBreeds);
+
+            Navigator.pop(context, selectedBreeds);
           } else {
             Navigator.pop(context);
           }
