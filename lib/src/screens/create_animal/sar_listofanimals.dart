@@ -381,6 +381,41 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                   );
                 },
               ),
+              // Row(
+              //   children: [
+              //     Expanded(
+              //       child: Container(
+              //         decoration: BoxDecoration(
+              //           borderRadius: BorderRadius.circular(50.0),
+              //           border: Border.all(),
+              //         ),
+              //         child: TextField(
+              //           onChanged: _filterMammals,
+              //           decoration: InputDecoration(
+              //             hintText: "Search By Name Or ID",
+              //             prefixIcon: const Icon(Icons.search),
+              //             suffixIcon: IconButton(
+              //               icon: const Icon(
+              //                 Icons.filter_alt,
+              //                 size: 30,
+              //               ),
+              //               onPressed: () {
+              //                 Navigator.push(
+              //                   context,
+              //                   MaterialPageRoute(
+              //                     builder: (context) =>
+              //                         const SarAnimalFilters(),
+              //                   ),
+              //                 );
+              //               },
+              //             ),
+              //             border: InputBorder.none,
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
               SizedBox(
                 height: globals.heightMediaQuery * 20,
               ),
