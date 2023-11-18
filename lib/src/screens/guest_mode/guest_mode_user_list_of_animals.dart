@@ -3,10 +3,7 @@ import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
-
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
-
-import '../create_animal/owned_animal_detail_reg_mode.dart';
 import '../sign_in/sign_in.dart';
 import '../sign_up/join_now.dart';
 
@@ -52,16 +49,16 @@ class _GuestModeUserListOfAnimals extends State<GuestModeUserListOfAnimals> {
   }
 
   void navigateToAnimalInfo(Map<String, dynamic> mammal) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => OwnedAnimalDetailsRegMode(
-          imagePath: mammal['image'],
-          title: mammal['name'],
-          geninfo: mammal['subtitle'],
-        ),
-      ),
-    );
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => OwnedAnimalDetailsRegMode(
+    //       imagePath: mammal['image'],
+    //       title: mammal['name'],
+    //       geninfo: mammal['subtitle'],
+    //     ),
+    //   ),
+    // );
   }
 
   @override

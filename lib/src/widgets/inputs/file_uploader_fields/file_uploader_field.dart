@@ -2,49 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../data/riverpod_globals.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 
-class FileUploaderField extends StatefulWidget {
+// Create a Riverpod provider to hold the list of uploaded files
+
+class FileUploaderField extends ConsumerStatefulWidget {
   const FileUploaderField({Key? key}) : super(key: key);
 
   @override
-  State<FileUploaderField> createState() => _FileUploaderFieldState();
+  ConsumerState<FileUploaderField> createState() => _FileUploaderFieldState();
 }
 
-class _FileUploaderFieldState extends State<FileUploaderField> {
-  final List<String> _uploadedFiles = [];
+class _FileUploaderFieldState extends ConsumerState<FileUploaderField> {
   bool _loading = false;
   double _uploadProgress = 0.0;
 
-  Future<void> _chooseFile() async {
+  Future<void> _chooseFile(BuildContext context) async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles();
 
       if (result != null && result.files.isNotEmpty) {
-        // Add the uploaded file name to the list
-        setState(() {
-          _uploadedFiles.add(result.files.single.name);
-          _loading = true;
-        });
+        // Add the uploaded file name to the provider
+        ref.read(uploadedFilesProvider).add(result.files.single.name);
 
         // Start uploading the file
         await _uploadFile(result.files.single.path!);
-
-        setState(() {
-          _loading = false;
-        });
-      } else {
-        // User canceled file selection
-        setState(() {
-          _loading = false;
-        });
       }
     } catch (e) {
       // Handle any potential errors when picking the file
-      setState(() {
-        _loading = false;
-      });
     }
   }
 
@@ -58,15 +47,14 @@ class _FileUploaderFieldState extends State<FileUploaderField> {
     }
   }
 
-  void _deleteFile(String fileName) {
-    // Remove the file from the list
-    setState(() {
-      _uploadedFiles.remove(fileName);
-    });
+  void _deleteFile(BuildContext context, String fileName) {
+    // Remove the file from the provider
+    ref.read(uploadedFilesProvider).remove(fileName);
   }
 
   @override
   Widget build(BuildContext context) {
+    final List<String> _uploadedFiles = ref.watch(uploadedFilesProvider);
     final borderColor =
         _uploadedFiles.isNotEmpty ? AppColors.primary20 : AppColors.grayscale20;
 
@@ -100,7 +88,7 @@ class _FileUploaderFieldState extends State<FileUploaderField> {
                 ),
               ),
             IconButton(
-              onPressed: () => _deleteFile(fileName),
+              onPressed: () => _deleteFile(context, fileName),
               icon: const Icon(
                 Icons.delete_outline,
                 color: AppColors.error100,
@@ -112,7 +100,7 @@ class _FileUploaderFieldState extends State<FileUploaderField> {
     }).toList();
 
     final uploadButton = ElevatedButton(
-      onPressed: _loading ? null : _chooseFile,
+      onPressed: _loading ? null : () => _chooseFile(context),
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.grayscale0,
         elevation: 0,
@@ -189,40 +177,3 @@ class _FileUploaderFieldState extends State<FileUploaderField> {
     );
   }
 }
-
-
-
-// Example of use:
-
-// First:
-// Add this in AndroidManifest.xml for Android:
-// <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-// Second:
-// Add this in Info.plist for iOS:
-// <key>NSPhotoLibraryUsageDescription</key>
-// <string>Allow access to photo library</string>
-
-// Third:
-// Add this in pubspec.yaml:
-// dependencies:
-//   file_picker: ^4.0.0
-
-// Fourth:
-// Add this in pubspec.yaml:
-// dependencies:
-//   dotted_border: ^2.0.0
-
-// Fifth:
-// SizedBox(
-//               height: 300,
-//               width: 350,
-//               child: Focus(
-//                 onFocusChange: (hasFocus) {}, // Dummy onFocusChange callback
-//                 child: const SizedBox(
-//                   // height: 100,
-//                   width: 350,
-//                   child: FileUploaderField(),
-//                 ),
-//               ),
-//             ),

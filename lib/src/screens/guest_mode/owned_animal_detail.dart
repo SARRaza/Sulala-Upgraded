@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/screens/create_animal/sar_listofanimals.dart';
 
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -13,12 +14,14 @@ class OwnedAnimalDetails extends StatefulWidget {
   final String imagePath;
   final String title;
   final String geninfo;
+  final OviVariables OviDetails;
 
   const OwnedAnimalDetails({
     Key? key,
     required this.imagePath,
     required this.title,
     required this.geninfo,
+    required this.OviDetails,
   }) : super(key: key);
 
   @override
@@ -205,6 +208,7 @@ class _OwnedAnimalDetailsState extends State<OwnedAnimalDetails>
                                     age: "3 years",
                                     type: "Mammal",
                                     sex: "Female",
+                                    OviDetails: widget.OviDetails,
                                   ),
 
                                   // Content for the 'Breeding' tab

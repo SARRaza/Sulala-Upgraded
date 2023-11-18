@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import '../../../data/riverpod_globals.dart';
+import '../../../screens/create_animal/sar_listofanimals.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 import '../../lists/table_lsit/table_textbutton.dart';
 import '../../other/three_information_block.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
-class GeneralInfoAnimalWidget extends StatefulWidget {
+class GeneralInfoAnimalWidget extends ConsumerStatefulWidget {
   final VoidCallback onDateOfBirthPressed;
   final VoidCallback onDateOfWeaningPressed;
   final VoidCallback onDateOfMatingPressed;
@@ -14,6 +18,8 @@ class GeneralInfoAnimalWidget extends StatefulWidget {
   final String type;
   final String age;
   final String sex;
+  // ignore: non_constant_identifier_names
+  final OviVariables OviDetails;
 
   const GeneralInfoAnimalWidget({
     Key? key,
@@ -25,25 +31,52 @@ class GeneralInfoAnimalWidget extends StatefulWidget {
     required this.type,
     required this.age,
     required this.sex,
+    // ignore: non_constant_identifier_names
+    required this.OviDetails,
   }) : super(key: key);
 
   @override
-  State<GeneralInfoAnimalWidget> createState() =>
+  ConsumerState<GeneralInfoAnimalWidget> createState() =>
       _GeneralInfoAnimalWidgetState();
 }
 
-class _GeneralInfoAnimalWidgetState extends State<GeneralInfoAnimalWidget> {
+String calculateAge(DateTime? selectedDate) {
+  if (selectedDate == null) {
+    return 'Not Selected'; // Handle the case when the date is not selected
+  }
+
+  final currentDate = DateTime.now();
+  final ageInYears = currentDate.year - selectedDate.year;
+  return '$ageInYears Years';
+}
+
+DateTime? parseSelectedDate(String? selectedDate) {
+  if (selectedDate == null) {
+    return null; // Return null if the date is not selected
+  }
+
+  try {
+    return DateFormat('dd/MM/yyyy').parse(selectedDate);
+  } catch (e) {
+    return null; // Return null if there is an error parsing the date
+  }
+}
+
+class _GeneralInfoAnimalWidgetState
+    extends ConsumerState<GeneralInfoAnimalWidget> {
   @override
   Widget build(BuildContext context) {
+    final selectedDate = parseSelectedDate(widget.OviDetails.dateOfBirth);
+    final List<String> uploadedFiles = ref.read(uploadedFilesProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
           width: globals.widthMediaQuery * 343,
           child: ThreeInformationBlock(
-            head1: widget.type,
-            head2: widget.age,
-            head3: widget.sex,
+            head1: widget.OviDetails.selectedAnimalType,
+            head2: calculateAge(selectedDate),
+            head3: widget.OviDetails.selectedOviGender,
           ),
         ),
         SizedBox(
@@ -60,28 +93,81 @@ class _GeneralInfoAnimalWidgetState extends State<GeneralInfoAnimalWidget> {
               children: [
                 TableTextButton(
                   onPressed: widget.onDateOfBirthPressed,
-                  textButton: "Add",
+                  textButton: widget.OviDetails.dateOfBirth,
                   textHead: "Date of Birth",
                 ),
-                TableTextButton(
-                  onPressed: widget.onDateOfWeaningPressed,
-                  textButton: "Add",
-                  textHead: "Date of weaning",
+                Visibility(
+                  visible: widget.OviDetails.selectedOviGender == 'Female' &&
+                      widget.OviDetails.selectedAnimalType == 'Mammal',
+                  child: TableTextButton(
+                    onPressed: widget.onDateOfBirthPressed,
+                    textButton: widget.OviDetails.selectedOviDates
+                                .containsKey('Date Of Weaning') &&
+                            widget.OviDetails
+                                    .selectedOviDates['Date Of Weaning'] !=
+                                null
+                        ? DateFormat('dd/MM/yyyy').format(
+                            widget.OviDetails
+                                .selectedOviDates['Date Of Weaning']!,
+                          )
+                        : 'Add',
+                    textHead: "Date of Weaning",
+                  ),
+                ),
+                Visibility(
+                  visible: widget.OviDetails.selectedOviGender == 'Female' &&
+                      widget.OviDetails.selectedAnimalType == 'Oviparous',
+                  child: TableTextButton(
+                    onPressed: widget.onDateOfBirthPressed,
+                    textButton: widget.OviDetails.selectedOviDates
+                                .containsKey('Date Of Hatching') &&
+                            widget.OviDetails
+                                    .selectedOviDates['Date Of Hatching'] !=
+                                null
+                        ? DateFormat('dd/MM/yyyy').format(
+                            widget.OviDetails
+                                .selectedOviDates['Date Of Hatching']!,
+                          )
+                        : 'Add',
+                    textHead: "Date of Hatching",
+                  ),
                 ),
                 TableTextButton(
-                  onPressed: widget.onDateOfMatingPressed,
-                  textButton: "Add",
-                  textHead: "Date of mating",
+                  onPressed: widget.onDateOfBirthPressed,
+                  textButton: widget.OviDetails.selectedOviDates
+                              .containsKey('Date Of Mating') &&
+                          widget.OviDetails
+                                  .selectedOviDates['Date Of Mating'] !=
+                              null
+                      ? DateFormat('dd/MM/yyyy').format(
+                          widget.OviDetails.selectedOviDates['Date Of Mating']!,
+                        )
+                      : 'Add',
+                  textHead: "Date of Mating",
                 ),
                 TableTextButton(
-                  onPressed: widget.onDateOfDeathPressed,
-                  textButton: "Add",
-                  textHead: "Date of death",
+                  onPressed: widget.onDateOfBirthPressed,
+                  textButton: widget.OviDetails.selectedOviDates
+                              .containsKey('Date Of Death') &&
+                          widget.OviDetails.selectedOviDates['Date Of Death'] !=
+                              null
+                      ? DateFormat('dd/MM/yyyy').format(
+                          widget.OviDetails.selectedOviDates['Date Of Death']!,
+                        )
+                      : 'Add',
+                  textHead: "Date of Death",
                 ),
                 TableTextButton(
-                  onPressed: widget.onDateOfSalePressed,
-                  textButton: "Add",
-                  textHead: "Date of sale",
+                  onPressed: widget.onDateOfBirthPressed,
+                  textButton: widget.OviDetails.selectedOviDates
+                              .containsKey('Date Of Sale') &&
+                          widget.OviDetails.selectedOviDates['Date Of Sale'] !=
+                              null
+                      ? DateFormat('dd/MM/yyyy').format(
+                          widget.OviDetails.selectedOviDates['Date Of Sale']!,
+                        )
+                      : 'Add',
+                  textHead: "Date of Sale",
                 ),
                 SizedBox(
                   height: globals.heightMediaQuery * 24,
@@ -94,7 +180,7 @@ class _GeneralInfoAnimalWidgetState extends State<GeneralInfoAnimalWidget> {
                   height: globals.heightMediaQuery * 14,
                 ),
                 Text(
-                  "This is my favourite sheep. I love it very much",
+                  widget.OviDetails.notes,
                   style: AppFonts.body1(color: AppColors.grayscale90),
                 ),
                 SizedBox(
@@ -118,8 +204,18 @@ class _GeneralInfoAnimalWidgetState extends State<GeneralInfoAnimalWidget> {
                     const SizedBox(width: 8),
                   ],
                 ),
-                const SizedBox(
-                  height: 32,
+                // const SizedBox(
+                //   height: 32,
+                // ),
+                ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: uploadedFiles.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(uploadedFiles[index]),
+                    );
+                  },
                 ),
               ],
             ),

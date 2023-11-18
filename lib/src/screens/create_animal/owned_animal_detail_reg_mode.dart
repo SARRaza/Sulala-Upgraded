@@ -4,21 +4,24 @@ import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
-import '../../widgets/controls_and_buttons/tags/tags.dart';
+import '../../widgets/controls_and_buttons/tags/custom_tags.dart';
 import '../../widgets/pages/owned_animal/breeding_info.dart';
 import '../../widgets/pages/owned_animal/general_info_animal_widget.dart';
 import '../medical/mammals_medical.dart';
+import 'sar_listofanimals.dart';
 
 class OwnedAnimalDetailsRegMode extends StatefulWidget {
   final String imagePath;
   final String title;
   final String geninfo;
+  final OviVariables OviDetails;
 
   const OwnedAnimalDetailsRegMode({
     Key? key,
     required this.imagePath,
     required this.title,
     required this.geninfo,
+    required this.OviDetails,
   }) : super(key: key);
 
   @override
@@ -129,19 +132,29 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
                   child: Column(
                     children: [
                       CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        radius: globals.widthMediaQuery * 60,
-                        backgroundImage: AssetImage(widget.imagePath),
+                        radius: MediaQuery.of(context).size.width * 0.16,
+                        backgroundColor: Colors.grey[100],
+                        backgroundImage:
+                            widget.OviDetails.selectedOviImage != null
+                                ? FileImage(widget.OviDetails.selectedOviImage!)
+                                : null,
+                        child: widget.OviDetails.selectedOviImage == null
+                            ? const Icon(
+                                Icons.camera_alt_outlined,
+                                size: 50,
+                                color: Colors.grey,
+                              )
+                            : null,
                       ),
                       SizedBox(
                         height: globals.heightMediaQuery * 16,
                       ),
                       Text(
-                        widget.title,
+                        widget.OviDetails.animalName,
                         style: AppFonts.title4(color: AppColors.grayscale90),
                       ),
                       Text(
-                        "ID #${widget.title}",
+                        "ID #${widget.OviDetails.animalName}",
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
                       SizedBox(
@@ -153,31 +166,19 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
                             right: globals.widthMediaQuery * 16),
                         child: Column(
                           children: [
-                            IntrinsicWidth(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Tags(
-                                    text: 'Mammal',
-                                    icon: null,
-                                    onPress: () {
-                                      // Handle tag click
-                                    },
-                                    status: TagStatus.active,
-                                  ),
-                                  SizedBox(
-                                    width: globals.widthMediaQuery * 8,
-                                  ),
-                                  Tags(
-                                    text: 'Herbivore',
-                                    icon: null,
-                                    onPress: () {
-                                      // Handle tag click
-                                    },
-                                    status: TagStatus.active,
-                                  ),
-                                ],
-                              ),
+                            Wrap(
+                              alignment: WrapAlignment.center,
+                              spacing: 8.0,
+                              runSpacing: 8.0,
+                              children: widget.OviDetails.selectedOviChips
+                                  .map((chip) {
+                                return CustomTag(
+                                  label: chip,
+                                  selected:
+                                      true, // Since these are selected chips
+                                  onTap: () {},
+                                );
+                              }).toList(),
                             ),
                             SizedBox(
                               height: globals.heightMediaQuery * 32,
@@ -227,6 +228,7 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
                                     age: "3 years",
                                     type: "Mammal",
                                     sex: "Female",
+                                    OviDetails: widget.OviDetails,
                                   ),
 
                                   // Content for the 'Breeding' tab

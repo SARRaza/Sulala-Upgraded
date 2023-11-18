@@ -100,3 +100,10 @@ final listOfBreedingEventsProvider = Provider<List<String>>((ref) => []);
 //   return {};
 // });
 
+final dateOfHatchingProvider = StateProvider<DateTime?>((ref) => null);
+final dateOfDeathProvider = StateProvider<DateTime?>((ref) => null);
+final dateOfSaleProvider = StateProvider<DateTime?>((ref) => null);
+final dateOfWeaningProvider = StateProvider<DateTime?>((ref) => null);
+final dateOfMatingProvider = StateProvider<DateTime?>((ref) => null);
+
+final uploadedFilesProvider = Provider<List<String>>((ref) => []);

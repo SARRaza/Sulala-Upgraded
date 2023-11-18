@@ -96,16 +96,16 @@ class _SearchPageOwnerAnimalsState extends State<SearchPageOwnerAnimals> {
   }
 
   void navigateToAnimalDetailsPage(Map<String, dynamic> option) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => OwnedAnimalDetails(
-          imagePath: option['imagePath'],
-          title: option['title'],
-          geninfo: option['geninfo'],
-        ),
-      ),
-    );
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => OwnedAnimalDetails(
+    //       imagePath: option['imagePath'],
+    //       title: option['title'],
+    //       geninfo: option['geninfo'],
+    //     ),
+    //   ),
+    // );
   }
 
   @override

@@ -10,6 +10,7 @@ import '../../widgets/inputs/search_bars/button_search_bar.dart';
 import '../breeding/list_of_breeding_events.dart';
 
 import 'create_animal.dart';
+import 'owned_animal_detail_reg_mode.dart';
 
 class OviVariables {
   final List<String> selectedFilters;
@@ -525,13 +526,17 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                                 ),
                               ),
                               onTap: () {
-                                // Navigator.of(context).push(
-                                //   MaterialPageRoute(
-                                //     builder: (context) => OvigenifnoPage(
-                                //       OviDetails: OviDetails,
-                                //     ),
-                                //   ),
-                                // );
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        OwnedAnimalDetailsRegMode(
+                                      OviDetails: OviDetails,
+                                      imagePath: '',
+                                      title: '',
+                                      geninfo: '',
+                                    ),
+                                  ),
+                                );
                               },
                             ));
                       },
