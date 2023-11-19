@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -14,10 +16,7 @@ import '../../widgets/inputs/text_fields/primary_text_field.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 import 'list_of_breeding_events.dart';
-import 'search_breeding_partner.dart';
-import 'search_children.dart';
-import 'search_father.dart';
-import 'search_mother.dart';
+
 // ignore: depend_on_referenced_packages
 
 class CreateBreedingEvents extends ConsumerStatefulWidget {
@@ -46,7 +45,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
   // String selectedBreedSire = 'Add';
   String selectedBreedDam = 'Add';
   String selectedBreedPartner = 'Add';
-  String selectedBreedChildren = '';
+  // List<ChildItem> selectedBreedChildren = [];
   String selectedBreedingDate = '';
   String selectedDeliveryDate = '';
 
@@ -150,8 +149,9 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
     // Add more country codes and names as needed
   ];
   void _showBreedDamSelectionSheet(BuildContext context) async {
-    String selectedbreedingDam =
-        ''; // Initialize an empty string for the selected item
+    String selectedbreedingDam = '';
+
+    // Initialize an empty string for the selected item
     final ovianimals = ref.watch(ovianimalsProvider);
     double sheetHeight = MediaQuery.of(context).size.height * 0.8;
     String searchQuery = '';
@@ -273,6 +273,8 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                             .read(breedingDamDetailsProvider.notifier)
                             .update((state) => selectedbreedingDam);
                         Navigator.pop(context, selectedbreedingDam);
+
+                        // Update the selected animal's name and type using Riverpod
                       },
                       child: const Text("Done"),
                     ),
@@ -287,7 +289,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
   }
 
   void _showBreedChildrenSelectionSheet(BuildContext context) async {
-    List<String> selectedChildren = []; // Initialize an empty list
+    List<ChildItem> selectedChildren = []; // Initialize an empty list
     final ovianimals = ref.watch(ovianimalsProvider);
 
     String searchQuery = '';
@@ -395,10 +397,13 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                             onTap: () {
                               setState(() {
                                 if (isSelected) {
-                                  selectedChildren
-                                      .remove(OviDetails.animalName);
+                                  selectedChildren.removeWhere((child) =>
+                                      child.animalName ==
+                                      OviDetails.animalName);
                                 } else {
-                                  selectedChildren.add(OviDetails.animalName);
+                                  selectedChildren.add(ChildItem(
+                                      OviDetails.animalName,
+                                      OviDetails.selectedOviImage!));
                                 }
                               });
                             },
@@ -410,9 +415,12 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                       onPressed: () {
                         ref
                             .read(breedingChildrenDetailsProvider.notifier)
-                            .update((state) => selectedBreedChildren);
-
-                        Navigator.pop(context, selectedChildren);
+                            .update((state) => selectedChildren);
+                        Navigator.pop(context);
+                        // Append the selected children to the existing list
+                        final List<ChildItem> existingSelectedChildren =
+                            ref.read(breedingChildrenDetailsProvider);
+                        existingSelectedChildren.addAll(selectedChildren);
                       },
                       child: const Text("Done"),
                     ),
@@ -424,14 +432,6 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
         );
       },
     );
-
-    if (selectedChildren.isNotEmpty) {
-      setState(() {
-        // Assuming you have a List<String> selectedBreedChildren
-        selectedBreedChildren =
-            selectedChildren.join(", "); // Join selected children into a string
-      });
-    }
   }
 
   void _showBreedPartnerSelectionSheet() {
@@ -513,6 +513,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
     final selectedbreedSire = ref.watch(breedingSireDetailsProvider);
     final selectedbreedDam = ref.watch(breedingDamDetailsProvider);
     final selectedbreedPartner = ref.watch(breedingPartnerDetailsProvider);
+    final image = ref.watch(breedingChildrenDetailsProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -617,13 +618,6 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                     text: selectedbreedDam,
                     onPressed: () {
                       _showBreedDamSelectionSheet(context);
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //       builder: (context) => const SearchMother(),
-                      //     ));
-
-                      // _showBreedDamSelectionSheet(context);
                     },
                     position: TextButtonPosition.right,
                   ),
@@ -675,11 +669,30 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                 style: AppFonts.title5(color: AppColors.grayscale90),
               ),
               SizedBox(height: 16 * globals.heightMediaQuery),
-              if (selectedBreedChildren.isNotEmpty)
-                Text(
-                  selectedBreedChildren,
-                  style: AppFonts.body1(color: AppColors.primary40),
-                ),
+              ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: image.length,
+                itemBuilder: (context, index) {
+                  final ChildItem child = image[index];
+                  return ListTile(
+                    leading: CircleAvatar(
+                        radius: 25,
+                        backgroundColor: Colors.grey[100],
+                        backgroundImage: FileImage(child.selectedOviImage)
+
+                        // child: child.selectedOviImage == null
+                        //     ? const Icon(
+                        //         Icons.camera_alt_outlined,
+                        //         size: 50,
+                        //         color: Colors.grey,
+                        //       )
+                        //     : null,
+                        ),
+                    title: Text(child.animalName),
+                  );
+                },
+              ),
               Row(
                 children: [
                   TextButton(

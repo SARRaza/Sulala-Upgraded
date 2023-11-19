@@ -1,3 +1,7 @@
+// ignore_for_file: non_constant_identifier_names
+
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,7 +19,8 @@ class BreedingEventVariables {
   final String sire;
   final String dam;
   final String partner;
-  final String children;
+  final List<ChildItem> children;
+  final File? breeddam;
   final String breedingDate;
   final String deliveryDate;
   final String notes;
@@ -23,6 +28,7 @@ class BreedingEventVariables {
 
   BreedingEventVariables({
     required this.eventNumber,
+    this.breeddam,
     required this.sire,
     required this.dam,
     required this.partner,
@@ -80,6 +86,7 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
   void addBreedingEvent(String eventNumber) {
     final breedingEvent = BreedingEventVariables(
       eventNumber: ref.read(breedingEventNumberProvider),
+      breeddam: ref.read(breeddamPictureProvider),
       sire: ref.read(breedingSireDetailsProvider),
       dam: ref.read(breedingDamDetailsProvider),
       partner: ref.read(breedingPartnerDetailsProvider),
@@ -114,28 +121,6 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
     });
   }
 
-  void _filterBreedingEvents(String query) {
-    setState(() {
-      filterQuery = query;
-    });
-  }
-
-  void _filterMammals(String query) {
-    setState(() {
-      filterQuery = query;
-      _updateFilteredOviAnimals(query: query);
-    });
-  }
-
-  void _updateFilteredOviAnimals({String? query}) {}
-
-  void _removeSelectedFilter(String filter) {
-    setState(() {
-      ref.read(selectedFiltersProvider).remove(filter);
-      _updateFilteredOviAnimals(); // Update the filtered list after removing a filter
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final animalIndex = ref.read(ovianimalsProvider).indexWhere(
@@ -143,7 +128,7 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
 
     if (animalIndex == -1) {
       // Animal not found, you can show an error message or handle it accordingly
-      return Center(
+      return const Center(
         child: Text('Animal not found.'),
       );
     }
@@ -159,7 +144,7 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
         automaticallyImplyLeading: false,
         title: Text(
           widget.OviDetails.animalName,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 25,
             fontWeight: FontWeight.bold,
             color: Colors.black,
@@ -299,6 +284,20 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                         return Column(
                           children: <Widget>[
                             ListTile(
+                              leading: CircleAvatar(
+                                radius: 25,
+                                backgroundColor: Colors.grey[100],
+                                backgroundImage: breedingEvent.breeddam != null
+                                    ? FileImage(breedingEvent.breeddam!)
+                                    : null,
+                                child: breedingEvent.breeddam == null
+                                    ? const Icon(
+                                        Icons.camera_alt_outlined,
+                                        size: 50,
+                                        color: Colors.grey,
+                                      )
+                                    : null,
+                              ),
                               title: Text(
                                 breedingEvent.eventNumber,
                                 style: AppFonts.body2(
@@ -309,8 +308,9 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) => BreedingEventDetails(
-                                      breedingEvent:
-                                          breedingEvent, // Pass the selected event
+                                      breedingEvent: breedingEvent,
+                                      OviDetails: widget
+                                          .OviDetails, // Pass the selected event
                                     ),
                                   ),
                                 );

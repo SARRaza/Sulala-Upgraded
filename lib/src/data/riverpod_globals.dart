@@ -71,7 +71,7 @@ final selectedFiltersProvider = StateProvider<List<String>>((ref) => []);
 final dateOfBirthProvider = StateProvider<String>((ref) => '');
 final breedingEventNumberProvider = StateProvider<String>((ref) => '');
 final breedingSireDetailsProvider = StateProvider<String>((ref) => 'Add');
-final breedingChildrenDetailsProvider = StateProvider<String>((ref) => 'Add');
+// final breedingChildrenDetailsProvider = StateProvider<String>((ref) => 'Add');
 final breedingDamDetailsProvider = StateProvider<String>((ref) => 'Add');
 final breedingPartnerDetailsProvider = StateProvider<String>((ref) => 'Add');
 final breedingDateProvider = StateProvider<String>((ref) => '');
@@ -107,3 +107,19 @@ final dateOfWeaningProvider = StateProvider<DateTime?>((ref) => null);
 final dateOfMatingProvider = StateProvider<DateTime?>((ref) => null);
 
 final uploadedFilesProvider = Provider<List<String>>((ref) => []);
+
+final selectedAnimalNameProvider = Provider<String>((ref) => '');
+final selectedbreeddamProvider = Provider<String>((ref) => '');
+final breeddamPictureProvider = StateProvider<File?>((ref) => null);
+
+class ChildItem {
+  final String animalName;
+  final File selectedOviImage;
+
+  ChildItem(this.animalName, this.selectedOviImage);
+
+  // Add any additional properties or methods you need
+}
+
+final breedingChildrenDetailsProvider =
+    StateProvider<List<ChildItem>>((ref) => []);

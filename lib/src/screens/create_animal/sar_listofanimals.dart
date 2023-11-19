@@ -37,7 +37,7 @@ class OviVariables {
   final String breedsire;
   final String breeddam;
   final String breedpartner;
-  final String breedchildren;
+  final List<ChildItem> breedchildren;
   final String breedingDate;
   final String breeddeliveryDate;
   final String breedingnotes;
@@ -103,7 +103,7 @@ class OviVariables {
       String? breedsire,
       String? breeddam,
       String? breedpartner,
-      String? breedchildren,
+      List<ChildItem>? breedchildren,
       String? breedingDate,
       String? breeddeliveryDate,
       String? breedingnotes,
@@ -153,7 +153,7 @@ class BreedingDetails {
   final String breedsire;
   final String breeddam;
   final String breedpartner;
-  final String breedchildren;
+  final List<ChildItem> breedchildren;
   final String breedingDate;
   final String breeddeliveryDate;
   final String breedingnotes;
