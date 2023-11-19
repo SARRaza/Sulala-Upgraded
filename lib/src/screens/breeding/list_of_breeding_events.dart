@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
+import '../create_animal/sar_listofanimals.dart';
 import 'breeding_event_detail.dart';
 import 'create_breeding_event.dart';
 
@@ -16,6 +19,7 @@ class BreedingEventVariables {
   final String breedingDate;
   final String deliveryDate;
   final String notes;
+  final bool shouldAddEvent;
 
   BreedingEventVariables({
     required this.eventNumber,
@@ -26,12 +30,13 @@ class BreedingEventVariables {
     required this.breedingDate,
     required this.deliveryDate,
     required this.notes,
+    required this.shouldAddEvent,
   });
 }
 
-List<BreedingEventVariables> breedingEvents = [];
+// List<BreedingEventVariables> breedingEvents = [];
 
-class ListOfBreedingEvents extends StatefulWidget {
+class ListOfBreedingEvents extends ConsumerStatefulWidget {
   final TextEditingController breedingNotesController;
   final TextEditingController breedingEventNumberController;
   final String selectedBreedSire;
@@ -40,6 +45,8 @@ class ListOfBreedingEvents extends StatefulWidget {
   final String selectedBreedChildren;
   final String selectedBreedingDate;
   final String selectedDeliveryDate;
+  final bool shouldAddBreedEvent;
+  final OviVariables OviDetails;
 
   const ListOfBreedingEvents({
     super.key,
@@ -51,48 +58,112 @@ class ListOfBreedingEvents extends StatefulWidget {
     required this.selectedBreedChildren,
     required this.selectedBreedingDate,
     required this.selectedDeliveryDate,
+    required this.shouldAddBreedEvent,
+    required this.OviDetails,
   });
 
   @override
-  State<ListOfBreedingEvents> createState() => _ListOfBreedingEvents();
+  ConsumerState<ListOfBreedingEvents> createState() => _ListOfBreedingEvents();
 }
 
-class _ListOfBreedingEvents extends State<ListOfBreedingEvents> {
+class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
+  String filterQuery = '';
   @override
   void initState() {
     super.initState();
     // Add the initial breeding event to the list
-    if (widget.breedingEventNumberController.text.isNotEmpty) {
-      addBreedingEvent(widget.breedingEventNumberController.text);
+    if (widget.shouldAddBreedEvent) {
+      addBreedingEvent(ref.read(breedingEventNumberProvider));
     }
   }
 
   void addBreedingEvent(String eventNumber) {
     final breedingEvent = BreedingEventVariables(
-      eventNumber: eventNumber,
-      sire: widget.selectedBreedSire,
-      dam: widget.selectedBreedDam,
-      partner: widget.selectedBreedPartner,
-      children: widget.selectedBreedChildren,
-      breedingDate: widget.selectedBreedingDate,
-      deliveryDate: widget.selectedDeliveryDate,
-      notes: widget.breedingNotesController.text,
+      eventNumber: ref.read(breedingEventNumberProvider),
+      sire: ref.read(breedingSireDetailsProvider),
+      dam: ref.read(breedingDamDetailsProvider),
+      partner: ref.read(breedingPartnerDetailsProvider),
+      children: ref.read(breedingChildrenDetailsProvider),
+      breedingDate: ref.read(breedingDateProvider),
+      deliveryDate: ref.read(deliveryDateProvider),
+      notes: ref.read(breedingnotesProvider),
+      shouldAddEvent: ref.read(shoudlAddEventProvider),
     );
 
     setState(() {
-      breedingEvents.insert(0, breedingEvent);
+      if (ref.read(breedingEventsProvider).isEmpty) {
+        ref.read(breedingEventsProvider).add(breedingEvent);
+      } else {
+        ref.read(breedingEventsProvider).insert(0, breedingEvent);
+      }
+      final animalIndex = ref.read(ovianimalsProvider).indexWhere(
+          (animal) => animal.animalName == widget.OviDetails.animalName);
+
+      if (animalIndex != -1) {
+        ref.read(ovianimalsProvider)[animalIndex] =
+            ref.read(ovianimalsProvider)[animalIndex].copyWith(breedingEvents: {
+          ...ref.read(ovianimalsProvider)[animalIndex].breedingEvents,
+          widget.OviDetails.animalName: [
+            ...ref
+                .read(ovianimalsProvider)[animalIndex]
+                .breedingEvents[widget.OviDetails.animalName]!,
+            breedingEvent
+          ]
+        });
+      }
+    });
+  }
+
+  void _filterBreedingEvents(String query) {
+    setState(() {
+      filterQuery = query;
+    });
+  }
+
+  void _filterMammals(String query) {
+    setState(() {
+      filterQuery = query;
+      _updateFilteredOviAnimals(query: query);
+    });
+  }
+
+  void _updateFilteredOviAnimals({String? query}) {}
+
+  void _removeSelectedFilter(String filter) {
+    setState(() {
+      ref.read(selectedFiltersProvider).remove(filter);
+      _updateFilteredOviAnimals(); // Update the filtered list after removing a filter
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final animalIndex = ref.read(ovianimalsProvider).indexWhere(
+        (animal) => animal.animalName == widget.OviDetails.animalName);
+
+    if (animalIndex == -1) {
+      // Animal not found, you can show an error message or handle it accordingly
+      return Center(
+        child: Text('Animal not found.'),
+      );
+    }
+
+    final breedingEvents = ref
+            .read(ovianimalsProvider)[animalIndex]
+            .breedingEvents[widget.OviDetails.animalName] ??
+        [];
+
+    // Filter the breeding events based on the query
     return Scaffold(
       appBar: AppBar(
-        scrolledUnderElevation: 0.0,
-        centerTitle: true,
+        automaticallyImplyLeading: false,
         title: Text(
-          'Harry',
-          style: AppFonts.headline3(color: AppColors.grayscale90),
+          widget.OviDetails.animalName,
+          style: TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -131,17 +202,17 @@ class _ListOfBreedingEvents extends State<ListOfBreedingEvents> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const CreateBreedingEvents(
+                      builder: (context) => CreateBreedingEvents(
                         selectedAnimalType: '',
                         selectedAnimalSpecies: '',
                         selectedAnimalBreed: '',
+                        OviDetails: widget.OviDetails,
                       ),
                     ),
                   ).then((_) {
                     // When returning from CreateBreedingEvents, add the new event
-                    if (widget.breedingEventNumberController.text.isNotEmpty) {
-                      addBreedingEvent(
-                          widget.breedingEventNumberController.text);
+                    if (ref.read(breedingEventNumberProvider).isNotEmpty) {
+                      addBreedingEvent(ref.read(breedingEventNumberProvider));
                     }
                   });
                 },
@@ -195,11 +266,11 @@ class _ListOfBreedingEvents extends State<ListOfBreedingEvents> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CreateBreedingEvents(
+                                    builder: (context) => CreateBreedingEvents(
                                       selectedAnimalType: '',
                                       selectedAnimalSpecies: '',
                                       selectedAnimalBreed: '',
+                                      OviDetails: widget.OviDetails,
                                     ),
                                   ),
                                 ).then((_) {

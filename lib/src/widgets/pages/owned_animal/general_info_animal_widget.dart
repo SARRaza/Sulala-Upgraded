@@ -62,7 +62,7 @@ DateTime? parseSelectedDate(String? selectedDate) {
   }
 }
 
-final bool _loading = false;
+const bool _loading = false;
 double _uploadProgress = 0.0;
 
 class _GeneralInfoAnimalWidgetState
@@ -186,30 +186,6 @@ class _GeneralInfoAnimalWidgetState
                   widget.OviDetails.notes,
                   style: AppFonts.body1(color: AppColors.grayscale90),
                 ),
-                // SizedBox(
-                //   height: globals.heightMediaQuery * 14,
-                // ),
-                // Row(
-                //   children: [
-                //     const Icon(
-                //       Icons.file_copy_outlined,
-                //       color: AppColors.primary30,
-                //     ),
-                //     const SizedBox(width: 8),
-                //     Expanded(
-                //       child: Text(
-                //         "fileName1",
-                //         style: AppFonts.body1(color: AppColors.grayscale90),
-                //         maxLines: 1,
-                //         overflow: TextOverflow.ellipsis,
-                //       ),
-                //     ),
-                //     const SizedBox(width: 8),
-                //   ],
-                // ),
-                // const SizedBox(
-                //   height: 32,
-                // ),
                 ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,

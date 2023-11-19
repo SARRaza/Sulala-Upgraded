@@ -1,21 +1,31 @@
 // ignore_for_file: dead_code
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../screens/breeding/list_of_breeding_events.dart';
 import '../../../screens/breeding/list_of_children.dart';
 import '../../../screens/breeding/list_of_mates.dart';
 import '../../../screens/breeding/parents_page.dart';
+import '../../../screens/create_animal/sar_listofanimals.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 import '../../other/one_information_block.dart';
 import '../../other/two_information_block.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
-class BreedingInfo extends StatelessWidget {
+class BreedingInfo extends ConsumerStatefulWidget {
+  final OviVariables OviDetails;
+
   const BreedingInfo({
     Key? key,
+    required this.OviDetails,
   }) : super(key: key);
 
+  @override
+  ConsumerState<BreedingInfo> createState() => _BreedingInfoState();
+}
+
+class _BreedingInfoState extends ConsumerState<BreedingInfo> {
   @override
   Widget build(BuildContext context) {
     bool animalGender = true;
@@ -23,7 +33,7 @@ class BreedingInfo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (animalGender)
+          if (widget.OviDetails.selectedOviGender == 'Female')
             SizedBox(
               width: globals.widthMediaQuery * 343,
               child: const OneInformationBlock(
@@ -33,7 +43,7 @@ class BreedingInfo extends StatelessWidget {
             SizedBox(
               height: globals.heightMediaQuery * 8,
             ),
-          if (animalGender)
+          if (widget.OviDetails.selectedOviGender == 'Female')
             SizedBox(
               width: 343 * globals.widthMediaQuery,
               child: const TwoInformationBlock(
@@ -41,6 +51,16 @@ class BreedingInfo extends StatelessWidget {
                 head2: '12.02.2023',
                 subtitle1: "Last Breeding Date",
                 subtitle2: 'Next Breeding Date',
+              ),
+            ),
+          if (widget.OviDetails.selectedOviGender == 'Male')
+            SizedBox(
+              width: 343 * globals.widthMediaQuery,
+              child: const TwoInformationBlock(
+                head1: '12.02.2023',
+                head2: '12.02.2023',
+                subtitle1: "Date Of Mating",
+                subtitle2: 'Next Date Of Mating Date',
               ),
             ),
           if (animalGender)
@@ -74,6 +94,8 @@ class BreedingInfo extends StatelessWidget {
                           breedingEventNumberController:
                               TextEditingController(),
                           breedingNotesController: TextEditingController(),
+                          shouldAddBreedEvent: false,
+                          OviDetails: widget.OviDetails,
                         );
                       },
                     ),

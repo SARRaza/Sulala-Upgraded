@@ -214,7 +214,9 @@ class _OwnedAnimalDetailsState extends State<OwnedAnimalDetails>
                                   ),
 
                                   // Content for the 'Breeding' tab
-                                  const BreedingInfo(),
+                                  BreedingInfo(
+                                    OviDetails: widget.OviDetails,
+                                  ),
 
                                   // Content for the 'Medical' tab
                                   const MammalsMedical(),
