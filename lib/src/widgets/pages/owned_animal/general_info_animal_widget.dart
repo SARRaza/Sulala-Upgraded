@@ -62,6 +62,9 @@ DateTime? parseSelectedDate(String? selectedDate) {
   }
 }
 
+final bool _loading = false;
+double _uploadProgress = 0.0;
+
 class _GeneralInfoAnimalWidgetState
     extends ConsumerState<GeneralInfoAnimalWidget> {
   @override
@@ -183,27 +186,27 @@ class _GeneralInfoAnimalWidgetState
                   widget.OviDetails.notes,
                   style: AppFonts.body1(color: AppColors.grayscale90),
                 ),
-                SizedBox(
-                  height: globals.heightMediaQuery * 14,
-                ),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.file_copy_outlined,
-                      color: AppColors.primary30,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        "fileName1",
-                        style: AppFonts.body1(color: AppColors.grayscale90),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                  ],
-                ),
+                // SizedBox(
+                //   height: globals.heightMediaQuery * 14,
+                // ),
+                // Row(
+                //   children: [
+                //     const Icon(
+                //       Icons.file_copy_outlined,
+                //       color: AppColors.primary30,
+                //     ),
+                //     const SizedBox(width: 8),
+                //     Expanded(
+                //       child: Text(
+                //         "fileName1",
+                //         style: AppFonts.body1(color: AppColors.grayscale90),
+                //         maxLines: 1,
+                //         overflow: TextOverflow.ellipsis,
+                //       ),
+                //     ),
+                //     const SizedBox(width: 8),
+                //   ],
+                // ),
                 // const SizedBox(
                 //   height: 32,
                 // ),
@@ -212,10 +215,44 @@ class _GeneralInfoAnimalWidgetState
                   shrinkWrap: true,
                   itemCount: uploadedFiles.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(uploadedFiles[index]),
+                    final fileName = uploadedFiles[index];
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.file_copy_outlined,
+                            color: AppColors.primary30,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              fileName,
+                              style:
+                                  AppFonts.body1(color: AppColors.grayscale90),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          if (_loading)
+                            Expanded(
+                              child: LinearProgressIndicator(
+                                value: _uploadProgress,
+                                valueColor: const AlwaysStoppedAnimation<Color>(
+                                  AppColors.primary30,
+                                ),
+                                backgroundColor: AppColors.grayscale10,
+                              ),
+                            ),
+                        ],
+                      ),
                     );
                   },
+                ),
+                const SizedBox(
+                  height: 50,
                 ),
               ],
             ),

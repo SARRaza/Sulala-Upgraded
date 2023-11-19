@@ -18,7 +18,7 @@ class FileUploaderField extends ConsumerStatefulWidget {
 }
 
 class _FileUploaderFieldState extends ConsumerState<FileUploaderField> {
-  bool _loading = false;
+  final bool _loading = false;
   double _uploadProgress = 0.0;
 
   Future<void> _chooseFile(BuildContext context) async {
@@ -54,11 +54,11 @@ class _FileUploaderFieldState extends ConsumerState<FileUploaderField> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> _uploadedFiles = ref.watch(uploadedFilesProvider);
+    final List<String> uploadedFiles = ref.watch(uploadedFilesProvider);
     final borderColor =
-        _uploadedFiles.isNotEmpty ? AppColors.primary20 : AppColors.grayscale20;
+        uploadedFiles.isNotEmpty ? AppColors.primary20 : AppColors.grayscale20;
 
-    final fileWidgets = _uploadedFiles.map((fileName) {
+    final fileWidgets = uploadedFiles.map((fileName) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
@@ -119,7 +119,7 @@ class _FileUploaderFieldState extends ConsumerState<FileUploaderField> {
               height: 150,
               child: Padding(
                 padding: const EdgeInsets.all(8),
-                child: _uploadedFiles.isNotEmpty
+                child: uploadedFiles.isNotEmpty
                     ? Column(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -167,7 +167,7 @@ class _FileUploaderFieldState extends ConsumerState<FileUploaderField> {
           child: ListView.builder(
             shrinkWrap: true,
             reverse: true,
-            itemCount: _uploadedFiles.length,
+            itemCount: uploadedFiles.length,
             itemBuilder: (context, index) {
               return fileWidgets[index];
             },

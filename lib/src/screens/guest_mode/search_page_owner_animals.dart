@@ -4,7 +4,6 @@ import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/inputs/search_bars/button_search_bar.dart';
 import '../../widgets/lists/animal_list/animal_list_widget.dart';
-import 'owned_animal_detail.dart';
 
 class SearchPageOwnerAnimals extends StatefulWidget {
   const SearchPageOwnerAnimals({super.key});

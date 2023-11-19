@@ -14,6 +14,7 @@ class OwnedAnimalDetailsRegMode extends StatefulWidget {
   final String imagePath;
   final String title;
   final String geninfo;
+  // ignore: non_constant_identifier_names
   final OviVariables OviDetails;
 
   const OwnedAnimalDetailsRegMode({
@@ -21,6 +22,7 @@ class OwnedAnimalDetailsRegMode extends StatefulWidget {
     required this.imagePath,
     required this.title,
     required this.geninfo,
+    // ignore: non_constant_identifier_names
     required this.OviDetails,
   }) : super(key: key);
 
