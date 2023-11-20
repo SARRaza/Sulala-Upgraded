@@ -43,11 +43,6 @@ final selectedAnimalTypeProvider = StateProvider<String>((ref) => '');
 final selectedAnimalSpeciesProvider = StateProvider<String>((ref) => '');
 final selectedAnimalBreedsProvider = StateProvider<String>((ref) => '');
 
-// final selectedSearchFarmProvider =
-//     StateProvider<Map<String, dynamic>?>(((ref) => null));
-// final selectedSearchAnimalProvider =
-//     StateProvider<Map<String, dynamic>?>(((ref) => null));
-
 // Enter Complete Info Global Varibales
 final selectedAnimalImageProvider = StateProvider<File?>((ref) => null);
 final animalNameProvider = StateProvider<String>((ref) => '');
@@ -71,7 +66,6 @@ final selectedFiltersProvider = StateProvider<List<String>>((ref) => []);
 final dateOfBirthProvider = StateProvider<String>((ref) => '');
 final breedingEventNumberProvider = StateProvider<String>((ref) => '');
 final breedingSireDetailsProvider = StateProvider<String>((ref) => 'Add');
-// final breedingChildrenDetailsProvider = StateProvider<String>((ref) => 'Add');
 final breedingDamDetailsProvider = StateProvider<String>((ref) => 'Add');
 final breedingPartnerDetailsProvider = StateProvider<String>((ref) => 'Add');
 final breedingDateProvider = StateProvider<String>((ref) => '');
@@ -81,33 +75,29 @@ final shoudlAddEventProvider = StateProvider<bool>((ref) => false);
 final ovianimalsProvider = StateProvider<List<OviVariables>>((ref) => []);
 final breedingEventsProvider =
     StateProvider<List<BreedingEventVariables>>((ref) => []);
+
+// Reg Home Page Pie Chart Global Variables
 final mammalCountProvider = Provider<int>((ref) {
   return ref
       .watch(ovianimalsProvider)
       .where((animal) => animal.selectedAnimalType.toLowerCase() == 'mammal')
       .length;
 });
-
 final oviparousCountProvider = Provider<int>((ref) {
   return ref
       .watch(ovianimalsProvider)
       .where((animal) => animal.selectedAnimalType.toLowerCase() == 'oviparous')
       .length;
 });
-final listOfBreedingEventsProvider = Provider<List<String>>((ref) => []);
-// final animalFiltersProvider = Provider<Map<String, String?>>((ref) {
-//   // This provider will store the selected filters
-//   return {};
-// });
 
+// Breeding Events Global Variable
+final listOfBreedingEventsProvider = Provider<List<String>>((ref) => []);
 final dateOfHatchingProvider = StateProvider<DateTime?>((ref) => null);
 final dateOfDeathProvider = StateProvider<DateTime?>((ref) => null);
 final dateOfSaleProvider = StateProvider<DateTime?>((ref) => null);
 final dateOfWeaningProvider = StateProvider<DateTime?>((ref) => null);
 final dateOfMatingProvider = StateProvider<DateTime?>((ref) => null);
-
 final uploadedFilesProvider = Provider<List<String>>((ref) => []);
-
 final selectedAnimalNameProvider = Provider<String>((ref) => '');
 final selectedbreeddamProvider = Provider<String>((ref) => '');
 final breeddamPictureProvider = StateProvider<File?>((ref) => null);
@@ -115,10 +105,9 @@ final breeddamPictureProvider = StateProvider<File?>((ref) => null);
 class ChildItem {
   final String animalName;
   final File selectedOviImage;
+  final String selectedOviGender;
 
-  ChildItem(this.animalName, this.selectedOviImage);
-
-  // Add any additional properties or methods you need
+  ChildItem(this.animalName, this.selectedOviImage, this.selectedOviGender);
 }
 
 final breedingChildrenDetailsProvider =

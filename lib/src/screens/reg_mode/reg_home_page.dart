@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import 'package:syncfusion_flutter_charts/charts.dart';
-import '../../../providers/animal_counts.dart';
+import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/tags/tags.dart';
@@ -21,22 +21,11 @@ class HomeScreenRegMode extends ConsumerStatefulWidget {
 
 class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
   Future<void> _refreshData() async {
-    // Implement your data fetching or refreshing logic here
-    // For example, you can fetch new data and update the chart, events, etc.
     setState(() {
       _chartData = getChartData();
       sumOfNextTwoCards = _chartData[0].quan + _chartData[1].quan;
-      // Update other data and state variables
     });
-
-    // Wait for a short duration to simulate a refresh
     await Future.delayed(const Duration(seconds: 1));
-
-    // // Navigate back to the same page to simulate a page reload
-    // Navigator.pushReplacement(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => const RegHomePage()),
-    // );
   }
 
   List<Tag> currentStateTags = [
@@ -148,7 +137,6 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
 
   @override
   Widget build(BuildContext context) {
-    final trueData = ref.watch(animalCountProvider);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -252,12 +240,11 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                             "assets/icons/frame/24px/cow_chicken.png",
                             width: globals.widthMediaQuery * 48,
                           ),
-                          animalData: trueData.first,
-                          quan: trueData.first.quan.toString(),
+                          animalData: AnimalData(
+                              'ALL', sumOfNextTwoCards, _chartData[0].color),
+                          quan: sumOfNextTwoCards.toString(),
                           onPressed: () {
-                            setState(() {
-                              _updateChartData(sumOfNextTwoCards, 'ALL');
-                            });
+                            _updateChartData(sumOfNextTwoCards, 'ALL');
                           },
                           isSelected: _selectedIndex == -1,
                         ),
@@ -273,9 +260,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                           quan: _chartData[0].quan.toString(),
                           animalData: _chartData[0],
                           onPressed: () {
-                            setState(() {
-                              _updateChartData(_chartData[0].quan, 'Mammals');
-                            });
+                            _updateChartData(_chartData[0].quan, 'Mammals');
                           },
                           isSelected: _selectedIndex == 0,
                         ),
@@ -291,9 +276,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                           animalData: _chartData[1],
                           quan: _chartData[1].quan.toString(),
                           onPressed: () {
-                            setState(() {
-                              _updateChartData(_chartData[1].quan, 'Oviparous');
-                            });
+                            _updateChartData(_chartData[1].quan, 'Oviparous');
                           },
                           isSelected: _selectedIndex == 1,
                         ),
@@ -315,7 +298,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                               xValueMapper: (AnimalData data, _) => data.animal,
                               yValueMapper: (AnimalData data, _) => data.quan,
                               pointColorMapper: (AnimalData data, _) =>
-                                  data.color,
+                                  data.quan == 0 ? Colors.grey : data.color,
                             )
                           ],
                         ),
@@ -427,15 +410,17 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
   }
 
   List<AnimalData> getChartData() {
+    final int mammalCount = ref.refresh(mammalCountProvider);
+    final int oviparousCount = ref.refresh(oviparousCountProvider);
     final List<AnimalData> chartData = [
       AnimalData(
         'Mammals',
-        5,
+        mammalCount,
         const Color.fromRGBO(175, 197, 86, 1),
       ),
       AnimalData(
         'Oviparous',
-        20,
+        oviparousCount,
         const Color.fromRGBO(244, 233, 174, 1),
       ),
     ];
@@ -443,14 +428,12 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
   }
 
   List<Widget> _buildLegendItems() {
-    final trueData = ref.watch(animalCountProvider);
-    return trueData.skip(1).map((data) {
+    return _chartData.map((data) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.circle,
-              color: data.color, size: globals.widthMediaQuery * 8),
-          SizedBox(width: globals.widthMediaQuery * 8),
+          Icon(Icons.circle, color: data.color),
+          const SizedBox(width: 4),
           Text('${data.animal}: ${data.quan}'),
         ],
       );

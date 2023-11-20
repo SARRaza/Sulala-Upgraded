@@ -28,13 +28,7 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
 
   final ImagePicker _picker = ImagePicker();
 
-// PrimaryButtonStatus buttonStatus = PrimaryButtonStatus.idle;
-
   void _showFilterModalSheet(BuildContext context) async {
-    // PermissionStatus cameraStatus = await Permission.camera.request();
-    // PermissionStatus photosStatus = await Permission.photos.request();
-
-    // if (cameraStatus.isGranted && photosStatus.isGranted) {
     showModalBottomSheet(
       showDragHandle: true,
       backgroundColor: Colors.transparent,
@@ -95,26 +89,6 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
         );
       },
     );
-    // } else {
-    //   showDialog(
-    //     context: context,
-    //     builder: (BuildContext context) {
-    //       return AlertDialog(
-    //         title: const Text('Permission Required'),
-    //         content: const Text(
-    //             'This app requires camera and photos access to continue.'),
-    //         actions: <Widget>[
-    //           TextButton(
-    //             child: const Text('OK'),
-    //             onPressed: () {
-    //               Navigator.of(context).pop();
-    //             },
-    //           ),
-    //         ],
-    //       );
-    //     },
-    //   );
-    // }
   }
 
   @override
@@ -140,8 +114,6 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
             ),
             onPressed: () {
               Navigator.pop(context);
-              // Handle back button press
-              // Add your code here
             },
           ),
           actions: [
