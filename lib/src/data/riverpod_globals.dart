@@ -1,8 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../screens/breeding/list_of_breeding_events.dart';
 import '../screens/create_animal/sar_listofanimals.dart';
 
@@ -112,3 +110,14 @@ class ChildItem {
 
 final breedingChildrenDetailsProvider =
     StateProvider<List<ChildItem>>((ref) => []);
+
+class DateItem {
+  final String animalNames;
+  final String dateInfo;
+
+  final String dateType;
+
+  DateItem(this.animalNames, this.dateType, this.dateInfo);
+}
+
+final remindersProvider = StateProvider<List<DateItem>>((ref) => []);

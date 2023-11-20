@@ -40,7 +40,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
   String selectedOviDam = 'Add';
   // String selectedDate = '';
   String selectedBreedingStage = '';
-
+  List<DateItem> mathdDates = [];
   // ignore: non_constant_identifier_names
   // void dateOfBirth(String DateOfBirth) {
   //   setState(() {
@@ -365,6 +365,8 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
   }
 
   void _showOviDatePicker(BuildContext context, String dateType) async {
+    final selectedAnimalName = ref.watch(animalNameProvider);
+
     final DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: selectedOviDates[dateType] ?? DateTime.now(),
@@ -373,8 +375,34 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
     );
 
     if (selectedDate != null) {
+      // Check if the selected date is five days away from today
+      final DateTime today = DateTime.now();
+      final DateTime fiveDaysAway = today.add(const Duration(days: 5));
+
+      if (selectedDate.isAfter(today) && selectedDate.isBefore(fiveDaysAway)) {
+        // Format the selected date as a string (excluding time)
+        final formattedDate =
+            DateFormat('dd/MM/yyyy').format(selectedDate.toLocal());
+
+        // Add the selected date to the mathdDates list
+        final DateItem newItem = DateItem(
+          selectedAnimalName, // Add the animal name
+          dateType,
+          formattedDate,
+        );
+        ref.read(remindersProvider.notifier).state = [
+          ...ref.read(remindersProvider),
+          newItem
+        ];
+      }
+
+      // Get the existing selectedOviDates
+      final Map<String, DateTime?> existingDates =
+          ref.read(selectedOviDatesProvider);
+
+      // Update the selectedOviDatesProvider with the new entry added
       ref.read(selectedOviDatesProvider.notifier).state = {
-        ...ref.read(selectedOviDatesProvider),
+        ...existingDates,
         dateType: selectedDate,
       };
     }

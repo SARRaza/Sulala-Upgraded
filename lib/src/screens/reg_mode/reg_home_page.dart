@@ -84,7 +84,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
   @override
   void initState() {
     _chartData = getChartData();
-    sumOfNextTwoCards = _chartData[0].quan + _chartData[1].quan;
+    sumOfNextTwoCards = _chartData[0].quan;
     super.initState();
   }
 
@@ -137,6 +137,8 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
 
   @override
   Widget build(BuildContext context) {
+    final reminders = ref.watch(remindersProvider);
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -299,7 +301,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                               yValueMapper: (AnimalData data, _) => data.quan,
                               pointColorMapper: (AnimalData data, _) =>
                                   data.quan == 0 ? Colors.grey : data.color,
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -313,7 +315,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                   ),
                   Row(
                     children: [
-                      if (events.isNotEmpty)
+                      if (reminders.isNotEmpty)
                         Row(
                           children: [
                             Image.asset(
@@ -330,7 +332,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                     ],
                   ),
                   SizedBox(height: globals.heightMediaQuery * 12),
-                  if (events.isEmpty)
+                  if (reminders.isEmpty)
                     Center(
                       child: Column(
                         children: [
@@ -345,26 +347,41 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                         ],
                       ),
                     ),
-                  if (events.isNotEmpty)
+                  if (reminders.isNotEmpty)
                     SizedBox(
                       height: globals.heightMediaQuery * 130,
                       child: ListView.builder(
                         shrinkWrap: true,
-                        itemCount: events.length,
-                        itemBuilder: (context, index) {
-                          EventData eventData = events[index];
+                        itemCount: reminders.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final DateItem dateItem = reminders[index];
+
                           return ListTile(
-                            title: Text(eventData.title,
-                                style: AppFonts.body1(
-                                    color: AppColors.grayscale90)),
+                            contentPadding: EdgeInsets.zero,
+                            title: Row(
+                              children: [
+                                Text(
+                                  dateItem.animalNames,
+                                  style: AppFonts.body1(
+                                      color: AppColors.grayscale90),
+                                ),
+                                SizedBox(width: globals.widthMediaQuery * 4),
+                                Text(
+                                  dateItem.dateType,
+                                  style: AppFonts.body1(
+                                      color: AppColors.grayscale90),
+                                ),
+                              ],
+                            ),
                             subtitle: Text(
-                              eventData.subtitle,
+                              dateItem.dateInfo,
                               style:
                                   AppFonts.body2(color: AppColors.grayscale60),
                             ),
                             trailing: Icon(Icons.arrow_forward_ios_rounded,
                                 color: AppColors.primary40,
                                 size: globals.widthMediaQuery * 12.75),
+                            // You can customize the ListTile as per your requirements
                           );
                         },
                       ),
@@ -412,16 +429,24 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
   List<AnimalData> getChartData() {
     final int mammalCount = ref.refresh(mammalCountProvider);
     final int oviparousCount = ref.refresh(oviparousCountProvider);
+
+    // Check if counts are zero and set colors accordingly
+    final Color mammalColor =
+        mammalCount > 0 ? const Color.fromRGBO(175, 197, 86, 1) : Colors.grey;
+    final Color oviparousColor = oviparousCount > 0
+        ? const Color.fromRGBO(244, 233, 174, 1)
+        : Colors.grey;
+
     final List<AnimalData> chartData = [
       AnimalData(
         'Mammals',
         mammalCount,
-        const Color.fromRGBO(175, 197, 86, 1),
+        mammalColor,
       ),
       AnimalData(
         'Oviparous',
         oviparousCount,
-        const Color.fromRGBO(244, 233, 174, 1),
+        oviparousColor,
       ),
     ];
     return chartData;
