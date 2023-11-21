@@ -1,19 +1,26 @@
+// ignore_for_file: non_constant_identifier_names
+
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:sulala_upgrade/src/screens/create_animal/sar_listofanimals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 class ParentsItem extends StatelessWidget {
-  final String? imageUrl;
+  final File? imageFile;
   final String name;
   final String sex;
   final String id;
   final String age;
+  final OviVariables OviDetails;
 
   const ParentsItem({
     Key? key, // Add 'Key?' type to the key parameter
-    this.imageUrl,
+    this.imageFile,
     required this.name,
+    required this.OviDetails,
     required this.sex,
     required this.age,
     required this.id,
@@ -22,8 +29,8 @@ class ParentsItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ImageProvider<Object>? getImage() {
-      if (imageUrl != null) {
-        return NetworkImage(imageUrl!);
+      if (imageFile != null) {
+        return FileImage(imageFile!);
       } else {
         return const AssetImage("assets/avatars/120px/Horse.png");
       }
@@ -69,7 +76,6 @@ class ParentsItem extends StatelessWidget {
     );
   }
 }
-
 
 // Example of use:
 

@@ -354,7 +354,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                         shrinkWrap: true,
                         itemCount: reminders.length,
                         itemBuilder: (BuildContext context, int index) {
-                          final DateItem dateItem = reminders[index];
+                          final reminderItem dateItem = reminders[index];
 
                           return ListTile(
                             contentPadding: EdgeInsets.zero,

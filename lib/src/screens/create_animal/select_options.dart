@@ -178,10 +178,10 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
               ref.read(animalNameProvider.notifier).update((state) => '');
               ref
                   .read(animalSireDetailsProvider.notifier)
-                  .update((state) => 'ADD');
+                  .update((state) => [MainAnimalSire('ADD', null, '')]);
               ref
                   .read(animalDamDetailsProvider.notifier)
-                  .update((state) => 'ADD');
+                  .update((state) => [MainAnimalDam('ADD', null, '')]);
               ref
                   .read(selectedOviGenderProvider.notifier)
                   .update((state) => '');

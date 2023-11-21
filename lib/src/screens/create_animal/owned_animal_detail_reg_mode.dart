@@ -7,6 +7,7 @@ import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/tags/custom_tags.dart';
 import '../../widgets/pages/owned_animal/breeding_info.dart';
 import '../../widgets/pages/owned_animal/general_info_animal_widget.dart';
+import '../breeding/list_of_breeding_events.dart';
 import '../medical/mammals_medical.dart';
 import 'sar_listofanimals.dart';
 

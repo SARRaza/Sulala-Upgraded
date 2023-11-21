@@ -1,4 +1,6 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, unnecessary_null_comparison
+
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -44,7 +46,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
   String selectedBreedPartner = 'Add';
   String selectedBreedingDate = '';
   String selectedDeliveryDate = '';
-  List<ChildItem> selectedChildren = [];
+  List<breedChildItem> selectedChildren = [];
 
   void setBreedingSelectedDate(DateTime breedingDate) {
     setState(() {
@@ -389,13 +391,19 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                             onTap: () {
                               setState(() {
                                 if (isSelected) {
-                                  selectedChildren.removeWhere((child) =>
-                                      child.animalName ==
-                                      OviDetails.animalName);
+                                  selectedChildren.removeWhere(
+                                    (child) =>
+                                        child.animalName ==
+                                        OviDetails.animalName,
+                                  );
                                 } else {
-                                  selectedChildren.add(ChildItem(
+                                  // Use a default image (icon) if selectedOviImage is null
+                                  final File? oviImage =
+                                      OviDetails.selectedOviImage;
+
+                                  selectedChildren.add(breedChildItem(
                                     OviDetails.animalName,
-                                    OviDetails.selectedOviImage!,
+                                    oviImage,
                                     OviDetails.selectedOviGender,
                                   ));
                                 }
@@ -412,7 +420,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                             .update((state) => selectedChildren);
                         Navigator.pop(context);
                         // Append the selected children to the existing list
-                        final List<ChildItem> existingSelectedChildren =
+                        final List<breedChildItem> existingSelectedChildren =
                             ref.read(breedingChildrenDetailsProvider);
                         existingSelectedChildren.addAll(selectedChildren);
                       },
@@ -669,25 +677,26 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                   shrinkWrap: true,
                   itemCount: image.length,
                   itemBuilder: (context, index) {
-                    final ChildItem child = image[index];
+                    final breedChildItem child = image[index];
                     return ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: CircleAvatar(
-                          radius: 25,
-                          backgroundColor: Colors.grey[100],
-                          backgroundImage: FileImage(child.selectedOviImage)
-
-                          // child: child.selectedOviImage == null
-                          //     ? const Icon(
-                          //         Icons.camera_alt_outlined,
-                          //         size: 50,
-                          //         color: Colors.grey,
-                          //       )
-                          //     : null,
-                          ),
+                        radius: globals.widthMediaQuery * 24,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: child.selectedOviImage != null
+                            ? FileImage(child.selectedOviImage!)
+                            : null,
+                        child: child.selectedOviImage == null
+                            ? const Icon(
+                                Icons.camera_alt_outlined,
+                                size: 50,
+                                color: Colors.grey,
+                              )
+                            : null,
+                      ),
                       title: Text(
                         child.animalName,
-                        style: AppFonts.headline3(color: AppColors.grayscale90),
+                        style: AppFonts.headline4(color: AppColors.grayscale90),
                       ),
                       subtitle: Text(
                         child.selectedOviGender,

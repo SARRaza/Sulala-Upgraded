@@ -1,30 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sulala_upgrade/src/screens/create_animal/sar_listofanimals.dart';
 
+import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/other/parents_item.dart';
+import 'list_of_breeding_events.dart';
 
-class ParentsPage extends StatefulWidget {
+class ParentsPage extends ConsumerStatefulWidget {
   final String selectedOviSire;
   final String selectedMammalSire;
   final String selectedOviDam;
   final String selectedMammalDam;
+  final OviVariables OviDetails;
 
   const ParentsPage({
     super.key,
     required this.selectedOviSire,
+    required this.OviDetails,
     required this.selectedMammalSire,
     required this.selectedOviDam,
     required this.selectedMammalDam,
   });
   @override
-  State<ParentsPage> createState() => _ParentsPageState();
+  ConsumerState<ParentsPage> createState() => _ParentsPageState();
 }
 
-class _ParentsPageState extends State<ParentsPage> {
+class _ParentsPageState extends ConsumerState<ParentsPage> {
   final List<Map<String, dynamic>> parents = [
     {
       'heading': 'Breeding Event 1',
@@ -55,12 +61,13 @@ class _ParentsPageState extends State<ParentsPage> {
 
   @override
   Widget build(BuildContext context) {
+    // final image = ref.watch(breedingChildrenDetailsProvider);
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
         centerTitle: true,
         title: Text(
-          'Harry',
+          widget.OviDetails.animalName,
           style: AppFonts.headline3(color: AppColors.grayscale90),
         ),
         backgroundColor: Colors.transparent,
@@ -115,6 +122,43 @@ class _ParentsPageState extends State<ParentsPage> {
               'Parents ',
               style: AppFonts.title3(color: AppColors.grayscale90),
             ),
+            ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: widget.OviDetails.breedchildren.length,
+              itemBuilder: (context, index) {
+                final child = widget.OviDetails.breedchildren[index];
+                return ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: CircleAvatar(
+                    radius: globals.widthMediaQuery * 24,
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: child.selectedOviImage != null
+                        ? FileImage(child.selectedOviImage!)
+                        : null,
+                    child: child.selectedOviImage == null
+                        ? const Icon(
+                            Icons.camera_alt_outlined,
+                            size: 50,
+                            color: Colors.grey,
+                          )
+                        : null,
+                  ),
+                  title: Text(
+                    child.animalName,
+                    style: AppFonts.headline4(color: AppColors.grayscale90),
+                  ),
+                  subtitle: Text(
+                    child.selectedOviGender,
+                    style: AppFonts.body2(color: AppColors.grayscale70),
+                  ),
+                  trailing: Text(
+                    'ID#131340',
+                    style: AppFonts.body2(color: AppColors.grayscale70),
+                  ),
+                );
+              },
+            ),
             parents.isEmpty
                 ? Center(
                     child: Column(
@@ -165,23 +209,30 @@ class _ParentsPageState extends State<ParentsPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          const Column(
+                          Column(
                             children: [
                               ParentsItem(
                                 id: '2222',
-                                name: '9999',
+                                name: widget.OviDetails.selectedOviSire.first
+                                    .animalName,
                                 sex: 'Male',
                                 age: '7 years',
-                                // imageUrl:'https://www.ghorse.com/sites/default/files/img_0682.jpg',
+                                imageFile: (widget.OviDetails.selectedOviSire
+                                    .first.selectedOviImage),
+                                OviDetails: widget.OviDetails,
                               ),
                             ],
                           ),
                           SizedBox(width: 55 * globals.widthMediaQuery),
-                          const ParentsItem(
+                          ParentsItem(
                             id: '2222',
-                            name: '9999',
+                            name: widget
+                                .OviDetails.selectedOviDam.first.animalName,
                             sex: 'Female',
                             age: '6 years',
+                            imageFile: (widget.OviDetails.selectedOviDam.first
+                                .selectedOviImage),
+                            OviDetails: widget.OviDetails,
                             // imageUrl:'https://www.ghorse.com/sites/default/files/img_0682.jpg',
                           ),
                         ],

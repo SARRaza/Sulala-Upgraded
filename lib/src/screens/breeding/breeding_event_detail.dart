@@ -7,6 +7,7 @@ import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
 import 'edit_breeding_event_detail.dart';
 import 'list_of_breeding_events.dart';
+import 'listofchildren.dart';
 
 class BreedingEventDetails extends StatefulWidget {
   final BreedingEventVariables
@@ -111,7 +112,6 @@ class _BreedingEventDetailsState extends State<BreedingEventDetails> {
                     ),
                   ],
                 ),
-
                 SizedBox(
                   height: 6 * globals.heightMediaQuery,
                 ),
@@ -212,55 +212,67 @@ class _BreedingEventDetailsState extends State<BreedingEventDetails> {
                 SizedBox(
                   height: 16 * globals.heightMediaQuery,
                 ),
-                // widget.breedingEvent.children.isEmpty
-                //     ? Column(
-                //         children: [
-                //           SizedBox(
-                //             height: 8 * globals.heightMediaQuery,
-                //           ),
-                //           Center(
-                //               child: Image.asset(
-                //                   'assets/illustrations/cow_childx.png')),
-                //         ],
-                //       )
-                //     :
-                ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: widget.breedingEvent.children.length,
-                  itemBuilder: (context, index) {
-                    final child = widget.breedingEvent.children[index];
-                    return ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: CircleAvatar(
-                          radius: 20,
-                          backgroundColor: Colors.grey[100],
-                          backgroundImage: FileImage(child.selectedOviImage)
-
-                          // child: child.selectedOviImage == null
-                          //     ? const Icon(
-                          //         Icons.camera_alt_outlined,
-                          //         size: 50,
-                          //         color: Colors.grey,
-                          //       )
-                          //     : null,
+                widget.breedingEvent.children.isEmpty
+                    ? Column(
+                        children: [
+                          SizedBox(
+                            height: 8 * globals.heightMediaQuery,
                           ),
-                      title: Text(
-                        child.animalName,
-                        style: AppFonts.headline3(color: AppColors.grayscale90),
+                          Center(
+                              child: Image.asset(
+                                  'assets/illustrations/cow_childx.png')),
+                        ],
+                      )
+                    : ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: widget.breedingEvent.children.length,
+                        itemBuilder: (context, index) {
+                          final child = widget.breedingEvent.children[index];
+                          return ListTile(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      BreedingEventChildrenList(
+                                    breedingEvent: widget.breedingEvent,
+                                  ),
+                                ),
+                              );
+                            },
+                            contentPadding: EdgeInsets.zero,
+                            leading: CircleAvatar(
+                              radius: globals.widthMediaQuery * 24,
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: child.selectedOviImage != null
+                                  ? FileImage(child.selectedOviImage!)
+                                  : null,
+                              child: child.selectedOviImage == null
+                                  ? const Icon(
+                                      Icons.camera_alt_outlined,
+                                      size: 50,
+                                      color: Colors.grey,
+                                    )
+                                  : null,
+                            ),
+                            title: Text(
+                              child.animalName,
+                              style: AppFonts.headline3(
+                                  color: AppColors.grayscale90),
+                            ),
+                            subtitle: Text(
+                              child.selectedOviGender,
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale70),
+                            ),
+                            trailing: Text(
+                              'ID#131340',
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale70),
+                            ),
+                          );
+                        },
                       ),
-                      subtitle: Text(
-                        child.selectedOviGender,
-                        style: AppFonts.body2(color: AppColors.grayscale70),
-                      ),
-                      trailing: Text(
-                        'ID#131340',
-                        style: AppFonts.body2(color: AppColors.grayscale70),
-                      ),
-                    );
-                  },
-                ),
-
                 SizedBox(
                   height: 24 * globals.heightMediaQuery,
                 ),

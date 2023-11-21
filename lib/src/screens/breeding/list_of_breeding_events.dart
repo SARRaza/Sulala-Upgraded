@@ -10,6 +10,7 @@ import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
+import '../create_animal/owned_animal_detail_reg_mode.dart';
 import '../create_animal/sar_listofanimals.dart';
 import 'breeding_event_detail.dart';
 import 'create_breeding_event.dart';
@@ -19,7 +20,7 @@ class BreedingEventVariables {
   final String sire;
   final String dam;
   final String partner;
-  final List<ChildItem> children;
+  final List<breedChildItem> children;
   final File? breeddam;
   final String breedingDate;
   final String deliveryDate;
@@ -165,7 +166,17 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                 color: Colors.black,
               ),
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => OwnedAnimalDetailsRegMode(
+                      OviDetails: widget.OviDetails,
+                      imagePath: '',
+                      title: '',
+                      geninfo: '',
+                    ),
+                  ),
+                );
               },
             ),
           ),
@@ -283,40 +294,39 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
 
                         return Column(
                           children: <Widget>[
-                            ListTile(
-                              leading: CircleAvatar(
-                                radius: 25,
-                                backgroundColor: Colors.grey[100],
-                                backgroundImage: breedingEvent.breeddam != null
-                                    ? FileImage(breedingEvent.breeddam!)
-                                    : null,
-                                child: breedingEvent.breeddam == null
-                                    ? const Icon(
-                                        Icons.camera_alt_outlined,
-                                        size: 50,
-                                        color: Colors.grey,
-                                      )
-                                    : null,
-                              ),
-                              title: Text(
-                                breedingEvent.eventNumber,
-                                style: AppFonts.body2(
-                                    color: AppColors.grayscale90),
-                              ),
-                              trailing: const Icon(Icons.chevron_right_rounded),
+                            GestureDetector(
                               onTap: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) => BreedingEventDetails(
                                       breedingEvent: breedingEvent,
-                                      OviDetails: widget
-                                          .OviDetails, // Pass the selected event
+                                      OviDetails: widget.OviDetails,
                                     ),
                                   ),
                                 );
                               },
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  breedingEvent.eventNumber.isEmpty
+                                      ? Text('New Event')
+                                      : Text(
+                                          breedingEvent.eventNumber,
+                                          style: AppFonts.body2(
+                                              color: AppColors.grayscale90),
+                                        ),
+                                  Icon(
+                                    Icons.chevron_right_rounded,
+                                    color: AppColors.grayscale50,
+                                    size: 30,
+                                  ),
+                                ],
+                              ),
                             ),
-                            const Divider(),
+                            const Divider(
+                              height: 25,
+                            ),
                           ],
                         );
                       },

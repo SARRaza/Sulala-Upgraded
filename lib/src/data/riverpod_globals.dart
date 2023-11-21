@@ -44,8 +44,7 @@ final selectedAnimalBreedsProvider = StateProvider<String>((ref) => '');
 // Enter Complete Info Global Varibales
 final selectedAnimalImageProvider = StateProvider<File?>((ref) => null);
 final animalNameProvider = StateProvider<String>((ref) => '');
-final animalSireDetailsProvider = StateProvider<String>((ref) => 'Add');
-final animalDamDetailsProvider = StateProvider<String>((ref) => 'Add');
+
 final shoudlAddAnimalProvider = StateProvider<bool>((ref) => false);
 final layingFrequencyProvider = StateProvider<String>((ref) => '');
 final eggsPerMonthProvider = StateProvider<String>((ref) => '');
@@ -74,6 +73,29 @@ final ovianimalsProvider = StateProvider<List<OviVariables>>((ref) => []);
 final breedingEventsProvider =
     StateProvider<List<BreedingEventVariables>>((ref) => []);
 
+class MainAnimalSire {
+  final String animalName;
+  final File? selectedOviImage;
+  final String selectedOviGender;
+
+  MainAnimalSire(
+      this.animalName, this.selectedOviImage, this.selectedOviGender);
+}
+
+final animalSireDetailsProvider =
+    StateProvider<List<MainAnimalSire>>((ref) => []);
+
+class MainAnimalDam {
+  final String animalName;
+  final File? selectedOviImage;
+  final String selectedOviGender;
+
+  MainAnimalDam(this.animalName, this.selectedOviImage, this.selectedOviGender);
+}
+
+final animalDamDetailsProvider =
+    StateProvider<List<MainAnimalDam>>((ref) => []);
+
 // Reg Home Page Pie Chart Global Variables
 final mammalCountProvider = Provider<int>((ref) {
   return ref
@@ -100,24 +122,25 @@ final selectedAnimalNameProvider = Provider<String>((ref) => '');
 final selectedbreeddamProvider = Provider<String>((ref) => '');
 final breeddamPictureProvider = StateProvider<File?>((ref) => null);
 
-class ChildItem {
+class breedChildItem {
   final String animalName;
-  final File selectedOviImage;
+  final File? selectedOviImage;
   final String selectedOviGender;
 
-  ChildItem(this.animalName, this.selectedOviImage, this.selectedOviGender);
+  breedChildItem(
+      this.animalName, this.selectedOviImage, this.selectedOviGender);
 }
 
 final breedingChildrenDetailsProvider =
-    StateProvider<List<ChildItem>>((ref) => []);
+    StateProvider<List<breedChildItem>>((ref) => []);
 
-class DateItem {
+class reminderItem {
   final String animalNames;
   final String dateInfo;
 
   final String dateType;
 
-  DateItem(this.animalNames, this.dateType, this.dateInfo);
+  reminderItem(this.animalNames, this.dateType, this.dateInfo);
 }
 
-final remindersProvider = StateProvider<List<DateItem>>((ref) => []);
+final remindersProvider = StateProvider<List<reminderItem>>((ref) => []);

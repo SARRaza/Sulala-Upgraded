@@ -116,11 +116,12 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return const ParentsPage(
+                        return ParentsPage(
                           selectedMammalDam: '',
                           selectedMammalSire: '',
                           selectedOviDam: '',
                           selectedOviSire: '',
+                          OviDetails: widget.OviDetails,
                         );
                       },
                     ),

@@ -16,8 +16,8 @@ import 'owned_animal_detail_reg_mode.dart';
 class OviVariables {
   final List<String> selectedFilters;
   late final String animalName;
-  final String selectedOviSire;
-  final String selectedOviDam;
+  final List<MainAnimalSire> selectedOviSire;
+  final List<MainAnimalDam> selectedOviDam;
   final String dateOfBirth;
   final String fieldName;
   final String fieldContent;
@@ -38,7 +38,7 @@ class OviVariables {
   final String breedsire;
   final String breeddam;
   final String breedpartner;
-  final List<ChildItem> breedchildren;
+  final List<breedChildItem> breedchildren;
   final String breedingDate;
   final String breeddeliveryDate;
   final String breedingnotes;
@@ -82,8 +82,8 @@ class OviVariables {
   OviVariables copyWith(
       {List<String>? selectedFilters,
       String? animalName,
-      String? selectedOviSire,
-      String? selectedOviDam,
+      List<MainAnimalSire>? selectedOviSire,
+      List<MainAnimalDam>? selectedOviDam,
       String? dateOfBirth,
       String? fieldName,
       String? fieldContent,
@@ -104,7 +104,7 @@ class OviVariables {
       String? breedsire,
       String? breeddam,
       String? breedpartner,
-      List<ChildItem>? breedchildren,
+      List<breedChildItem>? breedchildren,
       String? breedingDate,
       String? breeddeliveryDate,
       String? breedingnotes,
@@ -154,7 +154,7 @@ class BreedingDetails {
   final String breedsire;
   final String breeddam;
   final String breedpartner;
-  final List<ChildItem> breedchildren;
+  final List<breedChildItem> breedchildren;
   final String breedingDate;
   final String breeddeliveryDate;
   final String breedingnotes;
