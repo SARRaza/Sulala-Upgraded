@@ -12,10 +12,8 @@ import 'select_options.dart';
 
 class CreateAnimalPage extends ConsumerStatefulWidget {
   final List<BreedingEventVariables> breedingEvents;
-  final BreedingEventVariables breedingEvent;
 
-  const CreateAnimalPage(
-      {super.key, required this.breedingEvent, required this.breedingEvents});
+  const CreateAnimalPage({super.key, required this.breedingEvents});
 
   @override
   ConsumerState<CreateAnimalPage> createState() => _CreateAnimalPageState();
@@ -206,7 +204,6 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
                 MaterialPageRoute(
                   builder: (context) => SelectedOptionsPage(
                     breedingEvents: widget.breedingEvents,
-                    breedingEvent: widget.breedingEvent,
                   ),
                 ),
               );

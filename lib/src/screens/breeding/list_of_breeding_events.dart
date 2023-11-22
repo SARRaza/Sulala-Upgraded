@@ -55,7 +55,6 @@ class ListOfBreedingEvents extends ConsumerStatefulWidget {
   final bool shouldAddBreedEvent;
   final OviVariables OviDetails;
   final List<BreedingEventVariables> breedingEvents;
-  final BreedingEventVariables breedingEvent;
 
   const ListOfBreedingEvents(
       {super.key,
@@ -69,7 +68,6 @@ class ListOfBreedingEvents extends ConsumerStatefulWidget {
       required this.selectedDeliveryDate,
       required this.shouldAddBreedEvent,
       required this.OviDetails,
-      required this.breedingEvent,
       required this.breedingEvents});
 
   @override
@@ -178,7 +176,6 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                       title: '',
                       geninfo: '',
                       breedingEvents: widget.breedingEvents,
-                      breedingEvent: widget.breedingEvent,
                     ),
                   ),
                 );
@@ -209,7 +206,6 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                         selectedAnimalBreed: '',
                         OviDetails: widget.OviDetails,
                         breedingEvents: widget.breedingEvents,
-                        breedingEvent: widget.breedingEvent,
                       ),
                     ),
                   ).then((_) {
@@ -275,7 +271,6 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                                       selectedAnimalBreed: '',
                                       OviDetails: widget.OviDetails,
                                       breedingEvents: widget.breedingEvents,
-                                      breedingEvent: widget.breedingEvent,
                                     ),
                                   ),
                                 ).then((_) {

@@ -18,24 +18,10 @@ class NavigationBarRegMode extends StatefulWidget {
 
 class _NavigationBarRegModeState extends State<NavigationBarRegMode> {
   int _currentIndex = 0;
-
-  final List<BreedingEventVariables> breedingEvents =
-      []; // Your list of breeding events
-
   final List<Widget> _pages = [
     const HomeScreenRegMode(),
-    UserListOfAnimals(
+    const UserListOfAnimals(
       shouldAddAnimal: false,
-      breedingEvent: BreedingEventVariables(
-          eventNumber: '',
-          sire: '',
-          dam: '',
-          partner: '',
-          children: [],
-          breedingDate: '',
-          deliveryDate: '',
-          notes: '',
-          shouldAddEvent: false), // Default instance
       breedingEvents: [],
     ),
     const ProfilePage(),

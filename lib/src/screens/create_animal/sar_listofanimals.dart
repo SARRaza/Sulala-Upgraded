@@ -176,13 +176,9 @@ class BreedingDetails {
 class UserListOfAnimals extends ConsumerStatefulWidget {
   final bool shouldAddAnimal;
   final List<BreedingEventVariables> breedingEvents;
-  final BreedingEventVariables breedingEvent;
 
   const UserListOfAnimals(
-      {super.key,
-      required this.shouldAddAnimal,
-      required this.breedingEvent,
-      required this.breedingEvents});
+      {super.key, required this.shouldAddAnimal, required this.breedingEvents});
 
   @override
   ConsumerState<UserListOfAnimals> createState() => _UserListOfAnimals();
@@ -374,7 +370,6 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                     MaterialPageRoute(
                       builder: (context) => CreateAnimalPage(
                         breedingEvents: widget.breedingEvents,
-                        breedingEvent: widget.breedingEvent,
                       ),
                     ),
                   ).then((_) {
@@ -569,7 +564,6 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                                         title: '',
                                         geninfo: '',
                                         breedingEvents: widget.breedingEvents,
-                                        breedingEvent: widget.breedingEvent,
                                       ),
                                     ),
                                   );

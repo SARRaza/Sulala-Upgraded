@@ -26,10 +26,8 @@ import 'sar_listofanimals.dart';
 
 class CreateOviCumMammal extends ConsumerStatefulWidget {
   final List<BreedingEventVariables> breedingEvents;
-  final BreedingEventVariables breedingEvent;
 
-  const CreateOviCumMammal(
-      {super.key, required this.breedingEvent, required this.breedingEvents});
+  const CreateOviCumMammal({super.key, required this.breedingEvents});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -1999,7 +1997,6 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                   builder: (context) => UserListOfAnimals(
                     shouldAddAnimal: true,
                     breedingEvents: widget.breedingEvents,
-                    breedingEvent: widget.breedingEvent,
                   ),
                 ),
               );

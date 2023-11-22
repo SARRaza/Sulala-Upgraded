@@ -18,13 +18,9 @@ import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 class BreedingInfo extends ConsumerStatefulWidget {
   final OviVariables OviDetails;
   final List<BreedingEventVariables> breedingEvents;
-  final BreedingEventVariables breedingEvent;
 
   const BreedingInfo(
-      {Key? key,
-      required this.OviDetails,
-      required this.breedingEvent,
-      required this.breedingEvents})
+      {Key? key, required this.OviDetails, required this.breedingEvents})
       : super(key: key);
 
   @override
@@ -103,7 +99,6 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                           shouldAddBreedEvent: false,
                           OviDetails: widget.OviDetails,
                           breedingEvents: widget.breedingEvents,
-                          breedingEvent: widget.breedingEvent,
                         );
                       },
                     ),

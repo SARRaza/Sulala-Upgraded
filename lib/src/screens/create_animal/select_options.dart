@@ -11,10 +11,8 @@ import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 class SelectedOptionsPage extends ConsumerStatefulWidget {
   final List<BreedingEventVariables> breedingEvents;
-  final BreedingEventVariables breedingEvent;
 
-  const SelectedOptionsPage(
-      {super.key, required this.breedingEvent, required this.breedingEvents});
+  const SelectedOptionsPage({super.key, required this.breedingEvents});
 
   @override
   ConsumerState<SelectedOptionsPage> createState() =>
@@ -206,7 +204,6 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
                 MaterialPageRoute(
                   builder: (context) => CreateOviCumMammal(
                     breedingEvents: widget.breedingEvents,
-                    breedingEvent: widget.breedingEvent,
                   ),
                 ),
               );

@@ -19,7 +19,6 @@ class OwnedAnimalDetailsRegMode extends StatefulWidget {
   // ignore: non_constant_identifier_names
   final OviVariables OviDetails;
   final List<BreedingEventVariables> breedingEvents;
-  final BreedingEventVariables breedingEvent;
 
   const OwnedAnimalDetailsRegMode(
       {Key? key,
@@ -28,7 +27,6 @@ class OwnedAnimalDetailsRegMode extends StatefulWidget {
       required this.geninfo,
       // ignore: non_constant_identifier_names
       required this.OviDetails,
-      required this.breedingEvent,
       required this.breedingEvents})
       : super(key: key);
 
@@ -84,7 +82,6 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
                       builder: (context) => UserListOfAnimals(
                         shouldAddAnimal: false,
                         breedingEvents: widget.breedingEvents,
-                        breedingEvent: widget.breedingEvent,
                       ),
                     ),
                   );
@@ -252,7 +249,6 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
                                   BreedingInfo(
                                     OviDetails: widget.OviDetails,
                                     breedingEvents: widget.breedingEvents,
-                                    breedingEvent: widget.breedingEvent,
                                   ),
 
                                   // Content for the 'Medical' tab
