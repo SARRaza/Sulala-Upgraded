@@ -171,6 +171,10 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
                         "ID #${widget.OviDetails.animalName}",
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
+                      Text(
+                          'Father: ${widget.OviDetails.selectedOviSire.first.animalName}'),
+                      Text(
+                          'Grandfather: ${widget.OviDetails.selectedOviSire.first.father!.animalName}'),
                       SizedBox(
                         height: globals.heightMediaQuery * 16,
                       ),

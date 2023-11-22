@@ -122,43 +122,6 @@ class _ParentsPageState extends ConsumerState<ParentsPage> {
               'Parents ',
               style: AppFonts.title3(color: AppColors.grayscale90),
             ),
-            ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: widget.OviDetails.breedchildren.length,
-              itemBuilder: (context, index) {
-                final child = widget.OviDetails.breedchildren[index];
-                return ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: CircleAvatar(
-                    radius: globals.widthMediaQuery * 24,
-                    backgroundColor: Colors.transparent,
-                    backgroundImage: child.selectedOviImage != null
-                        ? FileImage(child.selectedOviImage!)
-                        : null,
-                    child: child.selectedOviImage == null
-                        ? const Icon(
-                            Icons.camera_alt_outlined,
-                            size: 50,
-                            color: Colors.grey,
-                          )
-                        : null,
-                  ),
-                  title: Text(
-                    child.animalName,
-                    style: AppFonts.headline4(color: AppColors.grayscale90),
-                  ),
-                  subtitle: Text(
-                    child.selectedOviGender,
-                    style: AppFonts.body2(color: AppColors.grayscale70),
-                  ),
-                  trailing: Text(
-                    'ID#131340',
-                    style: AppFonts.body2(color: AppColors.grayscale70),
-                  ),
-                );
-              },
-            ),
             parents.isEmpty
                 ? Center(
                     child: Column(

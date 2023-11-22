@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -74,13 +76,21 @@ final breedingEventsProvider =
     StateProvider<List<BreedingEventVariables>>((ref) => []);
 
 class MainAnimalSire {
-  final String animalName;
-  final File? selectedOviImage;
-  final String selectedOviGender;
+  String animalName;
+  File? selectedOviImage;
+  String selectedOviGender;
+  MainAnimalSire? father; // Reference to the father
 
+  // Constructor
   MainAnimalSire(
-      this.animalName, this.selectedOviImage, this.selectedOviGender);
+    this.animalName,
+    this.selectedOviImage,
+    this.selectedOviGender, {
+    this.father,
+  });
 }
+
+final grandfatherNamesProvider = StateProvider<String>((ref) => 'Add');
 
 final animalSireDetailsProvider =
     StateProvider<List<MainAnimalSire>>((ref) => []);

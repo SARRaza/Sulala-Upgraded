@@ -236,7 +236,18 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                                   : null,
                             ),
                             title: Text(OviDetails.animalName),
-                            subtitle: Text(OviDetails.selectedAnimalType),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Gender: ${OviDetails.selectedOviGender}'),
+                                Text(
+                                    'Father: ${OviDetails.selectedOviSire.first.animalName}'),
+                                if (OviDetails.selectedOviSire.first.father !=
+                                    null)
+                                  Text(
+                                      'Grandfather: ${OviDetails.selectedOviSire.first.father!.animalName}'),
+                              ],
+                            ),
                             onTap: () {
                               setState(() {
                                 if (isSelected) {
@@ -250,10 +261,15 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                                   final File? oviImage =
                                       OviDetails.selectedOviImage;
 
+                                  // Select the father if available
+                                  MainAnimalSire father =
+                                      OviDetails.selectedOviSire.first;
+
                                   selectedSire.add(MainAnimalSire(
                                     OviDetails.animalName,
                                     oviImage,
                                     OviDetails.selectedOviGender,
+                                    father: father,
                                   ));
                                 }
                               });
@@ -272,6 +288,13 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                         final List<MainAnimalSire> existingSelectedSire =
                             ref.read(animalSireDetailsProvider);
                         existingSelectedSire.addAll(selectedSire);
+
+                        // Also, add fathers to the list
+                        for (MainAnimalSire sire in selectedSire) {
+                          if (sire.father != null) {
+                            existingSelectedSire.add(sire.father!);
+                          }
+                        }
                       },
                       child: const Text("Done"),
                     ),
@@ -284,16 +307,6 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
       },
     );
   }
-
-  final List<Map<String, String>> animalSires = [
-    {'name': 'Alice'},
-    {'name': 'John'},
-    {'name': 'Jack'},
-    {'name': 'Kiran'},
-    {'name': 'Mantic'},
-    {'name': 'Mongolia'},
-    // Add more country codes and names as needed
-  ];
 
   void _showmainAnimalDamSelectionSheet(BuildContext context) async {
     // Initialize an empty list
