@@ -54,20 +54,23 @@ class ListOfBreedingEvents extends ConsumerStatefulWidget {
   final String selectedDeliveryDate;
   final bool shouldAddBreedEvent;
   final OviVariables OviDetails;
+  final List<BreedingEventVariables> breedingEvents;
+  final BreedingEventVariables breedingEvent;
 
-  const ListOfBreedingEvents({
-    super.key,
-    required this.breedingNotesController,
-    required this.breedingEventNumberController,
-    required this.selectedBreedSire,
-    required this.selectedBreedDam,
-    required this.selectedBreedPartner,
-    required this.selectedBreedChildren,
-    required this.selectedBreedingDate,
-    required this.selectedDeliveryDate,
-    required this.shouldAddBreedEvent,
-    required this.OviDetails,
-  });
+  const ListOfBreedingEvents(
+      {super.key,
+      required this.breedingNotesController,
+      required this.breedingEventNumberController,
+      required this.selectedBreedSire,
+      required this.selectedBreedDam,
+      required this.selectedBreedPartner,
+      required this.selectedBreedChildren,
+      required this.selectedBreedingDate,
+      required this.selectedDeliveryDate,
+      required this.shouldAddBreedEvent,
+      required this.OviDetails,
+      required this.breedingEvent,
+      required this.breedingEvents});
 
   @override
   ConsumerState<ListOfBreedingEvents> createState() => _ListOfBreedingEvents();
@@ -174,6 +177,8 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                       imagePath: '',
                       title: '',
                       geninfo: '',
+                      breedingEvents: widget.breedingEvents,
+                      breedingEvent: widget.breedingEvent,
                     ),
                   ),
                 );
@@ -203,6 +208,8 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                         selectedAnimalSpecies: '',
                         selectedAnimalBreed: '',
                         OviDetails: widget.OviDetails,
+                        breedingEvents: widget.breedingEvents,
+                        breedingEvent: widget.breedingEvent,
                       ),
                     ),
                   ).then((_) {
@@ -267,6 +274,8 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                                       selectedAnimalSpecies: '',
                                       selectedAnimalBreed: '',
                                       OviDetails: widget.OviDetails,
+                                      breedingEvents: widget.breedingEvents,
+                                      breedingEvent: widget.breedingEvent,
                                     ),
                                   ),
                                 ).then((_) {
@@ -299,8 +308,9 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) => BreedingEventDetails(
-                                      breedingEvent: breedingEvent,
+                                      breedingEvents: breedingEvents,
                                       OviDetails: widget.OviDetails,
+                                      breedingEvent: breedingEvent,
                                     ),
                                   ),
                                 );
@@ -310,13 +320,13 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   breedingEvent.eventNumber.isEmpty
-                                      ? Text('New Event')
+                                      ? const Text('New Event')
                                       : Text(
                                           breedingEvent.eventNumber,
                                           style: AppFonts.body2(
                                               color: AppColors.grayscale90),
                                         ),
-                                  Icon(
+                                  const Icon(
                                     Icons.chevron_right_rounded,
                                     color: AppColors.grayscale50,
                                     size: 30,

@@ -24,12 +24,16 @@ class CreateBreedingEvents extends ConsumerStatefulWidget {
   final String selectedAnimalSpecies;
   final String selectedAnimalBreed;
   final OviVariables OviDetails;
+  final List<BreedingEventVariables> breedingEvents;
+  final BreedingEventVariables breedingEvent;
 
   const CreateBreedingEvents(
       {super.key,
       required this.selectedAnimalType,
       required this.OviDetails,
       required this.selectedAnimalSpecies,
+      required this.breedingEvents,
+      required this.breedingEvent,
       required this.selectedAnimalBreed});
 
   @override
@@ -768,6 +772,8 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                     selectedDeliveryDate: selectedDeliveryDate,
                     shouldAddBreedEvent: true,
                     OviDetails: widget.OviDetails,
+                    breedingEvents: widget.breedingEvents,
+                    breedingEvent: widget.breedingEvent,
                   ),
                 ),
               );

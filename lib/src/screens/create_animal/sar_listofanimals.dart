@@ -175,11 +175,14 @@ class BreedingDetails {
 // ignore: must_be_immutable
 class UserListOfAnimals extends ConsumerStatefulWidget {
   final bool shouldAddAnimal;
+  final List<BreedingEventVariables> breedingEvents;
+  final BreedingEventVariables breedingEvent;
 
-  const UserListOfAnimals({
-    super.key,
-    required this.shouldAddAnimal,
-  });
+  const UserListOfAnimals(
+      {super.key,
+      required this.shouldAddAnimal,
+      required this.breedingEvent,
+      required this.breedingEvents});
 
   @override
   ConsumerState<UserListOfAnimals> createState() => _UserListOfAnimals();
@@ -369,7 +372,10 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const CreateAnimalPage(),
+                      builder: (context) => CreateAnimalPage(
+                        breedingEvents: widget.breedingEvents,
+                        breedingEvent: widget.breedingEvent,
+                      ),
                     ),
                   ).then((_) {
                     // When returning from CreateBreedingEvents, add the new event
@@ -403,7 +409,9 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const SarAnimalFilters()),
+                          builder: (context) => SarAnimalFilters(
+                                breedingEvents: widget.breedingEvents,
+                              )),
                     );
                   },
                 ),
@@ -560,6 +568,8 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                                         imagePath: '',
                                         title: '',
                                         geninfo: '',
+                                        breedingEvents: widget.breedingEvents,
+                                        breedingEvent: widget.breedingEvent,
                                       ),
                                     ),
                                   );

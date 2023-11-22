@@ -5,12 +5,17 @@ import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
+import '../breeding/list_of_breeding_events.dart';
 import 'drow_up_animal_breed.dart';
 import 'drow_up_animal_species.dart';
 import 'select_options.dart';
 
 class CreateAnimalPage extends ConsumerStatefulWidget {
-  const CreateAnimalPage({Key? key}) : super(key: key);
+  final List<BreedingEventVariables> breedingEvents;
+  final BreedingEventVariables breedingEvent;
+
+  const CreateAnimalPage(
+      {super.key, required this.breedingEvent, required this.breedingEvents});
 
   @override
   ConsumerState<CreateAnimalPage> createState() => _CreateAnimalPageState();
@@ -199,7 +204,10 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const SelectedOptionsPage(),
+                  builder: (context) => SelectedOptionsPage(
+                    breedingEvents: widget.breedingEvents,
+                    breedingEvent: widget.breedingEvent,
+                  ),
                 ),
               );
             }

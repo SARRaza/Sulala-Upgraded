@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, duplicate_ignore
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
@@ -19,10 +21,15 @@ import '../../widgets/inputs/date_fields/primary_date_field.dart';
 import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/paragraph_text_fields/paragraph_text_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
+import '../breeding/list_of_breeding_events.dart';
 import 'sar_listofanimals.dart';
 
 class CreateOviCumMammal extends ConsumerStatefulWidget {
-  const CreateOviCumMammal({super.key});
+  final List<BreedingEventVariables> breedingEvents;
+  final BreedingEventVariables breedingEvent;
+
+  const CreateOviCumMammal(
+      {super.key, required this.breedingEvent, required this.breedingEvents});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -189,6 +196,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                         shrinkWrap: true,
                         itemCount: ovianimals.length,
                         itemBuilder: (context, index) {
+                          // ignore: non_constant_identifier_names
                           final OviDetails = ovianimals[index];
 
                           final bool isSelected =
@@ -288,71 +296,6 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
     {'name': 'Mongolia'},
     // Add more country codes and names as needed
   ];
-
-  void _showAnimalDamSelectionSheet() {
-    double sheetHeight = MediaQuery.of(context).size.height * 0.5;
-
-    TextEditingController searchController = TextEditingController();
-    List<Map<String, String>> filteredAnimalDam = List.from(animalDams);
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return SizedBox(
-              height: sheetHeight,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: TextField(
-                      controller: searchController,
-                      onChanged: (value) {
-                        setState(() {
-                          filteredAnimalDam = animalDams
-                              .where((country) => country['name']!
-                                  .toLowerCase()
-                                  .contains(value.toLowerCase()))
-                              .toList();
-                        });
-                      },
-                      decoration: const InputDecoration(
-                        hintText: "Search Country",
-                        prefixIcon: Icon(Icons.search),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: filteredAnimalDam.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          leading: const CircleAvatar(
-                            backgroundColor: Colors.green,
-                          ),
-                          title: Text(filteredAnimalDam[index]['name']!),
-                          onTap: () {
-                            // final selectedDam =
-                            //     filteredAnimalDam[index]['name']!;
-                            // ref
-                            //     .read(animalDamDetailsProvider.notifier)
-                            //     .update((state) => selectedDam);
-                            // Navigator.pop(context);
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
 
   void _showmainAnimalDamSelectionSheet(BuildContext context) async {
     // Initialize an empty list
@@ -2053,8 +1996,10 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => const UserListOfAnimals(
+                  builder: (context) => UserListOfAnimals(
                     shouldAddAnimal: true,
+                    breedingEvents: widget.breedingEvents,
+                    breedingEvent: widget.breedingEvent,
                   ),
                 ),
               );

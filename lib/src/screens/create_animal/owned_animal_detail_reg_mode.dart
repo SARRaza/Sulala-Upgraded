@@ -7,6 +7,7 @@ import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/tags/custom_tags.dart';
 import '../../widgets/pages/owned_animal/breeding_info.dart';
 import '../../widgets/pages/owned_animal/general_info_animal_widget.dart';
+
 import '../breeding/list_of_breeding_events.dart';
 import '../medical/mammals_medical.dart';
 import 'sar_listofanimals.dart';
@@ -17,15 +18,19 @@ class OwnedAnimalDetailsRegMode extends StatefulWidget {
   final String geninfo;
   // ignore: non_constant_identifier_names
   final OviVariables OviDetails;
+  final List<BreedingEventVariables> breedingEvents;
+  final BreedingEventVariables breedingEvent;
 
-  const OwnedAnimalDetailsRegMode({
-    Key? key,
-    required this.imagePath,
-    required this.title,
-    required this.geninfo,
-    // ignore: non_constant_identifier_names
-    required this.OviDetails,
-  }) : super(key: key);
+  const OwnedAnimalDetailsRegMode(
+      {Key? key,
+      required this.imagePath,
+      required this.title,
+      required this.geninfo,
+      // ignore: non_constant_identifier_names
+      required this.OviDetails,
+      required this.breedingEvent,
+      required this.breedingEvents})
+      : super(key: key);
 
   @override
   State<OwnedAnimalDetailsRegMode> createState() =>
@@ -73,7 +78,16 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
                 ),
                 onPressed: () {
                   // Handle close button press
-                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UserListOfAnimals(
+                        shouldAddAnimal: false,
+                        breedingEvents: widget.breedingEvents,
+                        breedingEvent: widget.breedingEvent,
+                      ),
+                    ),
+                  );
                 },
               ),
             ),
@@ -237,6 +251,8 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
                                   // Content for the 'Breeding' tab
                                   BreedingInfo(
                                     OviDetails: widget.OviDetails,
+                                    breedingEvents: widget.breedingEvents,
+                                    breedingEvent: widget.breedingEvent,
                                   ),
 
                                   // Content for the 'Medical' tab

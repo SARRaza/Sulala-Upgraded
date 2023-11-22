@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../screens/breeding/list_of_breeding_events.dart';
 import '../../../screens/create_animal/sar_listofanimals.dart';
 
 import '../../../screens/profile/profile_page.dart';
@@ -17,10 +18,25 @@ class NavigationBarRegMode extends StatefulWidget {
 
 class _NavigationBarRegModeState extends State<NavigationBarRegMode> {
   int _currentIndex = 0;
+
+  final List<BreedingEventVariables> breedingEvents =
+      []; // Your list of breeding events
+
   final List<Widget> _pages = [
     const HomeScreenRegMode(),
-    const UserListOfAnimals(
+    UserListOfAnimals(
       shouldAddAnimal: false,
+      breedingEvent: BreedingEventVariables(
+          eventNumber: '',
+          sire: '',
+          dam: '',
+          partner: '',
+          children: [],
+          breedingDate: '',
+          deliveryDate: '',
+          notes: '',
+          shouldAddEvent: false), // Default instance
+      breedingEvents: [],
     ),
     const ProfilePage(),
   ];

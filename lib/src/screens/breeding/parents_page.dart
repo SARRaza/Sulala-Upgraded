@@ -1,15 +1,15 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sulala_upgrade/src/screens/create_animal/sar_listofanimals.dart';
 
-import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/other/parents_item.dart';
-import 'list_of_breeding_events.dart';
 
 class ParentsPage extends ConsumerStatefulWidget {
   final String selectedOviSire;

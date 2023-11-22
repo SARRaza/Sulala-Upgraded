@@ -4,12 +4,17 @@ import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
+import '../breeding/list_of_breeding_events.dart';
 import 'add_complete_info.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 class SelectedOptionsPage extends ConsumerStatefulWidget {
-  const SelectedOptionsPage({super.key});
+  final List<BreedingEventVariables> breedingEvents;
+  final BreedingEventVariables breedingEvent;
+
+  const SelectedOptionsPage(
+      {super.key, required this.breedingEvent, required this.breedingEvents});
 
   @override
   ConsumerState<SelectedOptionsPage> createState() =>
@@ -199,7 +204,10 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const CreateOviCumMammal(),
+                  builder: (context) => CreateOviCumMammal(
+                    breedingEvents: widget.breedingEvents,
+                    breedingEvent: widget.breedingEvent,
+                  ),
                 ),
               );
             },

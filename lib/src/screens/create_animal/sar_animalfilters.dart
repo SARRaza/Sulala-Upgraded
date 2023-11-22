@@ -8,11 +8,14 @@ import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 
 import '../../widgets/controls_and_buttons/tags/tags.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
+import '../breeding/list_of_breeding_events.dart';
 import 'sar_listofanimals.dart';
 
 // ignore: must_be_immutable
 class SarAnimalFilters extends ConsumerStatefulWidget {
-  const SarAnimalFilters({super.key});
+  final List<BreedingEventVariables> breedingEvents;
+
+  const SarAnimalFilters({super.key, required this.breedingEvents});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -417,14 +420,15 @@ class _SarAnimalFilters extends ConsumerState<SarAnimalFilters> {
                   .read(selectedFiltersProvider.notifier)
                   .update((state) => selectedFiltersList);
 
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const UserListOfAnimals(
-                    shouldAddAnimal: false,
-                  ),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => const UserListOfAnimals(
+              //       shouldAddAnimal: false,
+              //       breedingEvents: [],
+              //     ),
+              //   ),
+              // );
             },
             text: "Continue",
           ),

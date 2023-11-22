@@ -14,11 +14,11 @@ import 'list_of_breeding_events.dart';
 import 'search_children.dart';
 
 class EditBreedingEventDetails extends StatefulWidget {
-  final BreedingEventVariables breedingEvent;
+  final List<BreedingEventVariables> breedingEvents;
 
   const EditBreedingEventDetails({
     super.key,
-    required this.breedingEvent,
+    required this.breedingEvents,
   });
 
   @override
@@ -67,7 +67,7 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.breedingEvent.eventNumber,
+                  widget.breedingEvents.first.eventNumber,
                   style: AppFonts.title3(
                     color: AppColors.grayscale90,
                   ),
@@ -77,7 +77,7 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                 ),
                 PrimaryTextField(
                   controller: TextEditingController(
-                      text: widget.breedingEvent.eventNumber),
+                      text: widget.breedingEvents.first.eventNumber),
                   hintText: 'Edit Breeding Event',
                   labelText: 'Breeding Event',
                 ),
@@ -108,7 +108,7 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                       style: AppFonts.body2(color: AppColors.grayscale70),
                     ),
                     PrimaryTextButton(
-                      text: '${widget.breedingEvent.sire} (ID Needed)',
+                      text: '${widget.breedingEvents.first.sire} (ID Needed)',
                       onPressed: () {},
                       position: TextButtonPosition.right,
                       status: TextStatus.idle,
@@ -123,7 +123,7 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                       style: AppFonts.body2(color: AppColors.grayscale70),
                     ),
                     PrimaryTextButton(
-                      text: '${widget.breedingEvent.sire} (ID Needed)',
+                      text: '${widget.breedingEvents.first.sire} (ID Needed)',
                       onPressed: () {},
                       position: TextButtonPosition.right,
                       status: TextStatus.idle,
@@ -138,7 +138,7 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                       style: AppFonts.body2(color: AppColors.grayscale70),
                     ),
                     PrimaryTextButton(
-                      text: '${widget.breedingEvent.sire} (ID Needed)',
+                      text: '${widget.breedingEvents.first.sire} (ID Needed)',
                       onPressed: () {},
                       position: TextButtonPosition.right,
                       status: TextStatus.idle,
@@ -150,12 +150,12 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                 ),
                 PrimaryDateField(
                   labelText: 'Breeding Date',
-                  hintText: widget.breedingEvent.breedingDate.isNotEmpty
-                      ? widget.breedingEvent.breedingDate
+                  hintText: widget.breedingEvents.first.breedingDate.isNotEmpty
+                      ? widget.breedingEvents.first.breedingDate
                       : "DD/MM/YYYY",
                   onChanged: (value) {
                     setState(() {
-                      widget.breedingEvent.breedingDate;
+                      widget.breedingEvents.first.breedingDate;
                     });
                   },
                 ),
@@ -169,13 +169,13 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                       'Delivery Date',
                       style: AppFonts.body2(color: AppColors.grayscale70),
                     ),
-                    widget.breedingEvent.deliveryDate.isEmpty
+                    widget.breedingEvents.first.deliveryDate.isEmpty
                         ? Text(
                             'No Date Added',
                             style: AppFonts.body2(color: AppColors.grayscale90),
                           )
                         : Text(
-                            widget.breedingEvent.deliveryDate,
+                            widget.breedingEvents.first.deliveryDate,
                             style: AppFonts.body2(color: AppColors.grayscale90),
                           ),
                   ],
@@ -190,7 +190,7 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                 SizedBox(
                   height: 16 * globals.heightMediaQuery,
                 ),
-                widget.breedingEvent.children.isEmpty
+                widget.breedingEvents.first.children.isEmpty
                     ? Column(
                         children: [
                           SizedBox(

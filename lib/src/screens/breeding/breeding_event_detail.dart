@@ -10,14 +10,15 @@ import 'list_of_breeding_events.dart';
 import 'listofchildren.dart';
 
 class BreedingEventDetails extends StatefulWidget {
-  final BreedingEventVariables
-      breedingEvent; // Event selected in the SecondPage
+  final List<BreedingEventVariables> breedingEvents;
+  final BreedingEventVariables breedingEvent;
   final OviVariables OviDetails;
 
   const BreedingEventDetails({
     super.key,
-    required this.breedingEvent,
+    required this.breedingEvents,
     required this.OviDetails,
+    required this.breedingEvent,
   });
 
   @override
@@ -62,7 +63,7 @@ class _BreedingEventDetailsState extends State<BreedingEventDetails> {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => EditBreedingEventDetails(
-                      breedingEvent: widget.breedingEvent,
+                      breedingEvents: widget.breedingEvents,
                     ),
                   ),
                 );
@@ -235,7 +236,7 @@ class _BreedingEventDetailsState extends State<BreedingEventDetails> {
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       BreedingEventChildrenList(
-                                    breedingEvent: widget.breedingEvent,
+                                    breedingEvents: widget.breedingEvents,
                                   ),
                                 ),
                               );

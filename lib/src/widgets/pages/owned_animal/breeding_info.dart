@@ -2,9 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../screens/breeding/breeding_event_detail.dart';
 import '../../../screens/breeding/list_of_breeding_events.dart';
 import '../../../screens/breeding/list_of_children.dart';
 import '../../../screens/breeding/list_of_mates.dart';
+import '../../../screens/breeding/listofchildren.dart';
 import '../../../screens/breeding/parents_page.dart';
 import '../../../screens/create_animal/sar_listofanimals.dart';
 import '../../../theme/colors/colors.dart';
@@ -15,11 +17,15 @@ import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 class BreedingInfo extends ConsumerStatefulWidget {
   final OviVariables OviDetails;
+  final List<BreedingEventVariables> breedingEvents;
+  final BreedingEventVariables breedingEvent;
 
-  const BreedingInfo({
-    Key? key,
-    required this.OviDetails,
-  }) : super(key: key);
+  const BreedingInfo(
+      {Key? key,
+      required this.OviDetails,
+      required this.breedingEvent,
+      required this.breedingEvents})
+      : super(key: key);
 
   @override
   ConsumerState<BreedingInfo> createState() => _BreedingInfoState();
@@ -96,6 +102,8 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                           breedingNotesController: TextEditingController(),
                           shouldAddBreedEvent: false,
                           OviDetails: widget.OviDetails,
+                          breedingEvents: widget.breedingEvents,
+                          breedingEvent: widget.breedingEvent,
                         );
                       },
                     ),
@@ -180,11 +188,23 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return const ListOfChildren();
+                        return BreedingEventChildrenList(
+                          breedingEvents: widget.breedingEvents,
+                        );
                       },
                     ),
                   );
                 },
+                // onTap: () {
+                //   Navigator.of(context).push(
+                //     MaterialPageRoute(
+                //       builder: (context) => BreedingEventChildrenList(
+                //         breedingEvents: widget.breedingEvents,
+                //         breedingEvent: widget.breedingEvent,
+                //       ),
+                //     ),
+                //   );
+                // },
               ),
             ],
           ),
