@@ -206,6 +206,52 @@ class _BreedingEventDetailsState extends State<BreedingEventDetails> {
                 SizedBox(
                   height: 34 * globals.heightMediaQuery,
                 ),
+                ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: widget.breedingEvent.partner.length,
+                  itemBuilder: (context, index) {
+                    final child = widget.breedingEvent.partner[index];
+                    return ListTile(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => BreedingEventChildrenList(
+                              breedingEvents: widget.breedingEvents,
+                            ),
+                          ),
+                        );
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: CircleAvatar(
+                        radius: globals.widthMediaQuery * 24,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: child.selectedOviImage != null
+                            ? FileImage(child.selectedOviImage!)
+                            : null,
+                        child: child.selectedOviImage == null
+                            ? const Icon(
+                                Icons.camera_alt_outlined,
+                                size: 50,
+                                color: Colors.grey,
+                              )
+                            : null,
+                      ),
+                      title: Text(
+                        child.animalName,
+                        style: AppFonts.headline3(color: AppColors.grayscale90),
+                      ),
+                      subtitle: Text(
+                        child.selectedOviGender,
+                        style: AppFonts.body2(color: AppColors.grayscale70),
+                      ),
+                      trailing: Text(
+                        'ID#131340',
+                        style: AppFonts.body2(color: AppColors.grayscale70),
+                      ),
+                    );
+                  },
+                ),
                 Text(
                   "Children",
                   style: AppFonts.title5(color: AppColors.grayscale90),

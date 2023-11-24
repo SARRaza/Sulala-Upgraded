@@ -154,3 +154,15 @@ class reminderItem {
 }
 
 final remindersProvider = StateProvider<List<reminderItem>>((ref) => []);
+
+class breedingPartner {
+  final String animalName;
+  final File? selectedOviImage;
+  final String selectedOviGender;
+
+  breedingPartner(
+      this.animalName, this.selectedOviImage, this.selectedOviGender);
+}
+
+final breedingPartnerProvider =
+    StateProvider<List<breedingPartner>>((ref) => []);

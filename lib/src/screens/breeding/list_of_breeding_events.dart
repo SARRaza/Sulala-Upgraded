@@ -19,7 +19,7 @@ class BreedingEventVariables {
   final String eventNumber;
   final String sire;
   final String dam;
-  final String partner;
+  final List<breedingPartner> partner;
   final List<breedChildItem> children;
   final File? breeddam;
   final String breedingDate;
@@ -91,7 +91,7 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
       breeddam: ref.read(breeddamPictureProvider),
       sire: ref.read(breedingSireDetailsProvider),
       dam: ref.read(breedingDamDetailsProvider),
-      partner: ref.read(breedingPartnerDetailsProvider),
+      partner: ref.read(breedingPartnerProvider),
       children: ref.read(breedingChildrenDetailsProvider),
       breedingDate: ref.read(breedingDateProvider),
       deliveryDate: ref.read(deliveryDateProvider),

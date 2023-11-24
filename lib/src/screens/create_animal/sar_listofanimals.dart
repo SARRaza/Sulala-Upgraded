@@ -37,7 +37,7 @@ class OviVariables {
   final String breedingeventNumber;
   final String breedsire;
   final String breeddam;
-  final String breedpartner;
+  final List<breedingPartner> breedpartner;
   final List<breedChildItem> breedchildren;
   final String breedingDate;
   final String breeddeliveryDate;
@@ -103,7 +103,7 @@ class OviVariables {
       String? breedingeventNumber,
       String? breedsire,
       String? breeddam,
-      String? breedpartner,
+      List<breedingPartner>? breedpartner,
       List<breedChildItem>? breedchildren,
       String? breedingDate,
       String? breeddeliveryDate,
@@ -153,7 +153,7 @@ class OviVariables {
 class BreedingDetails {
   final String breedsire;
   final String breeddam;
-  final String breedpartner;
+  final List<breedingPartner> breedpartner;
   final List<breedChildItem> breedchildren;
   final String breedingDate;
   final String breeddeliveryDate;
@@ -214,7 +214,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
     final breedingDetails = BreedingDetails(
       breedsire: ref.read(breedingSireDetailsProvider),
       breeddam: ref.read(breedingDamDetailsProvider),
-      breedpartner: ref.read(breedingDamDetailsProvider),
+      breedpartner: ref.read(breedingPartnerProvider),
       breedchildren: ref.read(breedingChildrenDetailsProvider),
       breedingDate: ref.read(breedingDateProvider),
       breeddeliveryDate: ref.read(deliveryDateProvider),
@@ -247,7 +247,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
       selectedFilters: ref.read(selectedFiltersProvider),
       breedsire: ref.read(breedingSireDetailsProvider),
       breeddam: ref.read(breedingDamDetailsProvider),
-      breedpartner: ref.read(breedingDamDetailsProvider),
+      breedpartner: ref.read(breedingPartnerProvider),
       breedchildren: ref.read(breedingChildrenDetailsProvider),
       breedingDate: ref.read(breedingDateProvider),
       breeddeliveryDate: ref.read(deliveryDateProvider),

@@ -292,8 +292,6 @@
 // }
 // ignore_for_file: non_constant_identifier_names
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -304,37 +302,9 @@ import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../create_animal/owned_animal_detail_reg_mode.dart';
 import '../create_animal/sar_listofanimals.dart';
-import 'breeding_event_detail.dart';
+
 import 'create_breeding_event.dart';
 import 'list_of_breeding_events.dart';
-
-// class BreedingEventVariables {
-//   final String eventNumber;
-//   final String sire;
-//   final String dam;
-//   final String partner;
-//   final List<breedChildItem> children;
-//   final File? breeddam;
-//   final String breedingDate;
-//   final String deliveryDate;
-//   final String notes;
-//   final bool shouldAddEvent;
-
-//   BreedingEventVariables({
-//     required this.eventNumber,
-//     this.breeddam,
-//     required this.sire,
-//     required this.dam,
-//     required this.partner,
-//     required this.children,
-//     required this.breedingDate,
-//     required this.deliveryDate,
-//     required this.notes,
-//     required this.shouldAddEvent,
-//   });
-// }
-
-// List<BreedingEventVariables> breedingEvents = [];
 
 class ListOfBreedingChildren extends ConsumerStatefulWidget {
   final TextEditingController breedingNotesController;
@@ -385,7 +355,7 @@ class _ListOfBreedingChildren extends ConsumerState<ListOfBreedingChildren> {
       breeddam: ref.read(breeddamPictureProvider),
       sire: ref.read(breedingSireDetailsProvider),
       dam: ref.read(breedingDamDetailsProvider),
-      partner: ref.read(breedingPartnerDetailsProvider),
+      partner: ref.read(breedingPartnerProvider),
       children: ref.read(breedingChildrenDetailsProvider),
       breedingDate: ref.read(breedingDateProvider),
       deliveryDate: ref.read(deliveryDateProvider),
@@ -437,14 +407,11 @@ class _ListOfBreedingChildren extends ConsumerState<ListOfBreedingChildren> {
     // Filter the breeding events based on the query
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        scrolledUnderElevation: 0.0,
+        centerTitle: true,
         title: Text(
           widget.OviDetails.animalName,
-          style: const TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
+          style: AppFonts.headline3(color: AppColors.grayscale90),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -477,42 +444,6 @@ class _ListOfBreedingChildren extends ConsumerState<ListOfBreedingChildren> {
             ),
           ),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.grayscale10,
-              ),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.add,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CreateBreedingEvents(
-                        selectedAnimalType: '',
-                        selectedAnimalSpecies: '',
-                        selectedAnimalBreed: '',
-                        OviDetails: widget.OviDetails,
-                        breedingEvents: widget.breedingEvents,
-                      ),
-                    ),
-                  ).then((_) {
-                    // When returning from CreateBreedingEvents, add the new event
-                    if (ref.read(breedingEventNumberProvider).isNotEmpty) {
-                      addBreedingEvent(ref.read(breedingEventNumberProvider));
-                    }
-                  });
-                },
-              ),
-            ),
-          ),
-        ],
       ),
       body: Padding(
         padding: EdgeInsets.only(
@@ -522,165 +453,154 @@ class _ListOfBreedingChildren extends ConsumerState<ListOfBreedingChildren> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Breeding History',
+            Text('List Of Children',
                 style: AppFonts.title3(color: AppColors.grayscale90)),
             SizedBox(
               height: 16 * globals.heightMediaQuery,
             ),
-            breedingEvents.isEmpty
-                ? Expanded(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset('assets/illustrations/child_x.png'),
-                          SizedBox(
-                            height: 32 * globals.heightMediaQuery,
-                          ),
-                          Text(
-                            'No Breeding Events Yet',
-                            style: AppFonts.headline3(
-                                color: AppColors.grayscale90),
-                          ),
-                          SizedBox(
-                            height: 8 * globals.heightMediaQuery,
-                          ),
-                          Text(
-                            'Add a breeding event to get started',
-                            style: AppFonts.body2(color: AppColors.grayscale70),
-                          ),
-                          SizedBox(
-                            height: 140 * globals.heightMediaQuery,
-                          ),
-                          SizedBox(
-                            height: 52 * globals.heightMediaQuery,
-                            child: PrimaryButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CreateBreedingEvents(
-                                      selectedAnimalType: '',
-                                      selectedAnimalSpecies: '',
-                                      selectedAnimalBreed: '',
-                                      OviDetails: widget.OviDetails,
-                                      breedingEvents: widget.breedingEvents,
-                                    ),
+            if (breedingEvents.isEmpty)
+              Visibility(
+                child: Expanded(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset('assets/illustrations/child_x.png'),
+                        SizedBox(
+                          height: 32 * globals.heightMediaQuery,
+                        ),
+                        Text(
+                          'No Breeding Events Yet',
+                          style:
+                              AppFonts.headline3(color: AppColors.grayscale90),
+                        ),
+                        SizedBox(
+                          height: 8 * globals.heightMediaQuery,
+                        ),
+                        Text(
+                          'Add a breeding event to get started',
+                          style: AppFonts.body2(color: AppColors.grayscale70),
+                        ),
+                        SizedBox(
+                          height: 140 * globals.heightMediaQuery,
+                        ),
+                        SizedBox(
+                          height: 52 * globals.heightMediaQuery,
+                          child: PrimaryButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CreateBreedingEvents(
+                                    selectedAnimalType: '',
+                                    selectedAnimalSpecies: '',
+                                    selectedAnimalBreed: '',
+                                    OviDetails: widget.OviDetails,
+                                    breedingEvents: widget.breedingEvents,
                                   ),
-                                ).then((_) {
-                                  // When returning from CreateBreedingEvents, add the new event
-                                  if (widget.breedingEventNumberController.text
-                                      .isNotEmpty) {
-                                    addBreedingEvent(widget
-                                        .breedingEventNumberController.text);
-                                  }
-                                });
-                              },
-                              text: 'Add Breeding Event',
-                            ),
+                                ),
+                              ).then((_) {
+                                // When returning from CreateBreedingEvents, add the new event
+                                if (widget.breedingEventNumberController.text
+                                    .isNotEmpty) {
+                                  addBreedingEvent(widget
+                                      .breedingEventNumberController.text);
+                                }
+                              });
+                            },
+                            text: 'Add Breeding Event',
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  )
-                : Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: breedingEvents.length,
-                      itemBuilder: (context, index) {
-                        final breedingEvent = breedingEvents[index];
+                  ),
+                ),
+              )
+            else
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: breedingEvents.length,
+                  itemBuilder: (context, index) {
+                    final breedingEvent = breedingEvents[index];
 
-                        return Column(
-                          children: <Widget>[
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => BreedingEventDetails(
-                                      breedingEvents: breedingEvents,
-                                      OviDetails: widget.OviDetails,
-                                      breedingEvent: breedingEvent,
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  breedingEvent.eventNumber.isEmpty
-                                      ? const Text('New Event')
-                                      : Text(
-                                          breedingEvent.eventNumber,
-                                          style: AppFonts.body2(
-                                              color: AppColors.grayscale90),
-                                        ),
-                                  const Icon(
-                                    Icons.chevron_right_rounded,
-                                    color: AppColors.grayscale50,
-                                    size: 30,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            if (breedingEvent.children.isNotEmpty)
-                              ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: breedingEvent.children.length,
-                                itemBuilder: (context, index) {
-                                  final child = breedingEvent.children[index];
-                                  return ListTile(
-                                    contentPadding: EdgeInsets.zero,
-                                    leading: CircleAvatar(
-                                      radius: 24 * globals.widthMediaQuery,
-                                      backgroundColor: Colors.transparent,
-                                      backgroundImage: child.selectedOviImage !=
-                                              null
-                                          ? FileImage(child.selectedOviImage!)
-                                          : null,
-                                      child: child.selectedOviImage == null
-                                          ? const Icon(
-                                              Icons.camera_alt_outlined,
-                                              size: 50,
-                                              color: Colors.grey,
-                                            )
-                                          : null,
-                                    ),
-                                    title: Text(
-                                      child.animalName,
-                                      style: AppFonts.headline3(
-                                          color: AppColors.grayscale90),
-                                    ),
-                                    // ignore: unnecessary_null_comparison
-                                    subtitle: child.selectedOviGender.isEmpty
-                                        ? Text(
-                                            'Gender Not Selected',
-                                            style: AppFonts.body2(
-                                                color: AppColors.grayscale70),
-                                          )
-                                        : Text(
-                                            child.selectedOviGender,
-                                            style: AppFonts.body2(
-                                                color: AppColors.grayscale70),
-                                          ),
-                                    trailing: Text(
-                                      'ID #13542',
+                    return Column(
+                      children: <Widget>[
+                        if (breedingEvent.children.isNotEmpty)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              breedingEvent.eventNumber.isEmpty
+                                  ? const Text('New Event')
+                                  : Text(
+                                      breedingEvent.eventNumber,
                                       style: AppFonts.body2(
                                           color: AppColors.grayscale90),
                                     ),
-                                    // Add more information about the child as needed
-                                    // Example: subtitle: Text('DOB: ${child.dateOfBirth}'),
-                                  );
-                                },
+                              Text(
+                                '09.09.1993',
+                                style: AppFonts.caption2(
+                                    color: AppColors.grayscale80),
                               ),
-                            const Divider(
-                              height: 25,
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
+                            ],
+                          ),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: breedingEvent.children.length,
+                          itemBuilder: (context, index) {
+                            final child = breedingEvent.children[index];
+                            return ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: CircleAvatar(
+                                radius: 24 * globals.widthMediaQuery,
+                                backgroundColor: Colors.transparent,
+                                backgroundImage: child.selectedOviImage != null
+                                    ? FileImage(child.selectedOviImage!)
+                                    : null,
+                                child: child.selectedOviImage == null
+                                    ? const Icon(
+                                        Icons.camera_alt_outlined,
+                                        size: 50,
+                                        color: Colors.grey,
+                                      )
+                                    : null,
+                              ),
+                              title: Text(
+                                child.animalName,
+                                style: AppFonts.headline3(
+                                    color: AppColors.grayscale90),
+                              ),
+                              // ignore: unnecessary_null_comparison
+                              subtitle: child.selectedOviGender.isEmpty
+                                  ? Text(
+                                      'Gender Not Selected',
+                                      style: AppFonts.body2(
+                                          color: AppColors.grayscale70),
+                                    )
+                                  : Text(
+                                      child.selectedOviGender,
+                                      style: AppFonts.body2(
+                                          color: AppColors.grayscale70),
+                                    ),
+                              trailing: Text(
+                                'ID #13542',
+                                style: AppFonts.body2(
+                                    color: AppColors.grayscale90),
+                              ),
+                              // Add more information about the child as needed
+                              // Example: subtitle: Text('DOB: ${child.dateOfBirth}'),
+                            );
+                          },
+                        ),
+                        if (breedingEvent.children.isNotEmpty)
+                          const Divider(
+                            height: 25,
+                          ),
+                      ],
+                    );
+                  },
+                ),
+              ),
           ],
         ),
       ),
