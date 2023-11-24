@@ -172,9 +172,14 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
                       Text(
-                          'Father: ${widget.OviDetails.selectedOviSire.first.animalName}'),
-                      Text(
-                          'Grandfather: ${widget.OviDetails.selectedOviSire.first.father!.animalName}'),
+                        'Father: ${widget.OviDetails.selectedOviSire.isNotEmpty ? widget.OviDetails.selectedOviSire.first.animalName : 'Unknown'}',
+                      ),
+                      if (widget.OviDetails.selectedOviSire.isNotEmpty &&
+                          widget.OviDetails.selectedOviSire.first.father !=
+                              null)
+                        Text(
+                          'Grandfather: ${widget.OviDetails.selectedOviSire.first.father!.animalName}',
+                        ),
                       SizedBox(
                         height: globals.heightMediaQuery * 16,
                       ),

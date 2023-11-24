@@ -183,23 +183,24 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return BreedingEventChildrenList(
+                        return ListOfBreedingChildren(
+                          selectedBreedChildren: 'fff',
+                          selectedBreedDam: 'dd',
+                          selectedBreedSire: 'xx',
+                          selectedDeliveryDate: '2222',
+                          selectedBreedingDate: '321',
+                          selectedBreedPartner: 'fsdsdf',
+                          breedingEventNumberController:
+                              TextEditingController(),
+                          breedingNotesController: TextEditingController(),
+                          shouldAddBreedEvent: false,
+                          OviDetails: widget.OviDetails,
                           breedingEvents: widget.breedingEvents,
                         );
                       },
                     ),
                   );
                 },
-                // onTap: () {
-                //   Navigator.of(context).push(
-                //     MaterialPageRoute(
-                //       builder: (context) => BreedingEventChildrenList(
-                //         breedingEvents: widget.breedingEvents,
-                //         breedingEvent: widget.breedingEvent,
-                //       ),
-                //     ),
-                //   );
-                // },
               ),
             ],
           ),
