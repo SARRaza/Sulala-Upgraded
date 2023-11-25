@@ -37,8 +37,6 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
     'Cat',
     'Elephant',
     'Lion',
-    'Monkey',
-    'Bear',
   ];
 
   List<String> oviparousSpeciesList = [
@@ -46,8 +44,6 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
     'Chicken',
     'Turtle',
     'Snake',
-    'Frog',
-    'Fish',
   ];
 
   Map<String, List<String>> speciesToBreedsMap = {
@@ -95,6 +91,8 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
   };
 
   List<String> modalMammalSpeciesList = [
+    'Monkey',
+    'Bear',
     'Tiger',
     'Giraffe',
     'Kangaroo',
@@ -112,6 +110,8 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
   List<String> modalOviSpeciesList = [
     'Crocodile',
     'Eagle',
+    'Frog',
+    'Fish',
     'Penguin',
     'Alligator',
     'Salmon',

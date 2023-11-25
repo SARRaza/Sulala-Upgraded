@@ -119,18 +119,50 @@ final oviparousCountProvider = Provider<int>((ref) {
       .where((animal) => animal.selectedAnimalType.toLowerCase() == 'oviparous')
       .length;
 });
-final mammalSpeciesCountProvider = Provider<Map<String, int>>((ref) {
-  final animals = ref.watch(ovianimalsProvider);
+List<String> mammalSpeciesList = [
+  'Dog',
+  'Cat',
+  'Elephant',
+  'Lion',
+];
 
-  // Initialize an empty map to store the count of each species
+List<String> oviparousSpeciesList = [
+  'Duck',
+  'Chicken',
+  'Turtle',
+  'Snake',
+];
+final mammalSpeciesCountProvider = Provider<Map<String, int>>((ref) {
+  final mammals = ref
+      .watch(ovianimalsProvider)
+      .where((animal) => animal.selectedAnimalType.toLowerCase() == 'mammal')
+      .toList();
+
   Map<String, int> speciesCount = {};
 
-  // Count the occurrences of each species
-  for (final animal in animals) {
-    final selectedSpecies = animal.selectedAnimalSpecies.toLowerCase();
+  for (final species in mammalSpeciesList) {
+    final count = mammals
+        .where((animal) => animal.selectedAnimalSpecies == species)
+        .length;
+    speciesCount[species] = count;
+  }
 
-    // Increment the count for the selected species
-    speciesCount[selectedSpecies] = (speciesCount[selectedSpecies] ?? 0) + 1;
+  return speciesCount;
+});
+
+final oviparousSpeciesCountProvider = Provider<Map<String, int>>((ref) {
+  final oviparous = ref
+      .watch(ovianimalsProvider)
+      .where((animal) => animal.selectedAnimalType.toLowerCase() == 'oviparous')
+      .toList();
+
+  Map<String, int> speciesCount = {};
+
+  for (final species in oviparousSpeciesList) {
+    final count = oviparous
+        .where((animal) => animal.selectedAnimalSpecies == species)
+        .length;
+    speciesCount[species] = count;
   }
 
   return speciesCount;

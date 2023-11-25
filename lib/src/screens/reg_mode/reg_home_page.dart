@@ -34,11 +34,24 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
       return _chartData;
     } else if (_selectedIndex == 0) {
       // Show data for 'Mammals'
-      return [_chartData[0]];
+      return _getSpeciesChartData(mammalSpeciesList);
     } else {
       // Show data for 'Oviparous'
-      return [_chartData[1]];
+      return _getSpeciesChartData(oviparousSpeciesList);
     }
+  }
+
+  List<AnimalData> _getSpeciesChartData(List<String> speciesList) {
+    final speciesCountProvider = _selectedIndex == 0
+        ? mammalSpeciesCountProvider
+        : oviparousSpeciesCountProvider;
+
+    final speciesCount = ref.refresh(speciesCountProvider);
+
+    return speciesList
+        .map((species) => AnimalData(species, speciesCount[species] ?? 0,
+            Colors.blue)) // Replace Colors.blue with the desired color
+        .toList();
   }
 
   List<Tag> currentStateTags = [
@@ -62,6 +75,17 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
     Tag(name: 'Dead', status: TagStatus.notActive),
   ];
 
+  final Map<String, Color> speciesColorMap = {
+    'Dog': const Color.fromRGBO(175, 197, 86, 1),
+    'Cat': const Color.fromARGB(255, 139, 157, 67),
+    'Elephant': const Color.fromARGB(255, 254, 255, 168),
+    'Lion': const Color.fromARGB(255, 198, 199, 147),
+    'Duck': const Color.fromRGBO(175, 197, 86, 1),
+    'Chicken': const Color.fromARGB(255, 139, 157, 67),
+    'Turtle': const Color.fromARGB(255, 254, 255, 168),
+    'Snake': const Color.fromARGB(255, 198, 199, 147),
+    // Add more species and colors as needed
+  };
   late List<AnimalData> _chartData;
   int sumOfNextTwoCards = 0;
   List<EventData> events = [
@@ -98,6 +122,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
   void initState() {
     _chartData = getChartData();
     sumOfNextTwoCards = _chartData[0].quan + _chartData[1].quan;
+    getFilteredChartData();
     super.initState();
   }
 
@@ -313,7 +338,10 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                               xValueMapper: (AnimalData data, _) => data.animal,
                               yValueMapper: (AnimalData data, _) => data.quan,
                               pointColorMapper: (AnimalData data, _) =>
-                                  data.quan == 0 ? Colors.grey : data.color,
+                                  data.quan == 0
+                                      ? Colors.grey
+                                      : speciesColorMap[data.animal] ??
+                                          data.color,
                             ),
                           ],
                         ),
@@ -442,40 +470,56 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
   List<AnimalData> getChartData() {
     final int mammalCount = ref.refresh(mammalCountProvider);
     final int oviparousCount = ref.refresh(oviparousCountProvider);
-
-    // Check if counts are zero and set colors accordingly
-    final Color mammalColor =
-        mammalCount > 0 ? const Color.fromRGBO(175, 197, 86, 1) : Colors.grey;
-    final Color oviparousColor = oviparousCount > 0
-        ? const Color.fromRGBO(244, 233, 174, 1)
-        : Colors.grey;
-
     final List<AnimalData> chartData = [
       AnimalData(
         'Mammals',
         mammalCount,
-        mammalColor,
+        const Color.fromRGBO(175, 197, 86, 1),
       ),
       AnimalData(
         'Oviparous',
         oviparousCount,
-        oviparousColor,
+        const Color.fromARGB(255, 254, 255, 168),
       ),
     ];
     return chartData;
   }
 
   List<Widget> _buildLegendItems() {
-    return _chartData.map((data) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.circle, color: data.color),
-          const SizedBox(width: 4),
-          Text('${data.animal}: ${data.quan}'),
-        ],
-      );
-    }).toList();
+    if (_selectedIndex == -1) {
+      return _chartData.map((data) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.circle, color: data.color),
+            const SizedBox(width: 4),
+            Text('${data.animal}: ${data.quan}'),
+          ],
+        );
+      }).toList();
+    } else {
+      final speciesList =
+          _selectedIndex == 0 ? mammalSpeciesList : oviparousSpeciesList;
+
+      final speciesCountProvider = _selectedIndex == 0
+          ? mammalSpeciesCountProvider
+          : oviparousSpeciesCountProvider;
+
+      final speciesCount = ref.watch(speciesCountProvider);
+
+      return speciesList.map((species) {
+        final count = speciesCount[species] ?? 0;
+        final color = speciesColorMap[species] ?? Colors.blue;
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.circle, color: color),
+            const SizedBox(width: 4),
+            Text('$species: $count'),
+          ],
+        );
+      }).toList();
+    }
   }
 }
 
