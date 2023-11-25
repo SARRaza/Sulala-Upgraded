@@ -32,29 +32,70 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
         selectedAnimalBreed.isNotEmpty;
   }
 
-  List<String> animalSpeciesList = ['Sheep', 'Cow', 'Horse'];
-  List<String> modalAnimalSpeciesList = [
-    'Tiger',
+  List<String> mammalSpeciesList = [
+    'Dog',
+    'Cat',
     'Elephant',
-    'Elephant',
-    'Elephant',
-    'Elephant',
-    'Elephant',
-    'Elephant',
-    'Elephant',
-    'Elephant',
-    'Elephant',
-    'Elephant',
-    'Elephant',
-    'Elephant',
-    'Elephant',
-    'Elephant',
-    'Elephant',
-    'Elephant',
-    'Elephant',
-    'Giraffe'
+    'Lion',
+    'Monkey',
+    'Bear',
   ];
-  List<String> animalBreedsList = ['Bengal', 'African', 'Reticulated'];
+
+  List<String> oviparousSpeciesList = [
+    'Duck',
+    'Chicken',
+    'Turtle',
+    'Snake',
+    'Frog',
+    'Fish',
+  ];
+
+  Map<String, List<String>> speciesToBreedsMap = {
+    'Dog': ['Labrador', 'German Shepherd', 'Golden Retriever'],
+    'Cat': ['Siamese', 'Persian', 'Maine Coon'],
+    'Elephant': ['African Elephant', 'Asian Elephant'],
+    'Lion': ['African Lion', 'Asiatic Lion'],
+    'Monkey': ['Chimpanzee', 'Gorilla', 'Orangutan'],
+    'Bear': ['Grizzly Bear', 'Polar Bear', 'Black Bear'],
+    'Duck': ['Mallard', 'Pekin', 'Khaki Campbell'],
+    'Chicken': ['Rhode Island Red', 'Leghorn', 'Plymouth Rock'],
+    'Turtle': ['Red-eared Slider', 'Snapping Turtle', 'Painted Turtle'],
+    'Snake': ['Python', 'Cobra', 'Anaconda'],
+    'Frog': ['Bullfrog', 'Tree Frog', 'Poison Dart Frog'],
+    'Fish': ['Goldfish', 'Guppy', 'Betta'],
+  };
+
+  List<String> modalMammalSpeciesList = [
+    'Tiger',
+    'Giraffe',
+    'Kangaroo',
+    'Horse',
+    'Zebra',
+    'Panda',
+    'Hippopotamus',
+    'Gorilla',
+    'Cheetah',
+    'Raccoon',
+    'Squirrel',
+    'Koala',
+    'Penguin'
+  ];
+  List<String> modalOviparousSpeciesList = [
+    'Crocodile',
+    'Eagle',
+    'Penguin',
+    'Alligator',
+    'Salmon',
+    'Gecko',
+    'Chameleon',
+    'Toad',
+    'Iguana',
+    'Parrot',
+    'Lizard',
+    'Salamander',
+    'Tortoise'
+  ];
+
   List<String> modalAnimalBreedsList = ['Bengali', 'Africani', 'Reticulatedii'];
 
   final Map<String, String> animalImages = {
@@ -143,7 +184,9 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
                       'Animal Species',
                       style: AppFonts.headline2(color: AppColors.grayscale90),
                     ),
-                    for (String species in animalSpeciesList)
+                    for (String species in selectedAnimalType == 'Mammal'
+                        ? mammalSpeciesList
+                        : oviparousSpeciesList)
                       _buildAnimalSpeciesOption(species),
                     PrimaryTextButton(
                       status: TextStatus.idle,
@@ -174,7 +217,13 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
                     'Animal Breeds',
                     style: AppFonts.headline2(color: AppColors.grayscale90),
                   ),
-                  for (String breed in animalBreedsList)
+                  for (String breed in selectedAnimalType == 'Mammal'
+                      ? (mammalSpeciesList.contains(selectedAnimalSpecies)
+                          ? speciesToBreedsMap[selectedAnimalSpecies] ?? []
+                          : [])
+                      : (oviparousSpeciesList.contains(selectedAnimalSpecies)
+                          ? speciesToBreedsMap[selectedAnimalSpecies] ?? []
+                          : []))
                     _buildAnimalBreedOption(breed),
                   PrimaryTextButton(
                     onPressed: () {
@@ -321,13 +370,21 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
   }
 
   void _showAnimalSpecies(String section, BuildContext context) async {
-    List<String> filteredModalList = List.from(modalAnimalSpeciesList);
+    List<String> filteredModalList;
     TextEditingController searchValue = TextEditingController();
+    List<String> selectedSpeciesList;
+    if (selectedAnimalType == 'Mammal') {
+      filteredModalList = List.from(modalMammalSpeciesList);
+      selectedSpeciesList = List.from(modalMammalSpeciesList);
+    } else {
+      filteredModalList = List.from(modalOviparousSpeciesList);
+      selectedSpeciesList = List.from(modalOviparousSpeciesList);
+    }
 
     DrowupAnimalSpecies drowupAnimalSpecies = DrowupAnimalSpecies(
       searchValue: searchValue,
       filteredModalList: filteredModalList,
-      modalAnimalSpeciesList: modalAnimalSpeciesList,
+      modalAnimalSpeciesList: selectedSpeciesList,
       setState: setState,
     );
 
@@ -346,9 +403,16 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
 
     if (selectedSpeciesValue != null) {
       setState(() {
-        animalSpeciesList.remove(selectedSpeciesValue);
-        animalSpeciesList.insert(0, selectedSpeciesValue);
-        selectedAnimalSpecies = selectedSpeciesValue;
+        {
+          mammalSpeciesList.remove(selectedSpeciesValue);
+          mammalSpeciesList.insert(0, selectedSpeciesValue);
+          selectedAnimalSpecies = selectedSpeciesValue;
+        }
+        {
+          oviparousSpeciesList.remove(selectedSpeciesValue);
+          oviparousSpeciesList.insert(0, selectedSpeciesValue);
+          selectedAnimalSpecies = selectedSpeciesValue;
+        }
       });
     }
   }
@@ -379,8 +443,11 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
 
     if (selectedBreedValue != null) {
       setState(() {
-        animalBreedsList.remove(selectedBreedValue);
-        animalBreedsList.insert(0, selectedBreedValue);
+        List<String> breedsList =
+            speciesToBreedsMap[selectedAnimalSpecies] ?? [];
+        breedsList.remove(selectedBreedValue);
+        breedsList.insert(0, selectedBreedValue);
+        speciesToBreedsMap[selectedAnimalSpecies] = breedsList;
         selectedAnimalBreed = selectedBreedValue;
       });
     }
