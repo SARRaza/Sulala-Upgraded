@@ -119,6 +119,22 @@ final oviparousCountProvider = Provider<int>((ref) {
       .where((animal) => animal.selectedAnimalType.toLowerCase() == 'oviparous')
       .length;
 });
+final mammalSpeciesCountProvider = Provider<Map<String, int>>((ref) {
+  final animals = ref.watch(ovianimalsProvider);
+
+  // Initialize an empty map to store the count of each species
+  Map<String, int> speciesCount = {};
+
+  // Count the occurrences of each species
+  for (final animal in animals) {
+    final selectedSpecies = animal.selectedAnimalSpecies.toLowerCase();
+
+    // Increment the count for the selected species
+    speciesCount[selectedSpecies] = (speciesCount[selectedSpecies] ?? 0) + 1;
+  }
+
+  return speciesCount;
+});
 
 // Breeding Events Global Variable
 final listOfBreedingEventsProvider = Provider<List<String>>((ref) => []);

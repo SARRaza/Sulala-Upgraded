@@ -403,37 +403,34 @@ class _SarAnimalFilters extends ConsumerState<SarAnimalFilters> {
             _buildSection(sectionIndex),
         ],
       ),
-      persistentFooterButtons: [
-        SizedBox(
-          width: globals.widthMediaQuery * 343,
-          height: globals.heightMediaQuery * 52,
-          child: PrimaryButton(
-            onPressed: () {
-              List<String> selectedFiltersList = [];
-              selectedAnimals.forEach((key, value) {
-                if (value != null) {
-                  selectedFiltersList.add(value);
-                }
-              });
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16),
+        child: PrimaryButton(
+          onPressed: () {
+            List<String> selectedFiltersList = [];
+            selectedAnimals.forEach((key, value) {
+              if (value != null) {
+                selectedFiltersList.add(value);
+              }
+            });
 
-              ref
-                  .read(selectedFiltersProvider.notifier)
-                  .update((state) => selectedFiltersList);
+            ref
+                .read(selectedFiltersProvider.notifier)
+                .update((state) => selectedFiltersList);
 
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => const UserListOfAnimals(
-              //       shouldAddAnimal: false,
-              //       breedingEvents: [],
-              //     ),
-              //   ),
-              // );
-            },
-            text: "Continue",
-          ),
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const UserListOfAnimals(
+                  shouldAddAnimal: false,
+                  breedingEvents: [],
+                ),
+              ),
+            );
+          },
+          text: "Continue",
         ),
-      ],
+      ),
       // bottomNavigationBar: Padding(
       //   padding: const EdgeInsets.all(16),
       //   child: ButtonWidget(

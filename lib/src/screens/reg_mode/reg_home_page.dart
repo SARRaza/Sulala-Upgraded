@@ -28,6 +28,19 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
     await Future.delayed(const Duration(seconds: 1));
   }
 
+  List<AnimalData> getFilteredChartData() {
+    if (_selectedIndex == -1) {
+      // Show data for 'ALL'
+      return _chartData;
+    } else if (_selectedIndex == 0) {
+      // Show data for 'Mammals'
+      return [_chartData[0]];
+    } else {
+      // Show data for 'Oviparous'
+      return [_chartData[1]];
+    }
+  }
+
   List<Tag> currentStateTags = [
     Tag(name: 'Borrowed', status: TagStatus.notActive),
     Tag(name: 'Adopted', status: TagStatus.notActive),
@@ -84,7 +97,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
   @override
   void initState() {
     _chartData = getChartData();
-    sumOfNextTwoCards = _chartData[0].quan;
+    sumOfNextTwoCards = _chartData[0].quan + _chartData[1].quan;
     super.initState();
   }
 
@@ -296,7 +309,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                           margin: const EdgeInsets.all(0),
                           series: <CircularSeries>[
                             DoughnutSeries<AnimalData, String>(
-                              dataSource: _chartData,
+                              dataSource: getFilteredChartData(),
                               xValueMapper: (AnimalData data, _) => data.animal,
                               yValueMapper: (AnimalData data, _) => data.quan,
                               pointColorMapper: (AnimalData data, _) =>
@@ -468,6 +481,13 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
 
 class AnimalData {
   AnimalData(this.animal, this.quan, this.color);
+  final String animal;
+  final int quan;
+  final Color color;
+}
+
+class SpeciesData {
+  SpeciesData(this.animal, this.quan, this.color);
   final String animal;
   final int quan;
   final Color color;
