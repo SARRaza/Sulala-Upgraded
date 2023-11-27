@@ -18,6 +18,7 @@ class GeneralInfoAnimalWidget extends ConsumerStatefulWidget {
   final String type;
   final String age;
   final String sex;
+  final String breed;
   // ignore: non_constant_identifier_names
   final OviVariables OviDetails;
 
@@ -31,6 +32,7 @@ class GeneralInfoAnimalWidget extends ConsumerStatefulWidget {
     required this.type,
     required this.age,
     required this.sex,
+    required this.breed,
     // ignore: non_constant_identifier_names
     required this.OviDetails,
   }) : super(key: key);
@@ -98,6 +100,11 @@ class _GeneralInfoAnimalWidgetState
                   onPressed: widget.onDateOfBirthPressed,
                   textButton: widget.OviDetails.dateOfBirth,
                   textHead: "Date of Birth",
+                ),
+                TableTextButton(
+                  onPressed: widget.onDateOfBirthPressed,
+                  textButton: widget.OviDetails.selectedAnimalBreed,
+                  textHead: "Breed",
                 ),
                 Visibility(
                   visible: widget.OviDetails.selectedOviGender == 'Female' &&

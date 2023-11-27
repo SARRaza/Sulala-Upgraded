@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, library_private_types_in_public_api
+// ignore_for_file: non_constant_identifier_names, library_private_types_in_public_api, unused_local_variable
 
 import 'dart:io';
 
@@ -15,6 +15,8 @@ import '../../../widgets/controls_and_buttons/tags/custom_tags.dart';
 import '../../../widgets/inputs/text_fields/primary_text_field.dart';
 import '../../../widgets/pages/edit_geninfo/animaltype.dart';
 import '../../breeding/list_of_breeding_events.dart';
+import '../drow_up_animal_breed.dart';
+import '../drow_up_animal_species.dart';
 import '../sar_listofanimals.dart';
 
 class EditAnimalGenInfo extends ConsumerStatefulWidget {
@@ -57,6 +59,12 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
       TextEditingController();
   final TextEditingController imageUrlController = TextEditingController();
   Map<String, DateTime?> selectedOviDates = {}; // Add date fields here
+  final Map<String, String> animalImages = {
+    'Mammal': 'assets/avatars/120px/Horse_avatar.png',
+    'Oviparous': 'assets/avatars/120px/Duck.png',
+  };
+  late String selectedAnimalSpecies = widget.OviDetails.selectedAnimalSpecies;
+  late String selectedAnimalBreeds = widget.OviDetails.selectedAnimalBreed;
 
   @override
   void initState() {
@@ -68,8 +76,8 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
     // animalSireController.text = widget.OviDetails.selectedOviSire;
     // animalDamController.text = widget.OviDetails.selectedOviDam;
     selectedAnimalType = widget.OviDetails.selectedAnimalType;
-    animalSpeciesController.text = widget.OviDetails.selectedAnimalSpecies;
-    animalBreedController.text = widget.OviDetails.selectedAnimalBreed;
+    selectedAnimalSpecies = widget.OviDetails.selectedAnimalSpecies;
+    selectedAnimalBreeds = widget.OviDetails.selectedAnimalBreed;
     layingFrequencyController.text = widget.OviDetails.layingFrequency;
     eggsPerMonthController.text = widget.OviDetails.eggsPerMonth;
     dateOfBirthController.text = widget.OviDetails.dateOfBirth;
@@ -87,11 +95,52 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
         widget.OviDetails.selectedBreedingStage;
   }
 
-  void _updateSelectedAnimalType(String type) {
-    setState(() {
-      selectedAnimalType = type;
-    });
-  }
+  List<String> modalMammalSpeciesList = [
+    'Monkey',
+    'Bear',
+    'Tiger',
+    'Giraffe',
+    'Kangaroo',
+    'Horse',
+    'Zebra',
+    'Panda',
+  ];
+  List<String> modalOviSpeciesList = [
+    'Crocodile',
+    'Eagle',
+    'Frog',
+    'Fish',
+    'Penguin',
+    'Alligator',
+    'Salmon',
+    'Gecko',
+  ];
+  Map<String, List<String>> morespeciesToBreedsMap = {
+    'Dog': ['suhail', 'German Shepherd', 'Golden Retriever'],
+    'Cat': ['Siamese', 'Persian', 'Maine Coon'],
+    'Elephant': ['African Elephant', 'Asian Elephant'],
+    'Lion': ['African Lion', 'Asiatic Lion'],
+    'Duck': ['Mallard', 'Pekin', 'Khaki Campbell'],
+    'Chicken': ['Rhode Island Red', 'Leghorn', 'Plymouth Rock'],
+    'Turtle': ['Red-eared Slider', 'Snapping Turtle', 'Painted Turtle'],
+    'Snake': ['Python', 'Cobra', 'Anaconda'],
+    'Monkey': ['Chimpanzee', 'Gorilla', 'Orangutan'],
+    'Bear': ['Grizzly Bear', 'Polar Bear', 'Black Bear'],
+    'Tiger': ['Bengal Tiger', 'Siberian Tiger', 'Indochinese Tiger'],
+    'Giraffe': ['Masai Giraffe', 'Reticulated Giraffe'],
+    'Kangaroo': ['Red Kangaroo', 'Eastern Grey Kangaroo'],
+    'Horse': ['Thoroughbred', 'Quarter Horse', 'Arabian Horse'],
+    'Zebra': ['Plains Zebra', 'Grevy\'s Zebra'],
+    'Panda': ['Giant Panda', 'Red Panda'],
+    'Crocodile': ['Nile Crocodile', 'Saltwater Crocodile', 'Gharial'],
+    'Eagle': ['Bald Eagle', 'Golden Eagle', 'Harpy Eagle'],
+    'Frog': ['Bullfrog', 'Tree Frog', 'Poison Dart Frog'],
+    'Fish': ['Goldfish', 'Guppy', 'Betta'],
+    'Penguin': ['Emperor Penguin', 'Adelie Penguin', 'King Penguin'],
+    'Alligator': ['American Alligator', 'Chinese Alligator'],
+    'Salmon': ['Atlantic Salmon', 'Chinook Salmon', 'Coho Salmon'],
+    'Gecko': ['Leopard Gecko', 'Crested Gecko', 'Tokay Gecko'],
+  };
 
   Future<void> _pickImage(ImageSource source) async {
     final pickedFile = await ImagePicker().pickImage(source: source);
@@ -173,7 +222,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
       isDismissible: true,
       builder: (BuildContext context) {
         return Container(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -247,6 +296,77 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
     );
   }
 
+  void _editAnimalSpecies(
+      String section, BuildContext context, List<String> speciesList) async {
+    List<String> filteredModalList = List.from(speciesList);
+    TextEditingController searchValue = TextEditingController();
+
+    DrowupAnimalSpecies drowupAnimalSpecies = DrowupAnimalSpecies(
+      searchValue: searchValue,
+      filteredModalList: filteredModalList,
+      modalAnimalSpeciesList: speciesList,
+      setState: setState,
+    );
+
+    drowupAnimalSpecies.resetSelection();
+
+    final selectedSpeciesValue = await showModalBottomSheet<String>(
+      showDragHandle: true,
+      backgroundColor: Colors.transparent,
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      builder: (BuildContext context) {
+        return drowupAnimalSpecies;
+      },
+    );
+
+    if (selectedSpeciesValue != null) {
+      setState(() {
+        ref
+            .read(selectedAnimalSpeciesProvider.notifier)
+            .update((state) => selectedSpeciesValue);
+        selectedAnimalSpecies = selectedSpeciesValue;
+      });
+    }
+  }
+
+  void _editAnimalBreed(String section, BuildContext context) async {
+    List<String> filteredBreedList =
+        List.from(morespeciesToBreedsMap[selectedAnimalSpecies] ?? []);
+    TextEditingController searchValue = TextEditingController();
+
+    DrowupAnimalBreed drowupAnimalBreed = DrowupAnimalBreed(
+      searchValue: searchValue,
+      filteredBreedList: filteredBreedList,
+      setState: setState,
+      morespeciesToBreedsMap: morespeciesToBreedsMap,
+      selectedAnimalSpecies: selectedAnimalSpecies,
+    );
+
+    drowupAnimalBreed.resetSelection();
+
+    final selectedBreedValue = await showModalBottomSheet<String>(
+      showDragHandle: true,
+      backgroundColor: Colors.transparent,
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      builder: (BuildContext context) {
+        return drowupAnimalBreed;
+      },
+    );
+
+    if (selectedBreedValue != null) {
+      setState(() {
+        ref
+            .read(selectedAnimalSpeciesProvider.notifier)
+            .update((state) => selectedBreedValue);
+        selectedAnimalBreeds = selectedBreedValue;
+      });
+    }
+  }
+
   void _editAnimalType(BuildContext context) {
     showModalBottomSheet(
       showDragHandle: true,
@@ -256,12 +376,22 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
       isDismissible: true,
       builder: (BuildContext context) {
         return Container(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
+          height: 300,
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                'Animal Species',
+                style: AppFonts.title3(color: AppColors.grayscale90),
+              ),
+              SizedBox(height: globals.heightMediaQuery * 32),
               ListTile(
                 contentPadding: EdgeInsets.zero,
+                leading: CircleAvatar(
+                  backgroundImage: AssetImage(animalImages['Mammal']!),
+                ),
                 title: Text('Mammal',
                     style: AppFonts.body2(color: AppColors.grayscale90)),
                 trailing: Container(
@@ -288,6 +418,9 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
               ),
               ListTile(
                 contentPadding: EdgeInsets.zero,
+                leading: CircleAvatar(
+                  backgroundImage: AssetImage(animalImages['Oviparous']!),
+                ),
                 title: Text('Oviparous',
                     style: AppFonts.body2(color: AppColors.grayscale90)),
                 trailing: Container(
@@ -813,7 +946,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                     ? FileImage(ref.watch(selectedAnimalImageProvider)!)
                     : null,
                 child: ref.watch(selectedAnimalImageProvider) == null
-                    ? Icon(
+                    ? const Icon(
                         Icons.camera_alt_outlined,
                         size: 50,
                         color: Colors.grey,
@@ -864,80 +997,73 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                       ],
                     ),
                   ),
-                  SizedBox(height: globals.heightMediaQuery * 8),
-                  Row(
-                    children: [
-                      Text(
-                        'Animal Species',
-                        style: AppFonts.body2(color: AppColors.grayscale70),
-                      ),
-                      const Spacer(),
-                      Text(
-                        widget.OviDetails.selectedAnimalSpecies,
-                        style: AppFonts.body2(color: AppColors.grayscale90),
-                      ),
-                      SizedBox(
-                        width: globals.widthMediaQuery * 8,
-                      ),
-                      Icon(Icons.arrow_forward_ios_rounded,
-                          color: AppColors.primary40,
-                          size: globals.widthMediaQuery * 12.75),
-                    ],
-                  ),
-                  SizedBox(height: globals.heightMediaQuery * 8),
-                  const Divider(
-                    color: AppColors.grayscale50,
-                  ),
-                  SizedBox(height: globals.heightMediaQuery * 8),
-                  Row(
-                    children: [
-                      Text(
-                        'Animal Breed',
-                        style: AppFonts.body2(color: AppColors.grayscale70),
-                      ),
-                      const Spacer(),
-                      Text(
-                        widget.OviDetails.selectedAnimalBreed,
-                        style: AppFonts.body2(color: AppColors.grayscale90),
-                      ),
-                      SizedBox(
-                        width: globals.widthMediaQuery * 8,
-                      ),
-                      Icon(Icons.arrow_forward_ios_rounded,
-                          color: AppColors.primary40,
-                          size: globals.widthMediaQuery * 12.75),
-                    ],
-                  ),
-                  SizedBox(height: globals.heightMediaQuery * 8),
-                  TextField(
-                    controller: animalTypeController,
-                    decoration: InputDecoration(
-                      labelText: 'New Animal Type',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
+                  SizedBox(height: globals.heightMediaQuery * 24),
+                  GestureDetector(
+                    onTap: () {
+                      if (selectedAnimalType == 'Mammal') {
+                        _editAnimalSpecies(
+                            'species', context, modalMammalSpeciesList);
+                      } else {
+                        _editAnimalSpecies(
+                            'species', context, modalOviSpeciesList);
+                      }
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          'Animal Species',
+                          style: AppFonts.body2(color: AppColors.grayscale70),
+                        ),
+                        const Spacer(),
+                        Text(
+                          selectedAnimalSpecies,
+                          style: AppFonts.body2(color: AppColors.grayscale90),
+                        ),
+                        SizedBox(
+                          width: globals.widthMediaQuery * 8,
+                        ),
+                        Icon(Icons.arrow_forward_ios_rounded,
+                            color: AppColors.primary40,
+                            size: globals.widthMediaQuery * 12.75),
+                      ],
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-                  TextField(
-                    controller: animalSpeciesController,
-                    decoration: InputDecoration(
-                      labelText: 'New Animal Species',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
+                  SizedBox(height: globals.heightMediaQuery * 24),
+                  InkWell(
+                    onTap: () {
+                      for (String breed in selectedAnimalType == 'Mammal'
+                          ? (mammalSpeciesList.contains(selectedAnimalSpecies)
+                              ? morespeciesToBreedsMap[selectedAnimalSpecies] ??
+                                  []
+                              : [])
+                          : (oviparousSpeciesList
+                                  .contains(selectedAnimalSpecies)
+                              ? morespeciesToBreedsMap[selectedAnimalSpecies] ??
+                                  []
+                              : []));
+                      _editAnimalBreed('breeds', context);
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          'Animal Breed',
+                          style: AppFonts.body2(color: AppColors.grayscale70),
+                        ),
+                        const Spacer(),
+                        Text(
+                          selectedAnimalBreeds,
+                          style: AppFonts.body2(color: AppColors.grayscale90),
+                        ),
+                        SizedBox(
+                          width: globals.widthMediaQuery * 8,
+                        ),
+                        Icon(Icons.arrow_forward_ios_rounded,
+                            color: AppColors.primary40,
+                            size: globals.widthMediaQuery * 12.75),
+                      ],
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-                  TextField(
-                    controller: animalBreedController,
-                    decoration: InputDecoration(
-                      labelText: 'New Animal Breed',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                    ),
-                  ),
+                  SizedBox(height: globals.heightMediaQuery * 8),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.029),
                   TextField(
                     controller: selectedOviGenderController,
@@ -1105,8 +1231,8 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 animalName: animalNameController.text,
                 notes: notesController.text,
                 selectedAnimalType: selectedAnimalType,
-                selectedAnimalSpecies: animalSpeciesController.text,
-                selectedAnimalBreed: animalBreedController.text,
+                selectedAnimalSpecies: selectedAnimalSpecies,
+                selectedAnimalBreed: selectedAnimalBreeds,
                 selectedOviGender: selectedOviGenderController.text,
                 // selectedOviSire: animalSireController.text,
                 // selectedOviDam: animalDamController.text,

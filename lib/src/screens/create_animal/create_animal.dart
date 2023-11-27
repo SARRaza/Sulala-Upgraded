@@ -51,43 +51,52 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
     'Cat': ['Siamese', 'Persian', 'Maine Coon'],
     'Elephant': ['African Elephant', 'Asian Elephant'],
     'Lion': ['African Lion', 'Asiatic Lion'],
-    'Monkey': ['Chimpanzee', 'Gorilla', 'Orangutan'],
-    'Bear': ['Grizzly Bear', 'Polar Bear', 'Black Bear'],
     'Duck': ['Mallard', 'Pekin', 'Khaki Campbell'],
     'Chicken': ['Rhode Island Red', 'Leghorn', 'Plymouth Rock'],
     'Turtle': ['Red-eared Slider', 'Snapping Turtle', 'Painted Turtle'],
     'Snake': ['Python', 'Cobra', 'Anaconda'],
-    'Frog': ['Bullfrog', 'Tree Frog', 'Poison Dart Frog'],
-    'Fish': ['Goldfish', 'Guppy', 'Betta'],
+    'Monkey': ['Chimpanzee', 'Gorilla', 'Orangutan'],
+    'Bear': ['Grizzly Bear', 'Polar Bear', 'Black Bear'],
     'Tiger': ['Bengal Tiger', 'Siberian Tiger', 'Indochinese Tiger'],
     'Giraffe': ['Masai Giraffe', 'Reticulated Giraffe'],
     'Kangaroo': ['Red Kangaroo', 'Eastern Grey Kangaroo'],
     'Horse': ['Thoroughbred', 'Quarter Horse', 'Arabian Horse'],
     'Zebra': ['Plains Zebra', 'Grevy\'s Zebra'],
     'Panda': ['Giant Panda', 'Red Panda'],
-    'Hippopotamus': ['Common Hippopotamus', 'Pygmy Hippopotamus'],
-    'Gorilla': ['Western Gorilla', 'Eastern Gorilla'],
-    'Cheetah': ['African Cheetah', 'Asian Cheetah'],
-    'Raccoon': ['Common Raccoon', 'Procyon lotor'],
-    'Squirrel': ['Eastern Gray Squirrel', 'Red Squirrel'],
-    'Koala': ['Queensland Koala', 'New South Wales Koala'],
-    'Penguin': ['Emperor Penguin', 'Adelie Penguin', 'King Penguin'],
     'Crocodile': ['Nile Crocodile', 'Saltwater Crocodile', 'Gharial'],
     'Eagle': ['Bald Eagle', 'Golden Eagle', 'Harpy Eagle'],
+    'Frog': ['Bullfrog', 'Tree Frog', 'Poison Dart Frog'],
+    'Fish': ['Goldfish', 'Guppy', 'Betta'],
+    'Penguin': ['Emperor Penguin', 'Adelie Penguin', 'King Penguin'],
     'Alligator': ['American Alligator', 'Chinese Alligator'],
     'Salmon': ['Atlantic Salmon', 'Chinook Salmon', 'Coho Salmon'],
     'Gecko': ['Leopard Gecko', 'Crested Gecko', 'Tokay Gecko'],
-    'Chameleon': [
-      'Veiled Chameleon',
-      'Panther Chameleon',
-      'Jackson\'s Chameleon'
-    ],
-    'Toad': ['Common Toad', 'American Toad', 'Cane Toad'],
-    'Iguana': ['Green Iguana', 'Rhino Iguana', 'Blue Iguana'],
-    'Parrot': ['African Grey Parrot', 'Cockatiel', 'Macaw'],
-    'Lizard': ['Bearded Dragon', 'Anole Lizard', 'Skink'],
-    'Salamander': ['Fire Salamander', 'Tiger Salamander', 'Axolotl'],
-    'Tortoise': ['Aldabra Tortoise', 'Russian Tortoise', 'Galapagos Tortoise'],
+  };
+  Map<String, List<String>> morespeciesToBreedsMap = {
+    'Dog': ['suhail', 'German Shepherd', 'Golden Retriever'],
+    'Cat': ['Siamese', 'Persian', 'Maine Coon'],
+    'Elephant': ['African Elephant', 'Asian Elephant'],
+    'Lion': ['African Lion', 'Asiatic Lion'],
+    'Duck': ['Mallard', 'Pekin', 'Khaki Campbell'],
+    'Chicken': ['Rhode Island Red', 'Leghorn', 'Plymouth Rock'],
+    'Turtle': ['Red-eared Slider', 'Snapping Turtle', 'Painted Turtle'],
+    'Snake': ['Python', 'Cobra', 'Anaconda'],
+    'Monkey': ['Chimpanzee', 'Gorilla', 'Orangutan'],
+    'Bear': ['Grizzly Bear', 'Polar Bear', 'Black Bear'],
+    'Tiger': ['Bengal Tiger', 'Siberian Tiger', 'Indochinese Tiger'],
+    'Giraffe': ['Masai Giraffe', 'Reticulated Giraffe'],
+    'Kangaroo': ['Red Kangaroo', 'Eastern Grey Kangaroo'],
+    'Horse': ['Thoroughbred', 'Quarter Horse', 'Arabian Horse'],
+    'Zebra': ['Plains Zebra', 'Grevy\'s Zebra'],
+    'Panda': ['Giant Panda', 'Red Panda'],
+    'Crocodile': ['Nile Crocodile', 'Saltwater Crocodile', 'Gharial'],
+    'Eagle': ['Bald Eagle', 'Golden Eagle', 'Harpy Eagle'],
+    'Frog': ['Bullfrog', 'Tree Frog', 'Poison Dart Frog'],
+    'Fish': ['Goldfish', 'Guppy', 'Betta'],
+    'Penguin': ['Emperor Penguin', 'Adelie Penguin', 'King Penguin'],
+    'Alligator': ['American Alligator', 'Chinese Alligator'],
+    'Salmon': ['Atlantic Salmon', 'Chinook Salmon', 'Coho Salmon'],
+    'Gecko': ['Leopard Gecko', 'Crested Gecko', 'Tokay Gecko'],
   };
 
   List<String> modalMammalSpeciesList = [
@@ -433,14 +442,16 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
   }
 
   void _showAnimalBreed(String section, BuildContext context) async {
-    List<String> filteredBreedList = List.from(modalAnimalBreedsList);
+    List<String> filteredBreedList =
+        List.from(morespeciesToBreedsMap[selectedAnimalSpecies] ?? []);
     TextEditingController searchValue = TextEditingController();
 
     DrowupAnimalBreed drowupAnimalBreed = DrowupAnimalBreed(
       searchValue: searchValue,
       filteredBreedList: filteredBreedList,
-      modalAnimalBreedList: modalAnimalBreedsList,
       setState: setState,
+      morespeciesToBreedsMap: morespeciesToBreedsMap,
+      selectedAnimalSpecies: selectedAnimalSpecies,
     );
 
     drowupAnimalBreed.resetSelection();

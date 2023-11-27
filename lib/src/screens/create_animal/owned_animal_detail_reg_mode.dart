@@ -272,6 +272,7 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
                                     type: "Mammal",
                                     sex: "Female",
                                     OviDetails: widget.OviDetails,
+                                    breed: '',
                                   ),
 
                                   // Content for the 'Breeding' tab

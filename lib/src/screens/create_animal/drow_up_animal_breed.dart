@@ -14,14 +14,17 @@ import '../../widgets/inputs/search_bars/search_bar.dart';
 class DrowupAnimalBreed extends ConsumerStatefulWidget {
   TextEditingController searchValue = TextEditingController();
   List<String> filteredBreedList = [];
-  List<String> modalAnimalBreedList = [];
+
   StateSetter setState;
+  String selectedAnimalSpecies;
+  Map<String, List<String>> morespeciesToBreedsMap = {};
 
   DrowupAnimalBreed(
       {super.key,
       required this.searchValue,
       required this.filteredBreedList,
-      required this.modalAnimalBreedList,
+      required this.selectedAnimalSpecies,
+      required this.morespeciesToBreedsMap,
       required this.setState});
 
   @override
@@ -48,17 +51,29 @@ class _DrowupAnimalBreedState extends ConsumerState<DrowupAnimalBreed> {
           mainAxisSize: MainAxisSize.min,
           children: [
             PrimarySearchBar(
-                controller: widget.searchValue,
-                onChange: (value) {
-                  setState(() {
-                    value = widget.searchValue.text;
-                    widget.filteredBreedList = widget.modalAnimalBreedList
-                        .where((element) =>
-                            element.toLowerCase().contains(value.toLowerCase()))
+              controller: widget.searchValue,
+              onChange: (value) {
+                setState(() {
+                  value = widget.searchValue.text;
+                  if (value.isNotEmpty) {
+                    List<String> breedsForSpecies =
+                        widget.morespeciesToBreedsMap[
+                                widget.selectedAnimalSpecies] ??
+                            [];
+                    widget.filteredBreedList = breedsForSpecies
+                        .where((breed) =>
+                            breed.toLowerCase().contains(value.toLowerCase()))
                         .toList();
-                  });
-                },
-                hintText: 'Search by breed'),
+                  } else {
+                    // Show all breeds for the selected species if the search value is empty
+                    widget.filteredBreedList = widget.morespeciesToBreedsMap[
+                            widget.selectedAnimalSpecies] ??
+                        [];
+                  }
+                });
+              },
+              hintText: 'Search by breed',
+            ),
             SizedBox(
               height: globals.heightMediaQuery * 24,
             ),
