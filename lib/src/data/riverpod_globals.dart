@@ -124,6 +124,14 @@ List<String> mammalSpeciesList = [
   'Cat',
   'Elephant',
   'Lion',
+  'Monkey',
+  'Bear',
+  'Tiger',
+  'Giraffe',
+  'Kangaroo',
+  'Horse',
+  'Zebra',
+  'Panda',
 ];
 
 List<String> oviparousSpeciesList = [
@@ -131,6 +139,14 @@ List<String> oviparousSpeciesList = [
   'Chicken',
   'Turtle',
   'Snake',
+  'Crocodile',
+  'Eagle',
+  'Frog',
+  'Fish',
+  'Penguin',
+  'Alligator',
+  'Salmon',
+  'Gecko',
 ];
 final mammalSpeciesCountProvider = Provider<Map<String, int>>((ref) {
   final mammals = ref

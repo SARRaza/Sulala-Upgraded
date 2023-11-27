@@ -5,6 +5,7 @@ import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
+import '../../theme/colors/piechart_colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/tags/tags.dart';
 import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
@@ -75,17 +76,6 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
     Tag(name: 'Dead', status: TagStatus.notActive),
   ];
 
-  final Map<String, Color> speciesColorMap = {
-    'Dog': const Color.fromRGBO(175, 197, 86, 1),
-    'Cat': const Color.fromARGB(255, 139, 157, 67),
-    'Elephant': const Color.fromARGB(255, 254, 255, 168),
-    'Lion': const Color.fromARGB(255, 198, 199, 147),
-    'Duck': const Color.fromRGBO(175, 197, 86, 1),
-    'Chicken': const Color.fromARGB(255, 139, 157, 67),
-    'Turtle': const Color.fromARGB(255, 254, 255, 168),
-    'Snake': const Color.fromARGB(255, 198, 199, 147),
-    // Add more species and colors as needed
-  };
   late List<AnimalData> _chartData;
   int sumOfNextTwoCards = 0;
   List<EventData> events = [
@@ -487,7 +477,9 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
 
   List<Widget> _buildLegendItems() {
     if (_selectedIndex == -1) {
-      return _chartData.map((data) {
+      final filteredData = _chartData.where((data) => data.quan > 0);
+
+      return filteredData.map((data) {
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -507,7 +499,12 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
 
       final speciesCount = ref.watch(speciesCountProvider);
 
-      return speciesList.map((species) {
+      final filteredSpeciesList = speciesList.where((species) {
+        final count = speciesCount[species] ?? 0;
+        return count > 0;
+      });
+
+      return filteredSpeciesList.map((species) {
         final count = speciesCount[species] ?? 0;
         final color = speciesColorMap[species] ?? Colors.blue;
         return Row(

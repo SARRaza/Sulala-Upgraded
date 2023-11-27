@@ -10,6 +10,8 @@ import '../../widgets/pages/owned_animal/general_info_animal_widget.dart';
 
 import '../breeding/list_of_breeding_events.dart';
 import '../medical/mammals_medical.dart';
+import 'edit_animal_details/main_edit_details.dart';
+import 'edit_animal_details/new_editpage.dart';
 import 'sar_listofanimals.dart';
 
 class OwnedAnimalDetailsRegMode extends StatefulWidget {
@@ -38,6 +40,7 @@ class OwnedAnimalDetailsRegMode extends StatefulWidget {
 class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  bool editMode = false;
 
   @override
   void initState() {
@@ -102,7 +105,14 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
                       'assets/icons/frame/24px/edit_icon_button.png'),
                   onPressed: () {
                     // Handle close button press
-                    Navigator.pop(context);
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => EditAnimalGenInfo(
+                          OviDetails: widget.OviDetails,
+                          breedingEvents: widget.breedingEvents,
+                        ),
+                      ),
+                    );
                   },
                 ),
               ),
@@ -163,6 +173,16 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
                       SizedBox(
                         height: globals.heightMediaQuery * 16,
                       ),
+                      if (editMode == true)
+                        Row(
+                          children: [
+                            Text(
+                              widget.OviDetails.animalName,
+                              style:
+                                  AppFonts.title4(color: AppColors.grayscale90),
+                            ),
+                          ],
+                        ),
                       Text(
                         widget.OviDetails.animalName,
                         style: AppFonts.title4(color: AppColors.grayscale90),

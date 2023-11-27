@@ -11,6 +11,7 @@ import '../../widgets/inputs/search_bars/button_search_bar.dart';
 import '../breeding/list_of_breeding_events.dart';
 
 import 'create_animal.dart';
+
 import 'owned_animal_detail_reg_mode.dart';
 
 class OviVariables {
@@ -411,41 +412,6 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                       );
                     },
                   ),
-                  // Row(
-                  //   children: [
-                  //     Expanded(
-                  //       child: Container(
-                  //         decoration: BoxDecoration(
-                  //           borderRadius: BorderRadius.circular(50.0),
-                  //           border: Border.all(),
-                  //         ),
-                  //         child: TextField(
-                  //           onChanged: _filterMammals,
-                  //           decoration: InputDecoration(
-                  //             hintText: "Search By Name Or ID",
-                  //             prefixIcon: const Icon(Icons.search),
-                  //             suffixIcon: IconButton(
-                  //               icon: const Icon(
-                  //                 Icons.filter_alt,
-                  //                 size: 30,
-                  //               ),
-                  //               onPressed: () {
-                  //                 Navigator.push(
-                  //                   context,
-                  //                   MaterialPageRoute(
-                  //                     builder: (context) =>
-                  //                         const SarAnimalFilters(),
-                  //                   ),
-                  //                 );
-                  //               },
-                  //             ),
-                  //             border: InputBorder.none,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
                   SizedBox(
                     height: globals.heightMediaQuery * 20,
                   ),
@@ -541,21 +507,6 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                                   ),
                                   title: Text(OviDetails.animalName),
                                   subtitle: Text(OviDetails.selectedAnimalType),
-                                  trailing: IconButton(
-                                    onPressed: () {
-                                      // Navigator.of(context).push(
-                                      //   MaterialPageRoute(
-                                      //     builder: (context) => EditAnimalGenInfo(
-                                      //         OviDetails: OviDetails),
-                                      //   ),
-                                      // );
-                                    },
-                                    icon: const Icon(
-                                      Icons.edit_note_outlined,
-                                      size: 30,
-                                      color: AppColors.primary40,
-                                    ),
-                                  ),
                                   onTap: () {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(

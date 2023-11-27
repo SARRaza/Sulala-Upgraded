@@ -99,13 +99,6 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
     'Horse',
     'Zebra',
     'Panda',
-    'Hippopotamus',
-    'Gorilla',
-    'Cheetah',
-    'Raccoon',
-    'Squirrel',
-    'Koala',
-    'Penguin'
   ];
   List<String> modalOviSpeciesList = [
     'Crocodile',
@@ -116,13 +109,6 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
     'Alligator',
     'Salmon',
     'Gecko',
-    'Chameleon',
-    'Toad',
-    'Iguana',
-    'Parrot',
-    'Lizard',
-    'Salamander',
-    'Tortoise'
   ];
 
   List<String> modalAnimalBreedsList = ['Bengali', 'Africani', 'Reticulatedii'];
