@@ -12,6 +12,7 @@ import '../../../data/riverpod_globals.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 import '../../../widgets/controls_and_buttons/tags/custom_tags.dart';
+import '../../../widgets/inputs/date_fields/primary_date_field.dart';
 import '../../../widgets/inputs/text_fields/primary_text_field.dart';
 
 import '../../breeding/list_of_breeding_events.dart';
@@ -175,6 +176,25 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
     }
   }
 
+  void _showDOBPicker(BuildContext context) async {
+    final pickedDate = await showDatePicker(
+      context: context,
+      // ignore: unnecessary_null_comparison
+      initialDate: widget.OviDetails.dateOfBirth != null
+          ? DateFormat('dd/MM/yyyy').parse(widget.OviDetails.dateOfBirth)
+          : DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        dateOfBirthController.text =
+            DateFormat('dd/MM/yyyy').format(pickedDate);
+      });
+    }
+  }
+
   Column _buildDateFields() {
     final dateFields = <Widget>[];
     final selectedOviDates = widget.OviDetails.selectedOviDates;
@@ -182,30 +202,95 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
     final dateFormatter =
         DateFormat('dd/MM/yyyy'); // Define your desired date format
 
-    selectedOviDates.forEach((fieldName, selectedDate) {
-      dateFields.add(
-        Row(
-          children: [
-            Text(fieldName),
-            TextButton(
-              onPressed: () {
-                _showDatePicker(context, fieldName);
-              },
-              child: Text(
-                selectedDate != null
-                    ? dateFormatter.format(selectedDate)
-                    : "Select Date",
+    selectedOviDates.forEach(
+      (fieldName, selectedDate) {
+        dateFields.add(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                fieldName,
+                style: AppFonts.caption2(
+                  color: AppColors.grayscale90,
+                ),
               ),
-            ),
-          ],
-        ),
-      );
-    });
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.grayscale00,
+                        borderRadius: BorderRadius.circular(50.0),
+                        border: Border.all(
+                          color: AppColors.primary30,
+                          width: 1.0,
+                        ),
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          _showDatePicker(context, fieldName);
+                        },
+                        child: TextFormField(
+                          enabled: false,
+                          style: AppFonts.body2(color: AppColors.grayscale90),
+                          decoration: InputDecoration(
+                            hintText: 'DD:MM:YYYY',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(50.0),
+                              borderSide: const BorderSide(
+                                width: 0.2,
+                              ),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 12.0, horizontal: 16.0),
+                            suffixIcon: GestureDetector(
+                              onTap: () {
+                                _showDatePicker(context, fieldName);
+                              },
+                              child: const Icon(
+                                Icons.calendar_today_outlined,
+                                color: Color.fromARGB(255, 36, 86, 38),
+                              ),
+                            ),
+                          ),
+                          readOnly: true,
+                          controller: TextEditingController(
+                            text: selectedDate != null
+                                ? dateFormatter.format(selectedDate)
+                                : "Select Date : DD/MM/YYYY",
+                          ),
+                        ),
+                        // child: Text(fieldName),
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        widget.OviDetails.selectedOviDates[fieldName] = null;
+                      });
+                    },
+                    child: const Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
+        );
+      },
+    );
 
     return Column(
       children: dateFields,
     );
   }
+
+// Set the initial value based on widget.OviDetails.dateOfBirth
 
   void _deleteAvatar() {
     // Implement the logic to delete/reset the avatar
@@ -1036,15 +1121,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
               SizedBox(height: globals.heightMediaQuery * 24),
               InkWell(
                 onTap: () {
-                  for (String breed in selectedAnimalType == 'Mammal'
-                      ? (mammalSpeciesList.contains(selectedAnimalSpecies)
-                          ? morespeciesToBreedsMap[selectedAnimalSpecies] ?? []
-                          : [])
-                      : (oviparousSpeciesList.contains(selectedAnimalSpecies)
-                          ? morespeciesToBreedsMap[selectedAnimalSpecies] ?? []
-                          : [])) {
-                    _editAnimalBreed('breeds', context);
-                  }
+                  _editAnimalBreed('breeds', context);
                 },
                 child: Row(
                   children: [
@@ -1217,6 +1294,78 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 style: AppFonts.headline2(color: AppColors.grayscale90),
               ),
               SizedBox(height: globals.heightMediaQuery * 24),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Date Of Birth',
+                    style: AppFonts.caption2(
+                      color: AppColors.grayscale90,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.grayscale00,
+                            borderRadius: BorderRadius.circular(50.0),
+                            border: Border.all(
+                              color: AppColors.primary30,
+                              width: 1.0,
+                            ),
+                          ),
+                          child: GestureDetector(
+                            onTap: () {
+                              _showDOBPicker(context);
+                            },
+                            child: TextFormField(
+                                enabled: false,
+                                style: AppFonts.body2(
+                                    color: AppColors.grayscale90),
+                                decoration: InputDecoration(
+                                  hintText: 'DD/MM/YYYY',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(50.0),
+                                    borderSide: const BorderSide(
+                                      width: 0.2,
+                                    ),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 12.0, horizontal: 16.0),
+                                  suffixIcon: GestureDetector(
+                                    onTap: () {
+                                      _showDOBPicker(context);
+                                    },
+                                    child: const Icon(
+                                      Icons.calendar_today_outlined,
+                                      color: Color.fromARGB(255, 36, 86, 38),
+                                    ),
+                                  ),
+                                ),
+                                readOnly: true,
+                                controller: dateOfBirthController),
+                            // child: Text(fieldName),
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            // widget.OviDetails.selectedOviDates[fieldName] = null;
+                          });
+                        },
+                        child: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              ),
               _buildDateFields(),
               SizedBox(height: MediaQuery.of(context).size.height * 0.029),
               TextField(

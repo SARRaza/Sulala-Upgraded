@@ -19,7 +19,7 @@ class OviVariables {
   late final String animalName;
   final List<MainAnimalSire> selectedOviSire;
   final List<MainAnimalDam> selectedOviDam;
-  final String dateOfBirth;
+  late final String dateOfBirth;
   final String fieldName;
   final String fieldContent;
   final String notes;
