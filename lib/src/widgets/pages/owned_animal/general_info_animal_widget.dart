@@ -19,6 +19,8 @@ class GeneralInfoAnimalWidget extends ConsumerStatefulWidget {
   final String age;
   final String sex;
   final String breed;
+  final String fieldName;
+  final String fieldContent;
   // ignore: non_constant_identifier_names
   final OviVariables OviDetails;
 
@@ -33,6 +35,8 @@ class GeneralInfoAnimalWidget extends ConsumerStatefulWidget {
     required this.age,
     required this.sex,
     required this.breed,
+    required this.fieldName,
+    required this.fieldContent,
     // ignore: non_constant_identifier_names
     required this.OviDetails,
   }) : super(key: key);
@@ -179,6 +183,10 @@ class _GeneralInfoAnimalWidgetState
                       : 'Add',
                   textHead: "Date of Sale",
                 ),
+                TableTextButton(
+                    onPressed: widget.onDateOfBirthPressed,
+                    textButton: widget.OviDetails.fieldContent,
+                    textHead: widget.OviDetails.fieldName),
                 SizedBox(
                   height: globals.heightMediaQuery * 24,
                 ),

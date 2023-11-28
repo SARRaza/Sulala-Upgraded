@@ -1,20 +1,18 @@
 // ignore_for_file: non_constant_identifier_names, library_private_types_in_public_api, unused_local_variable
 
 import 'dart:io';
-
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:image_picker/image_picker.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import '../../../data/riverpod_globals.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
+import '../../../widgets/controls_and_buttons/buttons/sar_buttonwidget.dart';
 import '../../../widgets/controls_and_buttons/tags/custom_tags.dart';
-import '../../../widgets/inputs/date_fields/primary_date_field.dart';
+import '../../../widgets/inputs/paragraph_text_fields/edit_paragraph_text_field.dart';
 import '../../../widgets/inputs/text_fields/primary_text_field.dart';
-
 import '../../breeding/list_of_breeding_events.dart';
 import '../drow_up_animal_breed.dart';
 import '../drow_up_animal_species.dart';
@@ -60,6 +58,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
   final TextEditingController selectedBreedingStageController =
       TextEditingController();
   final TextEditingController imageUrlController = TextEditingController();
+  late File? selectedOviImage = widget.OviDetails.selectedOviImage;
   Map<String, DateTime?> selectedOviDates = {}; // Add date fields here
   Map<String, String> animalImages = {
     'Mammal': 'assets/avatars/120px/Horse_avatar.png',
@@ -95,6 +94,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
     selectedOviDates = widget.OviDetails.selectedOviDates;
     selectedBreedingStageController.text =
         widget.OviDetails.selectedBreedingStage;
+    selectedOviImage = widget.OviDetails.selectedOviImage;
   }
 
   List<String> modalMammalSpeciesList = [
@@ -149,14 +149,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
 
     if (pickedFile != null) {
       final selectedImage = File(pickedFile.path);
-
-      // Update the selectedOviImage
-      ref
-          .read(selectedAnimalImageProvider.notifier)
-          .update((state) => selectedImage);
-
-      // Update the image URL in the text field
-      imageUrlController.text = selectedImage.path;
+      selectedOviImage = selectedImage;
     }
   }
 
@@ -967,6 +960,155 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
     if (result != null) {}
   }
 
+  void _showOviFieldNameModal(BuildContext context) {
+    // TextEditingController fieldname = TextEditingController();
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      showDragHandle: true,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.7,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Add Custom Field',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 35,
+                ),
+                PrimaryTextField(
+                    hintText: 'Enter Custom Field Name',
+                    labelText: 'Enter Field Name',
+                    controller: fieldNameController),
+                SizedBox(height: globals.heightMediaQuery * 130),
+                ButtonWidget(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _showOviFieldContentModal(context);
+                  },
+                  buttonText: 'Confirm',
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 238, 238, 238),
+                          foregroundColor: Colors.black,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                        ),
+                        child: const Text('Cancel'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showOviFieldContentModal(BuildContext context) {
+    showModalBottomSheet(
+      showDragHandle: true,
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.50,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Add Text Area',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                TextField(
+                  maxLines: 5,
+                  controller: fieldContentController,
+                  decoration: InputDecoration(
+                    labelText: 'Enter Field Content',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(
+                        color: Colors.grey,
+                        width: 2.0,
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 12.0,
+                      horizontal: 16.0,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 35,
+                ),
+                ButtonWidget(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  buttonText: 'Confirm',
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 238, 238, 238),
+                          foregroundColor: Colors.black,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                        ),
+                        child: const Text('Cancel'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final chips = ref.watch(selectedOviChipsProvider);
@@ -1031,11 +1173,10 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 child: CircleAvatar(
                   radius: 70,
                   backgroundColor: Colors.grey[100],
-                  backgroundImage:
-                      ref.watch(selectedAnimalImageProvider) != null
-                          ? FileImage(ref.watch(selectedAnimalImageProvider)!)
-                          : null,
-                  child: ref.watch(selectedAnimalImageProvider) == null
+                  backgroundImage: selectedOviImage != null
+                      ? FileImage(selectedOviImage!)
+                      : null,
+                  child: selectedOviImage == null
                       ? const Icon(
                           Icons.camera_alt_outlined,
                           size: 50,
@@ -1367,7 +1508,134 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 ],
               ),
               _buildDateFields(),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
+              SizedBox(
+                height: globals.heightMediaQuery * 16,
+              ),
+              const Divider(
+                color: AppColors.grayscale20,
+              ),
+              SizedBox(
+                height: globals.heightMediaQuery * 16,
+              ),
+              Text(
+                "Add Tag",
+                style: AppFonts.headline2(color: AppColors.grayscale90),
+              ),
+              SizedBox(
+                height: globals.heightMediaQuery * 16,
+              ),
+              Wrap(
+                spacing: 8.0,
+                runSpacing: 8.0,
+                children: chips.map((chip) {
+                  return CustomTag(
+                    label: chip,
+                    selected: true, // Since these are selected chips
+                    onTap: () {},
+                  );
+                }).toList(),
+              ),
+              SizedBox(
+                height: globals.heightMediaQuery * 16,
+              ),
+              InkWell(
+                onTap: () {
+                  _animalTagsModalSheet();
+                },
+                child: const Text(
+                  'Add Tags +',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 36, 86, 38),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: globals.heightMediaQuery * 16,
+              ),
+              const Divider(
+                color: AppColors.grayscale20,
+              ),
+              SizedBox(
+                height: globals.heightMediaQuery * 16,
+              ),
+              Text(
+                "Custom fields",
+                style: AppFonts.headline2(color: AppColors.grayscale90),
+              ),
+              SizedBox(
+                height: globals.heightMediaQuery * 16,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    fieldNameController.text,
+                    style: AppFonts.caption2(
+                      color: AppColors.grayscale90,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.grayscale00,
+                            borderRadius: BorderRadius.circular(50.0),
+                            border: Border.all(
+                              color: AppColors.grayscale20,
+                              width: 1.0,
+                            ),
+                          ),
+                          child: TextFormField(
+                              // enabled: false,
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                              decoration: InputDecoration(
+                                hintText: 'Enter Field Content',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(50.0),
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 12.0, horizontal: 16.0),
+                                suffixIcon: GestureDetector(
+                                  onTap: () {
+                                    _showOviFieldNameModal(context);
+                                  },
+                                  child: Image.asset(
+                                      'assets/icons/frame/24px/edit_icon_button.png'),
+                                ),
+                              ),
+                              readOnly: true,
+                              controller: fieldContentController),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: globals.heightMediaQuery * 16,
+              ),
+              const Divider(
+                color: AppColors.grayscale20,
+              ),
+              SizedBox(
+                height: globals.heightMediaQuery * 16,
+              ),
+              Text(
+                "Additional Notes",
+                style: AppFonts.headline2(color: AppColors.grayscale90),
+              ),
+              SizedBox(
+                height: globals.heightMediaQuery * 16,
+              ),
+              EditParagraphTextField(
+                hintText: 'Add Any Additional Notes if Needed',
+                maxLines: 8,
+                notesController: notesController,
+              ),
               TextField(
                 controller: animalSireController,
                 decoration: InputDecoration(
@@ -1533,8 +1801,9 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
               layingFrequency: layingFrequencyController.text,
               eggsPerMonth: eggsPerMonthController.text,
               dateOfBirth: dateOfBirthController.text,
-              selectedOviImage: ref.read(selectedAnimalImageProvider),
+              // selectedOviImage: ref.read(selectedAnimalImageProvider),
               selectedOviDates: selectedOviDates,
+              selectedOviImage: selectedOviImage,
             );
 
             final oviAnimals = ref.read(ovianimalsProvider);
@@ -1561,7 +1830,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
             ),
           ),
           child: const Text(
-            'Save',
+            'Save Changes',
             style: TextStyle(color: Colors.white),
           ),
         ),
