@@ -13,7 +13,7 @@ import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 import '../../../widgets/controls_and_buttons/tags/custom_tags.dart';
 import '../../../widgets/inputs/text_fields/primary_text_field.dart';
-import '../../../widgets/pages/edit_geninfo/animaltype.dart';
+
 import '../../breeding/list_of_breeding_events.dart';
 import '../drow_up_animal_breed.dart';
 import '../drow_up_animal_species.dart';
@@ -32,6 +32,7 @@ class EditAnimalGenInfo extends ConsumerStatefulWidget {
 
 class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
   late String selectedAnimalType = widget.OviDetails.selectedAnimalType;
+  late String selectedOviGender = widget.OviDetails.selectedOviGender;
 
   final TextEditingController animalNameController = TextEditingController();
   final TextEditingController medicalNeedsController = TextEditingController();
@@ -47,8 +48,8 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
   final TextEditingController fieldNameController = TextEditingController();
   final TextEditingController fieldContentController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
-  final TextEditingController selectedOviGenderController =
-      TextEditingController();
+  // final TextEditingController selectedOviGenderController =
+  //     TextEditingController();
   final TextEditingController selectedAnimalBreedController =
       TextEditingController();
   final TextEditingController selectedAnimalSpeciesController =
@@ -84,7 +85,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
     fieldNameController.text = widget.OviDetails.fieldName;
     fieldContentController.text = widget.OviDetails.fieldContent;
     notesController.text = widget.OviDetails.notes;
-    selectedOviGenderController.text = widget.OviDetails.selectedOviGender;
+    selectedOviGender = widget.OviDetails.selectedOviGender;
     selectedAnimalBreedController.text = widget.OviDetails.selectedAnimalBreed;
     selectedAnimalSpeciesController.text =
         widget.OviDetails.selectedAnimalSpecies;
@@ -383,7 +384,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Animal Species',
+                'Animal Type',
                 style: AppFonts.title3(color: AppColors.grayscale90),
               ),
               SizedBox(height: globals.heightMediaQuery * 32),
@@ -936,288 +937,429 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.only(
+              left: globals.widthMediaQuery * 16,
+              right: globals.widthMediaQuery * 16),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                radius: 70,
-                backgroundColor: Colors.grey[100],
-                backgroundImage: ref.watch(selectedAnimalImageProvider) != null
-                    ? FileImage(ref.watch(selectedAnimalImageProvider)!)
-                    : null,
-                child: ref.watch(selectedAnimalImageProvider) == null
-                    ? const Icon(
-                        Icons.camera_alt_outlined,
-                        size: 50,
-                        color: Colors.grey,
-                      )
-                    : null,
+              Center(
+                child: CircleAvatar(
+                  radius: 70,
+                  backgroundColor: Colors.grey[100],
+                  backgroundImage:
+                      ref.watch(selectedAnimalImageProvider) != null
+                          ? FileImage(ref.watch(selectedAnimalImageProvider)!)
+                          : null,
+                  child: ref.watch(selectedAnimalImageProvider) == null
+                      ? const Icon(
+                          Icons.camera_alt_outlined,
+                          size: 50,
+                          color: Colors.grey,
+                        )
+                      : null,
+                ),
+              ),
+              Center(
+                child: TextButton(
+                  onPressed: () {
+                    _changeAnimalImagepicker(context);
+                  },
+                  child: const Text(
+                    'Change Photo',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 36, 86, 38),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.020),
+              PrimaryTextField(
+                  labelText: 'Name',
+                  hintText: 'Enter Name',
+                  controller: animalNameController),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
+              GestureDetector(
+                onTap: () {
+                  _editAnimalType(context);
+                },
+                child: Row(
+                  children: [
+                    Text(
+                      'Animal Type',
+                      style: AppFonts.body2(color: AppColors.grayscale70),
+                    ),
+                    const Spacer(),
+                    Text(
+                      selectedAnimalType,
+                      style: AppFonts.body2(color: AppColors.grayscale90),
+                    ),
+                    SizedBox(
+                      width: globals.widthMediaQuery * 8,
+                    ),
+                    Icon(Icons.arrow_forward_ios_rounded,
+                        color: AppColors.primary40,
+                        size: globals.widthMediaQuery * 12.75),
+                  ],
+                ),
+              ),
+              SizedBox(height: globals.heightMediaQuery * 24),
+              GestureDetector(
+                onTap: () {
+                  if (selectedAnimalType == 'Mammal') {
+                    _editAnimalSpecies(
+                        'species', context, modalMammalSpeciesList);
+                  } else {
+                    _editAnimalSpecies('species', context, modalOviSpeciesList);
+                  }
+                },
+                child: Row(
+                  children: [
+                    Text(
+                      'Animal Species',
+                      style: AppFonts.body2(color: AppColors.grayscale70),
+                    ),
+                    const Spacer(),
+                    Text(
+                      selectedAnimalSpecies,
+                      style: AppFonts.body2(color: AppColors.grayscale90),
+                    ),
+                    SizedBox(
+                      width: globals.widthMediaQuery * 8,
+                    ),
+                    Icon(Icons.arrow_forward_ios_rounded,
+                        color: AppColors.primary40,
+                        size: globals.widthMediaQuery * 12.75),
+                  ],
+                ),
+              ),
+              SizedBox(height: globals.heightMediaQuery * 24),
+              InkWell(
+                onTap: () {
+                  for (String breed in selectedAnimalType == 'Mammal'
+                      ? (mammalSpeciesList.contains(selectedAnimalSpecies)
+                          ? morespeciesToBreedsMap[selectedAnimalSpecies] ?? []
+                          : [])
+                      : (oviparousSpeciesList.contains(selectedAnimalSpecies)
+                          ? morespeciesToBreedsMap[selectedAnimalSpecies] ?? []
+                          : [])) {
+                    _editAnimalBreed('breeds', context);
+                  }
+                },
+                child: Row(
+                  children: [
+                    Text(
+                      'Animal Breed',
+                      style: AppFonts.body2(color: AppColors.grayscale70),
+                    ),
+                    const Spacer(),
+                    Text(
+                      selectedAnimalBreeds,
+                      style: AppFonts.body2(color: AppColors.grayscale90),
+                    ),
+                    SizedBox(
+                      width: globals.widthMediaQuery * 8,
+                    ),
+                    Icon(Icons.arrow_forward_ios_rounded,
+                        color: AppColors.primary40,
+                        size: globals.widthMediaQuery * 12.75),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: globals.heightMediaQuery * 16,
+              ),
+              const Divider(
+                color: AppColors.grayscale20,
+              ),
+              SizedBox(
+                height: globals.heightMediaQuery * 16,
+              ),
+              Text(
+                "Animal Sex",
+                style: AppFonts.headline2(color: AppColors.grayscale90),
+              ),
+              SizedBox(
+                height: globals.heightMediaQuery * 16,
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  top: globals.heightMediaQuery * 12,
+                  bottom: globals.heightMediaQuery * 12,
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      ref
+                          .read(selectedOviGenderProvider.notifier)
+                          .update((state) => 'Unknown');
+                      selectedOviGender = 'Unknown';
+
+                      // showAdditionalFields = false;
+                    });
+                  },
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Unknown',
+                          style: AppFonts.body2(color: AppColors.grayscale90),
+                        ),
+                      ),
+                      Container(
+                        width: globals.widthMediaQuery * 24,
+                        height: globals.widthMediaQuery * 24,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: selectedOviGender == 'Unknown'
+                                ? AppColors.primary20
+                                : AppColors.grayscale30,
+                            width: selectedOviGender == 'Unknown' ? 6.0 : 1.0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                    top: globals.heightMediaQuery * 12,
+                    bottom: globals.heightMediaQuery * 12),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      ref
+                          .read(selectedOviGenderProvider.notifier)
+                          .update((state) => 'Male');
+                      selectedOviGender = 'Male';
+
+                      // showAdditionalFields = false;
+                    });
+                  },
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Male',
+                          style: AppFonts.body2(color: AppColors.grayscale90),
+                        ),
+                      ),
+                      Container(
+                        width: globals.widthMediaQuery * 24,
+                        height: globals.widthMediaQuery * 24,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: selectedOviGender == 'Male'
+                                ? AppColors.primary20
+                                : AppColors.grayscale30,
+                            width: selectedOviGender == 'Male' ? 6.0 : 1.0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                    top: globals.heightMediaQuery * 12,
+                    bottom: globals.heightMediaQuery * 12),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      ref
+                          .read(selectedOviGenderProvider.notifier)
+                          .update((state) => 'Female');
+                      selectedOviGender = 'Female';
+
+                      // showAdditionalFields = false;
+                    });
+                  },
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Female',
+                          style: AppFonts.body2(color: AppColors.grayscale90),
+                        ),
+                      ),
+                      Container(
+                        width: globals.widthMediaQuery * 24,
+                        height: globals.widthMediaQuery * 24,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: selectedOviGender == 'Female'
+                                ? AppColors.primary20
+                                : AppColors.grayscale30,
+                            width: selectedOviGender == 'Female' ? 6.0 : 1.0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: globals.heightMediaQuery * 16,
+              ),
+              const Divider(
+                color: AppColors.grayscale20,
+              ),
+              SizedBox(
+                height: globals.heightMediaQuery * 16,
+              ),
+              Text(
+                "Dates",
+                style: AppFonts.headline2(color: AppColors.grayscale90),
+              ),
+              SizedBox(height: globals.heightMediaQuery * 24),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
+              TextField(
+                controller: animalSireController,
+                decoration: InputDecoration(
+                  labelText: 'New Animal Sire',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                ),
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
+              TextField(
+                controller: animalDamController,
+                decoration: InputDecoration(
+                  labelText: 'New Animal Dam',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                ),
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
+              TextField(
+                controller: selectedBreedingStageController,
+                decoration: InputDecoration(
+                  labelText: 'New Breeding Stage',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                ),
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
+              TextField(
+                maxLines: 4,
+                controller: notesController,
+                decoration: InputDecoration(
+                  labelText: 'New Additional Notes',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
+              TextField(
+                maxLines: 3,
+                controller: medicalNeedsController,
+                decoration: InputDecoration(
+                  labelText: 'New Medical Needs',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
+              _buildDateFields(),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
+              TextField(
+                controller: layingFrequencyController,
+                decoration: InputDecoration(
+                  labelText: 'New Laying Frequency',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                ),
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
+              TextField(
+                controller: eggsPerMonthController,
+                decoration: InputDecoration(
+                  labelText: 'New Eggs Per Month',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                ),
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
+              TextField(
+                controller: dateOfBirthController,
+                decoration: InputDecoration(
+                  labelText: 'New Date of Birth',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                ),
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
+              TextField(
+                controller: fieldNameController,
+                decoration: InputDecoration(
+                  labelText: fieldNameController.text.isNotEmpty
+                      ? fieldNameController.text
+                      : 'Custom Field Name',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                ),
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.015),
+              TextField(
+                controller: fieldContentController,
+                decoration: InputDecoration(
+                  labelText: fieldContentController.text.isNotEmpty
+                      ? fieldContentController.text
+                      : 'Custom Field Content',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                ),
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
+              TextField(
+                controller: imageUrlController,
+                decoration: InputDecoration(
+                  labelText: 'Image URL',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                ),
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
+              Wrap(
+                spacing: 8.0,
+                runSpacing: 8.0,
+                children: chips.map((chip) {
+                  return CustomTag(
+                    label: chip,
+                    selected: true, // Since these are selected chips
+                    onTap: () {},
+                  );
+                }).toList(),
               ),
               TextButton(
                 onPressed: () {
-                  _changeAnimalImagepicker(context);
+                  _animalTagsModalSheet();
                 },
                 child: const Text(
-                  'Change Photo',
+                  'Add Tags +',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color.fromARGB(255, 36, 86, 38),
                   ),
                 ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.020),
-              Column(
-                children: [
-                  PrimaryTextField(
-                      labelText: 'Name',
-                      hintText: 'Enter Name',
-                      controller: animalNameController),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-                  GestureDetector(
-                    onTap: () {
-                      _editAnimalType(context);
-                    },
-                    child: Row(
-                      children: [
-                        Text(
-                          'Animal Type',
-                          style: AppFonts.body2(color: AppColors.grayscale70),
-                        ),
-                        const Spacer(),
-                        Text(
-                          selectedAnimalType,
-                          style: AppFonts.body2(color: AppColors.grayscale90),
-                        ),
-                        SizedBox(
-                          width: globals.widthMediaQuery * 8,
-                        ),
-                        Icon(Icons.arrow_forward_ios_rounded,
-                            color: AppColors.primary40,
-                            size: globals.widthMediaQuery * 12.75),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: globals.heightMediaQuery * 24),
-                  GestureDetector(
-                    onTap: () {
-                      if (selectedAnimalType == 'Mammal') {
-                        _editAnimalSpecies(
-                            'species', context, modalMammalSpeciesList);
-                      } else {
-                        _editAnimalSpecies(
-                            'species', context, modalOviSpeciesList);
-                      }
-                    },
-                    child: Row(
-                      children: [
-                        Text(
-                          'Animal Species',
-                          style: AppFonts.body2(color: AppColors.grayscale70),
-                        ),
-                        const Spacer(),
-                        Text(
-                          selectedAnimalSpecies,
-                          style: AppFonts.body2(color: AppColors.grayscale90),
-                        ),
-                        SizedBox(
-                          width: globals.widthMediaQuery * 8,
-                        ),
-                        Icon(Icons.arrow_forward_ios_rounded,
-                            color: AppColors.primary40,
-                            size: globals.widthMediaQuery * 12.75),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: globals.heightMediaQuery * 24),
-                  InkWell(
-                    onTap: () {
-                      for (String breed in selectedAnimalType == 'Mammal'
-                          ? (mammalSpeciesList.contains(selectedAnimalSpecies)
-                              ? morespeciesToBreedsMap[selectedAnimalSpecies] ??
-                                  []
-                              : [])
-                          : (oviparousSpeciesList
-                                  .contains(selectedAnimalSpecies)
-                              ? morespeciesToBreedsMap[selectedAnimalSpecies] ??
-                                  []
-                              : []));
-                      _editAnimalBreed('breeds', context);
-                    },
-                    child: Row(
-                      children: [
-                        Text(
-                          'Animal Breed',
-                          style: AppFonts.body2(color: AppColors.grayscale70),
-                        ),
-                        const Spacer(),
-                        Text(
-                          selectedAnimalBreeds,
-                          style: AppFonts.body2(color: AppColors.grayscale90),
-                        ),
-                        SizedBox(
-                          width: globals.widthMediaQuery * 8,
-                        ),
-                        Icon(Icons.arrow_forward_ios_rounded,
-                            color: AppColors.primary40,
-                            size: globals.widthMediaQuery * 12.75),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: globals.heightMediaQuery * 8),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-                  TextField(
-                    controller: selectedOviGenderController,
-                    decoration: InputDecoration(
-                      labelText: 'New Gender',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-                  TextField(
-                    controller: animalSireController,
-                    decoration: InputDecoration(
-                      labelText: 'New Animal Sire',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-                  TextField(
-                    controller: animalDamController,
-                    decoration: InputDecoration(
-                      labelText: 'New Animal Dam',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-                  TextField(
-                    controller: selectedBreedingStageController,
-                    decoration: InputDecoration(
-                      labelText: 'New Breeding Stage',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-                  TextField(
-                    maxLines: 4,
-                    controller: notesController,
-                    decoration: InputDecoration(
-                      labelText: 'New Additional Notes',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-                  TextField(
-                    maxLines: 3,
-                    controller: medicalNeedsController,
-                    decoration: InputDecoration(
-                      labelText: 'New Medical Needs',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-                  _buildDateFields(),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-                  TextField(
-                    controller: layingFrequencyController,
-                    decoration: InputDecoration(
-                      labelText: 'New Laying Frequency',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-                  TextField(
-                    controller: eggsPerMonthController,
-                    decoration: InputDecoration(
-                      labelText: 'New Eggs Per Month',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-                  TextField(
-                    controller: dateOfBirthController,
-                    decoration: InputDecoration(
-                      labelText: 'New Date of Birth',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-                  TextField(
-                    controller: fieldNameController,
-                    decoration: InputDecoration(
-                      labelText: fieldNameController.text.isNotEmpty
-                          ? fieldNameController.text
-                          : 'Custom Field Name',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.015),
-                  TextField(
-                    controller: fieldContentController,
-                    decoration: InputDecoration(
-                      labelText: fieldContentController.text.isNotEmpty
-                          ? fieldContentController.text
-                          : 'Custom Field Content',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-                  TextField(
-                    controller: imageUrlController,
-                    decoration: InputDecoration(
-                      labelText: 'Image URL',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-                  Wrap(
-                    spacing: 8.0,
-                    runSpacing: 8.0,
-                    children: chips.map((chip) {
-                      return CustomTag(
-                        label: chip,
-                        selected: true, // Since these are selected chips
-                        onTap: () {},
-                      );
-                    }).toList(),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      _animalTagsModalSheet();
-                    },
-                    child: const Text(
-                      'Add Tags +',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 36, 86, 38),
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ],
           ),
@@ -1233,7 +1375,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 selectedAnimalType: selectedAnimalType,
                 selectedAnimalSpecies: selectedAnimalSpecies,
                 selectedAnimalBreed: selectedAnimalBreeds,
-                selectedOviGender: selectedOviGenderController.text,
+                selectedOviGender: selectedOviGender,
                 // selectedOviSire: animalSireController.text,
                 // selectedOviDam: animalDamController.text,
                 selectedBreedingStage: selectedBreedingStageController.text,
