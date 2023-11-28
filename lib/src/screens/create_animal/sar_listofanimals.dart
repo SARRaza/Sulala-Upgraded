@@ -442,7 +442,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                   ),
                   filteredOviAnimals.isNotEmpty
                       ? ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: filteredOviAnimals.length,
                           itemBuilder: (context, index) {

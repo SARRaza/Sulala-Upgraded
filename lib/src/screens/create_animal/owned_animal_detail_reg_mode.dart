@@ -10,7 +10,7 @@ import '../../widgets/pages/owned_animal/general_info_animal_widget.dart';
 
 import '../breeding/list_of_breeding_events.dart';
 import '../medical/mammals_medical.dart';
-import 'edit_animal_details/main_edit_details.dart';
+
 import 'edit_animal_details/new_editpage.dart';
 import 'sar_listofanimals.dart';
 
