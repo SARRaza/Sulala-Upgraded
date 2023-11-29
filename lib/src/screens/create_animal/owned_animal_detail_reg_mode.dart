@@ -284,7 +284,9 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
                                   ),
 
                                   // Content for the 'Medical' tab
-                                  const MammalsMedical(),
+                                  MammalsMedical(
+                                    OviDetails: widget.OviDetails,
+                                  ),
                                 ],
                               ),
                             ),

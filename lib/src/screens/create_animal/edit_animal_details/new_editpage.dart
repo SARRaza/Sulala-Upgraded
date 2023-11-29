@@ -32,8 +32,10 @@ class EditAnimalGenInfo extends ConsumerStatefulWidget {
 class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
   late String selectedAnimalType = widget.OviDetails.selectedAnimalType;
   late String selectedOviGender = widget.OviDetails.selectedOviGender;
+  late String selectedBreedingStage = widget.OviDetails.selectedBreedingStage;
 
   final TextEditingController animalNameController = TextEditingController();
+
   final TextEditingController medicalNeedsController = TextEditingController();
   final TextEditingController animalTypeController = TextEditingController();
   final TextEditingController animalSpeciesController = TextEditingController();
@@ -66,12 +68,13 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
   };
   late String selectedAnimalSpecies = widget.OviDetails.selectedAnimalSpecies;
   late String selectedAnimalBreeds = widget.OviDetails.selectedAnimalBreed;
-
+  bool showAdditionalFields = false;
   @override
   void initState() {
     super.initState();
 
     // Initialize text controllers with widget values
+    medicalNeedsController.text = widget.OviDetails.medicalNeeds;
     animalNameController.text = widget.OviDetails.animalName;
     medicalNeedsController.text = widget.OviDetails.medicalNeeds;
     // animalSireController.text = widget.OviDetails.selectedOviSire;
@@ -95,6 +98,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
     selectedBreedingStageController.text =
         widget.OviDetails.selectedBreedingStage;
     selectedOviImage = widget.OviDetails.selectedOviImage;
+    selectedBreedingStage = widget.OviDetails.selectedBreedingStage;
   }
 
   List<String> modalMammalSpeciesList = [
@@ -1313,7 +1317,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                           .update((state) => 'Unknown');
                       selectedOviGender = 'Unknown';
 
-                      // showAdditionalFields = false;
+                      showAdditionalFields = false;
                     });
                   },
                   child: Row(
@@ -1353,7 +1357,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                           .update((state) => 'Male');
                       selectedOviGender = 'Male';
 
-                      // showAdditionalFields = false;
+                      showAdditionalFields = false;
                     });
                   },
                   child: Row(
@@ -1392,8 +1396,6 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                           .read(selectedOviGenderProvider.notifier)
                           .update((state) => 'Female');
                       selectedOviGender = 'Female';
-
-                      // showAdditionalFields = false;
                     });
                   },
                   child: Row(
@@ -1430,6 +1432,221 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
               SizedBox(
                 height: globals.heightMediaQuery * 16,
               ),
+              Visibility(
+                visible: selectedAnimalType == 'Oviparous' &&
+                    selectedOviGender == "Female",
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Frequency Of Laying Eggs/Month',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      onChanged: (value) {
+                        ref
+                            .read(layingFrequencyProvider.notifier)
+                            .update((state) => value);
+                      },
+                      controller: layingFrequencyController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter Frequency', // Add your hint text here
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50.0),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 12.0, horizontal: 16.0),
+                      ),
+                      textInputAction:
+                          TextInputAction.done, // Change the keyboard action
+                    ),
+                    // Your first additional text field widget here
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Number Of Eggs/Month',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      onChanged: (value) {
+                        ref
+                            .read(eggsPerMonthProvider.notifier)
+                            .update((state) => value);
+                      },
+                      controller: eggsPerMonthController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter The Number', // Add your hint text here
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50.0),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 12.0, horizontal: 16.0),
+                      ),
+                      textInputAction:
+                          TextInputAction.done, // Change the keyboard action
+                    ),
+                    const SizedBox(height: 15),
+                    const Divider(),
+                    // Your second additional text field widget here
+                  ],
+                ),
+              ),
+              if (selectedOviGender == "Female")
+                Visibility(
+                  visible: selectedAnimalType == 'Mammal' &&
+                      selectedOviGender == "Female",
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: globals.heightMediaQuery * 16,
+                      ),
+                      Text(
+                        "Breeding Stage",
+                        style: AppFonts.headline2(color: AppColors.grayscale90),
+                      ),
+                      SizedBox(
+                        height: globals.heightMediaQuery * 16,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: globals.heightMediaQuery * 12,
+                          bottom: globals.heightMediaQuery * 12,
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            ref
+                                .read(selectedBreedingStageProvider.notifier)
+                                .update((state) => 'Ready For Breeding');
+                            setState(() {
+                              selectedBreedingStage = 'Ready For Breeding';
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'Ready For Breeding',
+                                  style: AppFonts.body2(
+                                      color: AppColors.grayscale90),
+                                ),
+                              ),
+                              Container(
+                                width: globals.widthMediaQuery * 24,
+                                height: globals.widthMediaQuery * 24,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: selectedBreedingStage ==
+                                            'Ready For Breeding'
+                                        ? AppColors.primary20
+                                        : AppColors.grayscale30,
+                                    width: selectedBreedingStage ==
+                                            'Ready For Breeding'
+                                        ? 6.0
+                                        : 1.0,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: globals.heightMediaQuery * 12,
+                          bottom: globals.heightMediaQuery * 12,
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            ref
+                                .read(selectedBreedingStageProvider.notifier)
+                                .update((state) => 'Pregnant');
+                            setState(() {
+                              selectedBreedingStage = 'Pregnant';
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'Pregnant',
+                                  style: AppFonts.body2(
+                                      color: AppColors.grayscale90),
+                                ),
+                              ),
+                              Container(
+                                width: globals.widthMediaQuery * 24,
+                                height: globals.widthMediaQuery * 24,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: selectedBreedingStage == 'Pregnant'
+                                        ? AppColors.primary20
+                                        : AppColors.grayscale30,
+                                    width: selectedBreedingStage == 'Pregnant'
+                                        ? 6.0
+                                        : 1.0,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: globals.heightMediaQuery * 12,
+                          bottom: globals.heightMediaQuery * 12,
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            ref
+                                .read(selectedBreedingStageProvider.notifier)
+                                .update((state) => 'Lactating');
+                            setState(() {
+                              selectedBreedingStage = 'Lactating';
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'Lactating',
+                                  style: AppFonts.body2(
+                                      color: AppColors.grayscale90),
+                                ),
+                              ),
+                              Container(
+                                width: globals.widthMediaQuery * 24,
+                                height: globals.widthMediaQuery * 24,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: selectedBreedingStage == 'Lactating'
+                                        ? AppColors.primary20
+                                        : AppColors.grayscale30,
+                                    width: selectedBreedingStage == 'Lactating'
+                                        ? 6.0
+                                        : 1.0,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.019),
+                      const Divider(),
+                    ],
+                  ),
+                ),
               Text(
                 "Dates",
                 style: AppFonts.headline2(color: AppColors.grayscale90),
@@ -1795,13 +2012,13 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
               selectedOviGender: selectedOviGender,
               // selectedOviSire: animalSireController.text,
               // selectedOviDam: animalDamController.text,
-              selectedBreedingStage: selectedBreedingStageController.text,
+              selectedBreedingStage: selectedBreedingStage,
               fieldName: fieldNameController.text,
               fieldContent: fieldContentController.text,
               layingFrequency: layingFrequencyController.text,
               eggsPerMonth: eggsPerMonthController.text,
               dateOfBirth: dateOfBirthController.text,
-              // selectedOviImage: ref.read(selectedAnimalImageProvider),
+
               selectedOviDates: selectedOviDates,
               selectedOviImage: selectedOviImage,
             );

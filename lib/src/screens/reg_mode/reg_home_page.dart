@@ -314,36 +314,59 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                     ],
                   ),
                   SizedBox(height: globals.heightMediaQuery * 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: globals.widthMediaQuery * 216,
-                        height: globals.heightMediaQuery * 220,
-                        child: SfCircularChart(
-                          margin: const EdgeInsets.all(0),
-                          series: <CircularSeries>[
-                            DoughnutSeries<AnimalData, String>(
-                              dataSource: getFilteredChartData(),
-                              xValueMapper: (AnimalData data, _) => data.animal,
-                              yValueMapper: (AnimalData data, _) => data.quan,
-                              pointColorMapper: (AnimalData data, _) =>
-                                  data.quan == 0
-                                      ? Colors.grey
-                                      : speciesColorMap[data.animal] ??
-                                          data.color,
+                  sumOfNextTwoCards == 0
+                      ? Row(
+                          children: [
+                            SizedBox(
+                              width: globals.widthMediaQuery * 20,
+                            ),
+                            Center(
+                              child: Image.asset(
+                                "assets/illustrations/pie_chart.png",
+                              ),
+                            ),
+                            SizedBox(
+                              width: globals.widthMediaQuery * 50,
+                            ),
+                            Center(
+                              child: Image.asset(
+                                "assets/illustrations/_Legend.png",
+                              ),
+                            ),
+                          ],
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: globals.widthMediaQuery * 216,
+                              height: globals.heightMediaQuery * 220,
+                              child: SfCircularChart(
+                                margin: const EdgeInsets.all(0),
+                                series: <CircularSeries>[
+                                  DoughnutSeries<AnimalData, String>(
+                                    dataSource: getFilteredChartData(),
+                                    xValueMapper: (AnimalData data, _) =>
+                                        data.animal,
+                                    yValueMapper: (AnimalData data, _) =>
+                                        data.quan,
+                                    pointColorMapper: (AnimalData data, _) =>
+                                        data.quan == 0
+                                            ? Colors.grey
+                                            : speciesColorMap[data.animal] ??
+                                                data.color,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: ListView(
+                                shrinkWrap: true,
+                                children: _buildLegendItems(),
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                      Expanded(
-                        child: ListView(
-                          shrinkWrap: true,
-                          children: _buildLegendItems(),
-                        ),
-                      ),
-                    ],
-                  ),
                   Row(
                     children: [
                       if (reminders.isNotEmpty)

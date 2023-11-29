@@ -33,7 +33,7 @@ class OviVariables {
   final String layingFrequency;
   final String eggsPerMonth;
   final String selectedBreedingStage;
-  final String medicalNeeds;
+  late final String medicalNeeds;
   final bool shouldAddAnimal;
   final String breedingeventNumber;
   final String breedsire;

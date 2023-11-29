@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
 import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
+import '../../widgets/inputs/paragraph_text_fields/medical_needs_paragraph.dart';
 import '../../widgets/inputs/paragraph_text_fields/paragraph_text_field.dart';
+import '../../widgets/inputs/text_fields/primary_text_field.dart';
 import '../../widgets/other/one_information_block.dart';
 import '../../widgets/other/two_information_block.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import '../create_animal/sar_listofanimals.dart';
 import 'add_medical_checkup.dart';
 import 'add_surgeries.dart';
 import 'add_vaccination.dart';
@@ -17,14 +22,14 @@ import 'edit_vaccination.dart';
 import 'is_pregnant_drawup.dart';
 import 'pregnant_status_drawup.dart';
 
-class MammalsMedical extends StatefulWidget {
-  const MammalsMedical({super.key});
+class MammalsMedical extends ConsumerStatefulWidget {
+  final OviVariables OviDetails;
+  const MammalsMedical({super.key, required this.OviDetails});
 
   @override
-  State<MammalsMedical> createState() => _MammalsMedicalState();
+  ConsumerState<MammalsMedical> createState() => _MammalsMedicalState();
 }
 
-TextEditingController mammalmedicalNeedsController = TextEditingController();
 bool _isMammalEditMode = false;
 bool _isFemale = true;
 bool? newMammalpregnantStatus;
@@ -42,7 +47,15 @@ List<VaccineDetails> mammalvaccineDetailsList = [];
 List<MedicalCheckupDetails> mammalmedicalCheckupDetailsList = [];
 List<SurgeryDetails> mammalsurgeryDetailsList = [];
 
-class _MammalsMedicalState extends State<MammalsMedical> {
+class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
+  final TextEditingController mammalmedicalNeedsController =
+      TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    mammalmedicalNeedsController.text = widget.OviDetails.medicalNeeds;
+  }
+
   void _showexpdeliveryDatePickerModalSheet() async {
     final DateTime? expdeliveryDate = await showDatePicker(
       context: context,
@@ -153,10 +166,19 @@ class _MammalsMedicalState extends State<MammalsMedical> {
                       text: 'Save',
                       onPressed: () {
                         setState(() {
+                          final updatedOviDetails = widget.OviDetails.copyWith(
+                            medicalNeeds: mammalmedicalNeedsController.text,
+                          );
+
+                          final oviAnimals = ref.read(ovianimalsProvider);
+                          final index = oviAnimals.indexOf(widget.OviDetails);
+                          if (index >= 0) {
+                            oviAnimals[index] = updatedOviDetails;
+                          }
+
                           _isMammalEditMode = false;
                         });
-                      },
-                    )
+                      })
                   : IconButton(
                       icon: Image.asset(
                         'assets/icons/frame/24px/24_Edit.png',
@@ -178,15 +200,12 @@ class _MammalsMedicalState extends State<MammalsMedical> {
                   children: [
                     SizedBox(
                       height: globals.heightMediaQuery * 144,
-                      child: ParagraphTextField(
-                          maxLines: 6,
-                          onChanged: (value) {
-                            setState(() {
-                              mammalmedicalNeedsController.text = value;
-                            });
-                          },
-                          hintText:
-                              'Be sure to include joint support medicine, antibiotics, anti-inflammatory medication, and topical antiseptics when packing your first-aid kit for your horses. If you have the essentials, you can keep your four-legged friends in the best condition possible.'),
+                      child: MedicalNeedsParagraphTextField(
+                        maxLines: 6,
+                        hintText:
+                            'Be sure to include joint support medicine, antibiotics, anti-inflammatory medication, and topical antiseptics when packing your first-aid kit for your horses. If you have the essentials, you can keep your four-legged friends in the best condition possible.',
+                        controller: mammalmedicalNeedsController,
+                      ),
                     ),
                     SizedBox(
                       height: globals.heightMediaQuery * 8,
@@ -201,7 +220,8 @@ class _MammalsMedicalState extends State<MammalsMedical> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Be sure to include joint support medicine, antibiotics, anti-inflammatory medication, and topical antiseptics when packing your first-aid kit for your horses. If you have the essentials, you can keep your four-legged friends in the best condition possible.',
+                      widget.OviDetails.medicalNeeds,
+                      // 'Be sure to include joint support medicine, antibiotics, anti-inflammatory medication, and topical antiseptics when packing your first-aid kit for your horses. If you have the essentials, you can keep your four-legged friends in the best condition possible.',
                       style: AppFonts.body2(color: AppColors.grayscale70),
                     ),
                     SizedBox(
