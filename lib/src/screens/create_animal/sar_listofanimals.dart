@@ -20,6 +20,8 @@ class OviVariables {
   final List<MainAnimalSire> selectedOviSire;
   final List<MainAnimalDam> selectedOviDam;
   late final String dateOfBirth;
+  final String dateOfSonar;
+  final String expDlvDate;
   final String fieldName;
   final String fieldContent;
   final String notes;
@@ -53,6 +55,8 @@ class OviVariables {
     required this.selectedOviSire,
     required this.selectedOviDam,
     required this.dateOfBirth,
+    required this.dateOfSonar,
+    required this.expDlvDate,
     required this.selectedOviGender,
     required this.fieldName,
     required this.fieldContent,
@@ -86,6 +90,8 @@ class OviVariables {
       List<MainAnimalSire>? selectedOviSire,
       List<MainAnimalDam>? selectedOviDam,
       String? dateOfBirth,
+      String? dateOfSonar,
+      String? expDlvDate,
       String? fieldName,
       String? fieldContent,
       String? notes,
@@ -119,6 +125,8 @@ class OviVariables {
       selectedOviSire: selectedOviSire ?? this.selectedOviSire,
       selectedOviDam: selectedOviDam ?? this.selectedOviDam,
       dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      dateOfSonar: dateOfSonar ?? this.dateOfSonar,
+      expDlvDate: expDlvDate ?? this.expDlvDate,
       fieldName: fieldName ?? this.fieldName,
       fieldContent: fieldContent ?? this.fieldContent,
       notes: notes ?? this.notes,
@@ -235,6 +243,8 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
       selectedOviSire: ref.read(animalSireDetailsProvider),
       selectedOviDam: ref.read(animalDamDetailsProvider),
       dateOfBirth: ref.read(dateOfBirthProvider),
+      dateOfSonar: ref.read(dateOfSonarProvider),
+      expDlvDate: ref.read(expDeliveryDateProvider),
       fieldName: ref.read(fieldNameProvider),
       fieldContent: ref.read(fieldContentProvider),
       notes: ref.read(additionalnotesProvider),

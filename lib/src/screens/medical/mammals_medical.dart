@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -7,8 +9,6 @@ import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
 import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/paragraph_text_fields/medical_needs_paragraph.dart';
-import '../../widgets/inputs/paragraph_text_fields/paragraph_text_field.dart';
-import '../../widgets/inputs/text_fields/primary_text_field.dart';
 import '../../widgets/other/one_information_block.dart';
 import '../../widgets/other/two_information_block.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
@@ -48,12 +48,15 @@ List<MedicalCheckupDetails> mammalmedicalCheckupDetailsList = [];
 List<SurgeryDetails> mammalsurgeryDetailsList = [];
 
 class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
-  final TextEditingController mammalmedicalNeedsController =
-      TextEditingController();
+  final TextEditingController medicalNeedsController = TextEditingController();
+  final TextEditingController dateOfSonarController = TextEditingController();
+  final TextEditingController expDlvDateController = TextEditingController();
   @override
   void initState() {
     super.initState();
-    mammalmedicalNeedsController.text = widget.OviDetails.medicalNeeds;
+    medicalNeedsController.text = widget.OviDetails.medicalNeeds;
+    dateOfSonarController.text = widget.OviDetails.dateOfSonar;
+    expDlvDateController.text = widget.OviDetails.expDlvDate;
   }
 
   void _showexpdeliveryDatePickerModalSheet() async {
@@ -82,7 +85,55 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
         expdeliveryDate != selectedmammalexpdeliveryDate) {
       setState(() {
         selectedmammalexpdeliveryDate = expdeliveryDate;
-        newmammalexpdeliverydate = DateFormat.yMMMd().format(expdeliveryDate);
+        expDlvDateController.text = DateFormat.yMMMd().format(expdeliveryDate);
+        final updatedOviDetails = widget.OviDetails.copyWith(
+          expDlvDate: expDlvDateController.text,
+        );
+
+        final oviAnimals = ref.read(ovianimalsProvider);
+        final index = oviAnimals.indexOf(widget.OviDetails);
+        if (index >= 0) {
+          oviAnimals[index] = updatedOviDetails;
+        }
+      });
+    }
+  }
+
+  void _dateOfSonarDatePickerModalSheet() async {
+    final DateTime? dateOfSonar = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            // Change the background color of the date picker
+            primaryColor: AppColors.primary30,
+            colorScheme: const ColorScheme.light(primary: AppColors.primary20),
+            buttonTheme:
+                const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            // Here you can customize more colors if needed
+            // For example, you can change the header color, selected day color, etc.
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (dateOfSonar != null && dateOfSonar != selectedmammalexpdeliveryDate) {
+      setState(() {
+        selectedmammalexpdeliveryDate = dateOfSonar;
+        dateOfSonarController.text = DateFormat.yMMMd().format(dateOfSonar);
+        final updatedOviDetails = widget.OviDetails.copyWith(
+          dateOfSonar: dateOfSonarController.text,
+        );
+
+        final oviAnimals = ref.read(ovianimalsProvider);
+        final index = oviAnimals.indexOf(widget.OviDetails);
+        if (index >= 0) {
+          oviAnimals[index] = updatedOviDetails;
+        }
       });
     }
   }
@@ -167,7 +218,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                       onPressed: () {
                         setState(() {
                           final updatedOviDetails = widget.OviDetails.copyWith(
-                            medicalNeeds: mammalmedicalNeedsController.text,
+                            medicalNeeds: medicalNeedsController.text,
                           );
 
                           final oviAnimals = ref.read(ovianimalsProvider);
@@ -192,9 +243,6 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                     ),
             ],
           ),
-          // SizedBox(
-          //   height: heightMediaQuery * 8,
-          // ),
           _isMammalEditMode
               ? Column(
                   children: [
@@ -204,7 +252,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                         maxLines: 6,
                         hintText:
                             'Be sure to include joint support medicine, antibiotics, anti-inflammatory medication, and topical antiseptics when packing your first-aid kit for your horses. If you have the essentials, you can keep your four-legged friends in the best condition possible.',
-                        controller: mammalmedicalNeedsController,
+                        controller: medicalNeedsController,
                       ),
                     ),
                     SizedBox(
@@ -219,11 +267,16 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.OviDetails.medicalNeeds,
-                      // 'Be sure to include joint support medicine, antibiotics, anti-inflammatory medication, and topical antiseptics when packing your first-aid kit for your horses. If you have the essentials, you can keep your four-legged friends in the best condition possible.',
-                      style: AppFonts.body2(color: AppColors.grayscale70),
-                    ),
+                    widget.OviDetails.medicalNeeds.isNotEmpty
+                        ? Text(
+                            widget.OviDetails.medicalNeeds,
+                            // 'Be sure to include joint support medicine, antibiotics, anti-inflammatory medication, and topical antiseptics when packing your first-aid kit for your horses. If you have the essentials, you can keep your four-legged friends in the best condition possible.',
+                            style: AppFonts.body2(color: AppColors.grayscale70),
+                          )
+                        : Text(
+                            'Be sure to include joint support medicine, antibiotics, anti-inflammatory medication, and topical antiseptics when packing your first-aid kit for your horses. If you have the essentials, you can keep your four-legged friends in the best condition possible.',
+                            style: AppFonts.body2(color: AppColors.grayscale70),
+                          ),
                     SizedBox(
                       height: globals.heightMediaQuery * 22,
                     ),
@@ -321,7 +374,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                 ),
                 ListTile(
                   onTap: () {
-                    _showexpdeliveryDatePickerModalSheet();
+                    _dateOfSonarDatePickerModalSheet();
                   },
                   contentPadding: const EdgeInsets.only(right: 0, left: 0),
                   leading: Text(
@@ -331,10 +384,17 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        '10.08.2023',
-                        style: AppFonts.body2(color: AppColors.grayscale90),
-                      ),
+                      dateOfSonarController.text.isNotEmpty
+                          ? Text(
+                              dateOfSonarController.text,
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            )
+                          : Text(
+                              'ADD',
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            ),
                       const Icon(Icons.chevron_right_rounded,
                           color: AppColors.primary40),
                     ],
@@ -342,7 +402,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                 ),
                 ListTile(
                   onTap: () {
-                    _showIsPregnantSelection(context);
+                    _showexpdeliveryDatePickerModalSheet();
                   },
                   contentPadding: const EdgeInsets.only(right: 0, left: 0),
                   leading: Text(
@@ -352,10 +412,17 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        '09.09.2023',
-                        style: AppFonts.body2(color: AppColors.grayscale90),
-                      ),
+                      expDlvDateController.text.isNotEmpty
+                          ? Text(
+                              expDlvDateController.text,
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            )
+                          : Text(
+                              'ADD',
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            ),
                       const Icon(Icons.chevron_right_rounded,
                           color: AppColors.primary40),
                     ],
