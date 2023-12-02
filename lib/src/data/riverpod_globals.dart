@@ -77,11 +77,14 @@ final ovianimalsProvider = StateProvider<List<OviVariables>>((ref) => []);
 final breedingEventsProvider =
     StateProvider<List<BreedingEventVariables>>((ref) => []);
 
+// final grandfatherNamesProvider = StateProvider<String>((ref) => 'Add');
+// final grandmotherNamesProvider = StateProvider<String>((ref) => 'Add');
 class MainAnimalSire {
   String animalName;
   File? selectedOviImage;
   String selectedOviGender;
-  MainAnimalSire? father; // Reference to the father
+  MainAnimalSire? father;
+  MainAnimalDam? mother;
 
   // Constructor
   MainAnimalSire(
@@ -89,22 +92,28 @@ class MainAnimalSire {
     this.selectedOviImage,
     this.selectedOviGender, {
     this.father,
+    this.mother,
   });
 }
-
-final grandfatherNamesProvider = StateProvider<String>((ref) => 'Add');
-
-final animalSireDetailsProvider =
-    StateProvider<List<MainAnimalSire>>((ref) => []);
 
 class MainAnimalDam {
   final String animalName;
   final File? selectedOviImage;
   final String selectedOviGender;
+  MainAnimalDam? mother;
+  MainAnimalSire? father;
 
-  MainAnimalDam(this.animalName, this.selectedOviImage, this.selectedOviGender);
+  MainAnimalDam(
+    this.animalName,
+    this.selectedOviImage,
+    this.selectedOviGender, {
+    this.mother,
+    this.father,
+  });
 }
 
+final animalSireDetailsProvider =
+    StateProvider<List<MainAnimalSire>>((ref) => []);
 final animalDamDetailsProvider =
     StateProvider<List<MainAnimalDam>>((ref) => []);
 

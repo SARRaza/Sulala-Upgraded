@@ -264,7 +264,7 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
                       imagePath: '',
                       title: '',
                       geninfo: '',
-                      breedingEvents: [],
+                      breedingEvents: const [],
                     ),
                   ),
                 );

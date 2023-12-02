@@ -194,11 +194,19 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
                       Text(
                         'Father: ${widget.OviDetails.selectedOviSire.isNotEmpty ? widget.OviDetails.selectedOviSire.first.animalName : 'Unknown'}',
                       ),
+                      Text(
+                        'Mother: ${widget.OviDetails.selectedOviDam.isNotEmpty ? widget.OviDetails.selectedOviDam.first.animalName : 'Unknown'}',
+                      ),
                       if (widget.OviDetails.selectedOviSire.isNotEmpty &&
                           widget.OviDetails.selectedOviSire.first.father !=
                               null)
                         Text(
                           'Grandfather: ${widget.OviDetails.selectedOviSire.first.father!.animalName}',
+                        ),
+                      if (widget.OviDetails.selectedOviDam.isNotEmpty &&
+                          widget.OviDetails.selectedOviDam.first.mother != null)
+                        Text(
+                          'Grandmother: ${widget.OviDetails.selectedOviDam.first.mother!.animalName}',
                         ),
                       SizedBox(
                         height: globals.heightMediaQuery * 16,

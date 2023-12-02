@@ -134,9 +134,12 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
     final ovianimals = ref.watch(ovianimalsProvider);
 
     String searchQuery = '';
+    final selectedFather = <MainAnimalSire>[];
+    final selectedMother = <MainAnimalDam>[];
 
     await showModalBottomSheet(
       context: context,
+      backgroundColor: Colors.white,
       showDragHandle: true,
       isScrollControlled: true,
       builder: (BuildContext context) {
@@ -198,7 +201,6 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                           final OviDetails = ovianimals[index];
 
                           final bool isSelected =
-                              // ignore: iterable_contains_unrelated_type
                               selectedSire.contains(OviDetails.animalName);
 
                           // Apply the filter here
@@ -244,8 +246,19 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                                     'Father: ${OviDetails.selectedOviSire.first.animalName}'),
                                 if (OviDetails.selectedOviSire.first.father !=
                                     null)
-                                  Text(
-                                      'Grandfather: ${OviDetails.selectedOviSire.first.father!.animalName}'),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                          'Paternal Father: ${OviDetails.selectedOviSire.first.father!.animalName}'),
+                                      if (OviDetails
+                                              .selectedOviSire.first.mother !=
+                                          null)
+                                        Text(
+                                            'Paternal Mother: ${OviDetails.selectedOviSire.first.mother!.animalName}'),
+                                    ],
+                                  ),
                               ],
                             ),
                             onTap: () {
@@ -265,12 +278,23 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                                   MainAnimalSire father =
                                       OviDetails.selectedOviSire.first;
 
+                                  // Select the mother if available
+                                  MainAnimalDam mother =
+                                      OviDetails.selectedOviDam.first;
+
                                   selectedSire.add(MainAnimalSire(
                                     OviDetails.animalName,
                                     oviImage,
                                     OviDetails.selectedOviGender,
                                     father: father,
+                                    mother: mother,
                                   ));
+
+                                  // Add father to the list
+                                  selectedFather.add(father);
+
+                                  // Add mother to the list
+                                  selectedMother.add(mother);
                                 }
                               });
                             },
@@ -290,11 +314,12 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                         existingSelectedSire.addAll(selectedSire);
 
                         // Also, add fathers to the list
-                        for (MainAnimalSire sire in selectedSire) {
-                          if (sire.father != null) {
-                            existingSelectedSire.add(sire.father!);
-                          }
-                        }
+                        existingSelectedSire.addAll(selectedFather);
+
+                        // Append the selected mothers to the existing list
+                        final List<MainAnimalDam> existingSelectedDam =
+                            ref.read(animalDamDetailsProvider);
+                        existingSelectedDam.addAll(selectedMother);
                       },
                       child: const Text("Done"),
                     ),
@@ -317,6 +342,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
     await showModalBottomSheet(
       context: context,
       showDragHandle: true,
+      backgroundColor: Colors.white,
       isScrollControlled: true,
       builder: (BuildContext context) {
         return StatefulBuilder(
@@ -377,7 +403,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
 
                           final bool isSelected =
                               // ignore: iterable_contains_unrelated_type
-                              selectedSire.contains(OviDetails.animalName);
+                              selectedDam.contains(OviDetails.animalName);
 
                           // Apply the filter here
                           if (!OviDetails.animalName
@@ -414,7 +440,18 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                                   : null,
                             ),
                             title: Text(OviDetails.animalName),
-                            subtitle: Text(OviDetails.selectedAnimalType),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Gender: ${OviDetails.selectedOviGender}'),
+                                Text(
+                                    'Mother: ${OviDetails.selectedOviDam.first.animalName}'),
+                                if (OviDetails.selectedOviDam.first.mother !=
+                                    null)
+                                  Text(
+                                      'Grandmother: ${OviDetails.selectedOviDam.first.mother!.animalName}'),
+                              ],
+                            ),
                             onTap: () {
                               setState(() {
                                 if (isSelected) {
@@ -426,12 +463,14 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                                   // Use a default image (icon) if selectedOviImage is null
                                   final File? oviImage =
                                       OviDetails.selectedOviImage;
+                                  MainAnimalDam mother =
+                                      OviDetails.selectedOviDam.first;
 
                                   selectedDam.add(MainAnimalDam(
-                                    OviDetails.animalName,
-                                    oviImage,
-                                    OviDetails.selectedOviGender,
-                                  ));
+                                      OviDetails.animalName,
+                                      oviImage,
+                                      OviDetails.selectedOviGender,
+                                      mother: mother));
                                 }
                               });
                             },
@@ -449,6 +488,12 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                         final List<MainAnimalDam> existingSelectedDam =
                             ref.read(animalDamDetailsProvider);
                         existingSelectedDam.addAll(selectedDam);
+
+                        for (MainAnimalDam dam in selectedDam) {
+                          if (dam.mother != null) {
+                            existingSelectedDam.add(dam.mother!);
+                          }
+                        }
                       },
                       child: const Text("Done"),
                     ),
