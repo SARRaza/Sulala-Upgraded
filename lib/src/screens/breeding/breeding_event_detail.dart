@@ -7,7 +7,7 @@ import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
 import 'edit_breeding_event_detail.dart';
 import 'list_of_breeding_events.dart';
-import 'listofchildren.dart';
+import 'list_of_childrens.dart';
 
 class BreedingEventDetails extends StatefulWidget {
   final List<BreedingEventVariables> breedingEvents;
@@ -217,7 +217,8 @@ class _BreedingEventDetailsState extends State<BreedingEventDetails> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => BreedingEventChildrenList(
-                              breedingEvents: widget.breedingEvents,
+                              // breedingEvents: widget.breedingEvents,
+                              OviDetails: widget.OviDetails,
                             ),
                           ),
                         );
@@ -282,7 +283,8 @@ class _BreedingEventDetailsState extends State<BreedingEventDetails> {
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       BreedingEventChildrenList(
-                                    breedingEvents: widget.breedingEvents,
+                                    // breedingEvents: widget.breedingEvents,
+                                    OviDetails: widget.OviDetails,
                                   ),
                                 ),
                               );

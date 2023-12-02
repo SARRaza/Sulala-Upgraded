@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../screens/breeding/list_of_breeding_events.dart';
-import '../../../screens/breeding/list_of_children.dart';
 import '../../../screens/breeding/list_of_mates.dart';
 
+import '../../../screens/breeding/list_of_childrens.dart';
 import '../../../screens/breeding/parents_page.dart';
 import '../../../screens/create_animal/sar_listofanimals.dart';
 import '../../../theme/colors/colors.dart';
@@ -163,18 +163,18 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                     MaterialPageRoute(
                       builder: (context) {
                         return ListOfBreedingMates(
-                          selectedBreedChildren: 'fff',
-                          selectedBreedDam: 'dd',
-                          selectedBreedSire: 'xx',
-                          selectedDeliveryDate: '2222',
-                          selectedBreedingDate: '321',
-                          selectedBreedPartner: 'fsdsdf',
-                          breedingEventNumberController:
-                              TextEditingController(),
-                          breedingNotesController: TextEditingController(),
-                          shouldAddBreedEvent: false,
+                          // selectedBreedChildren: 'fff',
+                          // selectedBreedDam: 'dd',
+                          // selectedBreedSire: 'xx',
+                          // selectedDeliveryDate: '2222',
+                          // selectedBreedingDate: '321',
+                          // selectedBreedPartner: 'fsdsdf',
+                          // breedingEventNumberController:
+                          //     TextEditingController(),
+                          // breedingNotesController: TextEditingController(),
+                          // shouldAddBreedEvent: false,
                           OviDetails: widget.OviDetails,
-                          breedingEvents: widget.breedingEvents,
+                          // breedingEvents: widget.breedingEvents,
                         );
                       },
                     ),
@@ -196,19 +196,19 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return ListOfBreedingChildren(
-                          selectedBreedChildren: 'fff',
-                          selectedBreedDam: 'dd',
-                          selectedBreedSire: 'xx',
-                          selectedDeliveryDate: '2222',
-                          selectedBreedingDate: '321',
-                          selectedBreedPartner: 'fsdsdf',
-                          breedingEventNumberController:
-                              TextEditingController(),
-                          breedingNotesController: TextEditingController(),
-                          shouldAddBreedEvent: false,
+                        return BreedingEventChildrenList(
+                          // selectedBreedChildren: 'fff',
+                          // selectedBreedDam: 'dd',
+                          // selectedBreedSire: 'xx',
+                          // selectedDeliveryDate: '2222',
+                          // selectedBreedingDate: '321',
+                          // selectedBreedPartner: 'fsdsdf',
+                          // breedingEventNumberController:
+                          //     TextEditingController(),
+                          // breedingNotesController: TextEditingController(),
+                          // shouldAddBreedEvent: false,
                           OviDetails: widget.OviDetails,
-                          breedingEvents: widget.breedingEvents,
+                          // breedingEvents: widget.breedingEvents,
                         );
                       },
                     ),

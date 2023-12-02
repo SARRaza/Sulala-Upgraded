@@ -195,35 +195,14 @@ import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../create_animal/owned_animal_detail_reg_mode.dart';
 import '../create_animal/sar_listofanimals.dart';
 import 'breeding_event_detail.dart';
-import 'create_breeding_event.dart';
-import 'list_of_breeding_events.dart';
 
 class ListOfBreedingMates extends ConsumerStatefulWidget {
-  final TextEditingController breedingNotesController;
-  final TextEditingController breedingEventNumberController;
-  final String selectedBreedSire;
-  final String selectedBreedDam;
-  final String selectedBreedPartner;
-  final String selectedBreedChildren;
-  final String selectedBreedingDate;
-  final String selectedDeliveryDate;
-  final bool shouldAddBreedEvent;
   final OviVariables OviDetails;
-  final List<BreedingEventVariables> breedingEvents;
 
-  const ListOfBreedingMates(
-      {super.key,
-      required this.breedingNotesController,
-      required this.breedingEventNumberController,
-      required this.selectedBreedSire,
-      required this.selectedBreedDam,
-      required this.selectedBreedPartner,
-      required this.selectedBreedChildren,
-      required this.selectedBreedingDate,
-      required this.selectedDeliveryDate,
-      required this.shouldAddBreedEvent,
-      required this.OviDetails,
-      required this.breedingEvents});
+  const ListOfBreedingMates({
+    super.key,
+    required this.OviDetails,
+  });
 
   @override
   ConsumerState<ListOfBreedingMates> createState() => _ListOfBreedingMates();
@@ -234,48 +213,6 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
   @override
   void initState() {
     super.initState();
-    // Add the initial breeding event to the list
-    if (widget.shouldAddBreedEvent) {
-      addBreedingEvent(ref.read(breedingEventNumberProvider));
-    }
-  }
-
-  void addBreedingEvent(String eventNumber) {
-    final breedingEvent = BreedingEventVariables(
-      eventNumber: ref.read(breedingEventNumberProvider),
-      breeddam: ref.read(breeddamPictureProvider),
-      sire: ref.read(breedingSireDetailsProvider),
-      dam: ref.read(breedingDamDetailsProvider),
-      partner: ref.read(breedingPartnerProvider),
-      children: ref.read(breedingChildrenDetailsProvider),
-      breedingDate: ref.read(breedingDateProvider),
-      deliveryDate: ref.read(deliveryDateProvider),
-      notes: ref.read(breedingnotesProvider),
-      shouldAddEvent: ref.read(shoudlAddEventProvider),
-    );
-
-    setState(() {
-      if (ref.read(breedingEventsProvider).isEmpty) {
-        ref.read(breedingEventsProvider).add(breedingEvent);
-      } else {
-        ref.read(breedingEventsProvider).insert(0, breedingEvent);
-      }
-      final animalIndex = ref.read(ovianimalsProvider).indexWhere(
-          (animal) => animal.animalName == widget.OviDetails.animalName);
-
-      if (animalIndex != -1) {
-        ref.read(ovianimalsProvider)[animalIndex] =
-            ref.read(ovianimalsProvider)[animalIndex].copyWith(breedingEvents: {
-          ...ref.read(ovianimalsProvider)[animalIndex].breedingEvents,
-          widget.OviDetails.animalName: [
-            ...ref
-                .read(ovianimalsProvider)[animalIndex]
-                .breedingEvents[widget.OviDetails.animalName]!,
-            breedingEvent
-          ]
-        });
-      }
-    });
   }
 
   @override
@@ -327,7 +264,7 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
                       imagePath: '',
                       title: '',
                       geninfo: '',
-                      breedingEvents: widget.breedingEvents,
+                      breedingEvents: [],
                     ),
                   ),
                 );
@@ -352,59 +289,42 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
             breedingEvents.isEmpty
                 ? Expanded(
                     child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset('assets/illustrations/child_x.png'),
-                          SizedBox(
-                            height: 32 * globals.heightMediaQuery,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 151 * globals.heightMediaQuery,
+                        ),
+                        Image.asset('assets/illustrations/cow_broke_adult.png'),
+                        SizedBox(height: 32 * globals.heightMediaQuery),
+                        Text(
+                          'No Mates Yet',
+                          style:
+                              AppFonts.headline3(color: AppColors.grayscale90),
+                        ),
+                        SizedBox(
+                          height: 8 * globals.heightMediaQuery,
+                        ),
+                        Text(
+                          "This animal hasn’t been mated yet.",
+                          style: AppFonts.body2(color: AppColors.grayscale70),
+                        ),
+                        SizedBox(
+                          height: 125 * globals.heightMediaQuery,
+                        ),
+                        SizedBox(
+                          width: 130 * globals.widthMediaQuery,
+                          height: 52 * globals.heightMediaQuery,
+                          child: PrimaryButton(
+                            text: 'Add Mate',
+                            onPressed: () {
+                              // Implement the logic to add children here
+                            },
                           ),
-                          Text(
-                            'No Breeding Events Yet',
-                            style: AppFonts.headline3(
-                                color: AppColors.grayscale90),
-                          ),
-                          SizedBox(
-                            height: 8 * globals.heightMediaQuery,
-                          ),
-                          Text(
-                            'Add a breeding event to get started',
-                            style: AppFonts.body2(color: AppColors.grayscale70),
-                          ),
-                          SizedBox(
-                            height: 140 * globals.heightMediaQuery,
-                          ),
-                          SizedBox(
-                            height: 52 * globals.heightMediaQuery,
-                            child: PrimaryButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CreateBreedingEvents(
-                                      selectedAnimalType: '',
-                                      selectedAnimalSpecies: '',
-                                      selectedAnimalBreed: '',
-                                      OviDetails: widget.OviDetails,
-                                      breedingEvents: widget.breedingEvents,
-                                    ),
-                                  ),
-                                ).then((_) {
-                                  // When returning from CreateBreedingEvents, add the new event
-                                  if (widget.breedingEventNumberController.text
-                                      .isNotEmpty) {
-                                    addBreedingEvent(widget
-                                        .breedingEventNumberController.text);
-                                  }
-                                });
-                              },
-                              text: 'Add Breeding Event',
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  )
+                  ))
                 : Expanded(
                     child: ListView.builder(
                       shrinkWrap: true,

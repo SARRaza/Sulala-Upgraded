@@ -19,7 +19,6 @@ import 'add_vaccination.dart';
 import 'edit_medical_checkup.dart';
 import 'edit_surgeries.dart';
 import 'edit_vaccination.dart';
-import 'is_pregnant_drawup.dart';
 import 'pregnant_status_drawup.dart';
 
 class MammalsMedical extends ConsumerStatefulWidget {
@@ -147,26 +146,6 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
       isDismissible: true,
       builder: (BuildContext context) {
         return PregnantStatusWidget(
-          mammalpregnantStatuses: mammalpregnantStatuses,
-          newMammalpregnantStatus: newMammalpregnantStatus,
-        );
-      },
-    ).then((_) {
-      setState(() {
-        newMammalpregnantStatus == mammalpregnantStatuses;
-      });
-    });
-  }
-
-  void _showIsPregnantSelection(BuildContext context) {
-    showModalBottomSheet(
-      showDragHandle: true,
-      backgroundColor: Colors.transparent,
-      context: context,
-      isScrollControlled: true,
-      isDismissible: true,
-      builder: (BuildContext context) {
-        return IsPregnantWidget(
           mammalpregnantStatuses: mammalpregnantStatuses,
           newMammalpregnantStatus: newMammalpregnantStatus,
         );
