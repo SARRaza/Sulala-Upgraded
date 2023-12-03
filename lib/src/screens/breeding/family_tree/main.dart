@@ -1,10 +1,9 @@
-import 'package:family_tree_app/family_tree_item.dart';
-import 'package:family_tree_app/family_tree_node.dart';
-import 'package:family_tree_app/person.dart';
-
 import 'package:flutter/material.dart';
 
+import 'family_tree_item.dart';
+import 'family_tree_node.dart';
 import 'graph_painter.dart';
+import 'person.dart';
 
 void main() {
   runApp(const MyApp());

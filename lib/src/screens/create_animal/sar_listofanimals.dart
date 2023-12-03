@@ -7,6 +7,7 @@ import 'package:sulala_upgrade/src/widgets/pages/main_widgets/navigation_bar_reg
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
+import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/inputs/search_bars/button_search_bar.dart';
 import '../breeding/list_of_breeding_events.dart';
 
@@ -560,6 +561,47 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                                 SizedBox(
                                   height:
                                       MediaQuery.of(context).size.height * 0.03,
+                                ),
+                                SizedBox(
+                                  height: 52 * globals.heightMediaQuery,
+                                  child: PrimaryButton(
+                                    onPressed: () {
+                                      ref
+                                          .read(selectedAnimalTypeProvider
+                                              .notifier)
+                                          .update((state) => '');
+                                      ref
+                                          .read(selectedAnimalSpeciesProvider
+                                              .notifier)
+                                          .update((state) => '');
+                                      ref
+                                          .read(selectedAnimalBreedsProvider
+                                              .notifier)
+                                          .update((state) => '');
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              CreateAnimalPage(
+                                            breedingEvents:
+                                                widget.breedingEvents,
+                                          ),
+                                        ),
+                                      ).then((_) {
+                                        // When returning from CreateBreedingEvents, add the new event
+                                        if (ref
+                                            .read(animalNameProvider)
+                                            .isNotEmpty) {
+                                          addOviAnimal(
+                                            ref.read(animalNameProvider),
+                                            ref.read(
+                                                breedingEventNumberProvider),
+                                          );
+                                        }
+                                      });
+                                    }, // Call the addAnimal function when the button is pressed
+                                    text: 'Add Animal',
+                                  ),
                                 ),
                               ],
                             ),
