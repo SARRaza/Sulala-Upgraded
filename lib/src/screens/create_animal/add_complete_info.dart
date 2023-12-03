@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, duplicate_ignore
+// ignore_for_file: non_constant_identifier_names, duplicate_ignore, iterable_contains_unrelated_type
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
