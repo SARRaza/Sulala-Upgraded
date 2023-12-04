@@ -203,44 +203,44 @@ class _ParentsPageState extends ConsumerState<ParentsPage> {
                       SizedBox(
                         height: 24 * globals.heightMediaQuery,
                       ),
-                      const Text('Paternal Grand Parents'),
-                      if (widget.OviDetails.selectedOviSire.isNotEmpty &&
-                          widget.OviDetails.selectedOviSire.first.father !=
-                              null)
-                        Text(
-                          'Grandfather: ${widget.OviDetails.selectedOviSire.first.father!.animalName}',
-                        ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Column(
-                            children: [
-                              ParentsItem(
-                                id: '2222',
-                                name: widget.OviDetails.selectedOviSire.first
-                                    .father!.animalName,
-                                sex: 'Male',
-                                age: '7 years',
-                                imageFile: (widget.OviDetails.selectedOviSire
-                                    .first.father!.selectedOviImage),
-                                OviDetails: widget.OviDetails,
-                              ),
-                            ],
-                          ),
-                          SizedBox(width: 55 * globals.widthMediaQuery),
-                          ParentsItem(
-                            id: '2222',
-                            name: widget.OviDetails.selectedOviDam.first.mother!
-                                .animalName,
-                            sex: 'Female',
-                            age: '6 years',
-                            imageFile: (widget.OviDetails.selectedOviDam.first
-                                .mother!.selectedOviImage),
-                            OviDetails: widget.OviDetails,
-                            // imageUrl:'https://www.ghorse.com/sites/default/files/img_0682.jpg',
-                          ),
-                        ],
-                      ),
+                      // const Text('Paternal Grand Parents'),
+                      // if (widget.OviDetails.selectedOviSire.isNotEmpty &&
+                      //     widget.OviDetails.selectedOviSire.first.father !=
+                      //         null)
+                      //   Text(
+                      //     'Grandfather: ${widget.OviDetails.selectedOviSire.first.father!.animalName}',
+                      //   ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //   children: [
+                      //     Column(
+                      //       children: [
+                      //         ParentsItem(
+                      //           id: '2222',
+                      //           name: widget.OviDetails.selectedOviSire.first
+                      //               .father!.animalName,
+                      //           sex: 'Male',
+                      //           age: '7 years',
+                      //           imageFile: (widget.OviDetails.selectedOviSire
+                      //               .first.father!.selectedOviImage),
+                      //           OviDetails: widget.OviDetails,
+                      //         ),
+                      //       ],
+                      //     ),
+                      //     SizedBox(width: 55 * globals.widthMediaQuery),
+                      //     ParentsItem(
+                      //       id: '2222',
+                      //       name: widget.OviDetails.selectedOviDam.first.mother!
+                      //           .animalName,
+                      //       sex: 'Female',
+                      //       age: '6 years',
+                      //       imageFile: (widget.OviDetails.selectedOviDam.first
+                      //           .mother!.selectedOviImage),
+                      //       OviDetails: widget.OviDetails,
+                      //       // imageUrl:'https://www.ghorse.com/sites/default/files/img_0682.jpg',
+                      //     ),
+                      //   ],
+                      // ),
                       SizedBox(
                         height: 120 * globals.heightMediaQuery,
                       ),

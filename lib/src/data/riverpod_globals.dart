@@ -45,6 +45,7 @@ final selectedAnimalBreedsProvider = StateProvider<String>((ref) => '');
 
 // Enter Complete Info Global Varibales
 final selectedAnimalImageProvider = StateProvider<File?>((ref) => null);
+
 final animalNameProvider = StateProvider<String>((ref) => '');
 
 final shoudlAddAnimalProvider = StateProvider<bool>((ref) => false);

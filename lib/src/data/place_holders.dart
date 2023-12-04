@@ -1,0 +1,26 @@
+import 'dart:io';
+
+Map<String, File> speciesImages = {
+  'Cat': File('assets/avatars/120px/Cat.png'),
+  'Dog': File('assets/avatars/120px/Dog.png'),
+  'Sheep': File('assets/avatars/120px/Sheep.png'),
+  'Monkey': File('assets/monkey.jpg'),
+  'Chicken': File('assets/avatars/120px/Chicken.png'),
+  'Cow': File('assets/avatars/120px/Cow.png'),
+  'Bear': File('assets/bear.jpg'),
+  'Tiger': File('assets/tiger.jpg'),
+  'Giraffe': File('assets/giraffe.jpg'),
+  'Kangaroo': File('assets/kangaroo.jpg'),
+  'Horse': File('assets/avatars/120px/Horse.png'),
+  'Duck': File('assets/avatars/120px/Duck.png'),
+  'Zebra': File('assets/zebra.jpg'),
+  'Panda': File('assets/panda.jpg'),
+  'Crocodile': File('assets/crocodile.jpg'),
+  'Eagle': File('assets/eagle.jpg'),
+  'Frog': File('assets/frog.jpg'),
+  'Fish': File('assets/fish.jpg'),
+  'Penguin': File('assets/penguin.jpg'),
+  'Alligator': File('assets/alligator.jpg'),
+  'Salmon': File('assets/salmon.jpg'),
+  'Gecko': File('assets/gecko.jpg'),
+};

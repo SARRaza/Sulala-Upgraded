@@ -122,6 +122,11 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                   }
                 },
               ),
+              Container(
+                height: 1,
+                width: globals.widthMediaQuery * 343,
+                color: AppColors.grayscale20,
+              ),
             ],
           ),
         );
@@ -1290,6 +1295,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
     final animalSire = ref.watch(animalSireDetailsProvider);
     final chips = ref.watch(selectedOviChipsProvider);
     final customFields = ref.watch(customOviTextFieldsProvider);
+    final ovianimals = ref.watch(ovianimalsProvider);
 
     return SafeArea(
       child: Scaffold(
@@ -1458,14 +1464,17 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                                   AppFonts.body2(color: AppColors.grayscale70),
                             ),
                             const Spacer(),
-                            PrimaryTextButton(
-                              onPressed: () {
-                                _showmainAnimalSireSelectionSheet(context);
-                              },
-                              status: TextStatus.idle,
-                              text: animalSire.first.animalName,
-                              position: TextButtonPosition.right,
-                            ),
+                            ovianimals.isNotEmpty
+                                ? PrimaryTextButton(
+                                    onPressed: () {
+                                      _showmainAnimalSireSelectionSheet(
+                                          context);
+                                    },
+                                    status: TextStatus.idle,
+                                    text: animalSire.first.animalName,
+                                    position: TextButtonPosition.right,
+                                  )
+                                : const Text('No Animals'),
                           ],
                         ),
                         SizedBox(height: globals.heightMediaQuery * 16),
@@ -1477,14 +1486,16 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                                   AppFonts.body2(color: AppColors.grayscale70),
                             ),
                             const Spacer(),
-                            PrimaryTextButton(
-                              onPressed: () {
-                                _showmainAnimalDamSelectionSheet(context);
-                              },
-                              status: TextStatus.idle,
-                              text: animalDam.first.animalName,
-                              position: TextButtonPosition.right,
-                            ),
+                            ovianimals.isNotEmpty
+                                ? PrimaryTextButton(
+                                    onPressed: () {
+                                      _showmainAnimalDamSelectionSheet(context);
+                                    },
+                                    status: TextStatus.idle,
+                                    text: animalDam.first.animalName,
+                                    position: TextButtonPosition.right,
+                                  )
+                                : const Text('No Animals'),
                           ],
                         ),
                       ],
