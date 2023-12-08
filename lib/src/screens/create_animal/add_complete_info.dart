@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
@@ -11,7 +12,6 @@ import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
-import '../../widgets/animal_info_modal_sheets.dart/animal_image_picker.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/buttons/sar_buttonwidget.dart';
 import '../../widgets/controls_and_buttons/tags/custom_tags.dart';
@@ -66,87 +66,73 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
   bool _addAnimalParents = false;
   bool _addOviChildren = false;
   // ignore: non_constant_identifier_names
+  final ImagePicker _Animalpicker = ImagePicker();
+
   void _showImagePicker(BuildContext context) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
       builder: (BuildContext context) {
-        return AnimalImagePickerWidget(
-          onImageSelected: (File pickedImage) {
-            ref
-                .read(selectedAnimalImageProvider.notifier)
-                .update((state) => pickedImage);
-          },
+        return SizedBox(
+          height: 150,
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              ListTile(
+                trailing: const Icon(
+                  Icons.chevron_right_rounded,
+                  color: AppColors.grayscale50,
+                ),
+                title: const Text('Camera'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final pickedAnimalImage =
+                      await _Animalpicker.pickImage(source: ImageSource.camera);
+                  if (pickedAnimalImage != null) {
+                    ref
+                        .read(selectedAnimalImageProvider.notifier)
+                        .update((state) => File(pickedAnimalImage.path));
+                    // setState(() {
+                    //   _selectedOviImage = File(pickedAnimalImage.path);
+                    // });
+                  }
+                },
+              ),
+              Container(
+                height: 1,
+                width: globals.widthMediaQuery * 343,
+                color: AppColors.grayscale20,
+              ),
+              ListTile(
+                trailing: const Icon(
+                  Icons.chevron_right_rounded,
+                  color: AppColors.grayscale50,
+                ),
+                title: const Text('Gallery'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final pickedAnimalImage = await _Animalpicker.pickImage(
+                      source: ImageSource.gallery);
+                  if (pickedAnimalImage != null) {
+                    ref
+                        .read(selectedAnimalImageProvider.notifier)
+                        .update((state) => File(pickedAnimalImage.path));
+                  }
+                },
+              ),
+              Container(
+                height: 1,
+                width: globals.widthMediaQuery * 343,
+                color: AppColors.grayscale20,
+              ),
+            ],
+          ),
         );
       },
     );
   }
-
-  // void _showImagePicker(BuildContext context) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     backgroundColor: Colors.white,
-  //     builder: (BuildContext context) {
-  //       return SizedBox(
-  //         height: 150,
-  //         child: Column(
-  //           children: [
-  //             const SizedBox(
-  //               height: 10,
-  //             ),
-  //             ListTile(
-  //               trailing: const Icon(
-  //                 Icons.chevron_right_rounded,
-  //                 color: AppColors.grayscale50,
-  //               ),
-  //               title: const Text('Camera'),
-  //               onTap: () async {
-  //                 Navigator.pop(context);
-  //                 final pickedAnimalImage =
-  //                     await _Animalpicker.pickImage(source: ImageSource.camera);
-  //                 if (pickedAnimalImage != null) {
-  //                   ref
-  //                       .read(selectedAnimalImageProvider.notifier)
-  //                       .update((state) => File(pickedAnimalImage.path));
-  //                   // setState(() {
-  //                   //   _selectedOviImage = File(pickedAnimalImage.path);
-  //                   // });
-  //                 }
-  //               },
-  //             ),
-  //             Container(
-  //               height: 1,
-  //               width: globals.widthMediaQuery * 343,
-  //               color: AppColors.grayscale20,
-  //             ),
-  //             ListTile(
-  //               trailing: const Icon(
-  //                 Icons.chevron_right_rounded,
-  //                 color: AppColors.grayscale50,
-  //               ),
-  //               title: const Text('Gallery'),
-  //               onTap: () async {
-  //                 Navigator.pop(context);
-  //                 final pickedAnimalImage = await _Animalpicker.pickImage(
-  //                     source: ImageSource.gallery);
-  //                 if (pickedAnimalImage != null) {
-  //                   ref
-  //                       .read(selectedAnimalImageProvider.notifier)
-  //                       .update((state) => File(pickedAnimalImage.path));
-  //                 }
-  //               },
-  //             ),
-  //             Container(
-  //               height: 1,
-  //               width: globals.widthMediaQuery * 343,
-  //               color: AppColors.grayscale20,
-  //             ),
-  //           ],
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 
   void _showmainAnimalSireSelectionSheet(BuildContext context) async {
     // Initialize an empty list
