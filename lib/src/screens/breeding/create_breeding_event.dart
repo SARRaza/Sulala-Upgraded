@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:sulala_upgrade/src/screens/create_animal/sar_listofanimals.dart';
+import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -48,8 +48,8 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
   String selectedBreedPartner = 'Add';
   String selectedBreedingDate = '';
   String selectedDeliveryDate = '';
-  List<breedChildItem> selectedChildren = [];
-  List<breedingPartner> breedPartners = [];
+  List<BreedChildItem> selectedChildren = [];
+  List<BreedingPartner> breedPartners = [];
 
   void setBreedingSelectedDate(DateTime breedingDate) {
     setState(() {
@@ -404,7 +404,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                                   final File? oviImage =
                                       OviDetails.selectedOviImage;
 
-                                  selectedChildren.add(breedChildItem(
+                                  selectedChildren.add(BreedChildItem(
                                     OviDetails.animalName,
                                     oviImage,
                                     OviDetails.selectedOviGender,
@@ -423,7 +423,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                             .update((state) => selectedChildren);
                         Navigator.pop(context);
                         // Append the selected children to the existing list
-                        final List<breedChildItem> existingSelectedChildren =
+                        final List<BreedChildItem> existingSelectedChildren =
                             ref.read(breedingChildrenDetailsProvider);
                         existingSelectedChildren.addAll(selectedChildren);
                       },
@@ -559,7 +559,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                                   final File? oviImage =
                                       OviDetails.selectedOviImage;
 
-                                  breedPartners.add(breedingPartner(
+                                  breedPartners.add(BreedingPartner(
                                     OviDetails.animalName,
                                     oviImage,
                                     OviDetails.selectedOviGender,
@@ -578,7 +578,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                             .update((state) => breedPartners);
                         Navigator.pop(context);
                         // Append the selected children to the existing list
-                        final List<breedingPartner> existingSelectedChildren =
+                        final List<BreedingPartner> existingSelectedChildren =
                             ref.read(breedingPartnerProvider);
                         existingSelectedChildren.addAll(breedPartners);
                       },
@@ -831,7 +831,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                   shrinkWrap: true,
                   itemCount: part.length,
                   itemBuilder: (context, index) {
-                    final breedingPartner child = part[index];
+                    final BreedingPartner child = part[index];
                     return ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: CircleAvatar(
@@ -873,7 +873,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                   shrinkWrap: true,
                   itemCount: image.length,
                   itemBuilder: (context, index) {
-                    final breedChildItem child = image[index];
+                    final BreedChildItem child = image[index];
                     return ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: CircleAvatar(

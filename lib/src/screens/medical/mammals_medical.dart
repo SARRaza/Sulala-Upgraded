@@ -3,22 +3,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
+import '../../widgets/controls_and_buttons/buttons/sar_buttonwidget.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
 import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/paragraph_text_fields/medical_needs_paragraph.dart';
+import '../../widgets/inputs/text_fields/primary_text_field.dart';
 import '../../widgets/other/one_information_block.dart';
 import '../../widgets/other/two_information_block.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
-import '../create_animal/sar_listofanimals.dart';
 import 'add_medical_checkup.dart';
 import 'add_surgeries.dart';
 import 'add_vaccination.dart';
 import 'edit_medical_checkup.dart';
 import 'edit_surgeries.dart';
 import 'edit_vaccination.dart';
+
 import 'pregnant_status_drawup.dart';
 
 class MammalsMedical extends ConsumerStatefulWidget {
@@ -30,7 +33,6 @@ class MammalsMedical extends ConsumerStatefulWidget {
 }
 
 bool _isMammalEditMode = false;
-bool _isFemale = true;
 bool? newMammalpregnantStatus;
 bool mammalpregnantStatuses = false;
 String newmammalmatingdate = 'ADD';
@@ -49,13 +51,23 @@ List<SurgeryDetails> mammalsurgeryDetailsList = [];
 class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
   final TextEditingController medicalNeedsController = TextEditingController();
   final TextEditingController dateOfSonarController = TextEditingController();
+  final TextEditingController dateOfLayingEggsController =
+      TextEditingController();
+  final TextEditingController numOfEggsController = TextEditingController();
   final TextEditingController expDlvDateController = TextEditingController();
+  final TextEditingController incubationDateController =
+      TextEditingController();
+  late String keptInOval = widget.OviDetails.keptInOval;
   @override
   void initState() {
     super.initState();
     medicalNeedsController.text = widget.OviDetails.medicalNeeds;
     dateOfSonarController.text = widget.OviDetails.dateOfSonar;
+    keptInOval = widget.OviDetails.keptInOval;
     expDlvDateController.text = widget.OviDetails.expDlvDate;
+    dateOfLayingEggsController.text = widget.OviDetails.dateOfLayingEggs;
+    numOfEggsController.text = widget.OviDetails.numOfEggs;
+    incubationDateController.text = widget.OviDetails.incubationDate;
   }
 
   void _showexpdeliveryDatePickerModalSheet() async {
@@ -135,6 +147,294 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
         }
       });
     }
+  }
+
+  void _dateOfLayingEggsPickerModalSheet() async {
+    final DateTime? dateOfLayingEggs = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            // Change the background color of the date picker
+            primaryColor: AppColors.primary30,
+            colorScheme: const ColorScheme.light(primary: AppColors.primary20),
+            buttonTheme:
+                const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            // Here you can customize more colors if needed
+            // For example, you can change the header color, selected day color, etc.
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (dateOfLayingEggs != null &&
+        dateOfLayingEggs != selectedmammalexpdeliveryDate) {
+      setState(() {
+        selectedmammalexpdeliveryDate = dateOfLayingEggs;
+        dateOfLayingEggsController.text =
+            DateFormat.yMMMd().format(dateOfLayingEggs);
+        final updatedOviDetails = widget.OviDetails.copyWith(
+          dateOfLayingEggs: dateOfLayingEggsController.text,
+        );
+
+        final oviAnimals = ref.read(ovianimalsProvider);
+        final index = oviAnimals.indexOf(widget.OviDetails);
+        if (index >= 0) {
+          oviAnimals[index] = updatedOviDetails;
+        }
+      });
+    }
+  }
+
+  void _incubationDatePickerModalSheet() async {
+    final DateTime? incubationDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            // Change the background color of the date picker
+            primaryColor: AppColors.primary30,
+            colorScheme: const ColorScheme.light(primary: AppColors.primary20),
+            buttonTheme:
+                const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            // Here you can customize more colors if needed
+            // For example, you can change the header color, selected day color, etc.
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (incubationDate != null &&
+        incubationDate != selectedmammalexpdeliveryDate) {
+      setState(() {
+        selectedmammalexpdeliveryDate = incubationDate;
+        incubationDateController.text =
+            DateFormat.yMMMd().format(incubationDate);
+        final updatedOviDetails = widget.OviDetails.copyWith(
+          incubationDate: incubationDateController.text,
+        );
+
+        final oviAnimals = ref.read(ovianimalsProvider);
+        final index = oviAnimals.indexOf(widget.OviDetails);
+        if (index >= 0) {
+          oviAnimals[index] = updatedOviDetails;
+        }
+      });
+    }
+  }
+
+  void _showNumOfEggsModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      showDragHandle: true,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.7,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Add Number Of Eggs',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 35,
+                ),
+                PrimaryTextField(
+                    hintText: 'Enter Number Of Eggs',
+                    labelText: 'Enter Number Of Eggs',
+                    onChanged: (value) {
+                      ref
+                          .read(numOfEggsProvider.notifier)
+                          .update((state) => value);
+                    },
+                    controller: numOfEggsController),
+                SizedBox(height: globals.heightMediaQuery * 130),
+                ButtonWidget(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    final updatedOviDetails = widget.OviDetails.copyWith(
+                        numOfEggs: numOfEggsController.text);
+
+                    final oviAnimals = ref.read(ovianimalsProvider);
+                    final index = oviAnimals.indexOf(widget.OviDetails);
+                    if (index >= 0) {
+                      oviAnimals[index] = updatedOviDetails;
+                    }
+                  },
+                  buttonText: 'Confirm',
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 238, 238, 238),
+                          foregroundColor: Colors.black,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                        ),
+                        child: const Text('Cancel'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showKeptInOvalSelection(BuildContext context) {
+    showModalBottomSheet(
+      showDragHandle: true,
+      backgroundColor: Colors.white,
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.29,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Have You Kept In Oval?',
+                  style: AppFonts.title3(color: AppColors.grayscale90),
+                ),
+                const SizedBox(
+                  height: 35,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: globals.heightMediaQuery * 12,
+                      bottom: globals.heightMediaQuery * 12),
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        keptInOval = 'Yes, Kept In Oval';
+                        final updatedOviDetails = widget.OviDetails.copyWith(
+                          keptInOval: keptInOval,
+                        );
+
+                        final oviAnimals = ref.read(ovianimalsProvider);
+                        final index = oviAnimals.indexOf(widget.OviDetails);
+                        if (index >= 0) {
+                          oviAnimals[index] = updatedOviDetails;
+                        }
+
+                        Navigator.pop(context);
+                      });
+                    },
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Yes, Kept In Oval',
+                            style: AppFonts.body2(color: AppColors.grayscale90),
+                          ),
+                        ),
+                        Container(
+                          width: globals.widthMediaQuery * 24,
+                          height: globals.widthMediaQuery * 24,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: keptInOval == 'Yes, Kept In Oval'
+                                  ? AppColors.primary20
+                                  : AppColors.grayscale30,
+                              width:
+                                  keptInOval == 'Yes, Kept In Oval' ? 6.0 : 1.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: globals.heightMediaQuery * 12,
+                      bottom: globals.heightMediaQuery * 12),
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        keptInOval = 'No';
+                        final updatedOviDetails = widget.OviDetails.copyWith(
+                          keptInOval: keptInOval,
+                        );
+
+                        final oviAnimals = ref.read(ovianimalsProvider);
+                        final index = oviAnimals.indexOf(widget.OviDetails);
+                        if (index >= 0) {
+                          oviAnimals[index] = updatedOviDetails;
+                        }
+
+                        Navigator.pop(context);
+                      });
+                    },
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'No',
+                            style: AppFonts.body2(color: AppColors.grayscale90),
+                          ),
+                        ),
+                        Container(
+                          width: globals.widthMediaQuery * 24,
+                          height: globals.widthMediaQuery * 24,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: keptInOval == 'No'
+                                  ? AppColors.primary20
+                                  : AppColors.grayscale30,
+                              width: keptInOval == 'No' ? 6.0 : 1.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 55 * globals.heightMediaQuery,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void _showPregnantStatusSelection(BuildContext context) {
@@ -298,7 +598,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
             height: 16 * globals.heightMediaQuery,
           ),
           Visibility(
-            visible: _isFemale,
+            visible: widget.OviDetails.selectedOviGender == 'Female' &&
+                widget.OviDetails.selectedAnimalType == 'Mammal',
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -425,6 +726,120 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                 SizedBox(height: 16 * globals.heightMediaQuery),
               ],
             ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Hatching Information',
+                style: AppFonts.title5(color: AppColors.grayscale90),
+              ),
+              ListTile(
+                onTap: () {
+                  _dateOfLayingEggsPickerModalSheet();
+                },
+                contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                leading: Text(
+                  'Date Of Laying Eggs',
+                  style: AppFonts.body2(color: AppColors.grayscale70),
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    dateOfLayingEggsController.text.isNotEmpty
+                        ? Text(
+                            dateOfLayingEggsController.text,
+                            style: AppFonts.body2(color: AppColors.grayscale90),
+                          )
+                        : Text(
+                            'ADD',
+                            style: AppFonts.body2(color: AppColors.grayscale90),
+                          ),
+                    const Icon(Icons.chevron_right_rounded,
+                        color: AppColors.primary40),
+                  ],
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  _showNumOfEggsModal(context);
+                },
+                contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                leading: Text(
+                  'Number Of Eggs',
+                  style: AppFonts.body2(color: AppColors.grayscale70),
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    numOfEggsController.text.isNotEmpty
+                        ? Text(
+                            numOfEggsController.text,
+                            style: AppFonts.body2(color: AppColors.grayscale90),
+                          )
+                        : Text(
+                            'ADD',
+                            style: AppFonts.body2(color: AppColors.grayscale90),
+                          ),
+                    const Icon(Icons.chevron_right_rounded,
+                        color: AppColors.primary40),
+                  ],
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  _showKeptInOvalSelection(context);
+                },
+                contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                leading: Text(
+                  'Have You Kept Eggs In Oval?',
+                  style: AppFonts.body2(color: AppColors.grayscale70),
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    keptInOval.isNotEmpty
+                        ? Text(
+                            keptInOval,
+                            style: AppFonts.body2(color: AppColors.grayscale90),
+                          )
+                        : Text(
+                            'ADD',
+                            style: AppFonts.body2(color: AppColors.grayscale90),
+                          ),
+                    const Icon(Icons.chevron_right_rounded,
+                        color: AppColors.primary40),
+                  ],
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  _incubationDatePickerModalSheet();
+                },
+                contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                leading: Text(
+                  'Incubation Date',
+                  style: AppFonts.body2(color: AppColors.grayscale70),
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    incubationDateController.text.isNotEmpty
+                        ? Text(
+                            incubationDateController.text,
+                            style: AppFonts.body2(color: AppColors.grayscale90),
+                          )
+                        : Text(
+                            'ADD',
+                            style: AppFonts.body2(color: AppColors.grayscale90),
+                          ),
+                    const Icon(Icons.chevron_right_rounded,
+                        color: AppColors.primary40),
+                  ],
+                ),
+              ),
+              SizedBox(height: 16 * globals.heightMediaQuery),
+            ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -801,36 +1216,4 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
       ),
     );
   }
-}
-
-class VaccineDetails {
-  final String vaccineName;
-  final DateTime? firstDoseDate;
-  final DateTime? secondDoseDate;
-
-  VaccineDetails({
-    required this.vaccineName,
-    this.firstDoseDate,
-    this.secondDoseDate,
-  });
-}
-
-class MedicalCheckupDetails {
-  final String mammalcheckupName;
-  final DateTime? mammalcheckupDate;
-
-  MedicalCheckupDetails({
-    required this.mammalcheckupName,
-    this.mammalcheckupDate,
-  });
-}
-
-class SurgeryDetails {
-  final String mammalsurgeryName;
-  final DateTime? mammalsurgeryDate;
-
-  SurgeryDetails({
-    required this.mammalsurgeryName,
-    this.mammalsurgeryDate,
-  });
 }

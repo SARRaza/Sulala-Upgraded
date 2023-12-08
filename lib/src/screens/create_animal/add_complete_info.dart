@@ -8,6 +8,7 @@ import 'dart:io';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 
+import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -21,7 +22,6 @@ import '../../widgets/inputs/date_fields/primary_date_field.dart';
 import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/paragraph_text_fields/paragraph_text_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
-import '../breeding/list_of_breeding_events.dart';
 import 'sar_listofanimals.dart';
 
 class CreateOviCumMammal extends ConsumerStatefulWidget {
@@ -45,7 +45,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
   String selectedOviDam = 'Add';
   // String selectedDate = '';
   String selectedBreedingStage = '';
-  List<reminderItem> mathdDates = [];
+  List<ReminderItem> mathdDates = [];
   List<MainAnimalSire> selectedSire = [];
   List<MainAnimalDam> selectedDam = [];
   // ignore: non_constant_identifier_names
@@ -635,7 +635,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
             DateFormat('dd/MM/yyyy').format(selectedDate.toLocal());
 
         // Add the selected date to the mathdDates list
-        final reminderItem newItem = reminderItem(
+        final ReminderItem newItem = ReminderItem(
           selectedAnimalName, // Add the animal name
           dateType,
           formattedDate,

@@ -3,9 +3,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../screens/breeding/list_of_breeding_events.dart';
-import '../screens/create_animal/sar_listofanimals.dart';
-import '../screens/medical/mammals_medical.dart';
+import 'classes.dart';
 
 // Join Now Global Variables
 final whoOwnTheFarmProvider = StateProvider<String>((ref) => '');
@@ -55,16 +53,19 @@ final eggsPerMonthProvider = StateProvider<String>((ref) => '');
 final selectedBreedingStageProvider = StateProvider<String>((ref) => '');
 final selectedDateProvider = StateProvider<String>((ref) => '');
 final medicalNeedsProvider = StateProvider<String>((ref) => '');
+final numOfEggsProvider = StateProvider<String>((ref) => '');
 final fieldNameProvider = StateProvider<String>((ref) => '');
 final fieldContentProvider = StateProvider<String>((ref) => '');
 final additionalnotesProvider = StateProvider<String>((ref) => '');
 final selectedOviGenderProvider = StateProvider<String>((ref) => '');
 final selectedOviDatesProvider =
     StateProvider<Map<String, DateTime?>>((ref) => {});
+final keptInOvalProvider = StateProvider<String>((ref) => '');
 final selectedOviChipsProvider = StateProvider<List<String>>((ref) => []);
 final customOviTextFieldsProvider = StateProvider<List<Widget>>((ref) => []);
 final selectedFiltersProvider = StateProvider<List<String>>((ref) => []);
 final dateOfBirthProvider = StateProvider<String>((ref) => '');
+final dateOfLayingEggsProvider = StateProvider<String>((ref) => '');
 final dateOfSonarProvider = StateProvider<String>((ref) => '');
 final expDeliveryDateProvider = StateProvider<String>((ref) => '');
 final breedingEventNumberProvider = StateProvider<String>((ref) => '');
@@ -83,38 +84,6 @@ final vaccineDetailsListProvider =
 
 // final grandfatherNamesProvider = StateProvider<String>((ref) => 'Add');
 // final grandmotherNamesProvider = StateProvider<String>((ref) => 'Add');
-class MainAnimalSire {
-  String animalName;
-  File? selectedOviImage;
-  String selectedOviGender;
-  MainAnimalSire? father;
-  MainAnimalDam? mother;
-
-  // Constructor
-  MainAnimalSire(
-    this.animalName,
-    this.selectedOviImage,
-    this.selectedOviGender, {
-    this.father,
-    this.mother,
-  });
-}
-
-class MainAnimalDam {
-  final String animalName;
-  final File? selectedOviImage;
-  final String selectedOviGender;
-  MainAnimalDam? mother;
-  MainAnimalSire? father;
-
-  MainAnimalDam(
-    this.animalName,
-    this.selectedOviImage,
-    this.selectedOviGender, {
-    this.mother,
-    this.father,
-  });
-}
 
 final animalSireDetailsProvider =
     StateProvider<List<MainAnimalSire>>((ref) => []);
@@ -211,37 +180,10 @@ final selectedAnimalNameProvider = Provider<String>((ref) => '');
 final selectedbreeddamProvider = Provider<String>((ref) => '');
 final breeddamPictureProvider = StateProvider<File?>((ref) => null);
 
-class breedChildItem {
-  final String animalName;
-  final File? selectedOviImage;
-  final String selectedOviGender;
-
-  breedChildItem(
-      this.animalName, this.selectedOviImage, this.selectedOviGender);
-}
-
 final breedingChildrenDetailsProvider =
-    StateProvider<List<breedChildItem>>((ref) => []);
+    StateProvider<List<BreedChildItem>>((ref) => []);
 
-class reminderItem {
-  final String animalNames;
-  final String dateInfo;
-
-  final String dateType;
-
-  reminderItem(this.animalNames, this.dateType, this.dateInfo);
-}
-
-final remindersProvider = StateProvider<List<reminderItem>>((ref) => []);
-
-class breedingPartner {
-  final String animalName;
-  final File? selectedOviImage;
-  final String selectedOviGender;
-
-  breedingPartner(
-      this.animalName, this.selectedOviImage, this.selectedOviGender);
-}
+final remindersProvider = StateProvider<List<ReminderItem>>((ref) => []);
 
 final breedingPartnerProvider =
-    StateProvider<List<breedingPartner>>((ref) => []);
+    StateProvider<List<BreedingPartner>>((ref) => []);

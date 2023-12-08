@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
+import '../../data/classes.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/tags/custom_tags.dart';
 import '../../widgets/pages/owned_animal/breeding_info.dart';
 import '../../widgets/pages/owned_animal/general_info_animal_widget.dart';
 
-import '../breeding/list_of_breeding_events.dart';
 import '../medical/mammals_medical.dart';
 
 import 'edit_animal_details/new_editpage.dart';
@@ -59,67 +59,6 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-
-        // extendBodyBehindAppBar: true,
-        // appBar: AppBar(
-        //   scrolledUnderElevation: 0.0,
-        //   backgroundColor: Colors.transparent,
-        //   elevation: 0,
-        //   leadingWidth: globals.widthMediaQuery * 56,
-        //   leading: Padding(
-        //     padding: EdgeInsets.only(left: globals.widthMediaQuery * 16),
-        //     child: Container(
-        //       decoration: const BoxDecoration(
-        //           color: AppColors.grayscale10, shape: BoxShape.circle),
-        //       child: IconButton(
-        //         padding: EdgeInsets.zero,
-        //         icon: Icon(
-        //           Icons.arrow_back_rounded,
-        //           color: Colors.black,
-        //           size: globals.widthMediaQuery * 24,
-        //         ),
-        //         onPressed: () {
-        //           // Handle close button press
-        //           Navigator.push(
-        //             context,
-        //             MaterialPageRoute(
-        //               builder: (context) => UserListOfAnimals(
-        //                 shouldAddAnimal: false,
-        //                 breedingEvents: widget.breedingEvents,
-        //               ),
-        //             ),
-        //           );
-        //         },
-        //       ),
-        //     ),
-        //   ),
-        //   actions: [
-        //     Padding(
-        //       padding: EdgeInsets.only(right: globals.widthMediaQuery * 16),
-        //       child: Container(
-        //         width: globals.widthMediaQuery * 40,
-        //         decoration: const BoxDecoration(
-        //             color: AppColors.grayscale10, shape: BoxShape.circle),
-        //         child: IconButton(
-        //           padding: EdgeInsets.zero,
-        //           icon: Image.asset(
-        //               'assets/icons/frame/24px/edit_icon_button.png'),
-        //           onPressed: () {
-        //             // Handle close button press
-        //             Navigator.of(context).push(
-        //               MaterialPageRoute(
-        //                 builder: (context) => EditAnimalGenInfo(
-        //                   OviDetails: widget.OviDetails,
-        //                   breedingEvents: widget.breedingEvents,
-        //                 ),
-        //               ),
-        //             );
-        //           },
-        //         ),
-        //       ),
-        //     ),
-        //   ],
-        // ),
         body: Stack(
           children: [
             Align(

@@ -27,26 +27,6 @@ class _AddVaccinationState extends State<AddVaccination> {
     super.dispose();
   }
 
-  Future<void> _selectDate(BuildContext context, bool isFirstDose) async {
-    final selectedDate = await showDatePicker(
-      context: context,
-      initialDate: isFirstDose
-          ? firstDoseDate ?? DateTime.now()
-          : secondDoseDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    if (selectedDate != null) {
-      setState(() {
-        if (isFirstDose) {
-          firstDoseDate = selectedDate;
-        } else {
-          secondDoseDate = selectedDate;
-        }
-      });
-    }
-  }
-
   void _saveDataAndNavigateBack() {
     String newVaccineName = vaccineNameController.text;
     widget.onSave(newVaccineName, firstDoseDate, secondDoseDate);

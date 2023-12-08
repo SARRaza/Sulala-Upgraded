@@ -188,12 +188,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../create_animal/owned_animal_detail_reg_mode.dart';
-import '../create_animal/sar_listofanimals.dart';
 import 'breeding_event_detail.dart';
 
 class ListOfBreedingMates extends ConsumerStatefulWidget {

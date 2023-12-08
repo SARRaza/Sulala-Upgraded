@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import '../../../data/classes.dart';
 import '../../../data/riverpod_globals.dart';
-import '../../../screens/create_animal/sar_listofanimals.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 import '../../lists/table_lsit/table_textbutton.dart';
@@ -84,7 +84,7 @@ class _GeneralInfoAnimalWidgetState
           width: globals.widthMediaQuery * 343,
           child: ThreeInformationBlock(
             head1: widget.OviDetails.selectedAnimalType,
-            head2: calculateAge(selectedDate),
+            head2: widget.OviDetails.selectedAnimalSpecies,
             head3: widget.OviDetails.selectedOviGender,
           ),
         ),
@@ -100,6 +100,11 @@ class _GeneralInfoAnimalWidgetState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                TableTextButton(
+                  onPressed: widget.onDateOfBirthPressed,
+                  textButton: calculateAge(selectedDate),
+                  textHead: "Age",
+                ),
                 TableTextButton(
                   onPressed: widget.onDateOfBirthPressed,
                   textButton: widget.OviDetails.dateOfBirth,
@@ -183,10 +188,13 @@ class _GeneralInfoAnimalWidgetState
                       : 'Add',
                   textHead: "Date of Sale",
                 ),
-                TableTextButton(
-                    onPressed: widget.onDateOfBirthPressed,
-                    textButton: widget.OviDetails.fieldContent,
-                    textHead: widget.OviDetails.fieldName),
+                Visibility(
+                  visible: widget.OviDetails.fieldName.isNotEmpty,
+                  child: TableTextButton(
+                      onPressed: widget.onDateOfBirthPressed,
+                      textButton: widget.OviDetails.fieldContent,
+                      textHead: widget.OviDetails.fieldName),
+                ),
                 SizedBox(
                   height: globals.heightMediaQuery * 24,
                 ),
@@ -243,7 +251,7 @@ class _GeneralInfoAnimalWidgetState
                   },
                 ),
                 const SizedBox(
-                  height: 50,
+                  height: 111,
                 ),
               ],
             ),

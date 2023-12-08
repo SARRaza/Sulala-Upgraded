@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -8,7 +9,6 @@ import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 
 import '../../widgets/controls_and_buttons/tags/tags.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
-import '../breeding/list_of_breeding_events.dart';
 import 'sar_listofanimals.dart';
 
 // ignore: must_be_immutable

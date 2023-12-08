@@ -1,191 +1,18 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import 'package:sulala_upgrade/src/screens/create_animal/sar_animalfilters.dart';
 import 'package:sulala_upgrade/src/widgets/pages/main_widgets/navigation_bar_reg_mode.dart';
+import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/inputs/search_bars/button_search_bar.dart';
-import '../breeding/list_of_breeding_events.dart';
 
-import '../medical/mammals_medical.dart';
 import 'create_animal.dart';
 
 import 'owned_animal_detail_reg_mode.dart';
-
-class OviVariables {
-  final List<String> selectedFilters;
-  late final String animalName;
-  final List<MainAnimalSire> selectedOviSire;
-  final List<MainAnimalDam> selectedOviDam;
-  late final String dateOfBirth;
-  final String dateOfSonar;
-  final String expDlvDate;
-  final String fieldName;
-  final String fieldContent;
-  final String notes;
-  final String selectedOviGender;
-  final Map<String, DateTime?> selectedOviDates;
-  final String selectedAnimalBreed;
-  final String selectedAnimalSpecies;
-  final String selectedAnimalType;
-  final List<String> selectedOviChips;
-  final File? selectedOviImage;
-  final String layingFrequency;
-  final String eggsPerMonth;
-  final String selectedBreedingStage;
-  late final String medicalNeeds;
-  final bool shouldAddAnimal;
-  final String breedingeventNumber;
-  final String breedsire;
-  final String breeddam;
-  final List<breedingPartner> breedpartner;
-  final List<breedChildItem> breedchildren;
-  final String breedingDate;
-  final String breeddeliveryDate;
-  final String breedingnotes;
-  final bool shouldAddEvent;
-  final BreedingDetails breedingDetails;
-  final Map<String, List<BreedingEventVariables>> breedingEvents;
-  final Map<String, List<VaccineDetails>> vaccineDetails;
-
-  OviVariables({
-    required this.selectedFilters,
-    required this.animalName,
-    required this.selectedOviSire,
-    required this.selectedOviDam,
-    required this.dateOfBirth,
-    required this.dateOfSonar,
-    required this.expDlvDate,
-    required this.selectedOviGender,
-    required this.fieldName,
-    required this.fieldContent,
-    required this.notes,
-    required this.selectedOviDates,
-    required this.selectedAnimalBreed,
-    required this.selectedAnimalSpecies,
-    required this.selectedAnimalType,
-    required this.selectedOviChips,
-    required this.selectedOviImage,
-    required this.layingFrequency,
-    required this.eggsPerMonth,
-    required this.selectedBreedingStage,
-    required this.shouldAddAnimal,
-    required this.medicalNeeds,
-    required this.breedingeventNumber,
-    required this.breedsire,
-    required this.breeddam,
-    required this.breedpartner,
-    required this.breedchildren,
-    required this.breedingDate,
-    required this.breeddeliveryDate,
-    required this.breedingnotes,
-    required this.shouldAddEvent,
-    required this.breedingDetails,
-    required this.breedingEvents,
-    required this.vaccineDetails,
-  });
-  OviVariables copyWith(
-      {List<String>? selectedFilters,
-      String? animalName,
-      List<MainAnimalSire>? selectedOviSire,
-      List<MainAnimalDam>? selectedOviDam,
-      String? dateOfBirth,
-      String? dateOfSonar,
-      String? expDlvDate,
-      String? fieldName,
-      String? fieldContent,
-      String? notes,
-      String? selectedOviGender,
-      Map<String, DateTime?>? selectedOviDates,
-      String? selectedAnimalBreed,
-      String? selectedAnimalSpecies,
-      String? selectedAnimalType,
-      List<String>? selectedOviChips,
-      File? selectedOviImage,
-      String? layingFrequency,
-      String? eggsPerMonth,
-      String? selectedBreedingStage,
-      String? medicalNeeds,
-      bool? shouldAddAnimal,
-      String? breedingeventNumber,
-      String? breedsire,
-      String? breeddam,
-      List<breedingPartner>? breedpartner,
-      List<breedChildItem>? breedchildren,
-      String? breedingDate,
-      String? breeddeliveryDate,
-      String? breedingnotes,
-      bool? shouldAddEvent,
-      Map<String, List<BreedingEventVariables>>? breedingEvents,
-      final Map<String, List<VaccineDetails>>? vaccineDetails,
-      // ignore: non_constant_identifier_names
-      String? BreedingDetails}) {
-    return OviVariables(
-      selectedFilters: selectedFilters ?? this.selectedFilters,
-      animalName: animalName ?? this.animalName,
-      selectedOviSire: selectedOviSire ?? this.selectedOviSire,
-      selectedOviDam: selectedOviDam ?? this.selectedOviDam,
-      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
-      dateOfSonar: dateOfSonar ?? this.dateOfSonar,
-      expDlvDate: expDlvDate ?? this.expDlvDate,
-      fieldName: fieldName ?? this.fieldName,
-      fieldContent: fieldContent ?? this.fieldContent,
-      notes: notes ?? this.notes,
-      selectedOviGender: selectedOviGender ?? this.selectedOviGender,
-      selectedOviDates: selectedOviDates ?? this.selectedOviDates,
-      selectedAnimalBreed: selectedAnimalBreed ?? this.selectedAnimalBreed,
-      selectedAnimalSpecies:
-          selectedAnimalSpecies ?? this.selectedAnimalSpecies,
-      selectedAnimalType: selectedAnimalType ?? this.selectedAnimalType,
-      selectedOviChips: selectedOviChips ?? this.selectedOviChips,
-      selectedOviImage: selectedOviImage ?? this.selectedOviImage,
-      layingFrequency: layingFrequency ?? this.layingFrequency,
-      eggsPerMonth: eggsPerMonth ?? this.eggsPerMonth,
-      selectedBreedingStage:
-          selectedBreedingStage ?? this.selectedBreedingStage,
-      medicalNeeds: medicalNeeds ?? this.medicalNeeds,
-      shouldAddAnimal: shouldAddAnimal ?? this.shouldAddAnimal,
-      breedingeventNumber: breedingeventNumber ?? this.breedingeventNumber,
-      breedsire: breedsire ?? this.breedsire,
-      breeddam: breeddam ?? this.breeddam,
-      breedchildren: breedchildren ?? this.breedchildren,
-      breedingDate: breedingDate ?? this.breedingDate,
-      breeddeliveryDate: breeddeliveryDate ?? this.breeddeliveryDate,
-      breedingnotes: breedingnotes ?? this.breedingnotes,
-      breedpartner: breedpartner ?? this.breedpartner,
-      shouldAddEvent: shouldAddEvent ?? this.shouldAddEvent,
-      breedingDetails: breedingDetails,
-      breedingEvents: breedingEvents ?? this.breedingEvents,
-      vaccineDetails: vaccineDetails ?? this.vaccineDetails,
-    );
-  }
-}
-
-class BreedingDetails {
-  final String breedsire;
-  final String breeddam;
-  final List<breedingPartner> breedpartner;
-  final List<breedChildItem> breedchildren;
-  final String breedingDate;
-  final String breeddeliveryDate;
-  final String breedingnotes;
-  final bool shouldAddEvent;
-
-  BreedingDetails({
-    required this.breedsire,
-    required this.breeddam,
-    required this.breedpartner,
-    required this.breedchildren,
-    required this.breedingDate,
-    required this.breeddeliveryDate,
-    required this.breedingnotes,
-    required this.shouldAddEvent,
-  });
-}
 
 // ignore: must_be_immutable
 class UserListOfAnimals extends ConsumerStatefulWidget {
@@ -249,9 +76,13 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
       selectedOviSire: ref.read(animalSireDetailsProvider),
       selectedOviDam: ref.read(animalDamDetailsProvider),
       dateOfBirth: ref.read(dateOfBirthProvider),
+      keptInOval: ref.read(keptInOvalProvider),
+      dateOfLayingEggs: ref.read(dateOfLayingEggsProvider),
+      numOfEggs: ref.read(numOfEggsProvider),
       dateOfSonar: ref.read(dateOfSonarProvider),
       expDlvDate: ref.read(expDeliveryDateProvider),
       fieldName: ref.read(fieldNameProvider),
+      incubationDate: ref.read(incbationDateProvider),
       fieldContent: ref.read(fieldContentProvider),
       notes: ref.read(additionalnotesProvider),
       selectedOviGender: ref.read(selectedOviGenderProvider),

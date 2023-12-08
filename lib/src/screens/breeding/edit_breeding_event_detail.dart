@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../data/classes.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/navigate_button.dart';
@@ -9,8 +10,6 @@ import '../../widgets/inputs/date_fields/primary_date_field.dart';
 import '../../widgets/inputs/paragraph_text_fields/paragraph_text_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
-
-import 'list_of_breeding_events.dart';
 import 'search_children.dart';
 
 class EditBreedingEventDetails extends StatefulWidget {

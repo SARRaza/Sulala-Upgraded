@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import 'package:syncfusion_flutter_charts/charts.dart';
+import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/colors/piechart_colors.dart';
@@ -408,7 +409,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                         shrinkWrap: true,
                         itemCount: reminders.length,
                         itemBuilder: (BuildContext context, int index) {
-                          final reminderItem dateItem = reminders[index];
+                          final ReminderItem dateItem = reminders[index];
 
                           return ListTile(
                             contentPadding: EdgeInsets.zero,

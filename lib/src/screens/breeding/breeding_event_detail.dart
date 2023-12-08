@@ -1,12 +1,11 @@
 // ignore_for_file: unnecessary_null_comparison, non_constant_identifier_names
 import 'package:flutter/material.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
-import 'package:sulala_upgrade/src/screens/create_animal/sar_listofanimals.dart';
+import '../../data/classes.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
 import 'edit_breeding_event_detail.dart';
-import 'list_of_breeding_events.dart';
 import 'list_of_childrens.dart';
 
 class BreedingEventDetails extends StatefulWidget {

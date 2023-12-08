@@ -80,7 +80,7 @@ class ThreeInformationBlock extends StatelessWidget {
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
                 Text(
-                  "Age",
+                  "Species",
                   style: AppFonts.caption2(color: AppColors.grayscale70),
                 ),
               ],

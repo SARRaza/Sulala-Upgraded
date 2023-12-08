@@ -3,12 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../data/classes.dart';
 import '../../../screens/breeding/list_of_breeding_events.dart';
 import '../../../screens/breeding/list_of_mates.dart';
 
 import '../../../screens/breeding/list_of_childrens.dart';
 import '../../../screens/breeding/parents_page.dart';
-import '../../../screens/create_animal/sar_listofanimals.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 import '../../other/one_information_block.dart';
@@ -45,7 +45,8 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
             SizedBox(
               height: globals.heightMediaQuery * 8,
             ),
-          if (widget.OviDetails.selectedOviGender == 'Female')
+          if (widget.OviDetails.selectedOviGender == 'Female' &&
+              widget.OviDetails.selectedAnimalType == 'Oviparous')
             SizedBox(
               width: 343 * globals.widthMediaQuery,
               child: const TwoInformationBlock(

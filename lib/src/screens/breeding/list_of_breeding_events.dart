@@ -1,47 +1,17 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../create_animal/owned_animal_detail_reg_mode.dart';
-import '../create_animal/sar_listofanimals.dart';
 import 'breeding_event_detail.dart';
 import 'create_breeding_event.dart';
-
-class BreedingEventVariables {
-  final String eventNumber;
-  final String sire;
-  final String dam;
-  final List<breedingPartner> partner;
-  final List<breedChildItem> children;
-  final File? breeddam;
-  final String breedingDate;
-  final String deliveryDate;
-  final String notes;
-  final bool shouldAddEvent;
-
-  BreedingEventVariables({
-    required this.eventNumber,
-    this.breeddam,
-    required this.sire,
-    required this.dam,
-    required this.partner,
-    required this.children,
-    required this.breedingDate,
-    required this.deliveryDate,
-    required this.notes,
-    required this.shouldAddEvent,
-  });
-}
-
-// List<BreedingEventVariables> breedingEvents = [];
 
 class ListOfBreedingEvents extends ConsumerStatefulWidget {
   final TextEditingController breedingNotesController;
