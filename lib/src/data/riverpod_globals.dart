@@ -55,6 +55,7 @@ final selectedDateProvider = StateProvider<String>((ref) => '');
 final medicalNeedsProvider = StateProvider<String>((ref) => '');
 final numOfEggsProvider = StateProvider<String>((ref) => '');
 final fieldNameProvider = StateProvider<String>((ref) => '');
+final incbationDateProvider = StateProvider<String>((ref) => '');
 final fieldContentProvider = StateProvider<String>((ref) => '');
 final additionalnotesProvider = StateProvider<String>((ref) => '');
 final selectedOviGenderProvider = StateProvider<String>((ref) => '');

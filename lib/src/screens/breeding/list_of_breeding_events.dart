@@ -171,9 +171,6 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => CreateBreedingEvents(
-                        selectedAnimalType: '',
-                        selectedAnimalSpecies: '',
-                        selectedAnimalBreed: '',
                         OviDetails: widget.OviDetails,
                         breedingEvents: widget.breedingEvents,
                       ),
@@ -236,9 +233,6 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => CreateBreedingEvents(
-                                      selectedAnimalType: '',
-                                      selectedAnimalSpecies: '',
-                                      selectedAnimalBreed: '',
                                       OviDetails: widget.OviDetails,
                                       breedingEvents: widget.breedingEvents,
                                     ),

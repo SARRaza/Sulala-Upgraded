@@ -85,7 +85,9 @@ class _GeneralInfoAnimalWidgetState
           child: ThreeInformationBlock(
             head1: widget.OviDetails.selectedAnimalType,
             head2: widget.OviDetails.selectedAnimalSpecies,
-            head3: widget.OviDetails.selectedOviGender,
+            head3: widget.OviDetails.selectedOviGender.isNotEmpty
+                ? widget.OviDetails.selectedOviGender
+                : 'Not Selected',
           ),
         ),
         SizedBox(
@@ -105,10 +107,13 @@ class _GeneralInfoAnimalWidgetState
                   textButton: calculateAge(selectedDate),
                   textHead: "Age",
                 ),
-                TableTextButton(
-                  onPressed: widget.onDateOfBirthPressed,
-                  textButton: widget.OviDetails.dateOfBirth,
-                  textHead: "Date of Birth",
+                Visibility(
+                  visible: widget.OviDetails.dateOfBirth.isNotEmpty,
+                  child: TableTextButton(
+                    onPressed: widget.onDateOfBirthPressed,
+                    textButton: widget.OviDetails.dateOfBirth,
+                    textHead: "Date of Birth",
+                  ),
                 ),
                 TableTextButton(
                   onPressed: widget.onDateOfBirthPressed,

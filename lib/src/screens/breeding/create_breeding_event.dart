@@ -20,19 +20,14 @@ import 'list_of_breeding_events.dart';
 // ignore: depend_on_referenced_packages
 
 class CreateBreedingEvents extends ConsumerStatefulWidget {
-  final String selectedAnimalType;
-  final String selectedAnimalSpecies;
-  final String selectedAnimalBreed;
   final OviVariables OviDetails;
   final List<BreedingEventVariables> breedingEvents;
 
-  const CreateBreedingEvents(
-      {super.key,
-      required this.selectedAnimalType,
-      required this.OviDetails,
-      required this.selectedAnimalSpecies,
-      required this.breedingEvents,
-      required this.selectedAnimalBreed});
+  const CreateBreedingEvents({
+    super.key,
+    required this.OviDetails,
+    required this.breedingEvents,
+  });
 
   @override
   // ignore: library_private_types_in_public_api
@@ -73,7 +68,6 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
 
   void _showBreedSireSelectionSheet() {
     double sheetHeight = MediaQuery.of(context).size.height * 0.5;
-
     TextEditingController searchController = TextEditingController();
     List<Map<String, String>> filteredbreedSires = List.from(breedSires);
     showModalBottomSheet(

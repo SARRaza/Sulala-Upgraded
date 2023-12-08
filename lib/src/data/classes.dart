@@ -94,6 +94,7 @@ class OviVariables {
   final String dateOfLayingEggs;
   final String dateOfSonar;
   final String expDlvDate;
+  final String incubationDate;
   final String fieldName;
   final String fieldContent;
   final String keptInOval;
@@ -132,6 +133,7 @@ class OviVariables {
     required this.dateOfBirth,
     required this.dateOfSonar,
     required this.expDlvDate,
+    required this.incubationDate,
     required this.selectedOviGender,
     required this.fieldName,
     required this.fieldContent,
@@ -173,6 +175,7 @@ class OviVariables {
       String? dateOfSonar,
       String? expDlvDate,
       String? keptInOval,
+      String? incubationDate,
       String? fieldName,
       String? numOfEggs,
       String? fieldContent,
@@ -214,6 +217,7 @@ class OviVariables {
       fieldName: fieldName ?? this.fieldName,
       fieldContent: fieldContent ?? this.fieldContent,
       notes: notes ?? this.notes,
+      incubationDate: incubationDate ?? this.incubationDate,
       keptInOval: keptInOval ?? this.keptInOval,
       numOfEggs: numOfEggs ?? this.numOfEggs,
       selectedOviGender: selectedOviGender ?? this.selectedOviGender,
