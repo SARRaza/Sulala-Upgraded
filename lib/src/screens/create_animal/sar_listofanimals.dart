@@ -103,6 +103,8 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
       shouldAddEvent: ref.read(shoudlAddEventProvider),
       breedingEvents: {animalName: []},
       vaccineDetails: {animalName: []},
+      checkUpDetails: {animalName: []},
+      surgeryDetails: {animalName: []},
     );
 
     setState(() {

@@ -39,11 +39,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
   final TextEditingController _frequencyEggsController =
       TextEditingController();
   final TextEditingController _numberofEggsController = TextEditingController();
-  String fieldName = '';
-  String fieldContent = '';
-  String selectedOviSire = 'Add';
-  String selectedOviDam = 'Add';
-  // String selectedDate = '';
+
   String selectedBreedingStage = '';
   List<ReminderItem> mathdDates = [];
   List<MainAnimalSire> selectedSire = [];

@@ -8,7 +8,9 @@ import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 
 class AddMedicalCheckUp extends StatefulWidget {
-  const AddMedicalCheckUp({super.key});
+  final Function(String, DateTime?, DateTime?) onSave;
+
+  const AddMedicalCheckUp({super.key, required this.onSave});
 
   @override
   State<AddMedicalCheckUp> createState() => _AddMedicalCheckUpState();
@@ -18,6 +20,19 @@ class _AddMedicalCheckUpState extends State<AddMedicalCheckUp> {
   TextEditingController checkupNameController = TextEditingController();
   DateTime? firstDoseDate;
   DateTime? secondDoseDate;
+  @override
+  void dispose() {
+    checkupNameController.dispose();
+    super.dispose();
+  }
+
+  void _saveDataAndNavigateBack() {
+    String newCheckUpName = checkupNameController.text;
+    widget.onSave(newCheckUpName, firstDoseDate, secondDoseDate);
+
+    // Close the modal sheet and return to MyPage
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +111,7 @@ class _AddMedicalCheckUpState extends State<AddMedicalCheckUp> {
           width: 343 * globals.widthMediaQuery,
           child: PrimaryButton(
             onPressed: () {
-              Navigator.pop(context);
+              _saveDataAndNavigateBack();
             },
             text: 'Save',
           ),

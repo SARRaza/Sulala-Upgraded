@@ -473,6 +473,14 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
             .read(ovianimalsProvider)[animalIndex]
             .vaccineDetails[widget.OviDetails.animalName] ??
         [];
+    final medicalCheckUpList = ref
+            .read(ovianimalsProvider)[animalIndex]
+            .checkUpDetails[widget.OviDetails.animalName] ??
+        [];
+    final surgeryDetailsList = ref
+            .read(ovianimalsProvider)[animalIndex]
+            .surgeryDetails[widget.OviDetails.animalName] ??
+        [];
 
     return SingleChildScrollView(
       child: Column(
@@ -963,11 +971,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                     MaterialPageRoute(
                       builder: (context) => AddVaccination(
                         onSave: (vaccineName, firstDoseDate, secondDoseDate) {
-                          // Save vaccine details to the list
                           setState(() {
-                            // ... (existing code)
-
-                            // Get the OviVariables
                             final oviVariables = ref.read(ovianimalsProvider);
                             final animalIndex = ref
                                 .read(ovianimalsProvider)
@@ -1043,55 +1047,102 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
           SizedBox(
             height: 14 * globals.heightMediaQuery,
           ),
-          ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.zero,
-            itemCount: 3,
-            shrinkWrap:
-                true, // This allows the ListView to take only necessary space
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                contentPadding: EdgeInsets.fromLTRB(
-                    0,
-                    10 * globals.heightMediaQuery,
-                    0,
-                    10 * globals.heightMediaQuery),
-                leading: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Check-Up 1",
+          medicalCheckUpList.isNotEmpty
+              ? ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: medicalCheckUpList.length,
+                  shrinkWrap:
+                      true, // This allows the ListView to take only necessary space
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      contentPadding: const EdgeInsets.all(0),
+                      title: Text(
+                        medicalCheckUpList[index].checkupName,
                         style: AppFonts.headline3(color: AppColors.grayscale90),
                       ),
-                      Text(
-                        '15.01.2022',
-                        style: AppFonts.body2(color: AppColors.grayscale70),
+                      trailing: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.file_copy_outlined,
+                            color: AppColors.primary40,
+                          ),
+                          Icon(
+                            Icons.chevron_right_rounded,
+                            color: AppColors.primary40,
+                          ),
+                        ],
                       ),
-                    ]),
-                trailing: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.file_copy_outlined,
-                      color: AppColors.primary40,
-                    ),
-                    Icon(
-                      Icons.chevron_right_rounded,
-                      color: AppColors.primary40,
-                    ),
-                  ],
+                      onTap: () {},
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            DateFormat('yyyy-MM-dd').format(
+                                medicalCheckUpList[index].firstDoseDate!),
+                            style: AppFonts.body2(color: AppColors.grayscale70),
+                          ),
+                          Text(
+                            DateFormat('yyyy-MM-dd').format(
+                                medicalCheckUpList[index].secondDoseDate!),
+                            style: AppFonts.body2(color: AppColors.grayscale70),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                )
+              : ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.zero,
+                  itemCount: 3,
+                  shrinkWrap:
+                      true, // This allows the ListView to take only necessary space
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      contentPadding: EdgeInsets.fromLTRB(
+                          0,
+                          10 * globals.heightMediaQuery,
+                          0,
+                          10 * globals.heightMediaQuery),
+                      leading: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Check-Up 1",
+                              style: AppFonts.headline3(
+                                  color: AppColors.grayscale90),
+                            ),
+                            Text(
+                              '15.01.2022',
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale70),
+                            ),
+                          ]),
+                      trailing: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.file_copy_outlined,
+                            color: AppColors.primary40,
+                          ),
+                          Icon(
+                            Icons.chevron_right_rounded,
+                            color: AppColors.primary40,
+                          ),
+                        ],
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const EditMedicalCheckUp(),
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const EditMedicalCheckUp(),
-                    ),
-                  );
-                },
-              );
-            },
-          ),
           Row(
             children: [
               PrimaryTextButton(
@@ -1099,7 +1150,48 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const AddMedicalCheckUp(),
+                      builder: (context) => AddMedicalCheckUp(
+                        onSave: (checkUpName, firstDoseDate, secondDoseDate) {
+                          setState(() {
+                            final oviVariables = ref.read(ovianimalsProvider);
+                            final animalIndex = ref
+                                .read(ovianimalsProvider)
+                                .indexWhere((animal) =>
+                                    animal.animalName ==
+                                    widget.OviDetails.animalName);
+                            // Get the current vaccineDetails map for the specific animal
+                            final animalCheckUpDetails =
+                                oviVariables[animalIndex].checkUpDetails;
+
+                            // Update the vaccineDetails map for that animal with the new vaccine details
+                            ref.read(ovianimalsProvider)[animalIndex] =
+                                oviVariables[animalIndex].copyWith(
+                              checkUpDetails: {
+                                ...animalCheckUpDetails,
+                                widget.OviDetails.animalName: [
+                                  ...animalCheckUpDetails[
+                                          widget.OviDetails.animalName] ??
+                                      [],
+                                  MedicalCheckupDetails(
+                                    checkupName: checkUpName,
+                                    firstDoseDate: firstDoseDate,
+                                    secondDoseDate: secondDoseDate,
+                                  ),
+                                ],
+                              },
+                            );
+
+                            // Add the vaccine details to the vaccineDetailsListProvider if needed
+                            ref.read(medicalCheckupDetailsProvider).add(
+                                  MedicalCheckupDetails(
+                                    checkupName: checkUpName,
+                                    firstDoseDate: firstDoseDate,
+                                    secondDoseDate: secondDoseDate,
+                                  ),
+                                );
+                          });
+                        },
+                      ),
                     ),
                   );
                 },
@@ -1136,55 +1228,102 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
           SizedBox(
             height: 14 * globals.heightMediaQuery,
           ),
-          ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.zero,
-            itemCount: 3,
-            shrinkWrap:
-                true, // This allows the ListView to take only necessary space
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                contentPadding: EdgeInsets.fromLTRB(
-                    0,
-                    10 * globals.heightMediaQuery,
-                    0,
-                    10 * globals.heightMediaQuery),
-                leading: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Surgeries 1",
+          surgeryDetailsList.isNotEmpty
+              ? ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: surgeryDetailsList.length,
+                  shrinkWrap:
+                      true, // This allows the ListView to take only necessary space
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      contentPadding: const EdgeInsets.all(0),
+                      title: Text(
+                        surgeryDetailsList[index].surgeryName,
                         style: AppFonts.headline3(color: AppColors.grayscale90),
                       ),
-                      Text(
-                        '15.01.2022',
-                        style: AppFonts.body2(color: AppColors.grayscale70),
+                      trailing: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.file_copy_outlined,
+                            color: AppColors.primary40,
+                          ),
+                          Icon(
+                            Icons.chevron_right_rounded,
+                            color: AppColors.primary40,
+                          ),
+                        ],
                       ),
-                    ]),
-                trailing: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.file_copy_outlined,
-                      color: AppColors.primary40,
-                    ),
-                    Icon(
-                      Icons.chevron_right_rounded,
-                      color: AppColors.primary40,
-                    ),
-                  ],
+                      onTap: () {},
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            DateFormat('yyyy-MM-dd').format(
+                                surgeryDetailsList[index].firstDoseDate!),
+                            style: AppFonts.body2(color: AppColors.grayscale70),
+                          ),
+                          Text(
+                            DateFormat('yyyy-MM-dd').format(
+                                surgeryDetailsList[index].secondDoseDate!),
+                            style: AppFonts.body2(color: AppColors.grayscale70),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                )
+              : ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.zero,
+                  itemCount: 3,
+                  shrinkWrap:
+                      true, // This allows the ListView to take only necessary space
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      contentPadding: EdgeInsets.fromLTRB(
+                          0,
+                          10 * globals.heightMediaQuery,
+                          0,
+                          10 * globals.heightMediaQuery),
+                      leading: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Surgeries 1",
+                              style: AppFonts.headline3(
+                                  color: AppColors.grayscale90),
+                            ),
+                            Text(
+                              '15.01.2022',
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale70),
+                            ),
+                          ]),
+                      trailing: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.file_copy_outlined,
+                            color: AppColors.primary40,
+                          ),
+                          Icon(
+                            Icons.chevron_right_rounded,
+                            color: AppColors.primary40,
+                          ),
+                        ],
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const EditSurgeriesRecords(),
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const EditSurgeriesRecords(),
-                    ),
-                  );
-                },
-              );
-            },
-          ),
           Row(
             children: [
               PrimaryTextButton(
@@ -1192,7 +1331,48 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const AddSurgeriesRecords(),
+                      builder: (context) => AddSurgeriesRecords(
+                        onSave: (surgeryName, firstDoseDate, secondDoseDate) {
+                          setState(() {
+                            final oviVariables = ref.read(ovianimalsProvider);
+                            final animalIndex = ref
+                                .read(ovianimalsProvider)
+                                .indexWhere((animal) =>
+                                    animal.animalName ==
+                                    widget.OviDetails.animalName);
+                            // Get the current vaccineDetails map for the specific animal
+                            final animalSurgeryDetails =
+                                oviVariables[animalIndex].surgeryDetails;
+
+                            // Update the vaccineDetails map for that animal with the new vaccine details
+                            ref.read(ovianimalsProvider)[animalIndex] =
+                                oviVariables[animalIndex].copyWith(
+                              surgeryDetails: {
+                                ...animalSurgeryDetails,
+                                widget.OviDetails.animalName: [
+                                  ...animalSurgeryDetails[
+                                          widget.OviDetails.animalName] ??
+                                      [],
+                                  SurgeryDetails(
+                                    surgeryName: surgeryName,
+                                    firstDoseDate: firstDoseDate,
+                                    secondDoseDate: secondDoseDate,
+                                  ),
+                                ],
+                              },
+                            );
+
+                            // Add the vaccine details to the vaccineDetailsListProvider if needed
+                            ref.read(surgeryDetailsProvider).add(
+                                  SurgeryDetails(
+                                    surgeryName: surgeryName,
+                                    firstDoseDate: firstDoseDate,
+                                    secondDoseDate: secondDoseDate,
+                                  ),
+                                );
+                          });
+                        },
+                      ),
                     ),
                   );
                 },

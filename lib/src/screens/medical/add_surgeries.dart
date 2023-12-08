@@ -8,7 +8,9 @@ import '../../widgets/inputs/text_fields/primary_text_field.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 class AddSurgeriesRecords extends StatefulWidget {
-  const AddSurgeriesRecords({super.key});
+  final Function(String, DateTime?, DateTime?) onSave;
+
+  const AddSurgeriesRecords({super.key, required this.onSave});
 
   @override
   State<AddSurgeriesRecords> createState() => _AddSurgeriesRecordsState();
@@ -18,6 +20,19 @@ class _AddSurgeriesRecordsState extends State<AddSurgeriesRecords> {
   TextEditingController surgeryNameController = TextEditingController();
   DateTime? firstDoseDate;
   DateTime? secondDoseDate;
+  @override
+  void dispose() {
+    surgeryNameController.dispose();
+    super.dispose();
+  }
+
+  void _saveDataAndNavigateBack() {
+    String newSurgeryName = surgeryNameController.text;
+    widget.onSave(newSurgeryName, firstDoseDate, secondDoseDate);
+
+    // Close the modal sheet and return to MyPage
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +111,7 @@ class _AddSurgeriesRecordsState extends State<AddSurgeriesRecords> {
           width: 343 * globals.widthMediaQuery,
           child: PrimaryButton(
             onPressed: () {
-              Navigator.pop(context);
+              _saveDataAndNavigateBack();
             },
             text: 'Save',
           ),

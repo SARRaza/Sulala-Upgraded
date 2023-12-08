@@ -82,6 +82,9 @@ final breedingEventsProvider =
     StateProvider<List<BreedingEventVariables>>((ref) => []);
 final vaccineDetailsListProvider =
     StateProvider<List<VaccineDetails>>((ref) => []);
+final medicalCheckupDetailsProvider =
+    StateProvider<List<MedicalCheckupDetails>>((ref) => []);
+final surgeryDetailsProvider = StateProvider<List<SurgeryDetails>>((ref) => []);
 
 // final grandfatherNamesProvider = StateProvider<String>((ref) => 'Add');
 // final grandmotherNamesProvider = StateProvider<String>((ref) => 'Add');

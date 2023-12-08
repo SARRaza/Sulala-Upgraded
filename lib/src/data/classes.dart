@@ -124,6 +124,8 @@ class OviVariables {
   final BreedingDetails breedingDetails;
   final Map<String, List<BreedingEventVariables>> breedingEvents;
   final Map<String, List<VaccineDetails>> vaccineDetails;
+  final Map<String, List<MedicalCheckupDetails>> checkUpDetails;
+  final Map<String, List<SurgeryDetails>> surgeryDetails;
 
   OviVariables({
     required this.selectedFilters,
@@ -164,6 +166,8 @@ class OviVariables {
     required this.breedingEvents,
     required this.vaccineDetails,
     required this.dateOfLayingEggs,
+    required this.checkUpDetails,
+    required this.surgeryDetails,
   });
   OviVariables copyWith(
       {List<String>? selectedFilters,
@@ -202,7 +206,9 @@ class OviVariables {
       String? breedingnotes,
       bool? shouldAddEvent,
       Map<String, List<BreedingEventVariables>>? breedingEvents,
-      final Map<String, List<VaccineDetails>>? vaccineDetails,
+      Map<String, List<VaccineDetails>>? vaccineDetails,
+      Map<String, List<MedicalCheckupDetails>>? checkUpDetails,
+      Map<String, List<SurgeryDetails>>? surgeryDetails,
       // ignore: non_constant_identifier_names
       String? BreedingDetails}) {
     return OviVariables(
@@ -246,6 +252,8 @@ class OviVariables {
       breedingDetails: breedingDetails,
       breedingEvents: breedingEvents ?? this.breedingEvents,
       vaccineDetails: vaccineDetails ?? this.vaccineDetails,
+      checkUpDetails: checkUpDetails ?? this.checkUpDetails,
+      surgeryDetails: surgeryDetails ?? this.surgeryDetails,
     );
   }
 }
@@ -285,21 +293,25 @@ class VaccineDetails {
 }
 
 class MedicalCheckupDetails {
-  final String mammalcheckupName;
-  final DateTime? mammalcheckupDate;
+  final String checkupName;
+  final DateTime? firstDoseDate;
+  final DateTime? secondDoseDate;
 
   MedicalCheckupDetails({
-    required this.mammalcheckupName,
-    this.mammalcheckupDate,
+    required this.checkupName,
+    required this.firstDoseDate,
+    required this.secondDoseDate,
   });
 }
 
 class SurgeryDetails {
-  final String mammalsurgeryName;
-  final DateTime? mammalsurgeryDate;
+  final String surgeryName;
+  final DateTime? firstDoseDate;
+  final DateTime? secondDoseDate;
 
   SurgeryDetails({
-    required this.mammalsurgeryName,
-    this.mammalsurgeryDate,
+    required this.surgeryName,
+    required this.firstDoseDate,
+    required this.secondDoseDate,
   });
 }
