@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../screens/breeding/list_of_breeding_events.dart';
 import '../screens/create_animal/sar_listofanimals.dart';
+import '../screens/medical/mammals_medical.dart';
 
 // Join Now Global Variables
 final whoOwnTheFarmProvider = StateProvider<String>((ref) => '');
@@ -77,6 +78,8 @@ final shoudlAddEventProvider = StateProvider<bool>((ref) => false);
 final ovianimalsProvider = StateProvider<List<OviVariables>>((ref) => []);
 final breedingEventsProvider =
     StateProvider<List<BreedingEventVariables>>((ref) => []);
+final vaccineDetailsListProvider =
+    StateProvider<List<VaccineDetails>>((ref) => []);
 
 // final grandfatherNamesProvider = StateProvider<String>((ref) => 'Add');
 // final grandmotherNamesProvider = StateProvider<String>((ref) => 'Add');

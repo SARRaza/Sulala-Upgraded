@@ -59,42 +59,110 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          scrolledUnderElevation: 0.0,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leadingWidth: globals.widthMediaQuery * 56,
-          leading: Padding(
-            padding: EdgeInsets.only(left: globals.widthMediaQuery * 16),
-            child: Container(
-              decoration: const BoxDecoration(
-                  color: AppColors.grayscale10, shape: BoxShape.circle),
-              child: IconButton(
-                padding: EdgeInsets.zero,
-                icon: Icon(
-                  Icons.arrow_back_rounded,
-                  color: Colors.black,
-                  size: globals.widthMediaQuery * 24,
+
+        // extendBodyBehindAppBar: true,
+        // appBar: AppBar(
+        //   scrolledUnderElevation: 0.0,
+        //   backgroundColor: Colors.transparent,
+        //   elevation: 0,
+        //   leadingWidth: globals.widthMediaQuery * 56,
+        //   leading: Padding(
+        //     padding: EdgeInsets.only(left: globals.widthMediaQuery * 16),
+        //     child: Container(
+        //       decoration: const BoxDecoration(
+        //           color: AppColors.grayscale10, shape: BoxShape.circle),
+        //       child: IconButton(
+        //         padding: EdgeInsets.zero,
+        //         icon: Icon(
+        //           Icons.arrow_back_rounded,
+        //           color: Colors.black,
+        //           size: globals.widthMediaQuery * 24,
+        //         ),
+        //         onPressed: () {
+        //           // Handle close button press
+        //           Navigator.push(
+        //             context,
+        //             MaterialPageRoute(
+        //               builder: (context) => UserListOfAnimals(
+        //                 shouldAddAnimal: false,
+        //                 breedingEvents: widget.breedingEvents,
+        //               ),
+        //             ),
+        //           );
+        //         },
+        //       ),
+        //     ),
+        //   ),
+        //   actions: [
+        //     Padding(
+        //       padding: EdgeInsets.only(right: globals.widthMediaQuery * 16),
+        //       child: Container(
+        //         width: globals.widthMediaQuery * 40,
+        //         decoration: const BoxDecoration(
+        //             color: AppColors.grayscale10, shape: BoxShape.circle),
+        //         child: IconButton(
+        //           padding: EdgeInsets.zero,
+        //           icon: Image.asset(
+        //               'assets/icons/frame/24px/edit_icon_button.png'),
+        //           onPressed: () {
+        //             // Handle close button press
+        //             Navigator.of(context).push(
+        //               MaterialPageRoute(
+        //                 builder: (context) => EditAnimalGenInfo(
+        //                   OviDetails: widget.OviDetails,
+        //                   breedingEvents: widget.breedingEvents,
+        //                 ),
+        //               ),
+        //             );
+        //           },
+        //         ),
+        //       ),
+        //     ),
+        //   ],
+        // ),
+        body: Stack(
+          children: [
+            Align(
+              alignment: Alignment.topCenter,
+              child: SizedBox(
+                width: globals.widthMediaQuery * 375,
+                child: Image.asset(
+                  "assets/graphic/Animal_p.png",
+                  fit: BoxFit.fill,
                 ),
-                onPressed: () {
-                  // Handle close button press
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => UserListOfAnimals(
-                        shouldAddAnimal: false,
-                        breedingEvents: widget.breedingEvents,
-                      ),
-                    ),
-                  );
-                },
               ),
             ),
-          ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: globals.widthMediaQuery * 16),
+            Positioned(
+              top: 8.0,
+              left: 8.0,
+              child: Container(
+                decoration: const BoxDecoration(
+                    color: AppColors.grayscale10, shape: BoxShape.circle),
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  icon: Icon(
+                    Icons.arrow_back_rounded,
+                    color: Colors.black,
+                    size: globals.widthMediaQuery * 24,
+                  ),
+                  onPressed: () {
+                    // Handle close button press
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UserListOfAnimals(
+                          shouldAddAnimal: false,
+                          breedingEvents: widget.breedingEvents,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            Positioned(
+              top: 8.0,
+              right: 8.0,
               child: Container(
                 width: globals.widthMediaQuery * 40,
                 decoration: const BoxDecoration(
@@ -114,20 +182,6 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
                       ),
                     );
                   },
-                ),
-              ),
-            ),
-          ],
-        ),
-        body: Stack(
-          children: [
-            Align(
-              alignment: Alignment.topCenter,
-              child: SizedBox(
-                width: globals.widthMediaQuery * 375,
-                child: Image.asset(
-                  "assets/graphic/Animal_p.png",
-                  fit: BoxFit.fitWidth,
                 ),
               ),
             ),

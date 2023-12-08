@@ -8,7 +8,9 @@ import '../../widgets/inputs/text_fields/primary_text_field.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 class AddVaccination extends StatefulWidget {
-  const AddVaccination({super.key});
+  final Function(String, DateTime?, DateTime?) onSave;
+
+  const AddVaccination({super.key, required this.onSave});
 
   @override
   State<AddVaccination> createState() => _AddVaccinationState();
@@ -18,6 +20,40 @@ class _AddVaccinationState extends State<AddVaccination> {
   TextEditingController vaccineNameController = TextEditingController();
   DateTime? firstDoseDate;
   DateTime? secondDoseDate;
+
+  @override
+  void dispose() {
+    vaccineNameController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _selectDate(BuildContext context, bool isFirstDose) async {
+    final selectedDate = await showDatePicker(
+      context: context,
+      initialDate: isFirstDose
+          ? firstDoseDate ?? DateTime.now()
+          : secondDoseDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (selectedDate != null) {
+      setState(() {
+        if (isFirstDose) {
+          firstDoseDate = selectedDate;
+        } else {
+          secondDoseDate = selectedDate;
+        }
+      });
+    }
+  }
+
+  void _saveDataAndNavigateBack() {
+    String newVaccineName = vaccineNameController.text;
+    widget.onSave(newVaccineName, firstDoseDate, secondDoseDate);
+
+    // Close the modal sheet and return to MyPage
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +132,8 @@ class _AddVaccinationState extends State<AddVaccination> {
           width: 343 * globals.widthMediaQuery,
           child: PrimaryButton(
             onPressed: () {
-              Navigator.pop(context);
+              _saveDataAndNavigateBack();
+              // Navigator.pop(context);
             },
             text: 'Save',
           ),

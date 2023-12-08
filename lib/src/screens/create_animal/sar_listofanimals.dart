@@ -11,6 +11,7 @@ import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/inputs/search_bars/button_search_bar.dart';
 import '../breeding/list_of_breeding_events.dart';
 
+import '../medical/mammals_medical.dart';
 import 'create_animal.dart';
 
 import 'owned_animal_detail_reg_mode.dart';
@@ -49,6 +50,7 @@ class OviVariables {
   final bool shouldAddEvent;
   final BreedingDetails breedingDetails;
   final Map<String, List<BreedingEventVariables>> breedingEvents;
+  final Map<String, List<VaccineDetails>> vaccineDetails;
 
   OviVariables({
     required this.selectedFilters,
@@ -84,6 +86,7 @@ class OviVariables {
     required this.shouldAddEvent,
     required this.breedingDetails,
     required this.breedingEvents,
+    required this.vaccineDetails,
   });
   OviVariables copyWith(
       {List<String>? selectedFilters,
@@ -118,6 +121,7 @@ class OviVariables {
       String? breedingnotes,
       bool? shouldAddEvent,
       Map<String, List<BreedingEventVariables>>? breedingEvents,
+      final Map<String, List<VaccineDetails>>? vaccineDetails,
       // ignore: non_constant_identifier_names
       String? BreedingDetails}) {
     return OviVariables(
@@ -156,6 +160,7 @@ class OviVariables {
       shouldAddEvent: shouldAddEvent ?? this.shouldAddEvent,
       breedingDetails: breedingDetails,
       breedingEvents: breedingEvents ?? this.breedingEvents,
+      vaccineDetails: vaccineDetails ?? this.vaccineDetails,
     );
   }
 }
@@ -266,6 +271,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
       breedingnotes: ref.read(breedingnotesProvider),
       shouldAddEvent: ref.read(shoudlAddEventProvider),
       breedingEvents: {animalName: []},
+      vaccineDetails: {animalName: []},
     );
 
     setState(() {
