@@ -11,7 +11,6 @@ final whatIsTheNameOfYourFarmProvider = StateProvider<String>((ref) => '');
 final hasErrorProvider = StateProvider<bool>((ref) => false);
 
 // Sign Up Global Variables
-
 final selectedCountryCodeProvider = StateProvider<String>((ref) => "+966");
 final selectedCountryFlagProvider =
     StateProvider<String>((ref) => "assets/icons/flags/Country=SA.png");
@@ -19,12 +18,10 @@ final phoneNumberProvider = StateProvider<String>((ref) => '');
 final emailAdressProvider = StateProvider<String>((ref) => '');
 
 // Create Password Global Variables
-
 final passwordProvider = StateProvider<String>((ref) => '');
 final passwrodConfirmProvider = StateProvider<String>((ref) => '');
 
 // Add Personal Information Gloabl Varibales
-
 final firstNameProvider = StateProvider<String>((ref) => '');
 final lastNameProvider = StateProvider<String>((ref) => '');
 
@@ -44,9 +41,7 @@ final selectedAnimalBreedsProvider = StateProvider<String>((ref) => '');
 
 // Enter Complete Info Global Varibales
 final selectedAnimalImageProvider = StateProvider<File?>((ref) => null);
-
 final animalNameProvider = StateProvider<String>((ref) => '');
-
 final shoudlAddAnimalProvider = StateProvider<bool>((ref) => false);
 final layingFrequencyProvider = StateProvider<String>((ref) => '');
 final eggsPerMonthProvider = StateProvider<String>((ref) => '');
