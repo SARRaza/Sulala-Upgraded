@@ -132,7 +132,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
       },
     );
 
-    if (dateOfSonar != null && dateOfSonar != selectedmammalexpdeliveryDate) {
+    if (dateOfSonar != null) {
       setState(() {
         selectedmammalexpdeliveryDate = dateOfSonar;
         dateOfSonarController.text = DateFormat.yMMMd().format(dateOfSonar);
