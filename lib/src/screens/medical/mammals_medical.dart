@@ -257,11 +257,6 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                 PrimaryTextField(
                     hintText: 'Enter Number Of Eggs',
                     labelText: 'Enter Number Of Eggs',
-                    onChanged: (value) {
-                      ref
-                          .read(numOfEggsProvider.notifier)
-                          .update((state) => value);
-                    },
                     controller: numOfEggsController),
                 SizedBox(height: globals.heightMediaQuery * 130),
                 ButtonWidget(
@@ -735,119 +730,131 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
               ],
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Hatching Information',
-                style: AppFonts.title5(color: AppColors.grayscale90),
-              ),
-              ListTile(
-                onTap: () {
-                  _dateOfLayingEggsPickerModalSheet();
-                },
-                contentPadding: const EdgeInsets.only(right: 0, left: 0),
-                leading: Text(
-                  'Date Of Laying Eggs',
-                  style: AppFonts.body2(color: AppColors.grayscale70),
+          Visibility(
+            visible: widget.OviDetails.selectedOviGender == 'Female' &&
+                widget.OviDetails.selectedAnimalType == 'Oviparous',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hatching Information',
+                  style: AppFonts.title5(color: AppColors.grayscale90),
                 ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    dateOfLayingEggsController.text.isNotEmpty
-                        ? Text(
-                            dateOfLayingEggsController.text,
-                            style: AppFonts.body2(color: AppColors.grayscale90),
-                          )
-                        : Text(
-                            'ADD',
-                            style: AppFonts.body2(color: AppColors.grayscale90),
-                          ),
-                    const Icon(Icons.chevron_right_rounded,
-                        color: AppColors.primary40),
-                  ],
+                ListTile(
+                  onTap: () {
+                    _dateOfLayingEggsPickerModalSheet();
+                  },
+                  contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                  leading: Text(
+                    'Date Of Laying Eggs',
+                    style: AppFonts.body2(color: AppColors.grayscale70),
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      dateOfLayingEggsController.text.isNotEmpty
+                          ? Text(
+                              dateOfLayingEggsController.text,
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            )
+                          : Text(
+                              'ADD',
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            ),
+                      const Icon(Icons.chevron_right_rounded,
+                          color: AppColors.primary40),
+                    ],
+                  ),
                 ),
-              ),
-              ListTile(
-                onTap: () {
-                  _showNumOfEggsModal(context);
-                },
-                contentPadding: const EdgeInsets.only(right: 0, left: 0),
-                leading: Text(
-                  'Number Of Eggs',
-                  style: AppFonts.body2(color: AppColors.grayscale70),
+                ListTile(
+                  onTap: () {
+                    _showNumOfEggsModal(context);
+                  },
+                  contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                  leading: Text(
+                    'Number Of Eggs',
+                    style: AppFonts.body2(color: AppColors.grayscale70),
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      numOfEggsController.text.isNotEmpty
+                          ? Text(
+                              numOfEggsController.text,
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            )
+                          : Text(
+                              'ADD',
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            ),
+                      const Icon(Icons.chevron_right_rounded,
+                          color: AppColors.primary40),
+                    ],
+                  ),
                 ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    numOfEggsController.text.isNotEmpty
-                        ? Text(
-                            numOfEggsController.text,
-                            style: AppFonts.body2(color: AppColors.grayscale90),
-                          )
-                        : Text(
-                            'ADD',
-                            style: AppFonts.body2(color: AppColors.grayscale90),
-                          ),
-                    const Icon(Icons.chevron_right_rounded,
-                        color: AppColors.primary40),
-                  ],
+                ListTile(
+                  onTap: () {
+                    _showKeptInOvalSelection(context);
+                  },
+                  contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                  leading: Text(
+                    'Have You Kept Eggs In Oval?',
+                    style: AppFonts.body2(color: AppColors.grayscale70),
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      keptInOval.isNotEmpty
+                          ? Text(
+                              keptInOval,
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            )
+                          : Text(
+                              'ADD',
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            ),
+                      const Icon(Icons.chevron_right_rounded,
+                          color: AppColors.primary40),
+                    ],
+                  ),
                 ),
-              ),
-              ListTile(
-                onTap: () {
-                  _showKeptInOvalSelection(context);
-                },
-                contentPadding: const EdgeInsets.only(right: 0, left: 0),
-                leading: Text(
-                  'Have You Kept Eggs In Oval?',
-                  style: AppFonts.body2(color: AppColors.grayscale70),
+                ListTile(
+                  onTap: () {
+                    _incubationDatePickerModalSheet();
+                  },
+                  contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                  leading: Text(
+                    'Incubation Date',
+                    style: AppFonts.body2(color: AppColors.grayscale70),
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      incubationDateController.text.isNotEmpty
+                          ? Text(
+                              incubationDateController.text,
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            )
+                          : Text(
+                              'ADD',
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            ),
+                      const Icon(Icons.chevron_right_rounded,
+                          color: AppColors.primary40),
+                    ],
+                  ),
                 ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    keptInOval.isNotEmpty
-                        ? Text(
-                            keptInOval,
-                            style: AppFonts.body2(color: AppColors.grayscale90),
-                          )
-                        : Text(
-                            'ADD',
-                            style: AppFonts.body2(color: AppColors.grayscale90),
-                          ),
-                    const Icon(Icons.chevron_right_rounded,
-                        color: AppColors.primary40),
-                  ],
-                ),
-              ),
-              ListTile(
-                onTap: () {
-                  _incubationDatePickerModalSheet();
-                },
-                contentPadding: const EdgeInsets.only(right: 0, left: 0),
-                leading: Text(
-                  'Incubation Date',
-                  style: AppFonts.body2(color: AppColors.grayscale70),
-                ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    incubationDateController.text.isNotEmpty
-                        ? Text(
-                            incubationDateController.text,
-                            style: AppFonts.body2(color: AppColors.grayscale90),
-                          )
-                        : Text(
-                            'ADD',
-                            style: AppFonts.body2(color: AppColors.grayscale90),
-                          ),
-                    const Icon(Icons.chevron_right_rounded,
-                        color: AppColors.primary40),
-                  ],
-                ),
-              ),
-              SizedBox(height: 16 * globals.heightMediaQuery),
-            ],
+                SizedBox(height: 16 * globals.heightMediaQuery),
+              ],
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
