@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
@@ -132,7 +133,7 @@ class _OTPPageState extends ConsumerState<OTPPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Enter Code",
+            "Enter Code".tr,
             style: AppFonts.title2(color: AppColors.grayscale90),
           ),
           SizedBox(
@@ -144,7 +145,9 @@ class _OTPPageState extends ConsumerState<OTPPage> {
                 TextSpan(
                   text: phoneNumber.isNotEmpty
                       ? "We sent a verification code on the following\nPhone number: "
-                      : "We sent a verification code on the following\nEmail address: ",
+                          .tr
+                      : "We sent a verification code on the following\nEmail address: "
+                          .tr,
                   style: AppFonts.body2(color: AppColors.grayscale70),
                 ),
                 TextSpan(
@@ -181,11 +184,11 @@ class _OTPPageState extends ConsumerState<OTPPage> {
               child: Column(
                 children: [
                   Text(
-                    "Invalid verification code.",
+                    "Invalid verification code.".tr,
                     style: AppFonts.caption2(color: AppColors.error100),
                   ),
                   Text(
-                    "Please, check the code or resend it again",
+                    "Please, check the code or resend it again".tr,
                     style: AppFonts.caption2(color: AppColors.error100),
                   ),
                 ],
@@ -199,14 +202,14 @@ class _OTPPageState extends ConsumerState<OTPPage> {
   Widget _buildResendButton() {
     return PrimaryTextButton(
       onPressed: _onResendButtonPressed,
-      text: "Send new code",
+      text: "Send New Code".tr,
       status: textStatus,
     );
   }
 
   Widget _buildCountdown() {
     return Text(
-      "Send new code in: 00:${_remainingSeconds.toString().padLeft(2, '0')}",
+      "Send New Code in: 00:${_remainingSeconds.toString().padLeft(2, '0')}".tr,
       style: AppFonts.body1(color: AppColors.grayscale90),
     );
   }
@@ -217,7 +220,7 @@ class _OTPPageState extends ConsumerState<OTPPage> {
       height: globals.heightMediaQuery * 52,
       width: globals.widthMediaQuery * 343,
       child: PrimaryButton(
-        text: "Confirm",
+        text: "Confirm".tr,
         status: status,
         onPressed: onPressed,
       ),

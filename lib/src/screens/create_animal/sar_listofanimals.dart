@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import 'package:sulala_upgrade/src/screens/create_animal/sar_animalfilters.dart';
 import 'package:sulala_upgrade/src/widgets/pages/main_widgets/navigation_bar_reg_mode.dart';
@@ -165,7 +166,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
             title: Padding(
               padding: EdgeInsets.only(left: globals.widthMediaQuery * 16),
               child: Text(
-                'Animals',
+                'Animals'.tr,
                 style: AppFonts.title3(color: AppColors.grayscale90),
               ),
             ),
@@ -249,7 +250,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                   ),
                   ButtonSearchBar(
                     onChange: _filterMammals,
-                    hintText: "Search by name or ID",
+                    hintText: "Search by name or ID".tr,
                     icon: Icons.filter_alt_outlined,
                     // controller: _searchController,
                     onIconPressed: () {
@@ -388,12 +389,12 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                                       MediaQuery.of(context).size.height * 0.04,
                                 ),
                                 Text(
-                                  'No Animals Found',
+                                  'No Animals Found'.tr,
                                   style: AppFonts.headline3(
                                       color: AppColors.grayscale90),
                                 ),
                                 Text(
-                                  'Try adjusting the filters',
+                                  'Try adjusting the filters'.tr,
                                   style: AppFonts.body2(
                                       color: AppColors.grayscale70),
                                 ),
@@ -439,7 +440,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                                         }
                                       });
                                     }, // Call the addAnimal function when the button is pressed
-                                    text: 'Add Animal',
+                                    text: 'Add Animal'.tr,
                                   ),
                                 ),
                               ],

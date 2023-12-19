@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
@@ -72,7 +73,7 @@ class _GuestModeUserListOfAnimals extends State<GuestModeUserListOfAnimals> {
           automaticallyImplyLeading: false,
           centerTitle: true,
           title: Text(
-            'Animals',
+            'Animals'.tr,
             style: AppFonts.title3(color: AppColors.grayscale90),
           ),
         ),
@@ -183,12 +184,12 @@ class _GuestModeUserListOfAnimals extends State<GuestModeUserListOfAnimals> {
                               height: globals.heightMediaQuery * 32,
                             ),
                             Text(
-                              'No Animals Added Yet',
+                              'No Animals Added Yet'.tr,
                               style:
                                   AppFonts.title4(color: AppColors.grayscale90),
                             ),
                             Text(
-                              'Sign In To Create A Farm & Add An Animal',
+                              'Sign In To Create A Farm & Add An Animal'.tr,
                               style: AppFonts.headline4(
                                   color: AppColors.grayscale70),
                             ),
@@ -199,7 +200,7 @@ class _GuestModeUserListOfAnimals extends State<GuestModeUserListOfAnimals> {
                               height: globals.heightMediaQuery * 48,
                               width: globals.widthMediaQuery * 108,
                               child: PrimaryButton(
-                                text: 'Join now',
+                                text: 'Join Now'.tr,
                                 onPressed: () {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
@@ -213,7 +214,7 @@ class _GuestModeUserListOfAnimals extends State<GuestModeUserListOfAnimals> {
                             SizedBox(height: globals.heightMediaQuery * 8),
                             PrimaryTextButton(
                               status: TextStatus.idle,
-                              text: 'Sign in',
+                              text: 'Sign In'.tr,
                               onPressed: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(

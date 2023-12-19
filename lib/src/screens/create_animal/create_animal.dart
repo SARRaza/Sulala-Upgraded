@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
@@ -140,7 +141,7 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
         elevation: 0,
         automaticallyImplyLeading: false,
         title: Text(
-          'Create Animal',
+          'Create Animal'.tr,
           style: AppFonts.headline3(color: AppColors.grayscale90),
         ),
         actions: [
@@ -175,7 +176,7 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Animal Type',
+                'Animal Type'.tr,
                 style: AppFonts.headline2(color: AppColors.grayscale90),
               ),
               SizedBox(
@@ -205,7 +206,7 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
                       height: globals.heightMediaQuery * 16,
                     ),
                     Text(
-                      'Animal Species',
+                      'Animal Species'.tr,
                       style: AppFonts.headline2(color: AppColors.grayscale90),
                     ),
                     for (String species in selectedAnimalType == 'Mammal'
@@ -225,7 +226,7 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
                               'species', context, modalOviSpeciesList);
                         }
                       },
-                      text: 'Show More',
+                      text: 'Show More'.tr,
                     ),
                   ],
                 ),
@@ -245,7 +246,7 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
                     height: globals.heightMediaQuery * 16,
                   ),
                   Text(
-                    'Animal Breeds',
+                    'Animal Breeds'.tr,
                     style: AppFonts.headline2(color: AppColors.grayscale90),
                   ),
                   for (String breed in selectedAnimalType == 'Mammal'

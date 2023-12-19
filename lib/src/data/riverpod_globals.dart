@@ -30,6 +30,9 @@ final cityProvider = StateProvider<String>((ref) => '');
 final countryProvider = StateProvider<String>((ref) => '');
 final proflePictureProvider = StateProvider<File?>((ref) => null);
 
+// Selected Language
+final languageProvider = StateProvider<String>((ref) => '');
+
 // Privacy & Security Global Variables
 final emailAddressVisibilityProvider = StateProvider<bool>((ref) => false);
 final phoneNumberVisibilityProvider = StateProvider<bool>((ref) => false);

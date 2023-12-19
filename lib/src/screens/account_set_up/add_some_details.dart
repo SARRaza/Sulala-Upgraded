@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../data/riverpod_globals.dart';
@@ -47,7 +48,7 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
                     Icons.chevron_right_rounded,
                     color: AppColors.grayscale50,
                   ),
-                  title: const Text('Gallery'),
+                  title: Text('Gallery'.tr),
                   onTap: () async {
                     Navigator.pop(context);
                     final pickedImage =
@@ -70,7 +71,7 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
                     Icons.chevron_right_rounded,
                     color: AppColors.grayscale50,
                   ),
-                  title: const Text('Camera'),
+                  title: Text('Camera'.tr),
                   onTap: () async {
                     Navigator.pop(context);
                     final pickedImage =
@@ -121,7 +122,7 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
               padding: const EdgeInsets.only(right: 8),
               child: PrimaryTextButton(
                 status: TextStatus.idle,
-                text: 'Skip For Now',
+                text: 'Skip For Now'.tr,
                 onPressed: () => Navigator.pop(context),
               ),
             )
@@ -136,11 +137,11 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Add Some Details',
+                  'Add Some Details'.tr,
                   style: AppFonts.title3(color: AppColors.grayscale90),
                 ),
                 SizedBox(height: globals.heightMediaQuery * 40),
-                Text('Add Profile Photo',
+                Text('Add Profile Photo'.tr,
                     style: AppFonts.headline3(color: AppColors.grayscale90)),
                 SizedBox(height: globals.heightMediaQuery * 24),
                 Center(
@@ -168,18 +169,18 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
                       _showFilterModalSheet(context);
                     },
                     status: TextStatus.idle,
-                    text: 'Add Photo',
+                    text: 'Add Photo'.tr,
                   ),
                 ),
                 SizedBox(height: globals.heightMediaQuery * 40),
                 Text(
-                  "What's your farm address?",
+                  "What's your farm address?".tr,
                   style: AppFonts.headline3(color: AppColors.grayscale90),
                 ),
                 SizedBox(height: globals.heightMediaQuery * 24),
                 PrimaryTextField(
                   controller: countrycontroller,
-                  hintText: 'Country',
+                  hintText: 'Country'.tr,
                   onChanged: (value) {
                     ref.read(countryProvider.notifier).update((state) => value);
                   },
@@ -187,7 +188,7 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
                 SizedBox(height: globals.heightMediaQuery * 16),
                 PrimaryTextField(
                   controller: citycontroller,
-                  hintText: 'City',
+                  hintText: 'City'.tr,
                   onChanged: (value) {
                     ref.read(cityProvider.notifier).update((state) => value);
                   },

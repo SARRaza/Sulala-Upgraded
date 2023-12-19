@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
@@ -95,7 +96,7 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
             },
           ),
           title: Text(
-            'Edit Personal Information',
+            'Edit Personal Information'.tr,
             style: AppFonts.headline3(color: AppColors.grayscale90),
           ),
         ),
@@ -134,13 +135,13 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                     onPressed: () {
                       _showImagePicker(context);
                     },
-                    text: 'Change Photo',
+                    text: 'Change Photo'.tr,
                     status: TextStatus.idle,
                   ),
                 ),
                 SizedBox(height: 32 * globals.heightMediaQuery),
                 Text(
-                  "General Info",
+                  "General Info".tr,
                   style: AppFonts.headline3(color: AppColors.grayscale90),
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
@@ -150,9 +151,9 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                           .read(firstNameProvider.notifier)
                           .update((state) => value);
                     },
-                    hintText: 'Enter Your First Name',
+                    hintText: 'Enter Your First Name'.tr,
                     controller: _firstnameController,
-                    labelText: 'First Name'),
+                    labelText: 'First Name'.tr),
                 SizedBox(height: 16 * globals.heightMediaQuery),
                 PrimaryTextField(
                     onChanged: (value) {
@@ -160,12 +161,12 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                           .read(lastNameProvider.notifier)
                           .update((state) => value);
                     },
-                    hintText: 'Enter Your Last Name',
+                    hintText: 'Enter Your Last Name'.tr,
                     controller: _lastnameController,
-                    labelText: 'Last Name'),
+                    labelText: 'Last Name'.tr),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 Text(
-                  "Farm Name",
+                  "Farm Name".tr,
                   style: AppFonts.headline3(color: AppColors.grayscale90),
                 ),
                 SizedBox(height: 16 * globals.heightMediaQuery),
@@ -175,12 +176,12 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                         .read(whatIsTheNameOfYourFarmProvider.notifier)
                         .update((state) => value);
                   },
-                  hintText: 'Enter Your Farm Name',
+                  hintText: 'Enter Your Farm Name'.tr,
                   controller: farmNameController,
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 Text(
-                  "Farm Owner",
+                  "Farm Owner".tr,
                   style: AppFonts.headline3(color: AppColors.grayscale90),
                 ),
                 SizedBox(height: 16 * globals.heightMediaQuery),
@@ -190,11 +191,11 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                         .read(whoOwnTheFarmProvider.notifier)
                         .update((state) => value);
                   },
-                  hintText: 'Enter Farm Owner Name',
+                  hintText: 'Enter Farm Owner Name'.tr,
                   controller: ownerNameController,
                 ),
                 SizedBox(height: 32 * globals.heightMediaQuery),
-                Text("Contact Details",
+                Text("Contact Details".tr,
                     style: AppFonts.headline3(color: AppColors.grayscale90)),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 const PhoneNumberField(),
@@ -205,19 +206,19 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                         .read(emailAdressProvider.notifier)
                         .update((state) => value);
                   },
-                  hintText: 'Enter Your Email Address',
+                  hintText: 'Enter Your Email Address'.tr,
                   controller: _emailController,
-                  labelText: 'Email Address',
+                  labelText: 'Email Address'.tr,
                 ),
                 SizedBox(height: 32 * globals.heightMediaQuery),
-                Text("Farm Address",
+                Text("Farm Address".tr,
                     style: AppFonts.headline3(color: AppColors.grayscale90)),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 PrimaryTextField(
                   onChanged: (value) {
                     ref.read(cityProvider.notifier).update((state) => value);
                   },
-                  hintText: 'Enter Address',
+                  hintText: 'Enter Address'.tr,
                   controller: _addressController,
                 ),
                 SizedBox(height: 16 * globals.heightMediaQuery),
@@ -225,7 +226,7 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                   onChanged: (value) {
                     ref.read(cityProvider.notifier).update((state) => value);
                   },
-                  hintText: 'Enter Your City',
+                  hintText: 'Enter Your City'.tr,
                   controller: _cityController,
                 ),
                 SizedBox(height: 16 * globals.heightMediaQuery),
@@ -233,7 +234,7 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                   onChanged: (value) {
                     ref.read(countryProvider.notifier).update((state) => value);
                   },
-                  hintText: 'Enter Your Country',
+                  hintText: 'Enter Your Country'.tr,
                   controller: _countryController,
                 ),
                 SizedBox(height: 100 * globals.heightMediaQuery),
@@ -251,13 +252,13 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
 
               CustomSnackBar.show(
                 context,
-                'Information Updated',
+                'Information Updated'.tr,
                 Icons.check_circle_rounded,
                 80 * globals.heightMediaQuery,
                 color: AppColors.primary10,
               );
             },
-            text: 'Save Changes',
+            text: 'Save Changes'.tr,
           ),
         ),
       ),
@@ -282,7 +283,7 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Camera',
+                      'Camera'.tr,
                       style: AppFonts.body2(color: AppColors.grayscale90),
                     ),
                     const Icon(
@@ -311,7 +312,7 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Gallery',
+                      'Gallery'.tr,
                       style: AppFonts.body2(color: AppColors.grayscale90),
                     ),
                     const Icon(
@@ -340,7 +341,7 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Delete Photo',
+                      'Delete Photo'.tr,
                       style: AppFonts.body2(color: AppColors.error100),
                     ),
                     const Icon(

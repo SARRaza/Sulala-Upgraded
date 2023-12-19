@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../../data/countries_data.dart';
@@ -99,7 +100,7 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
-                "Phone numbers can't have text",
+                "Phone numbers can't have text".tr,
                 style: AppFonts.caption2(color: AppColors.error100),
               ),
             ),
@@ -187,7 +188,7 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
                     keyboardType: TextInputType.phone,
                     style: AppFonts.body2(color: AppColors.grayscale90),
                     decoration: InputDecoration(
-                      hintText: "Enter phone number",
+                      hintText: 'Enter Phone Number'.tr,
                       border: InputBorder.none,
                       hintStyle: AppFonts.body1(color: AppColors.grayscale50),
                       suffixIcon: phoneNumber.isNotEmpty
@@ -225,7 +226,7 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
         return Container(
           color: Colors.transparent,
           child: DrowupWidget(
-            heading: 'Filter',
+            heading: 'Filter'.tr,
             content: Column(
               children: [
                 SizedBox(

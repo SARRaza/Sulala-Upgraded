@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -56,7 +57,7 @@ class _HomeScreenGuestModeState extends State<HomeScreenGuestMode> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Welcome',
+                'Welcome'.tr,
                 style: AppFonts.title3(color: AppColors.grayscale100),
               ),
               Row(
@@ -135,8 +136,8 @@ class _HomeScreenGuestModeState extends State<HomeScreenGuestMode> {
             child: CardWidget(
               color: const Color.fromRGBO(225, 236, 185, 1),
               iconPath: 'assets/icons/frame/24px/Cow_Icon.png',
-              title: 'Searching\nfor animals?',
-              buttonText: 'Find animals',
+              title: 'Searching for animals?'.tr,
+              buttonText: 'Find animals'.tr,
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -151,8 +152,8 @@ class _HomeScreenGuestModeState extends State<HomeScreenGuestMode> {
             child: CardWidget(
               color: const Color.fromRGBO(246, 239, 205, 1),
               iconPath: 'assets/icons/frame/24px/Farm_house.png',
-              title: 'Searching \nfor farm?',
-              buttonText: 'Find farms',
+              title: 'Searching for farm?'.tr,
+              buttonText: 'Find farms'.tr,
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -165,13 +166,13 @@ class _HomeScreenGuestModeState extends State<HomeScreenGuestMode> {
         ],
       ),
       SizedBox(height: globals.heightMediaQuery * 110),
-      const TitleText(text: 'Want to start your farm\nright now and join?'),
+      TitleText(text: 'Want to start your farm\nright now and join?'.tr),
       SizedBox(height: globals.heightMediaQuery * 24),
       SizedBox(
         height: globals.heightMediaQuery * 48,
         width: globals.widthMediaQuery * 108,
         child: PrimaryButton(
-          text: 'Join now',
+          text: 'Join Now'.tr,
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
@@ -185,7 +186,7 @@ class _HomeScreenGuestModeState extends State<HomeScreenGuestMode> {
       SizedBox(height: globals.heightMediaQuery * 8),
       PrimaryTextButton(
         status: TextStatus.idle,
-        text: 'Sign in',
+        text: 'Sign In'.tr,
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(

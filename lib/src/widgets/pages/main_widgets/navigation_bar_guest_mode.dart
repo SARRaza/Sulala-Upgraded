@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/screens/guest_mode/guest_mode_user_list_of_animals.dart';
 
 import '../../../screens/guest_mode/homescreen_guest_mode.dart';
@@ -53,10 +54,10 @@ class _NavigationBarGuestModeState extends State<NavigationBarGuestMode> {
                     });
                   },
                   items: <BottomNavigationBarItem>[
-                    const BottomNavigationBarItem(
+                    BottomNavigationBarItem(
                       icon: Icon(Icons.home_outlined),
                       activeIcon: Icon(Icons.home),
-                      label: 'Home',
+                      label: 'Home'.tr,
                     ),
                     BottomNavigationBarItem(
                       icon: Image.asset(
@@ -67,12 +68,12 @@ class _NavigationBarGuestModeState extends State<NavigationBarGuestMode> {
                         "assets/icons/frame/24px/Filled_Cow_Icon.png",
                         scale: 24 / (globals.widthMediaQuery * 24),
                       ),
-                      label: 'Animals',
+                      label: 'Animals'.tr,
                     ),
-                    const BottomNavigationBarItem(
+                    BottomNavigationBarItem(
                       icon: Icon(Icons.account_circle_outlined),
                       activeIcon: Icon(Icons.account_circle),
-                      label: 'Profile',
+                      label: 'Profile'.tr,
                     )
                   ],
                   selectedItemColor: AppColors.primary20,

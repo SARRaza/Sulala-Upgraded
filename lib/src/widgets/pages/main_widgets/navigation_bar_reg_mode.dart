@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../../screens/create_animal/sar_listofanimals.dart';
 
 import '../../../screens/profile/profile_page.dart';
@@ -53,10 +54,10 @@ class _NavigationBarRegModeState extends State<NavigationBarRegMode> {
                     });
                   },
                   items: <BottomNavigationBarItem>[
-                    const BottomNavigationBarItem(
-                      icon: Icon(Icons.home_outlined),
-                      activeIcon: Icon(Icons.home),
-                      label: 'Home',
+                    BottomNavigationBarItem(
+                      icon: const Icon(Icons.home_outlined),
+                      activeIcon: const Icon(Icons.home),
+                      label: 'Home'.tr,
                     ),
                     BottomNavigationBarItem(
                       icon: Image.asset(
@@ -67,12 +68,12 @@ class _NavigationBarRegModeState extends State<NavigationBarRegMode> {
                         "assets/icons/frame/24px/Filled_Cow_Icon.png",
                         scale: 24 / (globals.widthMediaQuery * 24),
                       ),
-                      label: 'Animals',
+                      label: 'Animals'.tr,
                     ),
-                    const BottomNavigationBarItem(
-                      icon: Icon(Icons.account_circle_outlined),
-                      activeIcon: Icon(Icons.account_circle),
-                      label: 'Profile',
+                    BottomNavigationBarItem(
+                      icon: const Icon(Icons.account_circle_outlined),
+                      activeIcon: const Icon(Icons.account_circle),
+                      label: 'Profile'.tr,
                     )
                   ],
                   selectedItemColor: AppColors.primary20,

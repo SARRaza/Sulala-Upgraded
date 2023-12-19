@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 
@@ -101,7 +102,7 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
               padding: const EdgeInsets.only(right: 8),
               child: PrimaryTextButton(
                 status: TextStatus.idle,
-                text: "Skip for now",
+                text: 'Skip For Now'.tr,
                 onPressed: () => Navigator.pop(context),
               ),
             )
@@ -117,16 +118,16 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Add Personal Information',
+                  'Add Personal Information'.tr,
                   style: AppFonts.title3(color: AppColors.grayscale90),
                 ),
                 SizedBox(height: globals.heightMediaQuery * 40),
-                Text("What's your name?",
+                Text("What's your name?".tr,
                     style: AppFonts.headline3(color: AppColors.grayscale90)),
                 SizedBox(height: globals.heightMediaQuery * 24),
                 PrimaryTextField(
                   controller: nameController,
-                  hintText: "Enter First Name",
+                  hintText: "Enter First Name".tr,
                   onChanged: (value) {
                     ref
                         .read(firstNameProvider.notifier)
@@ -136,7 +137,7 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                 SizedBox(height: globals.heightMediaQuery * 16),
                 PrimaryTextField(
                   controller: lastNameController,
-                  hintText: "Enter Last Name",
+                  hintText: "Enter Last Name".tr,
                   onChanged: (value) {
                     ref
                         .read(lastNameProvider.notifier)
@@ -144,12 +145,12 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                   },
                 ),
                 SizedBox(height: globals.heightMediaQuery * 40),
-                Text("What is the name of your farm?",
+                Text('What Is The Name Of Your Farm?'.tr,
                     style: AppFonts.headline3(color: AppColors.grayscale90)),
                 SizedBox(height: globals.heightMediaQuery * 24),
                 PrimaryTextField(
                   controller: farmNameController,
-                  hintText: 'Farm Name',
+                  hintText: 'Farm Name'.tr,
                   onChanged: (value) {
                     ref
                         .read(whatIsTheNameOfYourFarmProvider.notifier)
@@ -157,12 +158,12 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                   },
                 ),
                 SizedBox(height: globals.heightMediaQuery * 40),
-                Text("Who owns the farm?",
+                Text("Who owns the farm?".tr,
                     style: AppFonts.headline3(color: AppColors.grayscale90)),
                 SizedBox(height: globals.heightMediaQuery * 24),
                 PrimaryTextField(
                   controller: ownerNameController,
-                  hintText: "Owner Name",
+                  hintText: "Owner name".tr,
                   onChanged: (value) {
                     ref
                         .read(whoOwnTheFarmProvider.notifier)
@@ -170,18 +171,19 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                   },
                 ),
                 SizedBox(height: globals.heightMediaQuery * 40),
-                Text('Contacts',
+                Text('Contacts'.tr,
                     style: AppFonts.headline3(color: AppColors.grayscale90)),
                 SizedBox(height: globals.heightMediaQuery * 8),
                 Text(
-                    'Add contact details to help other people contact you for collaboration',
+                    'Add contact details to help other people contact you for collaboration'
+                        .tr,
                     style: AppFonts.body2(color: AppColors.grayscale70)),
                 SizedBox(height: globals.heightMediaQuery * 24),
                 const PhoneNumberField(),
                 SizedBox(height: globals.heightMediaQuery * 20),
                 const SizedBox(height: 8),
                 PrimaryTextField(
-                  hintText: 'Enter Email',
+                  hintText: 'Enter Email'.tr,
                   controller: emailController,
                   // errorMessage:
                   //     emailHasError == true ? 'Invalid email address' : null,
@@ -206,7 +208,7 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                   height: globals.heightMediaQuery * 52,
                   child: PrimaryButton(
                     status: buttonStatus,
-                    text: 'Continue',
+                    text: 'Continue'.tr,
                     onPressed: () {
                       buttonStatus = PrimaryButtonStatus.loading;
                       Navigator.push(

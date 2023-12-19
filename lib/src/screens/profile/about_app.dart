@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
@@ -22,7 +23,7 @@ class _AboutApp extends State<AboutApp> {
           automaticallyImplyLeading: false,
           centerTitle: true,
           title: Text(
-            'About App',
+            'About App'.tr,
             style: AppFonts.headline3(color: AppColors.grayscale90),
           ),
           leading: IconButton(
@@ -70,7 +71,7 @@ class _AboutApp extends State<AboutApp> {
                 ),
                 SizedBox(height: 16 * globals.heightMediaQuery),
                 Center(
-                  child: Text('Version Of The App: 0.1.12',
+                  child: Text('Version Of The App: 0.1.12'.tr,
                       style: AppFonts.body2(color: AppColors.grayscale70)),
                 ),
                 SizedBox(
@@ -88,7 +89,7 @@ class _AboutApp extends State<AboutApp> {
                   child: ListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Text(
-                      'Terms & Conditions',
+                      'Terms Of Use'.tr,
                       style: AppFonts.body2(color: AppColors.grayscale90),
                     ),
                     trailing: const Icon(
@@ -101,7 +102,7 @@ class _AboutApp extends State<AboutApp> {
                 ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Text(
-                    'Privacy Policy',
+                    'Privacy Policy'.tr,
                     style: AppFonts.body2(color: AppColors.grayscale90),
                   ),
                   trailing: const Icon(

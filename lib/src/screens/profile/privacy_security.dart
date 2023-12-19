@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -58,14 +59,14 @@ class _PrivacySecurityPage extends ConsumerState<PrivacySecurityPage> {
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
-                'Privacy & Security',
+                'Privacy & Security'.tr,
                 style: AppFonts.title4(color: AppColors.grayscale90),
               ),
               SizedBox(height: 16 * globals.heightMediaQuery),
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Allow Collaboration',
+                  'Allow Collaboration'.tr,
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
                 trailing: ToggleActive(
@@ -85,7 +86,7 @@ class _PrivacySecurityPage extends ConsumerState<PrivacySecurityPage> {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Show List Of Animals',
+                  'Show List Of Animals'.tr,
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
                 trailing: _AllowCollab
@@ -101,7 +102,7 @@ class _PrivacySecurityPage extends ConsumerState<PrivacySecurityPage> {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Show Family Tree',
+                  'Show Family Tree'.tr,
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
                 trailing: _AllowCollab
@@ -118,14 +119,14 @@ class _PrivacySecurityPage extends ConsumerState<PrivacySecurityPage> {
                 height: 32 * globals.heightMediaQuery,
               ),
               Text(
-                'Contact Information',
+                'Contact Information'.tr,
                 style: AppFonts.title4(color: AppColors.grayscale90),
               ),
               SizedBox(height: 16 * globals.heightMediaQuery),
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Show Contact Information',
+                  'Show Contact Information'.tr,
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
                 trailing: ToggleActive(
@@ -150,7 +151,7 @@ class _PrivacySecurityPage extends ConsumerState<PrivacySecurityPage> {
                         return ListTile(
                           contentPadding: EdgeInsets.zero,
                           title: Text(
-                            'Phone Number',
+                            'Phone Number'.tr,
                             style: AppFonts.body2(color: AppColors.grayscale90),
                           ),
                           trailing: ToggleActive(
@@ -175,7 +176,7 @@ class _PrivacySecurityPage extends ConsumerState<PrivacySecurityPage> {
                         return ListTile(
                           contentPadding: EdgeInsets.zero,
                           title: Text(
-                            'Email Address',
+                            'Email Address'.tr,
                             style: AppFonts.body2(color: AppColors.grayscale90),
                           ),
                           trailing: ToggleActive(

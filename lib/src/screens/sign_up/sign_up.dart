@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
@@ -147,7 +148,7 @@ class _SignUpState extends ConsumerState<SignUp>
                           Column(
                             children: [
                               Text(
-                                "Welcome to Sulala!",
+                                "Welcome to Sulala!".tr,
                                 style: AppFonts.title2(
                                   color: AppColors.grayscale90,
                                 ),
@@ -157,13 +158,15 @@ class _SignUpState extends ConsumerState<SignUp>
                               ),
                               showEmailField
                                   ? Text(
-                                      "Enter your Email Address, and we will send you confirmation code",
+                                      "Enter your Email Address, and we will send you confirmation code"
+                                          .tr,
                                       style: AppFonts.headline4(
                                         color: AppColors.grayscale90,
                                       ),
                                     )
                                   : Text(
-                                      "Enter your Phone Number, and we will send you confirmation code",
+                                      "Enter your Phone Number, and we will send you confirmation code"
+                                          .tr,
                                       style: AppFonts.headline4(
                                         color: AppColors.grayscale90,
                                       ),
@@ -174,9 +177,9 @@ class _SignUpState extends ConsumerState<SignUp>
                               if (showEmailField)
                                 PrimaryTextField(
                                   controller: emailController,
-                                  hintText: 'Enter your username',
+                                  hintText: 'Enter Email'.tr,
                                   errorMessage: emailHasError == true
-                                      ? 'Invalid email address'
+                                      ? 'Invalid email address'.tr
                                       : null,
                                   onChanged: (value) {
                                     ref
@@ -200,7 +203,7 @@ class _SignUpState extends ConsumerState<SignUp>
                                 width: double.infinity,
                                 child: PrimaryButton(
                                   status: buttonStatus,
-                                  text: "Continue",
+                                  text: "Continue".tr,
                                   onPressed: () {
                                     setState(() {
                                       if (showEmailField == false) {
@@ -266,8 +269,8 @@ class _SignUpState extends ConsumerState<SignUp>
                               PrimaryTextButton(
                                 status: textStatus,
                                 text: showEmailField == false
-                                    ? 'Use email address'
-                                    : 'Use phone number',
+                                    ? 'Use Email Address'.tr
+                                    : 'Use Phone Number'.tr,
                                 onPressed: () {
                                   setState(
                                     () {

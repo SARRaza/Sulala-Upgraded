@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -55,7 +56,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          'Profile',
+          'Profile'.tr,
           style: AppFonts.title3(color: AppColors.grayscale90),
         ),
         actions: [
@@ -137,7 +138,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         ),
                         SizedBox(height: 16 * globals.heightMediaQuery),
                         Text(
-                          'Head of Farm',
+                          'Head of Farm'.tr,
                           style: AppFonts.body2(color: AppColors.grayscale70),
                         ),
                         SizedBox(height: 32 * globals.heightMediaQuery),
@@ -152,7 +153,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               );
                               // Add function of the button below
                             },
-                            text: 'Collaboration',
+                            text: 'Collaboration'.tr,
                             position: PrimaryButtonPosition.right,
                           ),
                         ),
@@ -191,7 +192,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         ),
                       ),
                       title: Text(
-                        'Accounts',
+                        'Accounts'.tr,
                         style: AppFonts.body2(color: AppColors.grayscale90),
                       ),
                       onTap: () {
@@ -216,7 +217,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         ),
                       ),
                       title: Text(
-                        'Payment Methods',
+                        'Payment Methods'.tr,
                         style: AppFonts.body2(color: AppColors.grayscale90),
                       ),
                       onTap: () {
@@ -240,7 +241,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         ),
                       ),
                       title: Text(
-                        'Subscriptions',
+                        'Subscriptions'.tr,
                         style: AppFonts.body2(color: AppColors.grayscale90),
                       ),
                       onTap: () {
@@ -278,7 +279,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         ),
                       ),
                       title: Text(
-                        'Notifications',
+                        'Notifications'.tr,
                         style: AppFonts.body2(color: AppColors.grayscale90),
                       ),
                       onTap: () {
@@ -303,7 +304,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         ),
                       ),
                       title: Text(
-                        'Privacy and Security',
+                        'Privacy and Security'.tr,
                         style: AppFonts.body2(color: AppColors.grayscale90),
                       ),
                       onTap: () {
@@ -342,7 +343,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         ),
                       ),
                       title: Text(
-                        'App Settings',
+                        'App Settings'.tr,
                         style: AppFonts.body2(color: AppColors.grayscale90),
                       ),
                       onTap: () {
@@ -366,7 +367,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         ),
                       ),
                       title: Text(
-                        'About App',
+                        'About App'.tr,
                         style: AppFonts.body2(color: AppColors.grayscale90),
                       ),
                       onTap: () {
@@ -387,7 +388,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           child: const Icon(Icons.contact_support_outlined,
                               color: AppColors.primary30)),
                       title: Text(
-                        'Customer Support',
+                        'Customer Support'.tr,
                         style: AppFonts.body2(color: AppColors.grayscale90),
                       ),
                       onTap: () {
@@ -423,7 +424,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           color: AppColors.grayscale90),
                     ),
                     title: Text(
-                      'Sign Out',
+                      'Sign Out'.tr,
                       style: AppFonts.body2(color: AppColors.error100),
                     ),
                     onTap: () {
@@ -440,7 +441,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  'Sign Out?',
+                                  'Sign Out?'.tr,
                                   style: AppFonts.title3(
                                       color: AppColors.grayscale90),
                                 ),
@@ -449,14 +450,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   height: 52 * globals.heightMediaQuery,
                                   width: double.infinity,
                                   child: NavigateButton(
-                                      onPressed: () {}, text: 'Yes'),
+                                      onPressed: () {}, text: 'Yes'.tr),
                                 ),
                                 SizedBox(height: 8 * globals.heightMediaQuery),
                                 SizedBox(
                                   height: 52 * globals.heightMediaQuery,
                                   width: double.infinity,
                                   child: SecondaryButton(
-                                      onPressed: () {}, text: 'Cancel'),
+                                      onPressed: () {}, text: 'Cancel'.tr),
                                 ),
                               ],
                             ),

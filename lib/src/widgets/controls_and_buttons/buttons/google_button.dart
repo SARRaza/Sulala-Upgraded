@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:nuts_activity_indicator/nuts_activity_indicator.dart';
 
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
-
 
 class GoogleButton extends StatelessWidget {
   final GoogleButtonStatus status;
@@ -54,7 +54,7 @@ class GoogleButton extends StatelessWidget {
             height: 24,
           ),
           Text(
-            'Continue with Google',
+            'Continue With Google'.tr,
             style: AppFonts.body1(color: _getTextColor(status)),
           ),
           const SizedBox(width: 30),

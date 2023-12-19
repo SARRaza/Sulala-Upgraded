@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
@@ -114,7 +115,7 @@ class _JoinNowState extends ConsumerState<JoinNow>
                               ? Column(
                                   children: [
                                     Text(
-                                      'What Is The Name Of Your Farm?',
+                                      'What Is The Name Of Your Farm?'.tr,
                                       style: AppFonts.title2(
                                         color: AppColors.grayscale90,
                                       ),
@@ -125,9 +126,9 @@ class _JoinNowState extends ConsumerState<JoinNow>
                                     PrimaryTextField(
                                       controller:
                                           whatIsTheNameOfYourFarmController,
-                                      hintText: 'Farm name',
+                                      hintText: 'Farm Name'.tr,
                                       errorMessage: hasError == true
-                                          ? 'Field cannot be empty'
+                                          ? 'Field cannot be empty'.tr
                                           : null,
                                       onChanged: (value) {
                                         ref
@@ -147,7 +148,7 @@ class _JoinNowState extends ConsumerState<JoinNow>
                                       height: globals.heightMediaQuery * 52,
                                       width: double.infinity,
                                       child: PrimaryButton(
-                                        text: "Continue",
+                                        text: "Continue".tr,
                                         onPressed: () {
                                           if (ref
                                               .read(
@@ -172,7 +173,7 @@ class _JoinNowState extends ConsumerState<JoinNow>
                               : Column(
                                   children: [
                                     Text(
-                                      "Who owns the farm?",
+                                      "Who owns the farm?".tr,
                                       style: AppFonts.title2(
                                         color: AppColors.grayscale90,
                                       ),
@@ -182,9 +183,9 @@ class _JoinNowState extends ConsumerState<JoinNow>
                                     ),
                                     PrimaryTextField(
                                       controller: whoOwnTheFarmController,
-                                      hintText: 'Owner name',
+                                      hintText: 'Owner name'.tr,
                                       errorMessage: hasError == true
-                                          ? 'Field cannot be empty'
+                                          ? 'Field cannot be empty'.tr
                                           : null,
                                       onChanged: (value) {
                                         ref
@@ -200,7 +201,7 @@ class _JoinNowState extends ConsumerState<JoinNow>
                                       height: globals.heightMediaQuery * 52,
                                       width: double.infinity,
                                       child: PrimaryButton(
-                                        text: "Continue",
+                                        text: "Continue".tr,
                                         onPressed: () {
                                           if (ref
                                               .read(whoOwnTheFarmProvider)

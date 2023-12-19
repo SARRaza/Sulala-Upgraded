@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import 'package:sulala_upgrade/src/screens/account_set_up/add_personal_information.dart';
@@ -54,14 +55,14 @@ class _CreatePasswordState extends ConsumerState<CreatePassword> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Create Password",
+                "Create Password".tr,
                 style: AppFonts.title2(color: AppColors.grayscale90),
               ),
               SizedBox(
                 height: globals.heightMediaQuery * 40,
               ),
               PasswordField(
-                hintText: 'Password',
+                hintText: 'Password'.tr,
                 errorMessage: doesPasswordMatch
                     ? 'Passwords do not match'
                     : isPasswordValid
@@ -77,11 +78,12 @@ class _CreatePasswordState extends ConsumerState<CreatePassword> {
                 },
               ),
               PasswordField(
-                hintText: 'Confirm Password',
+                hintText: 'Confirm Password'.tr,
                 errorMessage: doesPasswordMatch
-                    ? 'Passwords do not match'
+                    ? 'Passwords do not match'.tr
                     : isPasswordValid
                         ? 'Password should be at least 8 characters long and contain at least one number'
+                            .tr
                         : null,
                 onChanged: (value) {
                   ref
@@ -110,7 +112,7 @@ class _CreatePasswordState extends ConsumerState<CreatePassword> {
                 height: globals.heightMediaQuery * 52,
                 width: globals.widthMediaQuery * 343,
                 child: PrimaryButton(
-                    text: "Confirm",
+                    text: "Confirm".tr,
                     status: buttonStatus,
                     onPressed: () {
                       if (enteredPassword.isNotEmpty) {

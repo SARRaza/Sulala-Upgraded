@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:nuts_activity_indicator/nuts_activity_indicator.dart';
 
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
-
 
 class AppleButton extends StatelessWidget {
   final AppleButtonStatus status;
@@ -50,7 +50,7 @@ class AppleButton extends StatelessWidget {
             height: 24,
           ),
           Text(
-            'Continue with Apple',
+            'Continue With Apple'.tr,
             style: AppFonts.body1(
               color: _getTextColor(status),
             ),

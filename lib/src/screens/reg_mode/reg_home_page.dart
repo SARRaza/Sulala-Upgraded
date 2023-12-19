@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../data/classes.dart';
@@ -57,24 +58,24 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
   }
 
   List<Tag> currentStateTags = [
-    Tag(name: 'Borrowed', status: TagStatus.notActive),
-    Tag(name: 'Adopted', status: TagStatus.notActive),
-    Tag(name: 'Donated', status: TagStatus.notActive),
-    Tag(name: 'Escaped', status: TagStatus.notActive),
-    Tag(name: 'Stolen', status: TagStatus.notActive),
-    Tag(name: 'Transferred', status: TagStatus.notActive),
+    Tag(name: 'Borrowed'.tr, status: TagStatus.notActive),
+    Tag(name: 'Adopted'.tr, status: TagStatus.notActive),
+    Tag(name: 'Donated'.tr, status: TagStatus.notActive),
+    Tag(name: 'Escaped'.tr, status: TagStatus.notActive),
+    Tag(name: 'Stolen'.tr, status: TagStatus.notActive),
+    Tag(name: 'Transferred'.tr, status: TagStatus.notActive),
   ];
   List<Tag> medicalStateTags = [
-    Tag(name: 'Injured', status: TagStatus.notActive),
-    Tag(name: 'Sick', status: TagStatus.notActive),
-    Tag(name: 'Quarantined', status: TagStatus.notActive),
-    Tag(name: 'Medication', status: TagStatus.notActive),
-    Tag(name: 'Testing', status: TagStatus.notActive),
+    Tag(name: 'Injured'.tr, status: TagStatus.notActive),
+    Tag(name: 'Sick'.tr, status: TagStatus.notActive),
+    Tag(name: 'Quarantined'.tr, status: TagStatus.notActive),
+    Tag(name: 'Medication'.tr, status: TagStatus.notActive),
+    Tag(name: 'Testing'.tr, status: TagStatus.notActive),
   ];
 
   List<Tag> otherStateTags = [
-    Tag(name: 'Sold', status: TagStatus.notActive),
-    Tag(name: 'Dead', status: TagStatus.notActive),
+    Tag(name: 'Sold'.tr, status: TagStatus.notActive),
+    Tag(name: 'Dead'.tr, status: TagStatus.notActive),
   ];
 
   late List<AnimalData> _chartData;
@@ -143,7 +144,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
           color: Colors.transparent,
           child: DrowupWidget(
             heightFactor: 0.73,
-            heading: "Tags",
+            heading: "Tags".tr,
             content: ShowFilterReg(
               currentStateTags: currentStateTags,
               medicalStateTags: medicalStateTags,
@@ -177,7 +178,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Overview',
+                'Overview'.tr,
                 style: AppFonts.title3(color: AppColors.grayscale100),
               ),
               Row(
@@ -244,7 +245,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                 children: [
                   Row(
                     children: [
-                      Text('Animals',
+                      Text('Animals'.tr,
                           style: AppFonts.title4(color: AppColors.grayscale90)),
                       const Spacer(),
                       InkWell(
@@ -272,10 +273,10 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                             width: globals.widthMediaQuery * 48,
                           ),
                           animalData: AnimalData(
-                              'ALL', sumOfNextTwoCards, _chartData[0].color),
+                              'ALL'.tr, sumOfNextTwoCards, _chartData[0].color),
                           quan: sumOfNextTwoCards.toString(),
                           onPressed: () {
-                            _updateChartData(sumOfNextTwoCards, 'ALL');
+                            _updateChartData(sumOfNextTwoCards, 'ALL'.tr);
                           },
                           isSelected: _selectedIndex == -1,
                         ),
@@ -291,7 +292,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                           quan: _chartData[0].quan.toString(),
                           animalData: _chartData[0],
                           onPressed: () {
-                            _updateChartData(_chartData[0].quan, 'Mammals');
+                            _updateChartData(_chartData[0].quan, 'Mammals'.tr);
                           },
                           isSelected: _selectedIndex == 0,
                         ),
@@ -307,7 +308,8 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                           animalData: _chartData[1],
                           quan: _chartData[1].quan.toString(),
                           onPressed: () {
-                            _updateChartData(_chartData[1].quan, 'Oviparous');
+                            _updateChartData(
+                                _chartData[1].quan, 'Oviparous'.tr);
                           },
                           isSelected: _selectedIndex == 1,
                         ),
@@ -381,7 +383,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                           ],
                         ),
                       Text(
-                        'Upcoming Events',
+                        'Upcoming Events'.tr,
                         style: AppFonts.title4(color: AppColors.grayscale90),
                       ),
                     ],
@@ -396,7 +398,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                           ),
                           SizedBox(height: globals.heightMediaQuery * 12),
                           Text(
-                            'You have no upcoming events so far',
+                            'You have no upcoming events so far'.tr,
                             style: AppFonts.body2(color: AppColors.grayscale70),
                           ),
                         ],
@@ -449,8 +451,8 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                         child: CardWidget(
                           color: const Color.fromRGBO(225, 236, 185, 1),
                           iconPath: 'assets/icons/frame/24px/Cow_Icon.png',
-                          title: 'Searching\nfor animals?',
-                          buttonText: 'Find animals',
+                          title: 'Searching\nfor animals?'.tr,
+                          buttonText: 'Find animals'.tr,
                           onPressed: () {
                             Navigator.of(context).pushNamed('/search_animals');
                           },
@@ -461,8 +463,8 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                         child: CardWidget(
                           color: const Color.fromRGBO(246, 239, 205, 1),
                           iconPath: 'assets/icons/frame/24px/Farm_house.png',
-                          title: 'Searching \nfor farm?',
-                          buttonText: 'Find farms',
+                          title: 'Searching \nfor farm?'.tr,
+                          buttonText: 'Find farms'.tr,
                           onPressed: () {
                             Navigator.of(context)
                                 .pushNamed('/search_house_farm');
@@ -486,12 +488,12 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
     final int oviparousCount = ref.refresh(oviparousCountProvider);
     final List<AnimalData> chartData = [
       AnimalData(
-        'Mammals',
+        'Mammals'.tr,
         mammalCount,
         const Color.fromRGBO(175, 197, 86, 1),
       ),
       AnimalData(
-        'Oviparous',
+        'Oviparous'.tr,
         oviparousCount,
         const Color.fromARGB(255, 254, 255, 168),
       ),

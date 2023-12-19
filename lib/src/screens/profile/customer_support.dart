@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
@@ -19,24 +20,24 @@ class _CustomerSupportState extends State<CustomerSupport> {
 
   List<Map<String, dynamic>> quastions = [
     {
-      'question': 'Question #1',
-      'answer': 'Subtitle1',
+      'question': 'Question #1'.tr,
+      'answer': 'Subtitle1'.tr,
     },
     {
-      'question': 'Question #2',
-      'answer': 'Subtitle2',
+      'question': 'Question #2'.tr,
+      'answer': 'Subtitle2'.tr,
     },
     {
-      'question': 'Question #3',
-      'answer': 'Subtitle3',
+      'question': 'Question #3'.tr,
+      'answer': 'Subtitle3'.tr,
     },
     {
-      'question': 'Question #4',
-      'answer': 'Subtitle4',
+      'question': 'Question #4'.tr,
+      'answer': 'Subtitle4'.tr,
     },
     {
-      'question': 'Question #5',
-      'answer': 'Subtitle5',
+      'question': 'Question #5'.tr,
+      'answer': 'Subtitle5'.tr,
     },
   ];
 
@@ -56,7 +57,7 @@ class _CustomerSupportState extends State<CustomerSupport> {
       builder: (BuildContext context) {
         return DrowupWidget(
           heightFactor: 0.475,
-          heading: 'Contact Us',
+          heading: 'Contact Us'.tr,
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -66,11 +67,11 @@ class _CustomerSupportState extends State<CustomerSupport> {
                   'assets/icons/frame/24px/32_WhatsApp.png',
                 ),
                 title: Text(
-                  'WhatsApp',
+                  'WhatsApp'.tr,
                   style: AppFonts.body1(color: AppColors.grayscale90),
                 ),
                 subtitle: Text(
-                  'Chat With Support',
+                  'Chat With Support'.tr,
                   style: AppFonts.body2(color: AppColors.grayscale70),
                 ),
                 trailing: const Icon(
@@ -92,7 +93,7 @@ class _CustomerSupportState extends State<CustomerSupport> {
                   style: AppFonts.body1(color: AppColors.grayscale90),
                 ),
                 subtitle: Text(
-                  'Call Us',
+                  'Call Us'.tr,
                   style: AppFonts.body2(color: AppColors.grayscale70),
                 ),
                 trailing: const Icon(
@@ -112,7 +113,7 @@ class _CustomerSupportState extends State<CustomerSupport> {
                 width: 343 * globals.widthMediaQuery,
                 height: 52 * globals.heightMediaQuery,
                 child: SecondaryButton(
-                  text: 'Cancel',
+                  text: 'Cancel'.tr,
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -136,7 +137,7 @@ class _CustomerSupportState extends State<CustomerSupport> {
             automaticallyImplyLeading: false,
             centerTitle: true,
             title: Text(
-              'Customer Support',
+              'Customer Support'.tr,
               style: AppFonts.headline3(color: AppColors.grayscale90),
             ),
             leading: IconButton(
@@ -165,7 +166,7 @@ class _CustomerSupportState extends State<CustomerSupport> {
                     left: 16 * globals.widthMediaQuery,
                     right: 16 * globals.widthMediaQuery,
                     top: 8 * globals.heightMediaQuery),
-                child: Text('FAQs',
+                child: Text('FAQs'.tr,
                     style: AppFonts.title3(color: AppColors.grayscale90)),
               ),
               SizedBox(height: 32 * globals.heightMediaQuery),
@@ -214,7 +215,7 @@ class _CustomerSupportState extends State<CustomerSupport> {
             height: 52 * globals.heightMediaQuery,
             child: PrimaryButton(
               onPressed: _showModalSheet,
-              text: 'Need Help',
+              text: 'Need Help'.tr,
             ),
           )),
     );

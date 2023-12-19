@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/toggles/toggle_active.dart';
@@ -56,14 +57,14 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Notifications',
+                'Notifications'.tr,
                 style: AppFonts.title4(color: AppColors.grayscale90),
               ),
               SizedBox(height: 16 * globals.heightMediaQuery),
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Pause All',
+                  'Pause All'.tr,
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
                 trailing: ToggleActive(
@@ -84,7 +85,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'System Notifications',
+                  'System Notifications'.tr,
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
                 trailing: _pauseAll
@@ -103,7 +104,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Animal Management',
+                  'Animal Management'.tr,
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
                 trailing: _pauseAll
@@ -122,7 +123,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Collaboration',
+                  'Collaboration'.tr,
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
                 trailing: _pauseAll
