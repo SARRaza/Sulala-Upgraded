@@ -1,4 +1,10 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import '../../data/classes.dart';
+import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/navigate_button.dart';
@@ -8,17 +14,46 @@ import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
-class EditMedicalCheckUp extends StatefulWidget {
-  const EditMedicalCheckUp({super.key});
+class EditMedicalCheckUp extends ConsumerStatefulWidget {
+  final OviVariables OviDetails;
+  final List<BreedingEventVariables> breedingEvents;
+  final MedicalCheckupDetails? selectedCheckup;
 
+  const EditMedicalCheckUp(
+      {super.key,
+      required this.breedingEvents,
+      this.selectedCheckup,
+      required this.OviDetails});
   @override
-  State<EditMedicalCheckUp> createState() => _EditMedicalCheckUpState();
+  ConsumerState<EditMedicalCheckUp> createState() => _EditMedicalCheckUpState();
 }
 
-class _EditMedicalCheckUpState extends State<EditMedicalCheckUp> {
+class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
   TextEditingController checkUpNameController = TextEditingController();
   DateTime? firstDoseDate;
   DateTime? secondDoseDate;
+  List<MedicalCheckupDetails> checkupDetailsList = [];
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.selectedCheckup != null) {
+      // Initialize text controller and date variables with selected vaccine details
+      checkUpNameController.text = widget.selectedCheckup!.checkupName;
+      firstDoseDate = widget.selectedCheckup!.firstDoseDate;
+      secondDoseDate = widget.selectedCheckup!.secondDoseDate;
+    }
+  }
+
+  void updateCheckUpDetailsList(MedicalCheckupDetails updatedCheckup) {
+    int index = checkupDetailsList.indexWhere(
+        (checkup) => checkup.checkupName == updatedCheckup.checkupName);
+
+    // Replace the old vaccine with the updated one
+    if (index != -1) {
+      checkupDetailsList[index] = updatedCheckup;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,13 +103,13 @@ class _EditMedicalCheckUpState extends State<EditMedicalCheckUp> {
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 PrimaryDateField(
-                  hintText: 'Date Of Checkup',
+                  hintText: DateFormat('yyyy-MM-dd').format(firstDoseDate!),
                   labelText: 'Date Of Checkup',
                   onChanged: (value) => setState(() => firstDoseDate = value),
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 PrimaryDateField(
-                  hintText: 'Date Of Next Checkup',
+                  hintText: DateFormat('yyyy-MM-dd').format(secondDoseDate!),
                   labelText: 'Date Of Next Checkup',
                   onChanged: (value) => setState(() => secondDoseDate = value),
                 ),
@@ -96,6 +131,44 @@ class _EditMedicalCheckUpState extends State<EditMedicalCheckUp> {
                   width: 343 * globals.widthMediaQuery,
                   child: PrimaryButton(
                     onPressed: () {
+                      // Update details using copyWith method
+                      MedicalCheckupDetails updatedCheckUp =
+                          widget.selectedCheckup!.copyWith(
+                        checkupName: checkUpNameController.text,
+                        firstDoseDate: firstDoseDate,
+                        secondDoseDate: secondDoseDate,
+                      );
+
+                      // Update the vaccineDetailsList for the selected animal
+                      final animalIndex =
+                          ref.read(ovianimalsProvider).indexWhere(
+                                (animal) =>
+                                    animal.animalName ==
+                                    widget.OviDetails.animalName,
+                              );
+
+                      if (animalIndex != -1) {
+                        // Replace the existing vaccine with the updated one
+                        final List<MedicalCheckupDetails> currentList = ref
+                                .read(ovianimalsProvider)[animalIndex]
+                                .checkUpDetails[widget.OviDetails.animalName] ??
+                            [];
+
+                        final List<MedicalCheckupDetails> updatedList =
+                            List<MedicalCheckupDetails>.from(currentList);
+                        final int indexToUpdate = updatedList.indexWhere(
+                            (checkup) => checkup == widget.selectedCheckup);
+
+                        if (indexToUpdate != -1) {
+                          updatedList[indexToUpdate] = updatedCheckUp;
+                          ref
+                                  .read(ovianimalsProvider)[animalIndex]
+                                  .checkUpDetails[
+                              widget.OviDetails.animalName] = updatedList;
+                        }
+                      }
+
+                      // Close the EditVaccination page
                       Navigator.pop(context);
                     },
                     text: 'Save',

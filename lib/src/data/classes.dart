@@ -291,7 +291,6 @@ class VaccineDetails {
     this.secondDoseDate,
   });
   VaccineDetails copyWith({
-    List<String>? selectedFilters,
     String? vaccineName,
     DateTime? firstDoseDate,
     DateTime? secondDoseDate,
@@ -316,6 +315,16 @@ class MedicalCheckupDetails {
     required this.firstDoseDate,
     required this.secondDoseDate,
   });
+  MedicalCheckupDetails copyWith({
+    String? checkupName,
+    DateTime? firstDoseDate,
+    DateTime? secondDoseDate,
+  }) {
+    return MedicalCheckupDetails(
+        checkupName: checkupName ?? this.checkupName,
+        firstDoseDate: firstDoseDate ?? this.firstDoseDate,
+        secondDoseDate: secondDoseDate ?? this.secondDoseDate);
+  }
 }
 
 class SurgeryDetails {
