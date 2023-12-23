@@ -31,8 +31,8 @@ class EditSurgeriesRecords extends ConsumerStatefulWidget {
 
 class _EditSurgeriesRecordsState extends ConsumerState<EditSurgeriesRecords> {
   TextEditingController surgeryNameController = TextEditingController();
-  DateTime? firstDoseDate;
-  DateTime? secondDoseDate;
+  DateTime? firstSurgery;
+  DateTime? secondSurgery;
   List<SurgeryDetails> surgeryDetails = [];
 
   @override
@@ -42,8 +42,8 @@ class _EditSurgeriesRecordsState extends ConsumerState<EditSurgeriesRecords> {
     if (widget.selectedSurgery != null) {
       // Initialize text controller and date variables with selected vaccine details
       surgeryNameController.text = widget.selectedSurgery!.surgeryName;
-      firstDoseDate = widget.selectedSurgery!.firstDoseDate;
-      secondDoseDate = widget.selectedSurgery!.secondDoseDate;
+      firstSurgery = widget.selectedSurgery!.firstSurgery;
+      secondSurgery = widget.selectedSurgery!.secondSurgery;
     }
   }
 
@@ -105,15 +105,15 @@ class _EditSurgeriesRecordsState extends ConsumerState<EditSurgeriesRecords> {
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 PrimaryDateField(
-                  hintText: DateFormat('yyyy-MM-dd').format(firstDoseDate!),
+                  hintText: DateFormat('yyyy-MM-dd').format(firstSurgery!),
                   labelText: 'Date Of Surgery',
-                  onChanged: (value) => setState(() => firstDoseDate = value),
+                  onChanged: (value) => setState(() => firstSurgery = value),
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 PrimaryDateField(
-                  hintText: DateFormat('yyyy-MM-dd').format(secondDoseDate!),
+                  hintText: DateFormat('yyyy-MM-dd').format(secondSurgery!),
                   labelText: 'Date Of Next Surgery',
-                  onChanged: (value) => setState(() => secondDoseDate = value),
+                  onChanged: (value) => setState(() => secondSurgery = value),
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 SizedBox(
@@ -137,8 +137,8 @@ class _EditSurgeriesRecordsState extends ConsumerState<EditSurgeriesRecords> {
                       SurgeryDetails updatedSurgery =
                           widget.selectedSurgery!.copyWith(
                         surgeryName: surgeryNameController.text,
-                        firstDoseDate: firstDoseDate,
-                        secondDoseDate: secondDoseDate,
+                        firstSurgery: firstSurgery,
+                        secondSurgery: secondSurgery,
                       );
 
                       // Update the vaccineDetailsList for the selected animal

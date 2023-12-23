@@ -30,8 +30,8 @@ class EditMedicalCheckUp extends ConsumerStatefulWidget {
 
 class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
   TextEditingController checkUpNameController = TextEditingController();
-  DateTime? firstDoseDate;
-  DateTime? secondDoseDate;
+  DateTime? firstCheckUp;
+  DateTime? secondCheckUp;
   List<MedicalCheckupDetails> checkupDetailsList = [];
   @override
   void initState() {
@@ -40,8 +40,8 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
     if (widget.selectedCheckup != null) {
       // Initialize text controller and date variables with selected vaccine details
       checkUpNameController.text = widget.selectedCheckup!.checkupName;
-      firstDoseDate = widget.selectedCheckup!.firstDoseDate;
-      secondDoseDate = widget.selectedCheckup!.secondDoseDate;
+      firstCheckUp = widget.selectedCheckup!.firstCheckUp;
+      secondCheckUp = widget.selectedCheckup!.secondCheckUp;
     }
   }
 
@@ -103,15 +103,15 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 PrimaryDateField(
-                  hintText: DateFormat('yyyy-MM-dd').format(firstDoseDate!),
+                  hintText: DateFormat('yyyy-MM-dd').format(firstCheckUp!),
                   labelText: 'Date Of Checkup',
-                  onChanged: (value) => setState(() => firstDoseDate = value),
+                  onChanged: (value) => setState(() => firstCheckUp = value),
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 PrimaryDateField(
-                  hintText: DateFormat('yyyy-MM-dd').format(secondDoseDate!),
+                  hintText: DateFormat('yyyy-MM-dd').format(secondCheckUp!),
                   labelText: 'Date Of Next Checkup',
-                  onChanged: (value) => setState(() => secondDoseDate = value),
+                  onChanged: (value) => setState(() => secondCheckUp = value),
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 SizedBox(
@@ -135,8 +135,8 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                       MedicalCheckupDetails updatedCheckUp =
                           widget.selectedCheckup!.copyWith(
                         checkupName: checkUpNameController.text,
-                        firstDoseDate: firstDoseDate,
-                        secondDoseDate: secondDoseDate,
+                        firstCheckUp: firstCheckUp,
+                        secondCheckUp: secondCheckUp,
                       );
 
                       // Update the vaccineDetailsList for the selected animal

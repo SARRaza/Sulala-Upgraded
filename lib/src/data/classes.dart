@@ -307,44 +307,44 @@ class VaccineDetails {
 
 class MedicalCheckupDetails {
   final String checkupName;
-  final DateTime? firstDoseDate;
-  final DateTime? secondDoseDate;
+  final DateTime? firstCheckUp;
+  final DateTime? secondCheckUp;
 
   MedicalCheckupDetails({
     required this.checkupName,
-    required this.firstDoseDate,
-    required this.secondDoseDate,
+    required this.firstCheckUp,
+    required this.secondCheckUp,
   });
   MedicalCheckupDetails copyWith({
     String? checkupName,
-    DateTime? firstDoseDate,
-    DateTime? secondDoseDate,
+    DateTime? firstCheckUp,
+    DateTime? secondCheckUp,
   }) {
     return MedicalCheckupDetails(
         checkupName: checkupName ?? this.checkupName,
-        firstDoseDate: firstDoseDate ?? this.firstDoseDate,
-        secondDoseDate: secondDoseDate ?? this.secondDoseDate);
+        firstCheckUp: firstCheckUp ?? this.firstCheckUp,
+        secondCheckUp: secondCheckUp ?? this.secondCheckUp);
   }
 }
 
 class SurgeryDetails {
   final String surgeryName;
-  final DateTime? firstDoseDate;
-  final DateTime? secondDoseDate;
+  final DateTime? firstSurgery;
+  final DateTime? secondSurgery;
 
   SurgeryDetails({
     required this.surgeryName,
-    required this.firstDoseDate,
-    required this.secondDoseDate,
+    required this.firstSurgery,
+    required this.secondSurgery,
   });
   SurgeryDetails copyWith({
     String? surgeryName,
-    DateTime? firstDoseDate,
-    DateTime? secondDoseDate,
+    DateTime? firstSurgery,
+    DateTime? secondSurgery,
   }) {
     return SurgeryDetails(
         surgeryName: surgeryName ?? this.surgeryName,
-        firstDoseDate: firstDoseDate ?? this.firstDoseDate,
-        secondDoseDate: secondDoseDate ?? this.secondDoseDate);
+        firstSurgery: firstSurgery ?? this.firstSurgery,
+        secondSurgery: secondSurgery ?? this.secondSurgery);
   }
 }

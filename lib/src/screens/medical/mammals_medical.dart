@@ -1111,12 +1111,12 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                         children: [
                           Text(
                             DateFormat('yyyy-MM-dd').format(
-                                medicalCheckUpList[index].firstDoseDate!),
+                                medicalCheckUpList[index].firstCheckUp!),
                             style: AppFonts.body2(color: AppColors.grayscale70),
                           ),
                           Text(
                             DateFormat('yyyy-MM-dd').format(
-                                medicalCheckUpList[index].secondDoseDate!),
+                                medicalCheckUpList[index].secondCheckUp!),
                             style: AppFonts.body2(color: AppColors.grayscale70),
                           ),
                         ],
@@ -1187,7 +1187,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => AddMedicalCheckUp(
-                        onSave: (checkUpName, firstDoseDate, secondDoseDate) {
+                        onSave: (checkUpName, firstCheckUp, secondCheckUp) {
                           setState(() {
                             final oviVariables = ref.read(ovianimalsProvider);
                             final animalIndex = ref
@@ -1210,8 +1210,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                                       [],
                                   MedicalCheckupDetails(
                                     checkupName: checkUpName,
-                                    firstDoseDate: firstDoseDate,
-                                    secondDoseDate: secondDoseDate,
+                                    firstCheckUp: firstCheckUp,
+                                    secondCheckUp: secondCheckUp,
                                   ),
                                 ],
                               },
@@ -1221,8 +1221,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                             ref.read(medicalCheckupDetailsProvider).add(
                                   MedicalCheckupDetails(
                                     checkupName: checkUpName,
-                                    firstDoseDate: firstDoseDate,
-                                    secondDoseDate: secondDoseDate,
+                                    firstCheckUp: firstCheckUp,
+                                    secondCheckUp: secondCheckUp,
                                   ),
                                 );
                           });
@@ -1307,12 +1307,12 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                         children: [
                           Text(
                             DateFormat('yyyy-MM-dd').format(
-                                surgeryDetailsList[index].firstDoseDate!),
+                                surgeryDetailsList[index].firstSurgery!),
                             style: AppFonts.body2(color: AppColors.grayscale70),
                           ),
                           Text(
                             DateFormat('yyyy-MM-dd').format(
-                                surgeryDetailsList[index].secondDoseDate!),
+                                surgeryDetailsList[index].secondSurgery!),
                             style: AppFonts.body2(color: AppColors.grayscale70),
                           ),
                         ],
@@ -1383,7 +1383,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => AddSurgeriesRecords(
-                        onSave: (surgeryName, firstDoseDate, secondDoseDate) {
+                        onSave: (surgeryName, firstSurgery, secondSurgery) {
                           setState(() {
                             final oviVariables = ref.read(ovianimalsProvider);
                             final animalIndex = ref
@@ -1406,8 +1406,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                                       [],
                                   SurgeryDetails(
                                     surgeryName: surgeryName,
-                                    firstDoseDate: firstDoseDate,
-                                    secondDoseDate: secondDoseDate,
+                                    firstSurgery: firstSurgery,
+                                    secondSurgery: secondSurgery,
                                   ),
                                 ],
                               },
@@ -1417,8 +1417,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                             ref.read(surgeryDetailsProvider).add(
                                   SurgeryDetails(
                                     surgeryName: surgeryName,
-                                    firstDoseDate: firstDoseDate,
-                                    secondDoseDate: secondDoseDate,
+                                    firstSurgery: firstSurgery,
+                                    secondSurgery: secondSurgery,
                                   ),
                                 );
                           });
