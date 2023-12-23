@@ -255,14 +255,28 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                                 name: widget.OviDetails.selectedOviSire.first
                                     .mother!.animalName,
                                 gender: Gender.female,
-                                image: const AssetImage('images/harry.jpg'),
+                                image: widget.OviDetails.selectedOviSire.first
+                                            .mother!.selectedOviImage !=
+                                        null
+                                    ? FileImage(widget
+                                        .OviDetails
+                                        .selectedOviSire
+                                        .first
+                                        .mother!
+                                        .selectedOviImage!)
+                                    : null,
                                 status: 'Dead'),
                             Person(
                                 id: 100010,
                                 name: widget.OviDetails.selectedOviDam.first
                                     .father!.animalName,
                                 gender: Gender.male,
-                                image: const AssetImage('images/tom.jpg'),
+                                image: widget.OviDetails.selectedOviDam.first
+                                            .father!.selectedOviImage !=
+                                        null
+                                    ? FileImage(widget.OviDetails.selectedOviDam
+                                        .first.father!.selectedOviImage!)
+                                    : null,
                                 status: 'Sold'),
                             Person(
                                 id: 100013,

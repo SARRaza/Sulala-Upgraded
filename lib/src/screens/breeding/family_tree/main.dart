@@ -269,7 +269,8 @@ class _FamilyTreePageState extends State<FamilyTreePage> {
                                   height: 24,
                                   clipBehavior: Clip.antiAlias,
                                   decoration: const BoxDecoration(),
-                                  child: Image.asset('images/arrow-left.png')),
+                                  child: Image.asset(
+                                      'assets/avatars/48px/arrow-left.png')),
                             ),
                           ],
                         ),
