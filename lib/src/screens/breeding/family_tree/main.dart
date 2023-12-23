@@ -1,192 +1,204 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: non_constant_identifier_names
 
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sulala_upgrade/src/data/classes.dart';
+
+import '../../../data/riverpod_globals.dart';
 import 'family_tree_item.dart';
 import 'family_tree_node.dart';
 import 'graph_painter.dart';
 import 'person.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+// void main() {
+//   runApp(const MyApp());
+// }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.deepPurple, background: Colors.white),
-        useMaterial3: true,
-      ),
-      home: FamilyTreePage(
-        members: [
-          Person(
-            id: 100001,
-            name: 'Harry',
-            image: const AssetImage('images/harry.jpg'),
-            status: 'Borrowed',
-            gender: Gender.male,
-            fatherId: 100002,
-            motherId: 100004,
-          ),
-          Person(
-              id: 100002,
-              name: 'Rocky',
-              image: const AssetImage('images/rocky.jpg'),
-              gender: Gender.male,
-              fatherId: 100003,
-              motherId: 100009,
-              status: 'Borrowed'),
-          Person(
-              id: 100003,
-              name: 'Mustang',
-              gender: Gender.male,
-              image: const AssetImage('images/mustang.jpg'),
-              status: 'Dead'),
-          Person(
-              id: 100011,
-              name: 'Frank',
-              gender: Gender.female,
-              image: const AssetImage('images/mustang.jpg'),
-              status: 'Dead'),
-          Person(
-            id: 100004,
-            name: 'Bella',
-            image: const AssetImage('images/harry.jpg'),
-            gender: Gender.female,
-            status: 'Sold',
-            fatherId: 100010,
-            motherId: 100011,
-          ),
-          Person(
-              id: 100005,
-              name: 'Harry Jr.',
-              image: const AssetImage('images/harry.jpg'),
-              status: 'Borrowed',
-              gender: Gender.male,
-              fatherId: 100001),
-          Person(
-              id: 100006,
-              name: 'Harry Junior',
-              image: const AssetImage('images/harry.jpg'),
-              gender: Gender.male,
-              status: 'Borrowed',
-              fatherId: 100001),
-          Person(
-              id: 100007,
-              name: 'Tom',
-              gender: Gender.male,
-              image: const AssetImage('images/harry.jpg'),
-              status: 'Borrowed',
-              fatherId: 100001),
-          Person(
-              id: 100008,
-              name: 'Ruben',
-              gender: Gender.male,
-              image: const AssetImage('images/harry.jpg'),
-              status: 'Borrowed',
-              fatherId: 100001),
-          Person(
-              id: 100009,
-              name: 'Shirley',
-              gender: Gender.female,
-              image: const AssetImage('images/harry.jpg'),
-              status: 'Dead'),
-          Person(
-              id: 100010,
-              name: 'Tom',
-              gender: Gender.male,
-              image: const AssetImage('images/tom.jpg'),
-              status: 'Sold'),
-          Person(
-              id: 100013,
-              name: 'Jerry',
-              gender: Gender.male,
-              image: const AssetImage('images/harry.jpg'),
-              status: 'Borrowed',
-              fatherId: 100005),
-          Person(
-              id: 100014,
-              name: 'Carry',
-              gender: Gender.male,
-              image: const AssetImage('images/harry.jpg'),
-              status: 'Borrowed',
-              fatherId: 100005),
-          Person(
-              id: 100015,
-              name: 'Jacky',
-              gender: Gender.male,
-              image: const AssetImage('images/harry.jpg'),
-              status: 'Borrowed',
-              fatherId: 100006),
-          Person(
-              id: 100016,
-              name: 'Jessy',
-              gender: Gender.male,
-              image: const AssetImage('images/harry.jpg'),
-              status: 'Borrowed',
-              fatherId: 100006),
-          Person(
-              id: 100017,
-              name: 'Jessy',
-              gender: Gender.male,
-              image: const AssetImage('images/harry.jpg'),
-              status: 'Borrowed',
-              fatherId: 100007),
-          Person(
-              id: 100018,
-              name: 'Sweety',
-              gender: Gender.male,
-              image: const AssetImage('images/harry.jpg'),
-              status: 'Borrowed',
-              fatherId: 100007),
-          Person(
-              id: 100019,
-              name: 'Cassy',
-              gender: Gender.male,
-              image: const AssetImage('images/harry.jpg'),
-              status: 'Borrowed',
-              fatherId: 100008),
-          Person(
-              id: 100018,
-              name: 'Lewis',
-              gender: Gender.male,
-              image: const AssetImage('images/harry.jpg'),
-              status: 'Borrowed',
-              fatherId: 100008),
-        ],
-        selectedPersonId: 100001,
-      ),
-    );
-  }
-}
+//   // This widget is the root of your application.
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Flutter Demo',
+//       theme: ThemeData(
+//         colorScheme: ColorScheme.fromSeed(
+//             seedColor: Colors.deepPurple, background: Colors.white),
+//         useMaterial3: true,
+//       ),
+//       home: FamilyTreePage(
+//         members: [
+//           Person(
+//             id: 100001,
+//             name: 'Harry',
+//             image: const AssetImage('images/harry.jpg'),
+//             status: 'Borrowed',
+//             gender: Gender.male,
+//             fatherId: 100002,
+//             motherId: 100004,
+//           ),
+//           Person(
+//               id: 100002,
+//               name: 'Rocky',
+//               image: const AssetImage('images/rocky.jpg'),
+//               gender: Gender.male,
+//               fatherId: 100003,
+//               motherId: 100009,
+//               status: 'Borrowed'),
+//           Person(
+//               id: 100003,
+//               name: 'Mustang',
+//               gender: Gender.male,
+//               image: const AssetImage('images/mustang.jpg'),
+//               status: 'Dead'),
+//           Person(
+//               id: 100011,
+//               name: 'Frank',
+//               gender: Gender.female,
+//               image: const AssetImage('images/mustang.jpg'),
+//               status: 'Dead'),
+//           Person(
+//             id: 100004,
+//             name: 'Bella',
+//             image: const AssetImage('images/harry.jpg'),
+//             gender: Gender.female,
+//             status: 'Sold',
+//             fatherId: 100010,
+//             motherId: 100011,
+//           ),
+//           Person(
+//               id: 100005,
+//               name: 'Harry Jr.',
+//               image: const AssetImage('images/harry.jpg'),
+//               status: 'Borrowed',
+//               gender: Gender.male,
+//               fatherId: 100001),
+//           Person(
+//               id: 100006,
+//               name: 'Harry Junior',
+//               image: const AssetImage('images/harry.jpg'),
+//               gender: Gender.male,
+//               status: 'Borrowed',
+//               fatherId: 100001),
+//           Person(
+//               id: 100007,
+//               name: 'Tom',
+//               gender: Gender.male,
+//               image: const AssetImage('images/harry.jpg'),
+//               status: 'Borrowed',
+//               fatherId: 100001),
+//           Person(
+//               id: 100008,
+//               name: 'Ruben',
+//               gender: Gender.male,
+//               image: const AssetImage('images/harry.jpg'),
+//               status: 'Borrowed',
+//               fatherId: 100001),
+//           Person(
+//               id: 100009,
+//               name: 'Shirley',
+//               gender: Gender.female,
+//               image: const AssetImage('images/harry.jpg'),
+//               status: 'Dead'),
+//           Person(
+//               id: 100010,
+//               name: 'Tom',
+//               gender: Gender.male,
+//               image: const AssetImage('images/tom.jpg'),
+//               status: 'Sold'),
+//           Person(
+//               id: 100013,
+//               name: 'Jerry',
+//               gender: Gender.male,
+//               image: const AssetImage('images/harry.jpg'),
+//               status: 'Borrowed',
+//               fatherId: 100005),
+//           Person(
+//               id: 100014,
+//               name: 'Carry',
+//               gender: Gender.male,
+//               image: const AssetImage('images/harry.jpg'),
+//               status: 'Borrowed',
+//               fatherId: 100005),
+//           Person(
+//               id: 100015,
+//               name: 'Jacky',
+//               gender: Gender.male,
+//               image: const AssetImage('images/harry.jpg'),
+//               status: 'Borrowed',
+//               fatherId: 100006),
+//           Person(
+//               id: 100016,
+//               name: 'Jessy',
+//               gender: Gender.male,
+//               image: const AssetImage('images/harry.jpg'),
+//               status: 'Borrowed',
+//               fatherId: 100006),
+//           Person(
+//               id: 100017,
+//               name: 'Jessy',
+//               gender: Gender.male,
+//               image: const AssetImage('images/harry.jpg'),
+//               status: 'Borrowed',
+//               fatherId: 100007),
+//           Person(
+//               id: 100018,
+//               name: 'Sweety',
+//               gender: Gender.male,
+//               image: const AssetImage('images/harry.jpg'),
+//               status: 'Borrowed',
+//               fatherId: 100007),
+//           Person(
+//               id: 100019,
+//               name: 'Cassy',
+//               gender: Gender.male,
+//               image: const AssetImage('images/harry.jpg'),
+//               status: 'Borrowed',
+//               fatherId: 100008),
+//           Person(
+//               id: 100018,
+//               name: 'Lewis',
+//               gender: Gender.male,
+//               image: const AssetImage('images/harry.jpg'),
+//               status: 'Borrowed',
+//               fatherId: 100008),
+//         ],
+//         selectedPersonId: 100001, OviDetails: wid,
+//       ),
+//     );
+//   }
+// }
 
-class FamilyTreePage extends StatefulWidget {
+class FamilyTreePage extends ConsumerStatefulWidget {
+  final OviVariables OviDetails;
   const FamilyTreePage(
-      {super.key, required this.members, required this.selectedPersonId});
+      {super.key,
+      required this.members,
+      required this.OviDetails,
+      required this.selectedPersonId});
   final List<Person> members;
   final int selectedPersonId;
 
   @override
-  State<FamilyTreePage> createState() => _FamilyTreePageState();
+  ConsumerState<FamilyTreePage> createState() => _FamilyTreePageState();
 }
 
-class _FamilyTreePageState extends State<FamilyTreePage> {
+class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
   late Person _selectedPerson;
   Widget? graph;
   GlobalKey stackKey = GlobalKey();
   late FamilyTreeNode root;
-
+  Set<String> addedChildIds = {};
   @override
   void initState() {
+    // Now you can call addPersonToChildrenBranch
+    // addPersonToChildrenBranch();
     _selectedPerson = widget.members
         .firstWhere((member) => member.id == widget.selectedPersonId);
     root = createTree(widget.members, _selectedPerson,
         attachParents: true, attachChildren: true);
+    addPersonToChildrenBranch();
 
     super.initState();
   }
@@ -309,7 +321,69 @@ class _FamilyTreePageState extends State<FamilyTreePage> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Add a person to the children branch dynamically
+          addPersonToChildrenBranch();
+        },
+        child: const Icon(Icons.add),
+      ),
     );
+  }
+
+  void addPersonToChildrenBranch() {
+    final animalIndex = ref.read(ovianimalsProvider).indexWhere(
+          (animal) => animal.animalName == widget.OviDetails.animalName,
+        );
+
+    if (animalIndex == -1) {
+      // Animal not found, you can show an error message or handle it accordingly
+      return;
+    }
+
+    final breedingEvents = ref
+            .read(ovianimalsProvider)[animalIndex]
+            .breedingEvents[widget.OviDetails.animalName] ??
+        [];
+
+    for (final breedingEvent in breedingEvents) {
+      for (final child in breedingEvent.children) {
+        // Check if the child ID is already added, skip if it exists
+        if (addedChildIds.contains(child.animalName)) {
+          continue;
+        }
+
+        final newPerson = Person(
+          id: generateUniqueId(),
+          name: child.animalName,
+          gender: Gender.male,
+          image: child.selectedOviImage != null
+              ? FileImage(child.selectedOviImage!)
+              : null,
+          status: 'Borrowed',
+          fatherId: _selectedPerson.id,
+        );
+
+        final newNode =
+            createTree(widget.members, newPerson, attachChildren: true);
+
+        // Update the UI to reflect the new person in the children branch
+        setState(() {
+          root.children.add(newNode);
+        });
+
+        // Add the child ID to the set to mark it as added
+        addedChildIds.add(child.animalName);
+      }
+    }
+  }
+
+  // ... existing code ...
+
+  int generateUniqueId() {
+    // You can implement a logic to generate a unique ID for the new person
+    // For simplicity, you can use the current timestamp
+    return DateTime.now().millisecondsSinceEpoch;
   }
 
   Widget buildTree() {
