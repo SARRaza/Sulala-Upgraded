@@ -326,19 +326,19 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
           // Add a person to the children branch dynamically
           addPersonToChildrenBranch();
         },
-        child: const Icon(Icons.add),
+        child: Icon(Icons.add),
       ),
     );
   }
 
-  void addPersonToChildrenBranch() {
+  Widget addPersonToChildrenBranch() {
     final animalIndex = ref.read(ovianimalsProvider).indexWhere(
           (animal) => animal.animalName == widget.OviDetails.animalName,
         );
 
     if (animalIndex == -1) {
       // Animal not found, you can show an error message or handle it accordingly
-      return;
+      return const SizedBox(); // Placeholder Widget, adjust as needed
     }
 
     final breedingEvents = ref
@@ -361,7 +361,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
               ? FileImage(child.selectedOviImage!)
               : null,
           status: 'Borrowed',
-          fatherId: _selectedPerson.id,
+          fatherId: 100001,
         );
 
         final newNode =
@@ -374,8 +374,19 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
 
         // Add the child ID to the set to mark it as added
         addedChildIds.add(child.animalName);
+
+        // Return the added FamilyTreeItem widget
+        return FamilyTreeItem(
+          node: newNode,
+          showGender: false,
+          key: newNode.key,
+          onTap: (ItemType itemType) => handleTap(itemType, newNode),
+        );
       }
     }
+
+    // You might return a Widget or null based on your requirement
+    return const SizedBox(); // Placeholder Widget, adjust as needed
   }
 
   // ... existing code ...
@@ -500,6 +511,9 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
       _selectedPerson = widget.members.firstWhere((member) => member.id == id);
       root = createTree(widget.members, _selectedPerson,
           attachParents: true, attachChildren: true);
+
+      // Clear the set of added child IDs when selecting a new person
+      addedChildIds.clear();
     });
   }
 }
