@@ -1290,7 +1290,18 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                           ),
                         ],
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditSurgeriesRecords(
+                              breedingEvents: const [],
+                              OviDetails: widget.OviDetails,
+                              selectedSurgery: surgeryDetailsList[index],
+                            ),
+                          ),
+                        );
+                      },
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -1353,7 +1364,11 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const EditSurgeriesRecords(),
+                            builder: (context) => EditSurgeriesRecords(
+                              breedingEvents: const [],
+                              OviDetails: widget.OviDetails,
+                              selectedSurgery: surgeryDetailsList[index],
+                            ),
                           ),
                         );
                       },

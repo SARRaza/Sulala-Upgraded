@@ -337,4 +337,14 @@ class SurgeryDetails {
     required this.firstDoseDate,
     required this.secondDoseDate,
   });
+  SurgeryDetails copyWith({
+    String? surgeryName,
+    DateTime? firstDoseDate,
+    DateTime? secondDoseDate,
+  }) {
+    return SurgeryDetails(
+        surgeryName: surgeryName ?? this.surgeryName,
+        firstDoseDate: firstDoseDate ?? this.firstDoseDate,
+        secondDoseDate: secondDoseDate ?? this.secondDoseDate);
+  }
 }
