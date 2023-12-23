@@ -290,6 +290,20 @@ class VaccineDetails {
     this.firstDoseDate,
     this.secondDoseDate,
   });
+  VaccineDetails copyWith({
+    List<String>? selectedFilters,
+    String? vaccineName,
+    DateTime? firstDoseDate,
+    DateTime? secondDoseDate,
+
+    // ignore: non_constant_identifier_names
+  }) {
+    return VaccineDetails(
+      vaccineName: vaccineName ?? this.vaccineName,
+      firstDoseDate: firstDoseDate ?? this.firstDoseDate,
+      secondDoseDate: secondDoseDate ?? this.secondDoseDate,
+    );
+  }
 }
 
 class MedicalCheckupDetails {

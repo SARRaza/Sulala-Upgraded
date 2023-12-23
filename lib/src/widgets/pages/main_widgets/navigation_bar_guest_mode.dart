@@ -55,8 +55,8 @@ class _NavigationBarGuestModeState extends State<NavigationBarGuestMode> {
                   },
                   items: <BottomNavigationBarItem>[
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.home_outlined),
-                      activeIcon: Icon(Icons.home),
+                      icon: const Icon(Icons.home_outlined),
+                      activeIcon: const Icon(Icons.home),
                       label: 'Home'.tr,
                     ),
                     BottomNavigationBarItem(
@@ -71,8 +71,8 @@ class _NavigationBarGuestModeState extends State<NavigationBarGuestMode> {
                       label: 'Animals'.tr,
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.account_circle_outlined),
-                      activeIcon: Icon(Icons.account_circle),
+                      icon: const Icon(Icons.account_circle_outlined),
+                      activeIcon: const Icon(Icons.account_circle),
                       label: 'Profile'.tr,
                     )
                   ],

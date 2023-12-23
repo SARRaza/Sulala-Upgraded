@@ -1,4 +1,10 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import '../../data/classes.dart';
+import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/navigate_button.dart';
@@ -9,17 +15,48 @@ import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 
-class EditVaccination extends StatefulWidget {
-  const EditVaccination({super.key});
+class EditVaccination extends ConsumerStatefulWidget {
+  final OviVariables OviDetails;
+  final List<BreedingEventVariables> breedingEvents;
+  final VaccineDetails? selectedVaccine;
+
+  const EditVaccination(
+      {super.key,
+      required this.breedingEvents,
+      this.selectedVaccine,
+      required this.OviDetails});
 
   @override
-  State<EditVaccination> createState() => _EditVaccinationState();
+  ConsumerState<EditVaccination> createState() => _EditVaccinationState();
 }
 
-class _EditVaccinationState extends State<EditVaccination> {
+class _EditVaccinationState extends ConsumerState<EditVaccination> {
   TextEditingController vaccineNameController = TextEditingController();
   DateTime? firstDoseDate;
   DateTime? secondDoseDate;
+  List<VaccineDetails> vaccineDetailsList = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.selectedVaccine != null) {
+      // Initialize text controller and date variables with selected vaccine details
+      vaccineNameController.text = widget.selectedVaccine!.vaccineName;
+      firstDoseDate = widget.selectedVaccine!.firstDoseDate;
+      secondDoseDate = widget.selectedVaccine!.secondDoseDate;
+    }
+  }
+
+  void updateVaccineDetailsList(VaccineDetails updatedVaccine) {
+    int index = vaccineDetailsList.indexWhere(
+        (vaccine) => vaccine.vaccineName == updatedVaccine.vaccineName);
+
+    // Replace the old vaccine with the updated one
+    if (index != -1) {
+      vaccineDetailsList[index] = updatedVaccine;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,13 +106,13 @@ class _EditVaccinationState extends State<EditVaccination> {
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 PrimaryDateField(
-                  hintText: 'Date Of Vaccination',
+                  hintText: DateFormat('yyyy-MM-dd').format(firstDoseDate!),
                   labelText: 'Date Of Vaccination',
                   onChanged: (value) => setState(() => firstDoseDate = value),
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 PrimaryDateField(
-                  hintText: 'Date Of Next Vaccination',
+                  hintText: DateFormat('yyyy-MM-dd').format(secondDoseDate!),
                   labelText: 'Date Of Next Vaccination',
                   onChanged: (value) => setState(() => secondDoseDate = value),
                 ),
@@ -97,6 +134,44 @@ class _EditVaccinationState extends State<EditVaccination> {
                   width: 343 * globals.widthMediaQuery,
                   child: PrimaryButton(
                     onPressed: () {
+                      // Update details using copyWith method
+                      VaccineDetails updatedVaccine =
+                          widget.selectedVaccine!.copyWith(
+                        vaccineName: vaccineNameController.text,
+                        firstDoseDate: firstDoseDate,
+                        secondDoseDate: secondDoseDate,
+                      );
+
+                      // Update the vaccineDetailsList for the selected animal
+                      final animalIndex =
+                          ref.read(ovianimalsProvider).indexWhere(
+                                (animal) =>
+                                    animal.animalName ==
+                                    widget.OviDetails.animalName,
+                              );
+
+                      if (animalIndex != -1) {
+                        // Replace the existing vaccine with the updated one
+                        final List<VaccineDetails> currentList = ref
+                                .read(ovianimalsProvider)[animalIndex]
+                                .vaccineDetails[widget.OviDetails.animalName] ??
+                            [];
+
+                        final List<VaccineDetails> updatedList =
+                            List<VaccineDetails>.from(currentList);
+                        final int indexToUpdate = updatedList.indexWhere(
+                            (vaccine) => vaccine == widget.selectedVaccine);
+
+                        if (indexToUpdate != -1) {
+                          updatedList[indexToUpdate] = updatedVaccine;
+                          ref
+                                  .read(ovianimalsProvider)[animalIndex]
+                                  .vaccineDetails[
+                              widget.OviDetails.animalName] = updatedList;
+                        }
+                      }
+
+                      // Close the EditVaccination page
                       Navigator.pop(context);
                     },
                     text: 'Save',

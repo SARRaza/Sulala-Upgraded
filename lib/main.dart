@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sulala_upgrade/src/widgets/pages/main_widgets/navigation_bar_guest_mode.dart';
 import 'package:sulala_upgrade/src/widgets/pages/main_widgets/navigation_bar_reg_mode.dart';
 import 'src/data/locale_strings.dart';
-import 'src/screens/account_set_up/add_some_details.dart';
 import 'src/screens/reg_mode/notifications_list.dart';
 import 'src/screens/reg_mode/reg_home_page.dart';
 import 'src/screens/sign_up/create_password.dart';
-import 'src/screens/sign_up/otp_page.dart';
 import 'src/theme/colors/colors.dart';
 
 void main() {

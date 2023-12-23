@@ -3,6 +3,8 @@
 // import '../../theme/fonts/fonts.dart';
 // import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 // import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
@@ -176,9 +178,9 @@ class AppSettings extends ConsumerStatefulWidget {
 
 class _AppSettings extends ConsumerState<AppSettings> {
   final List<Map<String, dynamic>> locales = [
-    {'name': 'English', 'locale': Locale('en', 'US')},
-    {'name': 'Hindi', 'locale': Locale('hi', 'IN')},
-    {'name': 'Arabic', 'locale': Locale('ar', 'SA')},
+    {'name': 'English', 'locale': const Locale('en', 'US')},
+    {'name': 'Hindi', 'locale': const Locale('hi', 'IN')},
+    {'name': 'Arabic', 'locale': const Locale('ar', 'SA')},
   ];
 
   String selectedLanguage = ''; // Default language
@@ -199,7 +201,7 @@ class _AppSettings extends ConsumerState<AppSettings> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(16.0),
                     child: Text(
                       'Language Of The App'.tr,
                       style: AppFonts.title3(color: AppColors.grayscale90),
