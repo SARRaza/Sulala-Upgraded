@@ -118,8 +118,8 @@ class FamilyTreeItem extends StatelessWidget {
                             width: 16,
                             height: 16,
                             child: Image.asset(node.person.gender == Gender.male
-                                ? 'images/gender_male.png'
-                                : 'images/gender_female.png')),
+                                ? 'assets/avatars/80px/gender_male.png'
+                                : 'assets/avatars/80px/gender_female.png')),
                     ],
                   ),
                 ),

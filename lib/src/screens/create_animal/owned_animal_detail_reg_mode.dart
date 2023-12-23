@@ -184,34 +184,34 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
                         "ID #${widget.OviDetails.animalName}",
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
-                      // Text(
-                      //   'Father: ${widget.OviDetails.selectedOviSire.isNotEmpty ? widget.OviDetails.selectedOviSire.first.animalName : 'Unknown'}',
-                      // ),
-                      // Text(
-                      //   'Mother: ${widget.OviDetails.selectedOviDam.isNotEmpty ? widget.OviDetails.selectedOviDam.first.animalName : 'Unknown'}',
-                      // ),
-                      // if (widget.OviDetails.selectedOviSire.isNotEmpty &&
-                      //     widget.OviDetails.selectedOviSire.first.father !=
-                      //         null)
-                      //   Text(
-                      //     'Paternal Grandfather: ${widget.OviDetails.selectedOviSire.first.father!.animalName}',
-                      //   ),
-                      // if (widget.OviDetails.selectedOviDam.isNotEmpty &&
-                      //     widget.OviDetails.selectedOviDam.first.mother != null)
-                      //   Text(
-                      //     'Patenral Grandmother: ${widget.OviDetails.selectedOviSire.first.mother!.animalName}',
-                      //   ),
-                      // if (widget.OviDetails.selectedOviSire.isNotEmpty &&
-                      //     widget.OviDetails.selectedOviSire.first.father !=
-                      //         null)
-                      //   Text(
-                      //     'Maternal Grandfather: ${widget.OviDetails.selectedOviDam.first.father!.animalName}',
-                      //   ),
-                      // if (widget.OviDetails.selectedOviDam.isNotEmpty &&
-                      //     widget.OviDetails.selectedOviDam.first.mother != null)
-                      //   Text(
-                      //     'Maternal Grandmother: ${widget.OviDetails.selectedOviDam.first.mother!.animalName}',
-                      //   ),
+                      Text(
+                        'Father: ${widget.OviDetails.selectedOviSire.isNotEmpty ? widget.OviDetails.selectedOviSire.first.animalName : 'Unknown'}',
+                      ),
+                      Text(
+                        'Mother: ${widget.OviDetails.selectedOviDam.isNotEmpty ? widget.OviDetails.selectedOviDam.first.animalName : 'Unknown'}',
+                      ),
+                      if (widget.OviDetails.selectedOviSire.isNotEmpty &&
+                          widget.OviDetails.selectedOviSire.first.father !=
+                              null)
+                        Text(
+                          'Paternal Grandfather: ${widget.OviDetails.selectedOviSire.first.father!.animalName}',
+                        ),
+                      if (widget.OviDetails.selectedOviDam.isNotEmpty &&
+                          widget.OviDetails.selectedOviDam.first.mother != null)
+                        Text(
+                          'Patenral Grandmother: ${widget.OviDetails.selectedOviSire.first.mother!.animalName}',
+                        ),
+                      if (widget.OviDetails.selectedOviSire.isNotEmpty &&
+                          widget.OviDetails.selectedOviSire.first.father !=
+                              null)
+                        Text(
+                          'Maternal Grandfather: ${widget.OviDetails.selectedOviDam.first.father!.animalName}',
+                        ),
+                      if (widget.OviDetails.selectedOviDam.isNotEmpty &&
+                          widget.OviDetails.selectedOviDam.first.mother != null)
+                        Text(
+                          'Maternal Grandmother: ${widget.OviDetails.selectedOviDam.first.mother!.animalName}',
+                        ),
                       SizedBox(
                         height: globals.heightMediaQuery * 16,
                       ),

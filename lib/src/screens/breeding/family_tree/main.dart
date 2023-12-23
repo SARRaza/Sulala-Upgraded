@@ -260,12 +260,17 @@ class _FamilyTreePageState extends State<FamilyTreePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Container(
-                                width: 24,
-                                height: 24,
-                                clipBehavior: Clip.antiAlias,
-                                decoration: const BoxDecoration(),
-                                child: Image.asset('images/arrow-left.png')),
+                            InkWell(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                  width: 24,
+                                  height: 24,
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: const BoxDecoration(),
+                                  child: Image.asset('images/arrow-left.png')),
+                            ),
                           ],
                         ),
                       ),
