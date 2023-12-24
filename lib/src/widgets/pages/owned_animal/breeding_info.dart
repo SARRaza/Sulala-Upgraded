@@ -66,22 +66,25 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
           motherId: 100009,
           status: 'Borrowed'),
       Person(
-          id: 100003,
-          name: widget.OviDetails.selectedOviSire.first.father!.animalName,
-          gender: Gender.male,
-          image: widget.OviDetails.selectedOviSire.first.father!
-                      .selectedOviImage !=
-                  null
-              ? FileImage(widget
-                  .OviDetails.selectedOviSire.first.father!.selectedOviImage!)
-              : null,
-          status: 'Dead'),
+        id: 100003,
+        name: widget.OviDetails.selectedOviSire.first.father?.animalName ??
+            'Unknown',
+        gender: Gender.male,
+        image:
+            widget.OviDetails.selectedOviSire.first.father?.selectedOviImage !=
+                    null
+                ? FileImage(widget
+                    .OviDetails.selectedOviSire.first.father!.selectedOviImage!)
+                : null,
+        status: 'Dead',
+      ),
       Person(
           id: 100011,
-          name: widget.OviDetails.selectedOviDam.first.mother!.animalName,
+          name: widget.OviDetails.selectedOviDam.first.mother?.animalName ??
+              'Unknown',
           gender: Gender.female,
           image:
-              widget.OviDetails.selectedOviDam.first.mother!.selectedOviImage !=
+              widget.OviDetails.selectedOviDam.first.mother?.selectedOviImage !=
                       null
                   ? FileImage(widget.OviDetails.selectedOviDam.first.mother!
                       .selectedOviImage!)
@@ -99,23 +102,39 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
         fatherId: 100010,
         motherId: 100011,
       ),
+      // Person(
+      //     id: 100009,
+      //     name: widget.OviDetails.selectedOviSire.first.mother?.animalName ??
+      //         'Unknown',
+      //     gender: Gender.female,
+      //     image: widget.OviDetails.selectedOviSire.first.mother!
+      //                 .selectedOviImage !=
+      //             null
+      //         ? FileImage(widget
+      //             .OviDetails.selectedOviSire.first.mother!.selectedOviImage!)
+      //         : null,
+      //     status: 'Dead'),
       Person(
-          id: 100009,
-          name: widget.OviDetails.selectedOviSire.first.mother!.animalName,
-          gender: Gender.female,
-          image: widget.OviDetails.selectedOviSire.first.mother!
-                      .selectedOviImage !=
-                  null
-              ? FileImage(widget
-                  .OviDetails.selectedOviSire.first.mother!.selectedOviImage!)
-              : null,
-          status: 'Dead'),
+        id: 100009,
+        name: widget.OviDetails.selectedOviSire.first.mother?.animalName ??
+            'Unknown',
+        gender: Gender.female,
+        image:
+            widget.OviDetails.selectedOviSire.first.mother?.selectedOviImage !=
+                    null
+                ? FileImage(widget
+                    .OviDetails.selectedOviSire.first.mother!.selectedOviImage!)
+                : null,
+        status: 'Dead',
+      ),
+
       Person(
           id: 100010,
-          name: widget.OviDetails.selectedOviDam.first.father!.animalName,
+          name: widget.OviDetails.selectedOviDam.first.father?.animalName ??
+              'Unknown',
           gender: Gender.male,
           image:
-              widget.OviDetails.selectedOviDam.first.father!.selectedOviImage !=
+              widget.OviDetails.selectedOviDam.first.father?.selectedOviImage !=
                       null
                   ? FileImage(widget.OviDetails.selectedOviDam.first.father!
                       .selectedOviImage!)
@@ -310,18 +329,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                     MaterialPageRoute(
                       builder: (context) {
                         return ListOfBreedingMates(
-                          // selectedBreedChildren: 'fff',
-                          // selectedBreedDam: 'dd',
-                          // selectedBreedSire: 'xx',
-                          // selectedDeliveryDate: '2222',
-                          // selectedBreedingDate: '321',
-                          // selectedBreedPartner: 'fsdsdf',
-                          // breedingEventNumberController:
-                          //     TextEditingController(),
-                          // breedingNotesController: TextEditingController(),
-                          // shouldAddBreedEvent: false,
                           OviDetails: widget.OviDetails,
-                          // breedingEvents: widget.breedingEvents,
                         );
                       },
                     ),
@@ -344,18 +352,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                     MaterialPageRoute(
                       builder: (context) {
                         return BreedingEventChildrenList(
-                          // selectedBreedChildren: 'fff',
-                          // selectedBreedDam: 'dd',
-                          // selectedBreedSire: 'xx',
-                          // selectedDeliveryDate: '2222',
-                          // selectedBreedingDate: '321',
-                          // selectedBreedPartner: 'fsdsdf',
-                          // breedingEventNumberController:
-                          //     TextEditingController(),
-                          // breedingNotesController: TextEditingController(),
-                          // shouldAddBreedEvent: false,
                           OviDetails: widget.OviDetails,
-                          // breedingEvents: widget.breedingEvents,
                         );
                       },
                     ),
