@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../data/classes.dart';
 import '../../../data/riverpod_globals.dart';
-import '../../../screens/breeding/family_tree/main.dart';
+import '../../../screens/breeding/family_tree/family_tree_page.dart';
 import '../../../screens/breeding/family_tree/person.dart';
 import '../../../screens/breeding/list_of_breeding_events.dart';
 import '../../../screens/breeding/list_of_mates.dart';
@@ -30,10 +30,11 @@ class BreedingInfo extends ConsumerStatefulWidget {
   ConsumerState<BreedingInfo> createState() => _BreedingInfoState();
 }
 
+int _uniqueIdCounter = 1; // Initialize a counter
+
+// Function to generate a unique ID
 int generateUniqueId() {
-  // You can implement a logic to generate a unique ID for the new person
-  // For simplicity, you can use the current timestamp
-  return DateTime.now().millisecondsSinceEpoch;
+  return DateTime.now().millisecondsSinceEpoch + (_uniqueIdCounter++);
 }
 
 class _BreedingInfoState extends ConsumerState<BreedingInfo> {
@@ -98,30 +99,6 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
         fatherId: 100010,
         motherId: 100011,
       ),
-
-      // Add the child ID to the addedChildIds set to avoid duplication
-
-      // Person(
-      //     id: 100006,
-      //     name: 'Harry Junior',
-      //     image: const AssetImage('images/harry.jpg'),
-      //     gender: Gender.male,
-      //     status: 'Borrowed',
-      //     fatherId: 100001),
-      // Person(
-      //     id: 100007,
-      //     name: 'Tom',
-      //     gender: Gender.male,
-      //     image: const AssetImage('images/harry.jpg'),
-      //     status: 'Borrowed',
-      //     fatherId: 100001),
-      // Person(
-      //     id: 100008,
-      //     name: 'Ruben',
-      //     gender: Gender.male,
-      //     image: const AssetImage('images/harry.jpg'),
-      //     status: 'Borrowed',
-      //     fatherId: 100001),
       Person(
           id: 100009,
           name: widget.OviDetails.selectedOviSire.first.mother!.animalName,
@@ -144,62 +121,6 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                       .selectedOviImage!)
                   : null,
           status: 'Sold'),
-      Person(
-          id: 100013,
-          name: 'Jerry',
-          gender: Gender.male,
-          image: const AssetImage('images/harry.jpg'),
-          status: 'Borrowed',
-          fatherId: 100005),
-      Person(
-          id: 100014,
-          name: 'Carry',
-          gender: Gender.male,
-          image: const AssetImage('images/harry.jpg'),
-          status: 'Borrowed',
-          fatherId: 100005),
-      Person(
-          id: 100015,
-          name: 'Jacky',
-          gender: Gender.male,
-          image: const AssetImage('images/harry.jpg'),
-          status: 'Borrowed',
-          fatherId: 100006),
-      Person(
-          id: 100016,
-          name: 'Jessy',
-          gender: Gender.male,
-          image: const AssetImage('images/harry.jpg'),
-          status: 'Borrowed',
-          fatherId: 100006),
-      Person(
-          id: 100017,
-          name: 'Jessy',
-          gender: Gender.male,
-          image: const AssetImage('images/harry.jpg'),
-          status: 'Borrowed',
-          fatherId: 100007),
-      Person(
-          id: 100018,
-          name: 'Sweety',
-          gender: Gender.male,
-          image: const AssetImage('images/harry.jpg'),
-          status: 'Borrowed',
-          fatherId: 100007),
-      Person(
-          id: 100019,
-          name: 'Cassy',
-          gender: Gender.male,
-          image: const AssetImage('images/harry.jpg'),
-          status: 'Borrowed',
-          fatherId: 100008),
-      Person(
-          id: 100018,
-          name: 'Lewis',
-          gender: Gender.male,
-          image: const AssetImage('images/harry.jpg'),
-          status: 'Borrowed',
-          fatherId: 100008),
     ];
     final animalIndex = ref.read(ovianimalsProvider).indexWhere(
           (animal) => animal.animalName == widget.OviDetails.animalName,
@@ -222,18 +143,19 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
           // Add the child as a new Person if it doesn't exist in the addedChildIds list
           familyMembers.add(
             Person(
-                id: generateUniqueId(),
-                name: child.animalName,
-                gender: Gender.male, // Change this accordingly
-                image: child.selectedOviImage != null
-                    ? FileImage(child.selectedOviImage!)
-                    : null,
-                status: 'Borrowed',
-                fatherId: 100001,
-                motherId: 100002 // Change this accordingly
-                // Add other details as needed
-                // Example: image, gender, fatherId, motherId, status, etc.
-                ),
+              id: generateUniqueId(),
+              name: child.animalName,
+              gender: Gender.male, // Change this accordingly
+              image: child.selectedOviImage != null
+                  ? FileImage(child.selectedOviImage!)
+                  : null,
+              status: 'Borrowed',
+              fatherId: 100001,
+
+              // motherId: 100002 // Change this accordingly
+              // Add other details as needed
+              // Example: image, gender, fatherId, motherId, status, etc.
+            ),
           );
           // Add the child ID to the addedChildIds set to avoid duplication
           addedChildIds.add(child.animalName);

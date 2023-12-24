@@ -190,7 +190,7 @@ class FamilyTreeItem extends StatelessWidget {
                 height: 43.20,
                 clipBehavior: Clip.antiAlias,
                 decoration: const BoxDecoration(),
-                child: Image.asset('images/24_Add.png')),
+                child: Image.asset('assets/avatars/48px/24_Add.png')),
           ],
         ),
       ),
