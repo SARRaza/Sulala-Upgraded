@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../data/classes.dart';
+import '../../../data/riverpod_globals.dart';
 import '../../../screens/breeding/family_tree/main.dart';
 import '../../../screens/breeding/family_tree/person.dart';
 import '../../../screens/breeding/list_of_breeding_events.dart';
@@ -29,9 +30,216 @@ class BreedingInfo extends ConsumerStatefulWidget {
   ConsumerState<BreedingInfo> createState() => _BreedingInfoState();
 }
 
+int generateUniqueId() {
+  // You can implement a logic to generate a unique ID for the new person
+  // For simplicity, you can use the current timestamp
+  return DateTime.now().millisecondsSinceEpoch;
+}
+
 class _BreedingInfoState extends ConsumerState<BreedingInfo> {
+  Set<String> addedChildIds = {};
   @override
   Widget build(BuildContext context) {
+    List<Person> familyMembers = [
+      Person(
+        id: 100001,
+        name: widget.OviDetails.animalName,
+        image: widget.OviDetails.selectedOviImage != null
+            ? FileImage(widget.OviDetails.selectedOviImage!)
+            : null,
+        status: 'Borrowed',
+        gender: Gender.male,
+        fatherId: 100002,
+        motherId: 100004,
+      ),
+      Person(
+          id: 100002,
+          name: widget.OviDetails.selectedOviSire.first.animalName,
+          image:
+              widget.OviDetails.selectedOviSire.first.selectedOviImage != null
+                  ? FileImage(
+                      widget.OviDetails.selectedOviSire.first.selectedOviImage!)
+                  : null,
+          gender: Gender.male,
+          fatherId: 100003,
+          motherId: 100009,
+          status: 'Borrowed'),
+      Person(
+          id: 100003,
+          name: widget.OviDetails.selectedOviSire.first.father!.animalName,
+          gender: Gender.male,
+          image: widget.OviDetails.selectedOviSire.first.father!
+                      .selectedOviImage !=
+                  null
+              ? FileImage(widget
+                  .OviDetails.selectedOviSire.first.father!.selectedOviImage!)
+              : null,
+          status: 'Dead'),
+      Person(
+          id: 100011,
+          name: widget.OviDetails.selectedOviDam.first.mother!.animalName,
+          gender: Gender.female,
+          image:
+              widget.OviDetails.selectedOviDam.first.mother!.selectedOviImage !=
+                      null
+                  ? FileImage(widget.OviDetails.selectedOviDam.first.mother!
+                      .selectedOviImage!)
+                  : null,
+          status: 'Dead'),
+      Person(
+        id: 100004,
+        name: widget.OviDetails.selectedOviDam.first.animalName,
+        image: widget.OviDetails.selectedOviDam.first.selectedOviImage != null
+            ? FileImage(
+                widget.OviDetails.selectedOviDam.first.selectedOviImage!)
+            : null,
+        gender: Gender.female,
+        status: 'Sold',
+        fatherId: 100010,
+        motherId: 100011,
+      ),
+
+      // Add the child ID to the addedChildIds set to avoid duplication
+
+      // Person(
+      //     id: 100006,
+      //     name: 'Harry Junior',
+      //     image: const AssetImage('images/harry.jpg'),
+      //     gender: Gender.male,
+      //     status: 'Borrowed',
+      //     fatherId: 100001),
+      // Person(
+      //     id: 100007,
+      //     name: 'Tom',
+      //     gender: Gender.male,
+      //     image: const AssetImage('images/harry.jpg'),
+      //     status: 'Borrowed',
+      //     fatherId: 100001),
+      // Person(
+      //     id: 100008,
+      //     name: 'Ruben',
+      //     gender: Gender.male,
+      //     image: const AssetImage('images/harry.jpg'),
+      //     status: 'Borrowed',
+      //     fatherId: 100001),
+      Person(
+          id: 100009,
+          name: widget.OviDetails.selectedOviSire.first.mother!.animalName,
+          gender: Gender.female,
+          image: widget.OviDetails.selectedOviSire.first.mother!
+                      .selectedOviImage !=
+                  null
+              ? FileImage(widget
+                  .OviDetails.selectedOviSire.first.mother!.selectedOviImage!)
+              : null,
+          status: 'Dead'),
+      Person(
+          id: 100010,
+          name: widget.OviDetails.selectedOviDam.first.father!.animalName,
+          gender: Gender.male,
+          image:
+              widget.OviDetails.selectedOviDam.first.father!.selectedOviImage !=
+                      null
+                  ? FileImage(widget.OviDetails.selectedOviDam.first.father!
+                      .selectedOviImage!)
+                  : null,
+          status: 'Sold'),
+      Person(
+          id: 100013,
+          name: 'Jerry',
+          gender: Gender.male,
+          image: const AssetImage('images/harry.jpg'),
+          status: 'Borrowed',
+          fatherId: 100005),
+      Person(
+          id: 100014,
+          name: 'Carry',
+          gender: Gender.male,
+          image: const AssetImage('images/harry.jpg'),
+          status: 'Borrowed',
+          fatherId: 100005),
+      Person(
+          id: 100015,
+          name: 'Jacky',
+          gender: Gender.male,
+          image: const AssetImage('images/harry.jpg'),
+          status: 'Borrowed',
+          fatherId: 100006),
+      Person(
+          id: 100016,
+          name: 'Jessy',
+          gender: Gender.male,
+          image: const AssetImage('images/harry.jpg'),
+          status: 'Borrowed',
+          fatherId: 100006),
+      Person(
+          id: 100017,
+          name: 'Jessy',
+          gender: Gender.male,
+          image: const AssetImage('images/harry.jpg'),
+          status: 'Borrowed',
+          fatherId: 100007),
+      Person(
+          id: 100018,
+          name: 'Sweety',
+          gender: Gender.male,
+          image: const AssetImage('images/harry.jpg'),
+          status: 'Borrowed',
+          fatherId: 100007),
+      Person(
+          id: 100019,
+          name: 'Cassy',
+          gender: Gender.male,
+          image: const AssetImage('images/harry.jpg'),
+          status: 'Borrowed',
+          fatherId: 100008),
+      Person(
+          id: 100018,
+          name: 'Lewis',
+          gender: Gender.male,
+          image: const AssetImage('images/harry.jpg'),
+          status: 'Borrowed',
+          fatherId: 100008),
+    ];
+    final animalIndex = ref.read(ovianimalsProvider).indexWhere(
+          (animal) => animal.animalName == widget.OviDetails.animalName,
+        );
+
+    if (animalIndex == -1) {
+      // Animal not found, you can show an error message or handle it accordingly
+      return const SizedBox(); // Placeholder Widget, adjust as needed
+    }
+
+    final breedingEvents = ref
+            .read(ovianimalsProvider)[animalIndex]
+            .breedingEvents[widget.OviDetails.animalName] ??
+        [];
+    // Add persons based on the breeding events and children
+    for (final breedingEvent in breedingEvents) {
+      for (final child in breedingEvent.children) {
+        // Check if the child ID is already added, skip if it exists
+        if (!addedChildIds.contains(child.animalName)) {
+          // Add the child as a new Person if it doesn't exist in the addedChildIds list
+          familyMembers.add(
+            Person(
+                id: generateUniqueId(),
+                name: child.animalName,
+                gender: Gender.male, // Change this accordingly
+                image: child.selectedOviImage != null
+                    ? FileImage(child.selectedOviImage!)
+                    : null,
+                status: 'Borrowed',
+                fatherId: 100001,
+                motherId: 100002 // Change this accordingly
+                // Add other details as needed
+                // Example: image, gender, fatherId, motherId, status, etc.
+                ),
+          );
+          // Add the child ID to the addedChildIds set to avoid duplication
+          addedChildIds.add(child.animalName);
+        }
+      }
+    }
     bool animalGender = true;
     return SingleChildScrollView(
       child: Column(
@@ -149,192 +357,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                     MaterialPageRoute(
                       builder: (context) {
                         return FamilyTreePage(
-                          members: [
-                            Person(
-                              id: 100001,
-                              name: widget.OviDetails.animalName,
-                              image: widget.OviDetails.selectedOviImage != null
-                                  ? FileImage(
-                                      widget.OviDetails.selectedOviImage!)
-                                  : null,
-                              status: 'Borrowed',
-                              gender: Gender.male,
-                              fatherId: 100002,
-                              motherId: 100004,
-                            ),
-                            Person(
-                                id: 100002,
-                                name: widget.OviDetails.selectedOviSire.first
-                                    .animalName,
-                                image: widget.OviDetails.selectedOviSire.first
-                                            .selectedOviImage !=
-                                        null
-                                    ? FileImage(widget
-                                        .OviDetails
-                                        .selectedOviSire
-                                        .first
-                                        .selectedOviImage!)
-                                    : null,
-                                gender: Gender.male,
-                                fatherId: 100003,
-                                motherId: 100009,
-                                status: 'Borrowed'),
-                            Person(
-                                id: 100003,
-                                name: widget.OviDetails.selectedOviSire.first
-                                    .father!.animalName,
-                                gender: Gender.male,
-                                image: widget.OviDetails.selectedOviSire.first
-                                            .father!.selectedOviImage !=
-                                        null
-                                    ? FileImage(widget
-                                        .OviDetails
-                                        .selectedOviSire
-                                        .first
-                                        .father!
-                                        .selectedOviImage!)
-                                    : null,
-                                status: 'Dead'),
-                            Person(
-                                id: 100011,
-                                name: widget.OviDetails.selectedOviDam.first
-                                    .mother!.animalName,
-                                gender: Gender.female,
-                                image: widget.OviDetails.selectedOviDam.first
-                                            .mother!.selectedOviImage !=
-                                        null
-                                    ? FileImage(widget.OviDetails.selectedOviDam
-                                        .first.mother!.selectedOviImage!)
-                                    : null,
-                                status: 'Dead'),
-                            Person(
-                              id: 100004,
-                              name: widget
-                                  .OviDetails.selectedOviDam.first.animalName,
-                              image: widget.OviDetails.selectedOviDam.first
-                                          .selectedOviImage !=
-                                      null
-                                  ? FileImage(widget.OviDetails.selectedOviDam
-                                      .first.selectedOviImage!)
-                                  : null,
-                              gender: Gender.female,
-                              status: 'Sold',
-                              fatherId: 100010,
-                              motherId: 100011,
-                            ),
-                            // Person(
-                            //     id: 100005,
-                            //     name: 'Harry Jr.',
-                            //     image: const AssetImage('images/harry.jpg'),
-                            //     status: 'Borrowed',
-                            //     gender: Gender.male,
-                            //     fatherId: 100001),
-                            // Person(
-                            //     id: 100006,
-                            //     name: 'Harry Junior',
-                            //     image: const AssetImage('images/harry.jpg'),
-                            //     gender: Gender.male,
-                            //     status: 'Borrowed',
-                            //     fatherId: 100001),
-                            // Person(
-                            //     id: 100007,
-                            //     name: 'Tom',
-                            //     gender: Gender.male,
-                            //     image: const AssetImage('images/harry.jpg'),
-                            //     status: 'Borrowed',
-                            //     fatherId: 100001),
-                            // Person(
-                            //     id: 100008,
-                            //     name: 'Ruben',
-                            //     gender: Gender.male,
-                            //     image: const AssetImage('images/harry.jpg'),
-                            //     status: 'Borrowed',
-                            //     fatherId: 100001),
-                            Person(
-                                id: 100009,
-                                name: widget.OviDetails.selectedOviSire.first
-                                    .mother!.animalName,
-                                gender: Gender.female,
-                                image: widget.OviDetails.selectedOviSire.first
-                                            .mother!.selectedOviImage !=
-                                        null
-                                    ? FileImage(widget
-                                        .OviDetails
-                                        .selectedOviSire
-                                        .first
-                                        .mother!
-                                        .selectedOviImage!)
-                                    : null,
-                                status: 'Dead'),
-                            Person(
-                                id: 100010,
-                                name: widget.OviDetails.selectedOviDam.first
-                                    .father!.animalName,
-                                gender: Gender.male,
-                                image: widget.OviDetails.selectedOviDam.first
-                                            .father!.selectedOviImage !=
-                                        null
-                                    ? FileImage(widget.OviDetails.selectedOviDam
-                                        .first.father!.selectedOviImage!)
-                                    : null,
-                                status: 'Sold'),
-                            Person(
-                                id: 100013,
-                                name: 'Jerry',
-                                gender: Gender.male,
-                                image: const AssetImage('images/harry.jpg'),
-                                status: 'Borrowed',
-                                fatherId: 100005),
-                            Person(
-                                id: 100014,
-                                name: 'Carry',
-                                gender: Gender.male,
-                                image: const AssetImage('images/harry.jpg'),
-                                status: 'Borrowed',
-                                fatherId: 100005),
-                            Person(
-                                id: 100015,
-                                name: 'Jacky',
-                                gender: Gender.male,
-                                image: const AssetImage('images/harry.jpg'),
-                                status: 'Borrowed',
-                                fatherId: 100006),
-                            Person(
-                                id: 100016,
-                                name: 'Jessy',
-                                gender: Gender.male,
-                                image: const AssetImage('images/harry.jpg'),
-                                status: 'Borrowed',
-                                fatherId: 100006),
-                            Person(
-                                id: 100017,
-                                name: 'Jessy',
-                                gender: Gender.male,
-                                image: const AssetImage('images/harry.jpg'),
-                                status: 'Borrowed',
-                                fatherId: 100007),
-                            Person(
-                                id: 100018,
-                                name: 'Sweety',
-                                gender: Gender.male,
-                                image: const AssetImage('images/harry.jpg'),
-                                status: 'Borrowed',
-                                fatherId: 100007),
-                            Person(
-                                id: 100019,
-                                name: 'Cassy',
-                                gender: Gender.male,
-                                image: const AssetImage('images/harry.jpg'),
-                                status: 'Borrowed',
-                                fatherId: 100008),
-                            Person(
-                                id: 100018,
-                                name: 'Lewis',
-                                gender: Gender.male,
-                                image: const AssetImage('images/harry.jpg'),
-                                status: 'Borrowed',
-                                fatherId: 100008),
-                          ],
+                          members: familyMembers,
                           selectedPersonId: 100001,
                           OviDetails: widget.OviDetails,
                         );

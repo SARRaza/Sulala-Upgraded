@@ -192,13 +192,10 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
   Set<String> addedChildIds = {};
   @override
   void initState() {
-    // Now you can call addPersonToChildrenBranch
-    // addPersonToChildrenBranch();
     _selectedPerson = widget.members
         .firstWhere((member) => member.id == widget.selectedPersonId);
     root = createTree(widget.members, _selectedPerson,
         attachParents: true, attachChildren: true);
-    addPersonToChildrenBranch();
 
     super.initState();
   }
@@ -321,81 +318,81 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add a person to the children branch dynamically
-          addPersonToChildrenBranch();
-        },
-        child: Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     // Add a person to the children branch dynamically
+      //     addPersonToChildrenBranch();
+      //   },
+      //   child: Icon(Icons.add),
+      // ),
     );
   }
 
-  Widget addPersonToChildrenBranch() {
-    final animalIndex = ref.read(ovianimalsProvider).indexWhere(
-          (animal) => animal.animalName == widget.OviDetails.animalName,
-        );
+  // Widget addPersonToChildrenBranch() {
+  //   final animalIndex = ref.read(ovianimalsProvider).indexWhere(
+  //         (animal) => animal.animalName == widget.OviDetails.animalName,
+  //       );
 
-    if (animalIndex == -1) {
-      // Animal not found, you can show an error message or handle it accordingly
-      return const SizedBox(); // Placeholder Widget, adjust as needed
-    }
+  //   if (animalIndex == -1) {
+  //     // Animal not found, you can show an error message or handle it accordingly
+  //     return const SizedBox(); // Placeholder Widget, adjust as needed
+  //   }
 
-    final breedingEvents = ref
-            .read(ovianimalsProvider)[animalIndex]
-            .breedingEvents[widget.OviDetails.animalName] ??
-        [];
+  //   final breedingEvents = ref
+  //           .read(ovianimalsProvider)[animalIndex]
+  //           .breedingEvents[widget.OviDetails.animalName] ??
+  //       [];
 
-    for (final breedingEvent in breedingEvents) {
-      for (final child in breedingEvent.children) {
-        // Check if the child ID is already added, skip if it exists
-        if (addedChildIds.contains(child.animalName)) {
-          continue;
-        }
+  //   for (final breedingEvent in breedingEvents) {
+  //     for (final child in breedingEvent.children) {
+  //       // Check if the child ID is already added, skip if it exists
+  //       if (addedChildIds.contains(child.animalName)) {
+  //         continue;
+  //       }
 
-        final newPerson = Person(
-          id: generateUniqueId(),
-          name: child.animalName,
-          gender: Gender.male,
-          image: child.selectedOviImage != null
-              ? FileImage(child.selectedOviImage!)
-              : null,
-          status: 'Borrowed',
-          fatherId: 100001,
-        );
+  //       final newPerson = Person(
+  //         id: generateUniqueId(),
+  //         name: child.animalName,
+  //         gender: Gender.male,
+  //         image: child.selectedOviImage != null
+  //             ? FileImage(child.selectedOviImage!)
+  //             : null,
+  //         status: 'Borrowed',
+  //         fatherId: 100001,
+  //       );
 
-        final newNode =
-            createTree(widget.members, newPerson, attachChildren: true);
+  //       final newNode =
+  //           createTree(widget.members, newPerson, attachChildren: true);
 
-        // Update the UI to reflect the new person in the children branch
-        setState(() {
-          root.children.add(newNode);
-        });
+  //       // Update the UI to reflect the new person in the children branch
+  //       setState(() {
+  //         root.children.add(newNode);
+  //       });
 
-        // Add the child ID to the set to mark it as added
-        addedChildIds.add(child.animalName);
+  //       // Add the child ID to the set to mark it as added
+  //       addedChildIds.add(child.animalName);
 
-        // Return the added FamilyTreeItem widget
-        return FamilyTreeItem(
-          node: newNode,
-          showGender: false,
-          key: newNode.key,
-          onTap: (ItemType itemType) => handleTap(itemType, newNode),
-        );
-      }
-    }
+  //       // Return the added FamilyTreeItem widget
+  //       return FamilyTreeItem(
+  //         node: newNode,
+  //         showGender: false,
+  //         key: newNode.key,
+  //         onTap: (ItemType itemType) => handleTap(itemType, newNode),
+  //       );
+  //     }
+  //   }
 
-    // You might return a Widget or null based on your requirement
-    return const SizedBox(); // Placeholder Widget, adjust as needed
-  }
+  //   // You might return a Widget or null based on your requirement
+  //   return const SizedBox(); // Placeholder Widget, adjust as needed
+  // }
 
-  // ... existing code ...
+  // // ... existing code ...
 
-  int generateUniqueId() {
-    // You can implement a logic to generate a unique ID for the new person
-    // For simplicity, you can use the current timestamp
-    return DateTime.now().millisecondsSinceEpoch;
-  }
+  // int generateUniqueId() {
+  //   // You can implement a logic to generate a unique ID for the new person
+  //   // For simplicity, you can use the current timestamp
+  //   return DateTime.now().millisecondsSinceEpoch;
+  // }
 
   Widget buildTree() {
     return SingleChildScrollView(
