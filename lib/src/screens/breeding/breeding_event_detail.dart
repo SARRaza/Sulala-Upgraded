@@ -4,7 +4,6 @@ import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import '../../data/classes.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
-import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
 import 'edit_breeding_event_detail.dart';
 import 'list_of_childrens.dart';
 
@@ -63,6 +62,8 @@ class _BreedingEventDetailsState extends State<BreedingEventDetails> {
                   MaterialPageRoute(
                     builder: (context) => EditBreedingEventDetails(
                       breedingEvents: widget.breedingEvents,
+                      OviDetails: widget.OviDetails,
+                      breedingEvent: widget.breedingEvent,
                     ),
                   ),
                 );
@@ -113,55 +114,7 @@ class _BreedingEventDetailsState extends State<BreedingEventDetails> {
                   ],
                 ),
                 SizedBox(
-                  height: 6 * globals.heightMediaQuery,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Sire (Father)',
-                      style: AppFonts.body2(color: AppColors.grayscale70),
-                    ),
-                    PrimaryTextButton(
-                      text: '${widget.breedingEvent.sire} (ID Needed)',
-                      onPressed: () {},
-                      position: TextButtonPosition.right,
-                      status: TextStatus.idle,
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Dam (Mother)',
-                      style: AppFonts.body2(color: AppColors.grayscale70),
-                    ),
-                    PrimaryTextButton(
-                      text: '${widget.breedingEvent.dam} (ID Needed)',
-                      onPressed: () {},
-                      position: TextButtonPosition.right,
-                      status: TextStatus.idle,
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Breeding Partner',
-                      style: AppFonts.body2(color: AppColors.grayscale70),
-                    ),
-                    PrimaryTextButton(
-                      text: '${widget.breedingEvent.partner} (ID Needed)',
-                      onPressed: () {},
-                      position: TextButtonPosition.right,
-                      status: TextStatus.idle,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 6 * globals.heightMediaQuery,
+                  height: 20 * globals.heightMediaQuery,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -203,7 +156,23 @@ class _BreedingEventDetailsState extends State<BreedingEventDetails> {
                   ],
                 ),
                 SizedBox(
-                  height: 34 * globals.heightMediaQuery,
+                  height: 10 * globals.heightMediaQuery,
+                ),
+                Divider(),
+                SizedBox(
+                  height: 10 * globals.heightMediaQuery,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Breeding Partner',
+                      style: AppFonts.title5(color: AppColors.grayscale90),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 16 * globals.heightMediaQuery,
                 ),
                 ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
@@ -251,6 +220,10 @@ class _BreedingEventDetailsState extends State<BreedingEventDetails> {
                       ),
                     );
                   },
+                ),
+                Divider(),
+                SizedBox(
+                  height: 6 * globals.heightMediaQuery,
                 ),
                 Text(
                   "Children",
@@ -321,6 +294,7 @@ class _BreedingEventDetailsState extends State<BreedingEventDetails> {
                           );
                         },
                       ),
+                Divider(),
                 SizedBox(
                   height: 24 * globals.heightMediaQuery,
                 ),
@@ -341,7 +315,7 @@ class _BreedingEventDetailsState extends State<BreedingEventDetails> {
                   height: 16 * globals.heightMediaQuery,
                 ),
                 Text(
-                  'Max had twins in this breeding event',
+                  widget.breedingEvent.notes,
                   // (widget.breedingEvent.notes),
                   style: AppFonts.body2(color: AppColors.grayscale70),
                 ),

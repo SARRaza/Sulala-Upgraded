@@ -13,11 +13,15 @@ import 'search_children.dart';
 
 class EditBreedingEventDetails extends StatefulWidget {
   final List<BreedingEventVariables> breedingEvents;
-
-  const EditBreedingEventDetails({
-    super.key,
-    required this.breedingEvents,
-  });
+  final OviVariables OviDetails;
+  final BreedingDetails? breedingDetails;
+  final BreedingEventVariables breedingEvent;
+  const EditBreedingEventDetails(
+      {super.key,
+      required this.breedingEvents,
+      required this.breedingEvent,
+      this.breedingDetails,
+      required this.OviDetails});
 
   @override
   State<EditBreedingEventDetails> createState() =>
@@ -25,6 +29,23 @@ class EditBreedingEventDetails extends StatefulWidget {
 }
 
 class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
+  TextEditingController breedingEventNumberController = TextEditingController();
+  TextEditingController breedingDateController = TextEditingController();
+  TextEditingController deliveryDateController = TextEditingController();
+  late final List<BreedingPartner> partner;
+  @override
+  void initState() {
+    super.initState();
+    breedingEventNumberController.text = widget.breedingEvent.eventNumber;
+    if (widget.breedingDetails != null) {
+      // Initialize text controller and date variables with selected vaccine details
+      breedingDateController.text = widget.breedingDetails!.breedingDate;
+      deliveryDateController.text = widget.breedingDetails!.breeddeliveryDate;
+      breedingEventNumberController.text = widget.breedingEvent.eventNumber;
+      partner = widget.breedingEvent.partner;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -33,7 +54,7 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
           scrolledUnderElevation: 0.0,
           centerTitle: true,
           title: Text(
-            'Harry',
+            widget.OviDetails.animalName,
             style: AppFonts.headline3(color: AppColors.grayscale90),
           ),
           backgroundColor: Colors.transparent,
@@ -65,7 +86,7 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.breedingEvents.first.eventNumber,
+                  breedingEventNumberController.text,
                   style: AppFonts.title3(
                     color: AppColors.grayscale90,
                   ),
@@ -74,8 +95,7 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                   height: 24 * globals.heightMediaQuery,
                 ),
                 PrimaryTextField(
-                  controller: TextEditingController(
-                      text: widget.breedingEvents.first.eventNumber),
+                  controller: breedingEventNumberController,
                   hintText: 'Edit Breeding Event',
                   labelText: 'Breeding Event',
                 ),
@@ -96,55 +116,7 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                   ],
                 ),
                 SizedBox(
-                  height: 6 * globals.heightMediaQuery,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Sire (Father)',
-                      style: AppFonts.body2(color: AppColors.grayscale70),
-                    ),
-                    PrimaryTextButton(
-                      text: '${widget.breedingEvents.first.sire} (ID Needed)',
-                      onPressed: () {},
-                      position: TextButtonPosition.right,
-                      status: TextStatus.idle,
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Dam (Mother)',
-                      style: AppFonts.body2(color: AppColors.grayscale70),
-                    ),
-                    PrimaryTextButton(
-                      text: '${widget.breedingEvents.first.sire} (ID Needed)',
-                      onPressed: () {},
-                      position: TextButtonPosition.right,
-                      status: TextStatus.idle,
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Breeding Partner',
-                      style: AppFonts.body2(color: AppColors.grayscale70),
-                    ),
-                    PrimaryTextButton(
-                      text: '${widget.breedingEvents.first.sire} (ID Needed)',
-                      onPressed: () {},
-                      position: TextButtonPosition.right,
-                      status: TextStatus.idle,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 6 * globals.heightMediaQuery,
+                  height: 26 * globals.heightMediaQuery,
                 ),
                 PrimaryDateField(
                   labelText: 'Breeding Date',
@@ -179,7 +151,65 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                   ],
                 ),
                 SizedBox(
-                  height: 34 * globals.heightMediaQuery,
+                  height: 20 * globals.heightMediaQuery,
+                ),
+                Divider(),
+                SizedBox(
+                  height: 10 * globals.heightMediaQuery,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Breeding Partner',
+                      style: AppFonts.title5(color: AppColors.grayscale90),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 16 * globals.heightMediaQuery,
+                ),
+                ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: widget.breedingEvent.partner.length,
+                  itemBuilder: (context, index) {
+                    final child = widget.breedingEvent.partner[index];
+                    return ListTile(
+                      onTap: () {},
+                      contentPadding: EdgeInsets.zero,
+                      leading: CircleAvatar(
+                        radius: globals.widthMediaQuery * 24,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: child.selectedOviImage != null
+                            ? FileImage(child.selectedOviImage!)
+                            : null,
+                        child: child.selectedOviImage == null
+                            ? const Icon(
+                                Icons.camera_alt_outlined,
+                                size: 50,
+                                color: Colors.grey,
+                              )
+                            : null,
+                      ),
+                      title: Text(
+                        child.animalName,
+                        style: AppFonts.headline3(color: AppColors.grayscale90),
+                      ),
+                      subtitle: Text(
+                        child.selectedOviGender,
+                        style: AppFonts.body2(color: AppColors.grayscale70),
+                      ),
+                      trailing: Text(
+                        'ID#131340',
+                        style: AppFonts.body2(color: AppColors.grayscale70),
+                      ),
+                    );
+                  },
+                ),
+                Divider(),
+                SizedBox(
+                  height: 6 * globals.heightMediaQuery,
                 ),
                 Text(
                   "Children",
@@ -188,7 +218,7 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                 SizedBox(
                   height: 16 * globals.heightMediaQuery,
                 ),
-                widget.breedingEvents.first.children.isEmpty
+                widget.breedingEvent.children.isEmpty
                     ? Column(
                         children: [
                           SizedBox(
@@ -199,31 +229,47 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                                   'assets/illustrations/cow_childx.png')),
                         ],
                       )
-                    : ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        onTap: () {
-                          // Add your onPressed functionality here
+                    : ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: widget.breedingEvent.children.length,
+                        itemBuilder: (context, index) {
+                          final child = widget.breedingEvent.children[index];
+                          return ListTile(
+                            onTap: () {},
+                            contentPadding: EdgeInsets.zero,
+                            leading: CircleAvatar(
+                              radius: globals.widthMediaQuery * 24,
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: child.selectedOviImage != null
+                                  ? FileImage(child.selectedOviImage!)
+                                  : null,
+                              child: child.selectedOviImage == null
+                                  ? const Icon(
+                                      Icons.camera_alt_outlined,
+                                      size: 50,
+                                      color: Colors.grey,
+                                    )
+                                  : null,
+                            ),
+                            title: Text(
+                              child.animalName,
+                              style: AppFonts.headline3(
+                                  color: AppColors.grayscale90),
+                            ),
+                            subtitle: Text(
+                              child.selectedOviGender,
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale70),
+                            ),
+                            trailing: Text(
+                              'ID#131340',
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale70),
+                            ),
+                          );
                         },
-                        leading: CircleAvatar(
-                          radius: 24 * globals.widthMediaQuery,
-                          backgroundColor: Colors.black,
-                        ),
-                        title: Text(
-                          'Hello',
-                          // widget.breedingEvent.children,
-                          style:
-                              AppFonts.headline3(color: AppColors.grayscale90),
-                        ),
-                        subtitle: Text(
-                          'Age',
-                          style: AppFonts.body2(color: AppColors.grayscale70),
-                        ),
-                        trailing: Text(
-                          'ID#090909',
-                          style: AppFonts.body2(color: AppColors.grayscale90),
-                        ),
                       ),
-                SizedBox(height: 16 * globals.heightMediaQuery),
                 InkWell(
                   onTap: () {
                     Navigator.of(context).push(
@@ -248,6 +294,11 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                     ],
                   ),
                 ),
+                Divider(),
+                SizedBox(
+                  height: 24 * globals.heightMediaQuery,
+                ),
+                SizedBox(height: 16 * globals.heightMediaQuery),
                 SizedBox(
                   height: 24 * globals.heightMediaQuery,
                 ),
