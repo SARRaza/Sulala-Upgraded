@@ -59,32 +59,6 @@ class BreedChildItem {
       this.animalName, this.selectedOviImage, this.selectedOviGender);
 }
 
-class BreedingEventVariables {
-  final String eventNumber;
-  final String sire;
-  final String dam;
-  final List<BreedingPartner> partner;
-  final List<BreedChildItem> children;
-  final File? breeddam;
-  final String breedingDate;
-  final String deliveryDate;
-  final String notes;
-  final bool shouldAddEvent;
-
-  BreedingEventVariables({
-    required this.eventNumber,
-    this.breeddam,
-    required this.sire,
-    required this.dam,
-    required this.partner,
-    required this.children,
-    required this.breedingDate,
-    required this.deliveryDate,
-    required this.notes,
-    required this.shouldAddEvent,
-  });
-}
-
 class OviVariables {
   final List<String> selectedFilters;
   late final String animalName;
@@ -278,6 +252,58 @@ class BreedingDetails {
     required this.breedingnotes,
     required this.shouldAddEvent,
   });
+}
+
+class BreedingEventVariables {
+  final String eventNumber;
+  final String sire;
+  final String dam;
+  final List<BreedingPartner> partner;
+  final List<BreedChildItem> children;
+  final File? breeddam;
+  final String breedingDate;
+  final String deliveryDate;
+  final String notes;
+  final bool shouldAddEvent;
+
+  BreedingEventVariables({
+    required this.eventNumber,
+    this.breeddam,
+    required this.sire,
+    required this.dam,
+    required this.partner,
+    required this.children,
+    required this.breedingDate,
+    required this.deliveryDate,
+    required this.notes,
+    required this.shouldAddEvent,
+  });
+  BreedingEventVariables copyWith({
+    String? eventNumber,
+    String? sire,
+    String? dam,
+    List<BreedingPartner>? partner,
+    List<BreedChildItem>? children,
+    File? breeddam,
+    String? breedingDate,
+    String? deliveryDate,
+    String? notes,
+
+    // ignore: non_constant_identifier_names
+  }) {
+    return BreedingEventVariables(
+      eventNumber: eventNumber ?? this.eventNumber,
+      sire: sire ?? this.sire,
+      dam: dam ?? this.dam,
+      partner: partner ?? this.partner,
+      children: children ?? this.children,
+      breedingDate: breedingDate ?? this.breedingDate,
+      breeddam: breeddam ?? this.breeddam,
+      deliveryDate: deliveryDate ?? this.deliveryDate,
+      notes: notes ?? this.notes,
+      shouldAddEvent: shouldAddEvent,
+    );
+  }
 }
 
 class VaccineDetails {

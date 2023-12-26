@@ -14,28 +14,28 @@ import 'breeding_event_detail.dart';
 import 'create_breeding_event.dart';
 
 class ListOfBreedingEvents extends ConsumerStatefulWidget {
-  final TextEditingController breedingNotesController;
-  final TextEditingController breedingEventNumberController;
-  final String selectedBreedSire;
-  final String selectedBreedDam;
-  final String selectedBreedPartner;
-  final String selectedBreedChildren;
-  final String selectedBreedingDate;
-  final String selectedDeliveryDate;
+  // final TextEditingController breedingNotesController;
+  // final TextEditingController breedingEventNumberController;
+  // final String selectedBreedSire;
+  // final String selectedBreedDam;
+  // final String selectedBreedPartner;
+  // // final String selectedBreedChildren;
+  // final String selectedBreedingDate;
+  // final String selectedDeliveryDate;
   final bool shouldAddBreedEvent;
   final OviVariables OviDetails;
   final List<BreedingEventVariables> breedingEvents;
 
   const ListOfBreedingEvents(
       {super.key,
-      required this.breedingNotesController,
-      required this.breedingEventNumberController,
-      required this.selectedBreedSire,
-      required this.selectedBreedDam,
-      required this.selectedBreedPartner,
-      required this.selectedBreedChildren,
-      required this.selectedBreedingDate,
-      required this.selectedDeliveryDate,
+      // required this.breedingNotesController,
+      // required this.breedingEventNumberController,
+      // required this.selectedBreedSire,
+      // required this.selectedBreedDam,
+      // required this.selectedBreedPartner,
+      // // required this.selectedBreedChildren,
+      // required this.selectedBreedingDate,
+      // required this.selectedDeliveryDate,
       required this.shouldAddBreedEvent,
       required this.OviDetails,
       required this.breedingEvents});
@@ -167,6 +167,8 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                   color: Colors.black,
                 ),
                 onPressed: () {
+                  ref.read(breedingDateProvider.notifier).update((state) => '');
+                  ref.read(deliveryDateProvider.notifier).update((state) => '');
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -229,6 +231,12 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                             height: 52 * globals.heightMediaQuery,
                             child: PrimaryButton(
                               onPressed: () {
+                                ref
+                                    .read(breedingDateProvider.notifier)
+                                    .update((state) => '');
+                                ref
+                                    .read(deliveryDateProvider.notifier)
+                                    .update((state) => '');
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -239,10 +247,10 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                                   ),
                                 ).then((_) {
                                   // When returning from CreateBreedingEvents, add the new event
-                                  if (widget.breedingEventNumberController.text
+                                  if (widget.breedingEvents.first.eventNumber
                                       .isNotEmpty) {
                                     addBreedingEvent(widget
-                                        .breedingEventNumberController.text);
+                                        .breedingEvents.first.eventNumber);
                                   }
                                 });
                               },

@@ -239,15 +239,8 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                     MaterialPageRoute(
                       builder: (context) {
                         return ListOfBreedingEvents(
-                          selectedBreedChildren: 'fff',
-                          selectedBreedDam: 'dd',
-                          selectedBreedSire: 'xx',
-                          selectedDeliveryDate: '2222',
-                          selectedBreedingDate: '321',
-                          selectedBreedPartner: 'fsdsdf',
-                          breedingEventNumberController:
-                              TextEditingController(),
-                          breedingNotesController: TextEditingController(),
+                          // breedingEventNumberController:
+                          //     TextEditingController(),
                           shouldAddBreedEvent: false,
                           OviDetails: widget.OviDetails,
                           breedingEvents: widget.breedingEvents,

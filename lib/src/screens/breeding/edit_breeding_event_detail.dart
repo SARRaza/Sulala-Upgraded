@@ -1,5 +1,12 @@
+// ignore_for_file: non_constant_identifier_names
+
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import '../../data/classes.dart';
+import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/navigate_button.dart';
@@ -9,9 +16,10 @@ import '../../widgets/inputs/date_fields/primary_date_field.dart';
 import '../../widgets/inputs/paragraph_text_fields/paragraph_text_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
-import 'search_children.dart';
 
-class EditBreedingEventDetails extends StatefulWidget {
+import 'list_of_breeding_events.dart';
+
+class EditBreedingEventDetails extends ConsumerStatefulWidget {
   final List<BreedingEventVariables> breedingEvents;
   final OviVariables OviDetails;
   final BreedingDetails? breedingDetails;
@@ -24,30 +32,360 @@ class EditBreedingEventDetails extends StatefulWidget {
       required this.OviDetails});
 
   @override
-  State<EditBreedingEventDetails> createState() =>
+  ConsumerState<EditBreedingEventDetails> createState() =>
       _EditBreedingEventDetailsState();
 }
 
-class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
+class _EditBreedingEventDetailsState
+    extends ConsumerState<EditBreedingEventDetails> {
   TextEditingController breedingEventNumberController = TextEditingController();
   TextEditingController breedingDateController = TextEditingController();
   TextEditingController deliveryDateController = TextEditingController();
-  late final List<BreedingPartner> partner;
+  TextEditingController breedingEventNotesController = TextEditingController();
+  List<BreedChildItem> selectedChildren = [];
+  List<BreedingPartner> breedPartners = [];
+  String selectedBreedingDate = '';
+  String selectedDeliveryDate = '';
+  bool isFirstTimeSelection = true;
   @override
   void initState() {
     super.initState();
     breedingEventNumberController.text = widget.breedingEvent.eventNumber;
-    if (widget.breedingDetails != null) {
-      // Initialize text controller and date variables with selected vaccine details
-      breedingDateController.text = widget.breedingDetails!.breedingDate;
-      deliveryDateController.text = widget.breedingDetails!.breeddeliveryDate;
-      breedingEventNumberController.text = widget.breedingEvent.eventNumber;
-      partner = widget.breedingEvent.partner;
-    }
+
+    selectedBreedingDate = widget.breedingEvent.breedingDate;
+    selectedDeliveryDate = widget.breedingEvent.deliveryDate;
+    selectedChildren = widget.breedingEvent.children;
+    breedingEventNotesController.text = widget.breedingEvent.notes;
+    breedPartners = widget.breedingEvent.partner;
+  }
+
+  void _showBreedChildrenSelectionSheet(BuildContext context) async {
+    // Initialize an empty list
+    final ovianimals = ref.watch(ovianimalsProvider);
+
+    String searchQuery = '';
+
+    await showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: Container(
+                height: MediaQuery.of(context).size.height * 1,
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    const Text(
+                      "Select Children",
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50.0),
+                              border: Border.all(),
+                            ),
+                            child: TextField(
+                              onChanged: (value) {
+                                setState(() {
+                                  searchQuery = value.toLowerCase();
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                hintText: "Search By Name Or ID",
+                                prefixIcon: Icon(Icons.search),
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: ovianimals.length,
+                        itemBuilder: (context, index) {
+                          final OviDetails = ovianimals[index];
+
+                          final bool isSelected =
+                              // ignore: iterable_contains_unrelated_type
+                              selectedChildren.contains(OviDetails.animalName);
+
+                          // Apply the filter here
+                          if (!OviDetails.animalName
+                                  .toLowerCase()
+                                  .contains(searchQuery) &&
+                              !OviDetails.selectedAnimalType
+                                  .toLowerCase()
+                                  .contains(searchQuery)) {
+                            return Container(); // Skip this item if it doesn't match the search query
+                          }
+
+                          return ListTile(
+                            tileColor: isSelected
+                                ? Colors.green.withOpacity(0.5)
+                                : null,
+                            shape: isSelected
+                                ? RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50.0),
+                                  )
+                                : null,
+                            leading: CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Colors.grey[100],
+                              backgroundImage:
+                                  OviDetails.selectedOviImage != null
+                                      ? FileImage(OviDetails.selectedOviImage!)
+                                      : null,
+                              child: OviDetails.selectedOviImage == null
+                                  ? const Icon(
+                                      Icons.camera_alt_outlined,
+                                      size: 50,
+                                      color: Colors.grey,
+                                    )
+                                  : null,
+                            ),
+                            title: Text(OviDetails.animalName),
+                            subtitle: Text(OviDetails.selectedAnimalType),
+                            onTap: () {
+                              setState(() {
+                                if (isSelected) {
+                                  selectedChildren.removeWhere(
+                                    (child) =>
+                                        child.animalName ==
+                                        OviDetails.animalName,
+                                  );
+                                } else {
+                                  // Use a default image (icon) if selectedOviImage is null
+                                  final File? oviImage =
+                                      OviDetails.selectedOviImage;
+
+                                  selectedChildren.add(BreedChildItem(
+                                    OviDetails.animalName,
+                                    oviImage,
+                                    OviDetails.selectedOviGender,
+                                  ));
+                                }
+                              });
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        ref
+                            .read(breedingChildrenDetailsProvider.notifier)
+                            .update((state) => selectedChildren);
+                        Navigator.pop(context);
+                        // Append the selected children to the existing list
+                        final List<BreedChildItem> existingSelectedChildren =
+                            ref.read(breedingChildrenDetailsProvider);
+                        existingSelectedChildren.addAll(selectedChildren);
+                      },
+                      child: const Text("Done"),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showBreedPartnerSelectionSheet(BuildContext context) async {
+    // Initialize an empty list
+    final ovianimals = ref.watch(ovianimalsProvider);
+
+    String searchQuery = '';
+
+    await showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: Container(
+                height: MediaQuery.of(context).size.height * 1,
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    const Text(
+                      "Select Partner",
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50.0),
+                              border: Border.all(),
+                            ),
+                            child: TextField(
+                              onChanged: (value) {
+                                setState(() {
+                                  searchQuery = value.toLowerCase();
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                hintText: "Search By Name Or ID",
+                                prefixIcon: Icon(Icons.search),
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: ovianimals.length,
+                        itemBuilder: (context, index) {
+                          final OviDetails = ovianimals[index];
+
+                          final bool isSelected =
+                              // ignore: iterable_contains_unrelated_type
+                              breedPartners.contains(OviDetails.animalName);
+
+                          // Apply the filter here
+                          if (!OviDetails.animalName
+                                  .toLowerCase()
+                                  .contains(searchQuery) &&
+                              !OviDetails.selectedAnimalType
+                                  .toLowerCase()
+                                  .contains(searchQuery)) {
+                            return Container(); // Skip this item if it doesn't match the search query
+                          }
+
+                          return ListTile(
+                            tileColor: isSelected
+                                ? Colors.green.withOpacity(0.5)
+                                : null,
+                            shape: isSelected
+                                ? RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50.0),
+                                  )
+                                : null,
+                            leading: CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Colors.grey[100],
+                              backgroundImage:
+                                  OviDetails.selectedOviImage != null
+                                      ? FileImage(OviDetails.selectedOviImage!)
+                                      : null,
+                              child: OviDetails.selectedOviImage == null
+                                  ? const Icon(
+                                      Icons.camera_alt_outlined,
+                                      size: 50,
+                                      color: Colors.grey,
+                                    )
+                                  : null,
+                            ),
+                            title: Text(OviDetails.animalName),
+                            subtitle: Text(OviDetails.selectedAnimalType),
+                            onTap: () {
+                              setState(() {
+                                if (isSelected) {
+                                  breedPartners.removeWhere(
+                                    (child) =>
+                                        child.animalName ==
+                                        OviDetails.animalName,
+                                  );
+                                } else {
+                                  // Use a default image (icon) if selectedOviImage is null
+                                  final File? oviImage =
+                                      OviDetails.selectedOviImage;
+
+                                  breedPartners.add(BreedingPartner(
+                                    OviDetails.animalName,
+                                    oviImage,
+                                    OviDetails.selectedOviGender,
+                                  ));
+                                }
+                              });
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        ref
+                            .read(breedingPartnerProvider.notifier)
+                            .update((state) => breedPartners);
+                        Navigator.pop(context);
+                        // Append the selected children to the existing list
+                        final List<BreedingPartner> existingSelectedChildren =
+                            ref.read(breedingPartnerProvider);
+                        existingSelectedChildren.addAll(breedPartners);
+                      },
+                      child: const Text("Done"),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void setBreedingSelectedDate(DateTime breedingDate) {
+    setState(() {
+      // Format the date as needed and update the local variable
+      selectedBreedingDate = DateFormat('dd/MM/yyyy').format(breedingDate);
+    });
+  }
+
+  void setDeliverySelectedDate(DateTime Deliverydate) {
+    setState(() {
+      // Format the date as needed and update the local variable
+      selectedDeliveryDate = DateFormat('dd/MM/yyyy').format(Deliverydate);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final selectedbreedPartner = ref.watch(breedingPartnerDetailsProvider);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -120,40 +458,30 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                 ),
                 PrimaryDateField(
                   labelText: 'Breeding Date',
-                  hintText: widget.breedingEvents.first.breedingDate.isNotEmpty
-                      ? widget.breedingEvents.first.breedingDate
+                  hintText: selectedBreedingDate.isNotEmpty
+                      ? selectedBreedingDate
                       : "DD/MM/YYYY",
                   onChanged: (value) {
-                    setState(() {
-                      widget.breedingEvents.first.breedingDate;
-                    });
+                    // Assuming value is a DateTime
+                    setBreedingSelectedDate(value);
                   },
                 ),
                 SizedBox(
                   height: 20 * globals.heightMediaQuery,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Delivery Date',
-                      style: AppFonts.body2(color: AppColors.grayscale70),
-                    ),
-                    widget.breedingEvents.first.deliveryDate.isEmpty
-                        ? Text(
-                            'No Date Added',
-                            style: AppFonts.body2(color: AppColors.grayscale90),
-                          )
-                        : Text(
-                            widget.breedingEvents.first.deliveryDate,
-                            style: AppFonts.body2(color: AppColors.grayscale90),
-                          ),
-                  ],
+                PrimaryDateField(
+                  labelText: 'Delivery Date',
+                  hintText: selectedDeliveryDate.isNotEmpty
+                      ? selectedDeliveryDate
+                      : "DD/MM/YYYY",
+                  onChanged: (value) {
+                    setDeliverySelectedDate(value);
+                  },
                 ),
                 SizedBox(
                   height: 20 * globals.heightMediaQuery,
                 ),
-                Divider(),
+                const Divider(),
                 SizedBox(
                   height: 10 * globals.heightMediaQuery,
                 ),
@@ -164,6 +492,19 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                       'Breeding Partner',
                       style: AppFonts.title5(color: AppColors.grayscale90),
                     ),
+                    PrimaryTextButton(
+                      status: TextStatus.idle,
+                      text: selectedbreedPartner,
+                      onPressed: () {
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //       builder: (context) => const SearchBreedingPartner(),
+                        //     ));
+                        _showBreedPartnerSelectionSheet(context);
+                      },
+                      position: TextButtonPosition.right,
+                    ),
                   ],
                 ),
                 SizedBox(
@@ -172,9 +513,9 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                 ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: widget.breedingEvent.partner.length,
+                  itemCount: breedPartners.length,
                   itemBuilder: (context, index) {
-                    final child = widget.breedingEvent.partner[index];
+                    final child = breedPartners[index];
                     return ListTile(
                       onTap: () {},
                       contentPadding: EdgeInsets.zero,
@@ -207,7 +548,7 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                     );
                   },
                 ),
-                Divider(),
+                const Divider(),
                 SizedBox(
                   height: 6 * globals.heightMediaQuery,
                 ),
@@ -218,7 +559,7 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                 SizedBox(
                   height: 16 * globals.heightMediaQuery,
                 ),
-                widget.breedingEvent.children.isEmpty
+                selectedChildren.isEmpty
                     ? Column(
                         children: [
                           SizedBox(
@@ -232,9 +573,9 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                     : ListView.builder(
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        itemCount: widget.breedingEvent.children.length,
+                        itemCount: selectedChildren.length,
                         itemBuilder: (context, index) {
-                          final child = widget.breedingEvent.children[index];
+                          final child = selectedChildren[index];
                           return ListTile(
                             onTap: () {},
                             contentPadding: EdgeInsets.zero,
@@ -272,10 +613,7 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                       ),
                 InkWell(
                   onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) => const SearchChildren()),
-                    );
+                    _showBreedChildrenSelectionSheet(context);
                   },
                   child: Row(
                     children: [
@@ -294,11 +632,7 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                     ],
                   ),
                 ),
-                Divider(),
-                SizedBox(
-                  height: 24 * globals.heightMediaQuery,
-                ),
-                SizedBox(height: 16 * globals.heightMediaQuery),
+                const Divider(),
                 SizedBox(
                   height: 24 * globals.heightMediaQuery,
                 ),
@@ -319,7 +653,7 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                   height: 16 * globals.heightMediaQuery,
                 ),
                 ParagraphTextField(
-                  hintText: 'Add Notes',
+                  hintText: breedingEventNotesController.text,
                   maxLines: 6,
                   onChanged: (value) {
                     setState(() {
@@ -335,7 +669,45 @@ class _EditBreedingEventDetailsState extends State<EditBreedingEventDetails> {
                   width: 343 * globals.widthMediaQuery,
                   child: PrimaryButton(
                     text: 'Save Changes',
-                    onPressed: () {},
+                    onPressed: () {
+                      final updatedBreedingEventDetails =
+                          widget.breedingEvent.copyWith(
+                        eventNumber: breedingEventNumberController.text,
+                        breedingDate: selectedBreedingDate,
+                        deliveryDate: selectedDeliveryDate,
+                        partner: breedPartners,
+                        children: selectedChildren,
+                      );
+                      final animalIndex = ref
+                          .read(ovianimalsProvider)
+                          .indexWhere((animal) =>
+                              animal.animalName ==
+                              widget.OviDetails.animalName);
+
+                      if (animalIndex == -1) {
+                        // Animal not found, you can show an error message or handle it accordingly
+                      }
+                      final breedingEvent = ref
+                              .read(ovianimalsProvider)[animalIndex]
+                              .breedingEvents[widget.OviDetails.animalName] ??
+                          [];
+                      final index = breedingEvent.indexOf(widget.breedingEvent);
+                      if (index >= 0) {
+                        breedingEvent[index] = updatedBreedingEventDetails;
+                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ListOfBreedingEvents(
+                            shouldAddBreedEvent: false,
+                            OviDetails: widget.OviDetails,
+                            breedingEvents: widget.breedingEvents,
+                            // breedingEventNumberController:
+                            //     breedingEventNumberController,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
                 SizedBox(

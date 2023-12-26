@@ -694,18 +694,10 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => ListOfBreedingEvents(
-                    breedingNotesController: _breedingnotesController,
-                    breedingEventNumberController:
-                        _breedingeventnumberController,
-                    selectedBreedSire: '',
-                    selectedBreedDam: '',
-                    selectedBreedPartner: '',
-                    selectedBreedChildren: '',
-                    selectedBreedingDate: selectedBreedingDate,
-                    selectedDeliveryDate: selectedDeliveryDate,
                     shouldAddBreedEvent: true,
                     OviDetails: widget.OviDetails,
                     breedingEvents: widget.breedingEvents,
+                    // breedingEventNumberController: TextEditingController(),
                   ),
                 ),
               );
