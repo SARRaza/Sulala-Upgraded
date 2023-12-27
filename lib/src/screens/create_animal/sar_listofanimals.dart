@@ -253,14 +253,15 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                     hintText: "Search by name or ID".tr,
                     icon: Icons.filter_alt_outlined,
                     // controller: _searchController,
-                    onIconPressed: () {
-                      Navigator.push(
+                    onIconPressed: () async {
+                      await Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => SarAnimalFilters(
                                   breedingEvents: widget.breedingEvents,
                                 )),
                       );
+                      setState(() {});
                     },
                   ),
                   SizedBox(

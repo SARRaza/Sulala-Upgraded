@@ -23,7 +23,7 @@ class SarAnimalFilters extends ConsumerStatefulWidget {
 }
 
 class _SarAnimalFilters extends ConsumerState<SarAnimalFilters> {
-  Map<String, List<String>> sectionItems = {
+  Map<String, List<String>> filterItems = {
     'Animal Type': ['Mammal', 'Oviparous'],
     'Animal Species': ['Sheep', 'Cow', 'Horse'],
     'Animal Breed': ['Altafai stoat', 'East Siberian stoat', 'Gobi stoat'],
@@ -37,7 +37,7 @@ class _SarAnimalFilters extends ConsumerState<SarAnimalFilters> {
   @override
   void initState() {
     super.initState();
-    for (var heading in sectionItems.keys) {
+    for (var heading in filterItems.keys) {
       selectedAnimals[heading] = null;
     }
   }
@@ -378,7 +378,7 @@ class _SarAnimalFilters extends ConsumerState<SarAnimalFilters> {
               onPressed: () {
                 setState(() {
                   selectedAnimals.clear();
-                  for (var heading in sectionItems.keys) {
+                  for (var heading in filterItems.keys) {
                     selectedAnimals[heading] = null;
                   }
                 });
@@ -398,7 +398,7 @@ class _SarAnimalFilters extends ConsumerState<SarAnimalFilters> {
       body: ListView(
         children: [
           for (var sectionIndex = 0;
-              sectionIndex < sectionItems.length;
+              sectionIndex < filterItems.length;
               sectionIndex++)
             _buildSection(sectionIndex),
         ],
@@ -418,15 +418,7 @@ class _SarAnimalFilters extends ConsumerState<SarAnimalFilters> {
                 .read(selectedFiltersProvider.notifier)
                 .update((state) => selectedFiltersList);
 
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const UserListOfAnimals(
-                  shouldAddAnimal: false,
-                  breedingEvents: [],
-                ),
-              ),
-            );
+            Navigator.pop(context);
           },
           text: "Continue",
         ),
@@ -462,8 +454,8 @@ class _SarAnimalFilters extends ConsumerState<SarAnimalFilters> {
   }
 
   Widget _buildSection(int sectionIndex) {
-    String sectionHeading = sectionItems.keys.elementAt(sectionIndex);
-    List<String> sectionLanguages = sectionItems[sectionHeading]!;
+    String sectionHeading = filterItems.keys.elementAt(sectionIndex);
+    List<String> sectionLanguages = filterItems[sectionHeading]!;
     String? selectedLanguage = selectedAnimals[sectionHeading];
 
     bool showShowMoreButton =
