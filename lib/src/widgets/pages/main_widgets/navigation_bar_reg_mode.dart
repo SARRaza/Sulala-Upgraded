@@ -23,7 +23,9 @@ class _NavigationBarRegModeState extends State<NavigationBarRegMode> {
       shouldAddAnimal: false,
       breedingEvents: [],
     ),
-    const ProfilePage(),
+    const ProfilePage(
+      showEditIcon: true,
+    ),
   ];
 
   @override

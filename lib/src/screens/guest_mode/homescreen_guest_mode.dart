@@ -76,13 +76,6 @@ class _HomeScreenGuestModeState extends State<HomeScreenGuestMode> {
                     ),
                   ),
                   SizedBox(width: globals.widthMediaQuery * 4),
-                  InkWell(
-                    onTap: () {},
-                    child: const Image(
-                      image: AssetImage(
-                          'assets/icons/frame/24px/Icon-button1.png'),
-                    ),
-                  ),
                 ],
               ),
             ],

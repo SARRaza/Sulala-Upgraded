@@ -23,7 +23,9 @@ class _NavigationBarGuestModeState extends State<NavigationBarGuestMode> {
     const GuestModeUserListOfAnimals(
       selectedFilters: [],
     ),
-    const ProfilePage(),
+    const ProfilePage(
+      showEditIcon: false,
+    ),
   ];
 
   @override

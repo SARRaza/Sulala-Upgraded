@@ -8,7 +8,7 @@ import '../../widgets/controls_and_buttons/buttons/navigate_button.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/buttons/secondary_button.dart';
 import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
-import '../../widgets/other/three_information_block.dart';
+import '../../widgets/other/profile_three_information_block.dart';
 import 'about_app.dart';
 import 'app_setting.dart';
 import 'customer_support.dart';
@@ -20,7 +20,8 @@ import 'shimmer_profile_page.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 class ProfilePage extends ConsumerStatefulWidget {
-  const ProfilePage({super.key});
+  final bool showEditIcon;
+  const ProfilePage({super.key, required this.showEditIcon});
 
   @override
   ConsumerState<ProfilePage> createState() => _ProfilePageState();
@@ -60,29 +61,30 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           style: AppFonts.title3(color: AppColors.grayscale90),
         ),
         actions: [
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const EditProfileInformation(),
-                ),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                ),
-                child: const Image(
-                  image: AssetImage(
-                      'assets/icons/frame/24px/edit_icon_button.png'),
+          if (widget.showEditIcon)
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const EditProfileInformation(),
+                  ),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: const Image(
+                    image: AssetImage(
+                        'assets/icons/frame/24px/edit_icon_button.png'),
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -158,7 +160,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           ),
                         ),
                         SizedBox(height: 24 * globals.heightMediaQuery),
-                        const ThreeInformationBlock(
+                        const ProfileThreeInformationBlock(
                           head1: '24',
                           head2: '1',
                           head3: '4',
