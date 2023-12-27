@@ -5,7 +5,7 @@ import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
-import '../../widgets/pages/main_widgets/navigation_bar_guest_mode.dart';
+import '../tutorials.dart/guest_mode_tutorial.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -33,12 +33,12 @@ class _SplashScreenState extends State<SplashScreen> {
         MaterialPageRoute(
           builder: (context) => ShowCaseWidget(
             builder: Builder(
-              builder: (context) => const NavigationBarGuestMode(),
+              builder: (context) => const GuestHomeScreenTutorial(),
             ),
             onFinish: () {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                    builder: (context) => const NavigationBarGuestMode()),
+                    builder: (context) => const GuestHomeScreenTutorial()),
               );
             },
           ),

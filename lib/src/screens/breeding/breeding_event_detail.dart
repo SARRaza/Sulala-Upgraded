@@ -158,7 +158,7 @@ class _BreedingEventDetailsState extends State<BreedingEventDetails> {
                 SizedBox(
                   height: 10 * globals.heightMediaQuery,
                 ),
-                Divider(),
+                const Divider(),
                 SizedBox(
                   height: 10 * globals.heightMediaQuery,
                 ),
@@ -221,7 +221,7 @@ class _BreedingEventDetailsState extends State<BreedingEventDetails> {
                     );
                   },
                 ),
-                Divider(),
+                const Divider(),
                 SizedBox(
                   height: 6 * globals.heightMediaQuery,
                 ),
@@ -294,7 +294,7 @@ class _BreedingEventDetailsState extends State<BreedingEventDetails> {
                           );
                         },
                       ),
-                Divider(),
+                const Divider(),
                 SizedBox(
                   height: 24 * globals.heightMediaQuery,
                 ),

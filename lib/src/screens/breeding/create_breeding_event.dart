@@ -35,8 +35,6 @@ class CreateBreedingEvents extends ConsumerStatefulWidget {
 }
 
 class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
-  final TextEditingController _breedingnotesController =
-      TextEditingController();
   final TextEditingController _breedingeventnumberController =
       TextEditingController();
   String selectedBreedDam = 'Add';
