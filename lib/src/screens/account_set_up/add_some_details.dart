@@ -123,7 +123,11 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
               child: PrimaryTextButton(
                 status: TextStatus.idle,
                 text: 'Skip For Now'.tr,
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const NavigationBarRegMode()),
+                ),
               ),
             )
           ],
