@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:badges/badges.dart' as badges;
@@ -12,6 +14,9 @@ import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/tags/tags.dart';
 import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
 import '../../widgets/pages/homepage_widgets/card.dart';
+import '../search/search_page.dart';
+import '../search/search_page_animals.dart';
+import '../search/search_page_house_farm.dart';
 import 'show_filter_reg.dart';
 import 'small_card_widget.dart';
 
@@ -34,7 +39,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
   List<AnimalData> getFilteredChartData() {
     if (_selectedIndex == -1) {
       // Show data for 'ALL'
-      return _chartData;
+      return getChartData();
     } else if (_selectedIndex == 0) {
       // Show data for 'Mammals'
       return _getSpeciesChartData(mammalSpeciesList);
@@ -114,7 +119,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
   void initState() {
     _chartData = getChartData();
     sumOfNextTwoCards = _chartData[0].quan + _chartData[1].quan;
-    getFilteredChartData();
+
     super.initState();
   }
 
@@ -132,8 +137,8 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
     });
   }
 
-  void _showFilterModalSheet(BuildContext context) {
-    showModalBottomSheet(
+  Future<void> _showFilterModalSheet(BuildContext context) async {
+    await showModalBottomSheet(
       showDragHandle: true,
       backgroundColor: Colors.transparent,
       context: context,
@@ -157,6 +162,8 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
         );
       },
     );
+    setState(() {
+    });
   }
 
   void _removeEvent(int index) {
@@ -184,9 +191,11 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
               Row(
                 children: [
                   InkWell(
-                    onTap: () {
-                      Navigator.of(context).pushNamed('/search');
-                    },
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const SearchPage(),
+                      ),
+                    ),
                     child: const Image(
                       image:
                           AssetImage('assets/icons/frame/24px/Icon-button.png'),
@@ -453,9 +462,11 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                           iconPath: 'assets/icons/frame/24px/Cow_Icon.png',
                           title: 'Searching\nfor animals?'.tr,
                           buttonText: 'Find animals'.tr,
-                          onPressed: () {
-                            Navigator.of(context).pushNamed('/search_animals');
-                          },
+                          onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const SearchPageAnimals(),
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(width: globals.widthMediaQuery * 6),
@@ -465,10 +476,11 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                           iconPath: 'assets/icons/frame/24px/Farm_house.png',
                           title: 'Searching \nfor farm?'.tr,
                           buttonText: 'Find farms'.tr,
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pushNamed('/search_house_farm');
-                          },
+                          onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const SearchPageHouseFarm(),
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -484,8 +496,15 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
   }
 
   List<AnimalData> getChartData() {
-    final int mammalCount = ref.refresh(mammalCountProvider);
-    final int oviparousCount = ref.refresh(oviparousCountProvider);
+    final currentStateFilterActive = currentStateTags.any((tag) => tag.status == TagStatus.active);
+    final medicalStateFilterActive = medicalStateTags.any((tag) => tag.status == TagStatus.active);
+    final otherFilterActive = otherStateTags.any((tag) => tag.status == TagStatus.active);
+
+    final mammalCount = countFilteredMammals(currentStateFilterActive,
+        medicalStateFilterActive, otherFilterActive);
+    final oviparousCount = countFilteredOviparous(currentStateFilterActive,
+        medicalStateFilterActive, otherFilterActive);
+
     final List<AnimalData> chartData = [
       AnimalData(
         'Mammals'.tr,
@@ -501,9 +520,60 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
     return chartData;
   }
 
+  int countFilteredMammals(currentStateFilterActive, medicalStateFilterActive, otherFilterActive) {
+    int mammalCount = 0;
+
+    bool filtersActive =  currentStateFilterActive || medicalStateFilterActive
+        || otherFilterActive;
+
+    if(filtersActive) {
+      mammalCount = ref.read(ovianimalsProvider).where(
+              (animal) => animal.selectedAnimalType.toLowerCase() == 'mammal' &&
+              (!currentStateFilterActive || animal.selectedOviChips.any(
+                      (chip) => currentStateTags.any((tag) => tag.status ==
+                      TagStatus.active && tag.name == chip))) && (
+              !medicalStateFilterActive || animal.selectedOviChips.any(
+                      (chip) => medicalStateTags.any((tag) => tag.status ==
+                      TagStatus.active && tag.name == chip))) && (
+              !otherFilterActive || animal.selectedOviChips.any(
+                      (chip) => otherStateTags.any((tag) => tag.status ==
+                      TagStatus.active && tag.name == chip)))).length;
+    } else {
+      mammalCount = ref.refresh(mammalCountProvider);
+    }
+
+    return mammalCount;
+  }
+
+  int countFilteredOviparous(currentStateFilterActive, medicalStateFilterActive, otherFilterActive) {
+    int oviparousCount = 0;
+
+    bool filtersActive =  currentStateFilterActive || medicalStateFilterActive
+        || otherFilterActive;
+
+    if(filtersActive) {
+      oviparousCount = ref.read(ovianimalsProvider).where(
+              (animal) => animal.selectedAnimalType.toLowerCase() == 'oviparous'
+                  &&
+              (!currentStateFilterActive || animal.selectedOviChips.any(
+                      (chip) => currentStateTags.any((tag) => tag.status ==
+                      TagStatus.active && tag.name == chip))) && (
+              !medicalStateFilterActive || animal.selectedOviChips.any(
+                      (chip) => medicalStateTags.any((tag) => tag.status ==
+                      TagStatus.active && tag.name == chip))) && (
+              !otherFilterActive || animal.selectedOviChips.any(
+                      (chip) => otherStateTags.any((tag) => tag.status ==
+                      TagStatus.active && tag.name == chip)))).length;
+    } else {
+      oviparousCount = ref.refresh(oviparousCountProvider);
+    }
+
+    return oviparousCount;
+  }
+
   List<Widget> _buildLegendItems() {
     if (_selectedIndex == -1) {
-      final filteredData = _chartData.where((data) => data.quan > 0);
+      final filteredData = getFilteredChartData();
 
       return filteredData.map((data) {
         return Row(

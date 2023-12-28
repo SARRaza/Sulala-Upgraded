@@ -11,9 +11,9 @@ import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 import '../sign_in/sign_in.dart';
 import '../sign_up/join_now.dart';
-import 'search_page.dart';
-import 'search_page_animals.dart';
-import 'search_page_house_farm.dart';
+import '../search/search_page.dart';
+import '../search/search_page_animals.dart';
+import '../search/search_page_house_farm.dart';
 import 'shimmer_homescreen.dart';
 
 class HomeScreenGuestMode extends StatefulWidget {

@@ -3,7 +3,15 @@ import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
-class NotificationList extends StatelessWidget {
+class NotificationList extends StatefulWidget {
+
+  const NotificationList({super.key});
+
+  @override
+  State<NotificationList> createState() => _NotificationListState();
+}
+
+class _NotificationListState extends State<NotificationList> {
   final List<Map<String, dynamic>> notifications = [
     {
       'imagePath': 'assets/icons/frame/24px/Frame-39.png',
@@ -28,8 +36,6 @@ class NotificationList extends StatelessWidget {
     },
     // Add more data here if needed
   ];
-
-  NotificationList({super.key});
 
   String formatTimeAgo(DateTime time) {
     final now = DateTime.now();
@@ -97,68 +103,83 @@ class NotificationList extends StatelessWidget {
                     final notification = notifications[index];
                     final timeAgo =
                         formatTimeAgo(notification['time'] as DateTime);
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        radius: globals.widthMediaQuery * 24,
-                        backgroundImage:
-                            AssetImage(notification['imagePath'] as String),
-                      ),
-                      title: Text(
-                        truncateTextWithEllipsis(
-                            notification['title'] as String, 15),
-                        style: AppFonts.headline4(color: AppColors.grayscale90),
-                      ),
-                      subtitle: Text(
-                        truncateTextWithEllipsis(
-                            notification['subtitle'] as String, 20),
-                        style: AppFonts.body2(color: AppColors.grayscale70),
-                      ),
-                      trailing: (notification['subtitle'] == 'Request')
-                          ? Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: () {
-                                    // Handle 'Yes' button click
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    elevation: 0,
-                                    backgroundColor: AppColors.primary50,
-                                    shape: const CircleBorder(),
-                                    padding: EdgeInsets.all(
-                                        globals.widthMediaQuery * 12),
-                                  ),
-                                  child: const Icon(
-                                    Icons.check,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                // SizedBox(width: 8),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    // Handle 'No' button click
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.grayscale10,
-                                    elevation: 0,
-                                    shape: const CircleBorder(),
-                                    padding: EdgeInsets.all(
-                                        globals.widthMediaQuery * 12),
-                                  ),
-                                  child: const Icon(Icons.close_rounded,
-                                      color: AppColors.grayscale90),
-                                ),
-                              ],
-                            )
-                          : Text(
-                              timeAgo,
-                              style:
-                                  AppFonts.body2(color: AppColors.grayscale60),
-                            ),
-                      onTap: () {
-                        // Handle tap on the list item
+                    return Dismissible(
+                      key: Key(notification['title']),
+                      onDismissed: (direction) {
+                        // Remove the item from the list
+                        setState(() {
+                          notifications.removeAt(index);
+                        });
                       },
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          radius: globals.widthMediaQuery * 24,
+                          backgroundImage:
+                              AssetImage(notification['imagePath'] as String),
+                        ),
+                        title: Text(
+                          truncateTextWithEllipsis(
+                              notification['title'] as String, 15),
+                          style: AppFonts.headline4(color: AppColors.grayscale90),
+                        ),
+                        subtitle: Text(
+                          truncateTextWithEllipsis(
+                              notification['subtitle'] as String, 20),
+                          style: AppFonts.body2(color: AppColors.grayscale70),
+                        ),
+                        trailing: (notification['subtitle'] == 'Request')
+                            ? Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      // Handle 'Yes' button click
+                                      setState(() {
+                                        notifications.removeAt(index);
+                                      });
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      backgroundColor: AppColors.primary50,
+                                      shape: const CircleBorder(),
+                                      padding: EdgeInsets.all(
+                                          globals.widthMediaQuery * 12),
+                                    ),
+                                    child: const Icon(
+                                      Icons.check,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  // SizedBox(width: 8),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      // Handle 'No' button click
+                                      setState(() {
+                                        notifications.removeAt(index);
+                                      });
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.grayscale10,
+                                      elevation: 0,
+                                      shape: const CircleBorder(),
+                                      padding: EdgeInsets.all(
+                                          globals.widthMediaQuery * 12),
+                                    ),
+                                    child: const Icon(Icons.close_rounded,
+                                        color: AppColors.grayscale90),
+                                  ),
+                                ],
+                              )
+                            : Text(
+                                timeAgo,
+                                style:
+                                    AppFonts.body2(color: AppColors.grayscale60),
+                              ),
+                        onTap: () {
+                          // Handle tap on the list item
+                        },
+                      ),
                     );
                   },
                 ),
