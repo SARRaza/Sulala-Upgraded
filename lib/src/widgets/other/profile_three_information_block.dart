@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -101,7 +102,7 @@ class ProfileThreeInformationBlock extends StatelessWidget {
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
                 Text(
-                  "Staffs",
+                  'Collaborations'.tr,
                   style: AppFonts.caption2(color: AppColors.grayscale70),
                 ),
               ],
