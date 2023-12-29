@@ -160,10 +160,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           ),
                         ),
                         SizedBox(height: 24 * globals.heightMediaQuery),
-                        const ProfileThreeInformationBlock(
-                          head1: '24',
+                        ProfileThreeInformationBlock(
+                          head1: ref.refresh(totalAnimalsCountProvider).toString(),
                           head2: '1',
-                          head3: '4',
+                          head3: '5',
                         ),
                         SizedBox(height: 24 * globals.heightMediaQuery),
                       ],

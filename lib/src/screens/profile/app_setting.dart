@@ -181,21 +181,22 @@ class _AppSettings extends ConsumerState<AppSettings> {
     {'name': 'English', 'locale': const Locale('en', 'US')},
     {'name': 'Hindi', 'locale': const Locale('hi', 'IN')},
     {'name': 'Arabic', 'locale': const Locale('ar', 'SA')},
+    {'name': 'French', 'locale': const Locale('fr', 'FR')}
   ];
 
   String selectedLanguage = ''; // Default language
   String selectedLanguageTemp = '';
 
   void _showLanguageSelection() {
-    double sheetHeight = MediaQuery.of(context).size.height * 0.42;
+    double sheetHeight = MediaQuery.of(context).size.height * 0.60;
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
-            return SizedBox(
-              height: sheetHeight,
+            return Container(
+              constraints: BoxConstraints(maxHeight: sheetHeight),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
