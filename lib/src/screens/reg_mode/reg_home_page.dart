@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/screens/create_animal/owned_animal_detail_reg_mode.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
@@ -50,11 +51,24 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
   }
 
   List<AnimalData> _getSpeciesChartData(List<String> speciesList) {
-    final speciesCountProvider = _selectedIndex == 0
-        ? mammalSpeciesCountProvider
-        : oviparousSpeciesCountProvider;
+    Map<String, int> speciesCount = {};
 
-    final speciesCount = ref.refresh(speciesCountProvider);
+    final currentStateFilterActive = currentStateTags.any((tag) => tag.status ==
+        TagStatus.active);
+    final medicalStateFilterActive = medicalStateTags.any((tag) => tag.status ==
+        TagStatus.active);
+    final otherFilterActive = otherStateTags.any((tag) => tag.status ==
+        TagStatus.active);
+    final filtersActive = currentStateFilterActive || medicalStateFilterActive
+        || otherFilterActive;
+
+    if(filtersActive) {
+      speciesCount = countFilteredSpecies(speciesList, currentStateFilterActive,
+          medicalStateFilterActive, otherFilterActive);
+    } else {
+      speciesCount = ref.refresh(_selectedIndex == 0
+          ? mammalSpeciesCountProvider : oviparousSpeciesCountProvider);
+    }
 
     return speciesList
         .map((species) => AnimalData(species, speciesCount[species] ?? 0,
@@ -422,32 +436,35 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                         itemBuilder: (BuildContext context, int index) {
                           final ReminderItem dateItem = reminders[index];
 
-                          return ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            title: Row(
-                              children: [
-                                Text(
-                                  dateItem.animalNames,
-                                  style: AppFonts.body1(
-                                      color: AppColors.grayscale90),
-                                ),
-                                SizedBox(width: globals.widthMediaQuery * 4),
-                                Text(
-                                  dateItem.dateType,
-                                  style: AppFonts.body1(
-                                      color: AppColors.grayscale90),
-                                ),
-                              ],
+                          return GestureDetector(
+                            onTap: () => navigateToAnimal(dateItem.animalNames),
+                            child: ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              title: Row(
+                                children: [
+                                  Text(
+                                    dateItem.animalNames,
+                                    style: AppFonts.body1(
+                                        color: AppColors.grayscale90),
+                                  ),
+                                  SizedBox(width: globals.widthMediaQuery * 4),
+                                  Text(
+                                    dateItem.dateType,
+                                    style: AppFonts.body1(
+                                        color: AppColors.grayscale90),
+                                  ),
+                                ],
+                              ),
+                              subtitle: Text(
+                                dateItem.dateInfo,
+                                style:
+                                    AppFonts.body2(color: AppColors.grayscale60),
+                              ),
+                              trailing: Icon(Icons.arrow_forward_ios_rounded,
+                                  color: AppColors.primary40,
+                                  size: globals.widthMediaQuery * 12.75),
+                              // You can customize the ListTile as per your requirements
                             ),
-                            subtitle: Text(
-                              dateItem.dateInfo,
-                              style:
-                                  AppFonts.body2(color: AppColors.grayscale60),
-                            ),
-                            trailing: Icon(Icons.arrow_forward_ios_rounded,
-                                color: AppColors.primary40,
-                                size: globals.widthMediaQuery * 12.75),
-                            // You can customize the ListTile as per your requirements
                           );
                         },
                       ),
@@ -571,6 +588,42 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
     return oviparousCount;
   }
 
+  Map<String, int> countFilteredSpecies(List<String> speciesList,
+      currentStateFilterActive,
+      medicalStateFilterActive, otherFilterActive) {
+    Map<String, int> speciesCount = {};
+    final animalType = _selectedIndex == 0 ? 'mammal' : 'oviparous';
+    final animals = ref.read(ovianimalsProvider).where(
+            (animal) =>
+        animal.selectedAnimalType.toLowerCase() == animalType
+            &&
+            (
+                !currentStateFilterActive || animal.selectedOviChips.any(
+                        (chip) =>
+                        currentStateTags.any((tag) =>
+                        tag.status ==
+                            TagStatus.active && tag.name == chip))) && (
+            !medicalStateFilterActive || animal.selectedOviChips.any(
+                    (chip) =>
+                    medicalStateTags.any((tag) =>
+                    tag.status ==
+                        TagStatus.active && tag.name == chip))) && (
+            !otherFilterActive || animal.selectedOviChips.any(
+                    (chip) =>
+                    otherStateTags.any((tag) =>
+                    tag.status ==
+                        TagStatus.active && tag.name == chip)))).toList();
+
+
+    for (final species in speciesList) {
+      final count = animals
+          .where((animal) => animal.selectedAnimalSpecies == species)
+          .length;
+      speciesCount[species] = count;
+    }
+    return speciesCount;
+  }
+
   List<Widget> _buildLegendItems() {
     if (_selectedIndex == -1) {
       final filteredData = getFilteredChartData();
@@ -586,14 +639,32 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
         );
       }).toList();
     } else {
-      final speciesList =
-          _selectedIndex == 0 ? mammalSpeciesList : oviparousSpeciesList;
+      Map<String, int> speciesCount = {};
+      final speciesList = _selectedIndex == 0 ? mammalSpeciesList
+          : oviparousSpeciesList;
 
-      final speciesCountProvider = _selectedIndex == 0
-          ? mammalSpeciesCountProvider
-          : oviparousSpeciesCountProvider;
+      final currentStateFilterActive = currentStateTags.any((tag) => tag.status ==
+          TagStatus.active);
+      final medicalStateFilterActive = medicalStateTags.any((tag) => tag.status ==
+          TagStatus.active);
+      final otherFilterActive = otherStateTags.any((tag) => tag.status ==
+          TagStatus.active);
+      final filtersActive = currentStateFilterActive || medicalStateFilterActive
+          || otherFilterActive;
 
-      final speciesCount = ref.watch(speciesCountProvider);
+      if(filtersActive) {
+        speciesCount = countFilteredSpecies(speciesList,
+            currentStateFilterActive, medicalStateFilterActive,
+            otherFilterActive);
+      } else {
+        final speciesCountProvider = _selectedIndex == 0
+            ? mammalSpeciesCountProvider
+            : oviparousSpeciesCountProvider;
+
+        speciesCount = ref.watch(speciesCountProvider);
+      }
+
+
 
       final filteredSpeciesList = speciesList.where((species) {
         final count = speciesCount[species] ?? 0;
@@ -613,6 +684,16 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
         );
       }).toList();
     }
+  }
+
+  void navigateToAnimal(String animalName) {
+    final animal = ref.read(ovianimalsProvider).firstWhere(
+            (animal) => animal.animalName == animalName);
+
+    Navigator.push(context, MaterialPageRoute(builder: (context) =>
+        OwnedAnimalDetailsRegMode(imagePath: '', title: '',
+            geninfo: '', OviDetails: animal,
+            breedingEvents: [])));
   }
 }
 
