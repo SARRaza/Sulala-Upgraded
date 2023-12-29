@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -51,7 +51,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
   }
 
   List<AnimalData> _getSpeciesChartData(List<String> speciesList) {
-    Map<String, int> speciesCount = {};
+    List<AnimalData> chartData = [];
 
     final currentStateFilterActive = currentStateTags.any((tag) => tag.status ==
         TagStatus.active);
@@ -63,17 +63,28 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
         || otherFilterActive;
 
     if(filtersActive) {
-      speciesCount = countFilteredSpecies(speciesList, currentStateFilterActive,
-          medicalStateFilterActive, otherFilterActive);
+      final animalType = _selectedIndex == 0 ? 'mammal' : 'oviparous';
+      final tags = currentStateTags + medicalStateTags + otherStateTags;
+      for (var tag in tags) {
+        if(tag.status == TagStatus.active) {
+          final count = ref.read(ovianimalsProvider).where((animal) =>
+          animal.selectedAnimalType.toLowerCase() == animalType &&
+              animal.selectedOviChips.contains(tag.name)).toList().length;
+          final color = tagColors[tag.name];
+          chartData.add(AnimalData(tag.name, count, color!));
+        }
+      }
     } else {
-      speciesCount = ref.refresh(_selectedIndex == 0
+      final speciesCount = ref.refresh(_selectedIndex == 0
           ? mammalSpeciesCountProvider : oviparousSpeciesCountProvider);
+      chartData = speciesList
+          .map((species) => AnimalData(species, speciesCount[species] ?? 0,
+          Colors.blue)) // Replace Colors.blue with the desired color
+          .toList();
     }
 
-    return speciesList
-        .map((species) => AnimalData(species, speciesCount[species] ?? 0,
-            Colors.blue)) // Replace Colors.blue with the desired color
-        .toList();
+
+    return chartData;
   }
 
   List<Tag> currentStateTags = [
@@ -96,6 +107,22 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
     Tag(name: 'Sold'.tr, status: TagStatus.notActive),
     Tag(name: 'Dead'.tr, status: TagStatus.notActive),
   ];
+
+  Map<String, Color> tagColors = {
+    'Borrowed': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Adopted': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Donated': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Escaped': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Stolen': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Transferred': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Injured': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Sick': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Quarantined': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Medication': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Testing': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Sold': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Dead': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+  };
 
   late List<AnimalData> _chartData;
   int sumOfNextTwoCards = 0;
@@ -513,115 +540,44 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
   }
 
   List<AnimalData> getChartData() {
+    List<AnimalData> chartData = [];
     final currentStateFilterActive = currentStateTags.any((tag) => tag.status == TagStatus.active);
     final medicalStateFilterActive = medicalStateTags.any((tag) => tag.status == TagStatus.active);
     final otherFilterActive = otherStateTags.any((tag) => tag.status == TagStatus.active);
 
-    final mammalCount = countFilteredMammals(currentStateFilterActive,
-        medicalStateFilterActive, otherFilterActive);
-    final oviparousCount = countFilteredOviparous(currentStateFilterActive,
-        medicalStateFilterActive, otherFilterActive);
+    bool filtersActive =  currentStateFilterActive || medicalStateFilterActive
+        || otherFilterActive;
 
-    final List<AnimalData> chartData = [
-      AnimalData(
-        'Mammals'.tr,
-        mammalCount,
-        const Color.fromRGBO(175, 197, 86, 1),
-      ),
-      AnimalData(
-        'Oviparous'.tr,
-        oviparousCount,
-        const Color.fromARGB(255, 254, 255, 168),
-      ),
-    ];
+    if(filtersActive) {
+      final tags = currentStateTags + medicalStateTags + otherStateTags;
+      for (var tag in tags) {
+        if(tag.status == TagStatus.active) {
+          final count = ref.read(ovianimalsProvider).where((animal) =>
+              animal.selectedOviChips.contains(tag.name)).toList().length;
+          final color = tagColors[tag.name];
+          chartData.add(AnimalData(tag.name, count, color!));
+        }
+      }
+    } else {
+      final mammalCount = ref.refresh(mammalCountProvider);
+      final oviparousCount = ref.refresh(oviparousCountProvider);
+      chartData = [
+        AnimalData(
+          'Mammals'.tr,
+          mammalCount,
+          const Color.fromRGBO(175, 197, 86, 1),
+        ),
+        AnimalData(
+          'Oviparous'.tr,
+          oviparousCount,
+          const Color.fromARGB(255, 254, 255, 168),
+        ),
+      ];
+    }
+
+
+
     return chartData;
-  }
-
-  int countFilteredMammals(currentStateFilterActive, medicalStateFilterActive, otherFilterActive) {
-    int mammalCount = 0;
-
-    bool filtersActive =  currentStateFilterActive || medicalStateFilterActive
-        || otherFilterActive;
-
-    if(filtersActive) {
-      mammalCount = ref.read(ovianimalsProvider).where(
-              (animal) => animal.selectedAnimalType.toLowerCase() == 'mammal' &&
-              (!currentStateFilterActive || animal.selectedOviChips.any(
-                      (chip) => currentStateTags.any((tag) => tag.status ==
-                      TagStatus.active && tag.name == chip))) && (
-              !medicalStateFilterActive || animal.selectedOviChips.any(
-                      (chip) => medicalStateTags.any((tag) => tag.status ==
-                      TagStatus.active && tag.name == chip))) && (
-              !otherFilterActive || animal.selectedOviChips.any(
-                      (chip) => otherStateTags.any((tag) => tag.status ==
-                      TagStatus.active && tag.name == chip)))).length;
-    } else {
-      mammalCount = ref.refresh(mammalCountProvider);
-    }
-
-    return mammalCount;
-  }
-
-  int countFilteredOviparous(currentStateFilterActive, medicalStateFilterActive, otherFilterActive) {
-    int oviparousCount = 0;
-
-    bool filtersActive =  currentStateFilterActive || medicalStateFilterActive
-        || otherFilterActive;
-
-    if(filtersActive) {
-      oviparousCount = ref.read(ovianimalsProvider).where(
-              (animal) => animal.selectedAnimalType.toLowerCase() == 'oviparous'
-                  &&
-              (!currentStateFilterActive || animal.selectedOviChips.any(
-                      (chip) => currentStateTags.any((tag) => tag.status ==
-                      TagStatus.active && tag.name == chip))) && (
-              !medicalStateFilterActive || animal.selectedOviChips.any(
-                      (chip) => medicalStateTags.any((tag) => tag.status ==
-                      TagStatus.active && tag.name == chip))) && (
-              !otherFilterActive || animal.selectedOviChips.any(
-                      (chip) => otherStateTags.any((tag) => tag.status ==
-                      TagStatus.active && tag.name == chip)))).length;
-    } else {
-      oviparousCount = ref.refresh(oviparousCountProvider);
-    }
-
-    return oviparousCount;
-  }
-
-  Map<String, int> countFilteredSpecies(List<String> speciesList,
-      currentStateFilterActive,
-      medicalStateFilterActive, otherFilterActive) {
-    Map<String, int> speciesCount = {};
-    final animalType = _selectedIndex == 0 ? 'mammal' : 'oviparous';
-    final animals = ref.read(ovianimalsProvider).where(
-            (animal) =>
-        animal.selectedAnimalType.toLowerCase() == animalType
-            &&
-            (
-                !currentStateFilterActive || animal.selectedOviChips.any(
-                        (chip) =>
-                        currentStateTags.any((tag) =>
-                        tag.status ==
-                            TagStatus.active && tag.name == chip))) && (
-            !medicalStateFilterActive || animal.selectedOviChips.any(
-                    (chip) =>
-                    medicalStateTags.any((tag) =>
-                    tag.status ==
-                        TagStatus.active && tag.name == chip))) && (
-            !otherFilterActive || animal.selectedOviChips.any(
-                    (chip) =>
-                    otherStateTags.any((tag) =>
-                    tag.status ==
-                        TagStatus.active && tag.name == chip)))).toList();
-
-
-    for (final species in speciesList) {
-      final count = animals
-          .where((animal) => animal.selectedAnimalSpecies == species)
-          .length;
-      speciesCount[species] = count;
-    }
-    return speciesCount;
   }
 
   List<Widget> _buildLegendItems() {
@@ -639,7 +595,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
         );
       }).toList();
     } else {
-      Map<String, int> speciesCount = {};
+      List<Widget> legendItems = [];
       final speciesList = _selectedIndex == 0 ? mammalSpeciesList
           : oviparousSpeciesList;
 
@@ -652,37 +608,55 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
       final filtersActive = currentStateFilterActive || medicalStateFilterActive
           || otherFilterActive;
 
+
       if(filtersActive) {
-        speciesCount = countFilteredSpecies(speciesList,
-            currentStateFilterActive, medicalStateFilterActive,
-            otherFilterActive);
+        final tags = currentStateTags + medicalStateTags + otherStateTags;
+        final animalType = _selectedIndex == 0 ? 'mammal' : 'oviparous';
+
+        for(var tag in tags) {
+          if(tag.status == TagStatus.active) {
+            final count = ref.read(ovianimalsProvider).where(
+                    (animal) => animal.selectedAnimalType.toLowerCase() ==
+                        animalType &&
+                    animal.selectedOviChips.contains(tag.name)).toList()
+                .length;
+
+            legendItems.add(Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.circle, color: tagColors[tag.name]),
+                const SizedBox(width: 4),
+                Text('${tag.name.tr}: $count'),
+              ],
+            ));
+          }
+        }
       } else {
         final speciesCountProvider = _selectedIndex == 0
             ? mammalSpeciesCountProvider
             : oviparousSpeciesCountProvider;
 
-        speciesCount = ref.watch(speciesCountProvider);
+        final speciesCount = ref.watch(speciesCountProvider);
+        final filteredSpeciesList = speciesList.where((species) {
+          final count = speciesCount[species] ?? 0;
+          return count > 0;
+        });
+
+        legendItems = filteredSpeciesList.map((species) {
+          final count = speciesCount[species] ?? 0;
+          final color = speciesColorMap[species] ?? Colors.blue;
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.circle, color: color),
+              const SizedBox(width: 4),
+              Text('$species: $count'),
+            ],
+          );
+        }).toList();
       }
 
-
-
-      final filteredSpeciesList = speciesList.where((species) {
-        final count = speciesCount[species] ?? 0;
-        return count > 0;
-      });
-
-      return filteredSpeciesList.map((species) {
-        final count = speciesCount[species] ?? 0;
-        final color = speciesColorMap[species] ?? Colors.blue;
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.circle, color: color),
-            const SizedBox(width: 4),
-            Text('$species: $count'),
-          ],
-        );
-      }).toList();
+      return legendItems;
     }
   }
 

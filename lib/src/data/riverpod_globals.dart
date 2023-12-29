@@ -105,6 +105,13 @@ final oviparousCountProvider = Provider<int>((ref) {
       .where((animal) => animal.selectedAnimalType.toLowerCase() == 'oviparous')
       .length;
 });
+
+final totalAnimalsCountProvider = Provider<int>((ref) {
+  return ref
+      .watch(ovianimalsProvider)
+      .length;
+});
+
 List<String> mammalSpeciesList = [
   'Dog',
   'Cat',
