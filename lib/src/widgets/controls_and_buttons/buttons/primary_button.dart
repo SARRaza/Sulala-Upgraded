@@ -15,6 +15,7 @@ class PrimaryButton extends StatelessWidget {
   final VoidCallback onPressed;
   final PrimaryButtonStatus status;
   final PrimaryButtonPosition position;
+  final Size? minimumSize;
 
   const PrimaryButton({
     Key? key,
@@ -22,6 +23,7 @@ class PrimaryButton extends StatelessWidget {
     required this.onPressed,
     this.status = PrimaryButtonStatus.idle,
     this.position = PrimaryButtonPosition.primary,
+    this.minimumSize
   }) : super(key: key);
 
   @override
@@ -34,6 +36,7 @@ class PrimaryButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(globals.widthMediaQuery * 30),
         ),
+        minimumSize: minimumSize
       ),
       child: _buildButtonContent(),
     );

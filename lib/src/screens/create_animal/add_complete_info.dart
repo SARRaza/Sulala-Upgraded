@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, duplicate_ignore, iterable_contains_unrelated_type
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
@@ -65,6 +66,25 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
   bool _addOviChildren = false;
   // ignore: non_constant_identifier_names
   final ImagePicker _Animalpicker = ImagePicker();
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    _scrollController.addListener(() {
+      if (_scrollController.position.userScrollDirection != ScrollDirection.idle) {
+        if(FocusScope.of(context).hasFocus) {
+          FocusScope.of(context).unfocus();
+        }
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   void _showImagePicker(BuildContext context) {
     showModalBottomSheet(
@@ -143,192 +163,271 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
     await showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
-      showDragHandle: true,
+      showDragHandle: false,
       isScrollControlled: true,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
-            return Padding(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-              ),
-              child: Container(
-                height: MediaQuery.of(context).size.height * 1,
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    const Text(
-                      "Select Sire",
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 35,
+                  height: 4,
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFFE3E5E7),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
+                  ),
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  padding: const EdgeInsets.only(
+                    top: 40,
+                    // left: 16,
+                    // right: 16,
+                    bottom: 50,
+                  ),
+                  decoration: const ShapeDecoration(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
                       ),
                     ),
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50.0),
-                              border: Border.all(),
-                            ),
-                            child: TextField(
-                              onChanged: (value) {
-                                setState(() {
-                                  searchQuery = value.toLowerCase();
-                                });
-                              },
-                              decoration: const InputDecoration(
-                                hintText: "Search By Name Or ID",
-                                prefixIcon: Icon(Icons.search),
-                                border: InputBorder.none,
-                              ),
-                            ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 32),
+                      SizedBox(
+                        width: 343,
+                        child: Text(
+                          'Add father'.tr,
+                          style: const TextStyle(
+                            color: Color(0xFF232323),
+                            fontSize: 34,
+                            fontFamily: 'Source Serif Pro',
+                            fontWeight: FontWeight.w600,
+                            height: 0.03,
+                            letterSpacing: 0.24,
                           ),
                         ),
-                      ],
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: ovianimals.length,
-                        itemBuilder: (context, index) {
-                          // ignore: non_constant_identifier_names
-                          final OviDetails = ovianimals[index];
-
-                          final bool isSelected =
-                              selectedSire.contains(OviDetails.animalName);
-
-                          // Apply the filter here
-                          if (!OviDetails.animalName
-                                  .toLowerCase()
-                                  .contains(searchQuery) &&
-                              !OviDetails.selectedAnimalType
-                                  .toLowerCase()
-                                  .contains(searchQuery)) {
-                            return Container(); // Skip this item if it doesn't match the search query
-                          }
-
-                          return ListTile(
-                            tileColor: isSelected
-                                ? Colors.green.withOpacity(0.5)
-                                : null,
-                            shape: isSelected
-                                ? RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(50.0),
-                                  )
-                                : null,
-                            leading: CircleAvatar(
-                              radius: 25,
-                              backgroundColor: Colors.grey[100],
-                              backgroundImage:
-                                  OviDetails.selectedOviImage != null
-                                      ? FileImage(OviDetails.selectedOviImage!)
-                                      : null,
-                              child: OviDetails.selectedOviImage == null
-                                  ? const Icon(
-                                      Icons.camera_alt_outlined,
-                                      size: 50,
-                                      color: Colors.grey,
-                                    )
-                                  : null,
-                            ),
-                            title: Text(OviDetails.animalName),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Gender: ${OviDetails.selectedOviGender}'),
-                                Text(
-                                    'Father: ${OviDetails.selectedOviSire.first.animalName}'),
-                                if (OviDetails.selectedOviSire.first.father !=
-                                    null)
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          'Paternal Father: ${OviDetails.selectedOviSire.first.father!.animalName}'),
-                                      if (OviDetails
-                                              .selectedOviSire.first.mother !=
-                                          null)
-                                        Text(
-                                            'Paternal Mother: ${OviDetails.selectedOviSire.first.mother!.animalName}'),
-                                    ],
-                                  ),
-                              ],
-                            ),
-                            onTap: () {
-                              setState(() {
-                                if (isSelected) {
-                                  selectedSire.removeWhere(
-                                    (sire) =>
-                                        sire.animalName ==
-                                        OviDetails.animalName,
-                                  );
-                                } else {
-                                  // Use a default image (icon) if selectedOviImage is null
-                                  final File? oviImage =
-                                      OviDetails.selectedOviImage;
-
-                                  // Select the father if available
-                                  MainAnimalSire father =
-                                      OviDetails.selectedOviSire.first;
-
-                                  // Select the mother if available
-                                  MainAnimalDam mother =
-                                      OviDetails.selectedOviDam.first;
-
-                                  selectedSire.add(MainAnimalSire(
-                                    OviDetails.animalName,
-                                    oviImage,
-                                    OviDetails.selectedOviGender,
-                                    father: father,
-                                    mother: mother,
-                                  ));
-
-                                  // Add father to the list
-                                  selectedFather.add(father);
-
-                                  // Add mother to the list
-                                  selectedMother.add(mother);
-                                }
-                              });
-                            },
-                          );
-                        },
                       ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        ref
-                            .read(animalSireDetailsProvider.notifier)
-                            .update((state) => selectedSire);
-                        Navigator.pop(context);
-                        // Append the selected children to the existing list
-                        final List<MainAnimalSire> existingSelectedSire =
-                            ref.read(animalSireDetailsProvider);
-                        existingSelectedSire.addAll(selectedSire);
+                      const SizedBox(height: 32),
+                      Expanded(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding:
+                              const EdgeInsets.symmetric(horizontal: 16),
+                              child: Container(
+                                decoration: ShapeDecoration(
+                                  shape: RoundedRectangleBorder(
+                                    side: const BorderSide(
+                                        width: 1, color: Color(0xFFE3E5E7)),
+                                    borderRadius: BorderRadius.circular(24),
+                                  ),
+                                ),
+                                child: TextField(
+                                    onChanged: (value) {
+                                      setState(() {
+                                        searchQuery = value.toLowerCase();
+                                      });
+                                    },
+                                    decoration: const InputDecoration(
+                                        hintText: "Search By Name Or ID",
+                                        prefixIcon: Icon(Icons.search),
+                                        border: InputBorder.none,
+                                        hintStyle: TextStyle(
+                                          color: Color(0xFFA2A6AC),
+                                          fontSize: 14,
+                                          fontFamily: 'IBM Plex Sans',
+                                          fontWeight: FontWeight.w400,
+                                          height: 0.10,
+                                        ))),
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16),
+                                child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: ovianimals.length,
+                                    itemBuilder: (context, index) {
+                                      final OviDetails = ovianimals[index];
+                                      final bool isSelected = selectedSire.any(
+                                              (sire) =>
+                                          sire.animalName ==
+                                              OviDetails.animalName);
 
-                        // Also, add fathers to the list
-                        existingSelectedSire.addAll(selectedFather);
+                                      if (!OviDetails.animalName
+                                          .toLowerCase()
+                                          .contains(searchQuery) &&
+                                          !OviDetails.selectedAnimalType
+                                              .toLowerCase()
+                                              .contains(searchQuery)) {
+                                        return Container(); // Skip this item if it doesn't match the search query
+                                      }
 
-                        // Append the selected mothers to the existing list
-                        final List<MainAnimalDam> existingSelectedDam =
-                            ref.read(animalDamDetailsProvider);
-                        existingSelectedDam.addAll(selectedMother);
-                      },
-                      child: const Text("Done"),
-                    ),
-                  ],
+                                      return Material(
+                                        child: ListTile(
+                                          contentPadding: EdgeInsets.zero,
+                                          selected: isSelected,
+                                          selectedTileColor:
+                                          Colors.green.withOpacity(0.5),
+                                          shape: isSelected
+                                              ? RoundedRectangleBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(50.0),
+                                          )
+                                              : null,
+                                          leading: CircleAvatar(
+                                            radius: 25,
+                                            backgroundColor: Colors.grey[100],
+                                            backgroundImage: OviDetails
+                                                .selectedOviImage !=
+                                                null
+                                                ? FileImage(
+                                                OviDetails.selectedOviImage!)
+                                                : null,
+                                            child: OviDetails.selectedOviImage ==
+                                                null
+                                                ? const Icon(
+                                              Icons.camera_alt_outlined,
+                                              size: 50,
+                                              color: Colors.grey,
+                                            )
+                                                : null,
+                                          ),
+                                          title: Text(OviDetails.animalName),
+                                          subtitle: Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                  'Gender: ${OviDetails.selectedOviGender}'),
+                                              Text(
+                                                  'Mother: ${OviDetails.selectedOviDam.first.animalName}'),
+                                              if (OviDetails.selectedOviDam.first
+                                                  .mother !=
+                                                  null)
+                                                Column(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                        'Maternal Father: ${OviDetails.selectedOviDam.first.father!.animalName}'),
+                                                    if (OviDetails.selectedOviDam
+                                                        .first.mother !=
+                                                        null)
+                                                      Text(
+                                                          'Maternal Mother: ${OviDetails.selectedOviDam.first.mother!.animalName}'),
+                                                  ],
+                                                ),
+                                            ],
+                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              if (isSelected) {
+                                                selectedSire.removeWhere(
+                                                      (sire) =>
+                                                  sire.animalName ==
+                                                      OviDetails.animalName,
+                                                );
+                                              } else {
+                                                // Use a default image (icon) if selectedOviImage is null
+                                                final File? oviImage =
+                                                    OviDetails.selectedOviImage;
+                                                MainAnimalDam mother = OviDetails
+                                                    .selectedOviDam.first;
+
+                                                MainAnimalSire father = OviDetails
+                                                    .selectedOviSire.first;
+
+                                                selectedSire.add(MainAnimalSire(
+                                                    OviDetails.animalName,
+                                                    oviImage,
+                                                    OviDetails.selectedOviGender,
+                                                    mother: mother,
+                                                    father: father));
+                                                selectedFather.add(father);
+                                                selectedMother.add(mother);
+                                              }
+                                            });
+                                          },
+                                        ),
+                                      );
+                                    }),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(16),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0x28CACBCD),
+                                    blurRadius: 8,
+                                    offset: Offset(0, -4),
+                                    spreadRadius: 0,
+                                  )
+                                ],
+                              ),
+                              child: PrimaryButton(
+                                text: 'Confirm'.tr,
+                                minimumSize: const Size(0, 52),
+                                onPressed: () {
+                                  ref
+                                      .read(animalSireDetailsProvider.notifier)
+                                      .update((state) => selectedSire);
+                                  Navigator.pop(context);
+                                  // Append the selected children to the existing list
+                                  final List<MainAnimalDam>
+                                  existingSelectedDam =
+                                  ref.read(animalDamDetailsProvider);
+                                  existingSelectedDam.addAll(selectedDam);
+                                  existingSelectedDam.addAll(selectedMother);
+
+                                  final List<MainAnimalSire>
+                                  existingSelectedSire =
+                                  ref.read(animalSireDetailsProvider);
+                                  existingSelectedSire.addAll(selectedFather);
+
+                                  // for (MainAnimalDam dam in selectedDam) {
+                                  //   if (dam.mother != null) {
+                                  //     existingSelectedDam.add(dam.mother!);
+                                  //   }
+                                  // }
+                                },
+                              )),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+              ],
             );
           },
         );
@@ -359,16 +458,19 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                   height: 4,
                   decoration: ShapeDecoration(
                     color: const Color(0xFFE3E5E7),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
                   ),
                 ),
-                const SizedBox(height: 8,),
+                const SizedBox(
+                  height: 8,
+                ),
                 Container(
                   height: MediaQuery.of(context).size.height * 0.8,
                   padding: const EdgeInsets.only(
                     top: 40,
-                    left: 16,
-                    right: 16,
+                    // left: 16,
+                    // right: 16,
                     bottom: 50,
                   ),
                   decoration: const ShapeDecoration(
@@ -407,1075 +509,479 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              width: 343,
-                              height: 48,
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                              decoration: ShapeDecoration(
-                                color: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  side: BorderSide(width: 1, color: Color(0xFFE3E5E7)),
-                                  borderRadius: BorderRadius.circular(24),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      height: 24,
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            width: 24,
-                                            height: 24,
-                                            clipBehavior: Clip.antiAlias,
-                                            decoration: BoxDecoration(),
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: SizedBox(
-                                              child: Text(
-                                                'Search by name of ID',
-                                                style: TextStyle(
-                                                  color: Color(0xFFA2A6AC),
-                                                  fontSize: 14,
-                                                  fontFamily: 'IBM Plex Sans',
-                                                  fontWeight: FontWeight.w400,
-                                                  height: 0.10,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: Container(
+                                decoration: ShapeDecoration(
+                                  shape: RoundedRectangleBorder(
+                                    side: const BorderSide(
+                                        width: 1, color: Color(0xFFE3E5E7)),
+                                    borderRadius: BorderRadius.circular(24),
                                   ),
-                                ],
+                                ),
+                                child: TextField(
+                                    onChanged: (value) {
+                                      setState(() {
+                                        searchQuery = value.toLowerCase();
+                                      });
+                                    },
+                                    decoration: const InputDecoration(
+                                        hintText: "Search By Name Or ID",
+                                        prefixIcon: Icon(Icons.search),
+                                        border: InputBorder.none,
+                                        hintStyle: TextStyle(
+                                          color: Color(0xFFA2A6AC),
+                                          fontSize: 14,
+                                          fontFamily: 'IBM Plex Sans',
+                                          fontWeight: FontWeight.w400,
+                                          height: 0.10,
+                                        ))),
                               ),
                             ),
                             const SizedBox(height: 24),
-                            Container(
-                              width: 343,
-                              height: 434,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 375,
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                    decoration: BoxDecoration(color: Colors.white),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            height: 48,
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: 48,
-                                                  height: 48,
-                                                  clipBehavior: Clip.antiAlias,
-                                                  decoration: ShapeDecoration(
-                                                    color: Color(0xFFF9F5EC),
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(50),
-                                                    ),
-                                                  ),
-                                                  child: Stack(
-                                                    children: [
-                                                      Positioned(
-                                                        left: 0,
-                                                        top: 0,
-                                                        child: Container(
-                                                          width: 48,
-                                                          height: 48,
-                                                          decoration: BoxDecoration(
-                                                            image: DecorationImage(
-                                                              image: NetworkImage("https://via.placeholder.com/48x48"),
-                                                              fit: BoxFit.fill,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 16),
-                                                Expanded(
-                                                  child: Container(
-                                                    child: Column(
-                                                      mainAxisSize: MainAxisSize.min,
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        SizedBox(
-                                                          width: double.infinity,
-                                                          child: Text(
-                                                            'Text',
-                                                            style: TextStyle(
-                                                              color: Color(0xFF232323),
-                                                              fontSize: 16,
-                                                              fontFamily: 'IBM Plex Sans',
-                                                              fontWeight: FontWeight.w500,
-                                                              height: 0.09,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: double.infinity,
-                                                          child: Text(
-                                                            'Sheep',
-                                                            style: TextStyle(
-                                                              color: Color(0xFF52565D),
-                                                              fontSize: 14,
-                                                              fontFamily: 'IBM Plex Sans',
-                                                              fontWeight: FontWeight.w400,
-                                                              height: 0.10,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16),
+                                child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: ovianimals.length,
+                                    itemBuilder: (context, index) {
+                                      final OviDetails = ovianimals[index];
+                                      final bool isSelected = selectedDam.any(
+                                          (dam) =>
+                                              dam.animalName ==
+                                              OviDetails.animalName);
+
+                                      if (!OviDetails.animalName
+                                              .toLowerCase()
+                                              .contains(searchQuery) &&
+                                          !OviDetails.selectedAnimalType
+                                              .toLowerCase()
+                                              .contains(searchQuery)) {
+                                        return Container(); // Skip this item if it doesn't match the search query
+                                      }
+
+                                      return Material(
+                                        child: ListTile(
+                                          contentPadding: EdgeInsets.zero,
+                                          selected: isSelected,
+                                          selectedTileColor:
+                                              Colors.green.withOpacity(0.5),
+                                          shape: isSelected
+                                              ? RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(50.0),
+                                                )
+                                              : null,
+                                          leading: CircleAvatar(
+                                            radius: 25,
+                                            backgroundColor: Colors.grey[100],
+                                            backgroundImage: OviDetails
+                                                        .selectedOviImage !=
+                                                    null
+                                                ? FileImage(
+                                                    OviDetails.selectedOviImage!)
+                                                : null,
+                                            child: OviDetails.selectedOviImage ==
+                                                    null
+                                                ? const Icon(
+                                                    Icons.camera_alt_outlined,
+                                                    size: 50,
+                                                    color: Colors.grey,
+                                                  )
+                                                : null,
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 375,
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                    decoration: BoxDecoration(color: Colors.white),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            height: 48,
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: 48,
-                                                  height: 48,
-                                                  clipBehavior: Clip.antiAlias,
-                                                  decoration: ShapeDecoration(
-                                                    color: Color(0xFFF9F5EC),
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(50),
-                                                    ),
-                                                  ),
-                                                  child: Stack(
-                                                    children: [
-                                                      Positioned(
-                                                        left: 0,
-                                                        top: 0,
-                                                        child: Container(
-                                                          width: 48,
-                                                          height: 48,
-                                                          decoration: BoxDecoration(
-                                                            image: DecorationImage(
-                                                              image: NetworkImage("https://via.placeholder.com/48x48"),
-                                                              fit: BoxFit.fill,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
+                                          title: Text(OviDetails.animalName),
+                                          subtitle: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                  'Gender: ${OviDetails.selectedOviGender}'),
+                                              Text(
+                                                  'Mother: ${OviDetails.selectedOviDam.first.animalName}'),
+                                              if (OviDetails.selectedOviDam.first
+                                                      .mother !=
+                                                  null)
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                        'Maternal Father: ${OviDetails.selectedOviDam.first.father!.animalName}'),
+                                                    if (OviDetails.selectedOviDam
+                                                            .first.mother !=
+                                                        null)
+                                                      Text(
+                                                          'Maternal Mother: ${OviDetails.selectedOviDam.first.mother!.animalName}'),
+                                                  ],
                                                 ),
-                                                const SizedBox(width: 16),
-                                                Expanded(
-                                                  child: Container(
-                                                    child: Column(
-                                                      mainAxisSize: MainAxisSize.min,
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        SizedBox(
-                                                          width: double.infinity,
-                                                          child: Text(
-                                                            'Text',
-                                                            style: TextStyle(
-                                                              color: Color(0xFF232323),
-                                                              fontSize: 16,
-                                                              fontFamily: 'IBM Plex Sans',
-                                                              fontWeight: FontWeight.w500,
-                                                              height: 0.09,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: double.infinity,
-                                                          child: Text(
-                                                            'Sheep',
-                                                            style: TextStyle(
-                                                              color: Color(0xFF52565D),
-                                                              fontSize: 14,
-                                                              fontFamily: 'IBM Plex Sans',
-                                                              fontWeight: FontWeight.w400,
-                                                              height: 0.10,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                            ],
                                           ),
+                                          onTap: () {
+                                            setState(() {
+                                              if (isSelected) {
+                                                selectedDam.removeWhere(
+                                                  (dam) =>
+                                                      dam.animalName ==
+                                                      OviDetails.animalName,
+                                                );
+                                              } else {
+                                                // Use a default image (icon) if selectedOviImage is null
+                                                final File? oviImage =
+                                                    OviDetails.selectedOviImage;
+                                                MainAnimalDam mother = OviDetails
+                                                    .selectedOviDam.first;
+
+                                                MainAnimalSire father = OviDetails
+                                                    .selectedOviSire.first;
+
+                                                selectedDam.add(MainAnimalDam(
+                                                    OviDetails.animalName,
+                                                    oviImage,
+                                                    OviDetails.selectedOviGender,
+                                                    mother: mother,
+                                                    father: father));
+                                                selectedFather.add(father);
+                                                selectedMother.add(mother);
+                                              }
+                                            });
+                                          },
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 375,
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                    decoration: BoxDecoration(color: Colors.white),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            height: 48,
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: 48,
-                                                  height: 48,
-                                                  clipBehavior: Clip.antiAlias,
-                                                  decoration: ShapeDecoration(
-                                                    color: Color(0xFFF9F5EC),
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(50),
-                                                    ),
-                                                  ),
-                                                  child: Stack(
-                                                    children: [
-                                                      Positioned(
-                                                        left: 0,
-                                                        top: 0,
-                                                        child: Container(
-                                                          width: 48,
-                                                          height: 48,
-                                                          decoration: BoxDecoration(
-                                                            image: DecorationImage(
-                                                              image: NetworkImage("https://via.placeholder.com/48x48"),
-                                                              fit: BoxFit.fill,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 16),
-                                                Expanded(
-                                                  child: Container(
-                                                    child: Column(
-                                                      mainAxisSize: MainAxisSize.min,
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        SizedBox(
-                                                          width: double.infinity,
-                                                          child: Text(
-                                                            'Text',
-                                                            style: TextStyle(
-                                                              color: Color(0xFF232323),
-                                                              fontSize: 16,
-                                                              fontFamily: 'IBM Plex Sans',
-                                                              fontWeight: FontWeight.w500,
-                                                              height: 0.09,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: double.infinity,
-                                                          child: Text(
-                                                            'Sheep',
-                                                            style: TextStyle(
-                                                              color: Color(0xFF52565D),
-                                                              fontSize: 14,
-                                                              fontFamily: 'IBM Plex Sans',
-                                                              fontWeight: FontWeight.w400,
-                                                              height: 0.10,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 375,
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                    decoration: BoxDecoration(color: Colors.white),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            height: 48,
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: 48,
-                                                  height: 48,
-                                                  clipBehavior: Clip.antiAlias,
-                                                  decoration: ShapeDecoration(
-                                                    color: Color(0xFFF9F5EC),
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(50),
-                                                    ),
-                                                  ),
-                                                  child: Stack(
-                                                    children: [
-                                                      Positioned(
-                                                        left: 0,
-                                                        top: 0,
-                                                        child: Container(
-                                                          width: 48,
-                                                          height: 48,
-                                                          decoration: BoxDecoration(
-                                                            image: DecorationImage(
-                                                              image: NetworkImage("https://via.placeholder.com/48x48"),
-                                                              fit: BoxFit.fill,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 16),
-                                                Expanded(
-                                                  child: Container(
-                                                    child: Column(
-                                                      mainAxisSize: MainAxisSize.min,
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        SizedBox(
-                                                          width: double.infinity,
-                                                          child: Text(
-                                                            'Text',
-                                                            style: TextStyle(
-                                                              color: Color(0xFF232323),
-                                                              fontSize: 16,
-                                                              fontFamily: 'IBM Plex Sans',
-                                                              fontWeight: FontWeight.w500,
-                                                              height: 0.09,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: double.infinity,
-                                                          child: Text(
-                                                            'Sheep',
-                                                            style: TextStyle(
-                                                              color: Color(0xFF52565D),
-                                                              fontSize: 14,
-                                                              fontFamily: 'IBM Plex Sans',
-                                                              fontWeight: FontWeight.w400,
-                                                              height: 0.10,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 375,
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                    decoration: BoxDecoration(color: Colors.white),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            height: 48,
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: 48,
-                                                  height: 48,
-                                                  decoration: ShapeDecoration(
-                                                    color: Color(0xFFF9F5EC),
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(50),
-                                                    ),
-                                                  ),
-                                                  child: Stack(
-                                                    children: [
-                                                      Positioned(
-                                                        left: 0,
-                                                        top: 0,
-                                                        child: Container(
-                                                          width: 48,
-                                                          height: 48,
-                                                          decoration: BoxDecoration(
-                                                            image: DecorationImage(
-                                                              image: NetworkImage("https://via.placeholder.com/48x48"),
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 16),
-                                                Expanded(
-                                                  child: Container(
-                                                    child: Column(
-                                                      mainAxisSize: MainAxisSize.min,
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        SizedBox(
-                                                          width: double.infinity,
-                                                          child: Text(
-                                                            'Text',
-                                                            style: TextStyle(
-                                                              color: Color(0xFF232323),
-                                                              fontSize: 16,
-                                                              fontFamily: 'IBM Plex Sans',
-                                                              fontWeight: FontWeight.w500,
-                                                              height: 0.09,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: double.infinity,
-                                                          child: Text(
-                                                            'Sheep',
-                                                            style: TextStyle(
-                                                              color: Color(0xFF52565D),
-                                                              fontSize: 14,
-                                                              fontFamily: 'IBM Plex Sans',
-                                                              fontWeight: FontWeight.w400,
-                                                              height: 0.10,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 375,
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                    decoration: BoxDecoration(color: Colors.white),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            height: 48,
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: 48,
-                                                  height: 48,
-                                                  clipBehavior: Clip.antiAlias,
-                                                  decoration: ShapeDecoration(
-                                                    color: Color(0xFFF9F5EC),
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(50),
-                                                    ),
-                                                  ),
-                                                  child: Stack(
-                                                    children: [
-                                                      Positioned(
-                                                        left: 0,
-                                                        top: 0,
-                                                        child: Container(
-                                                          width: 48,
-                                                          height: 48,
-                                                          decoration: BoxDecoration(
-                                                            image: DecorationImage(
-                                                              image: NetworkImage("https://via.placeholder.com/48x48"),
-                                                              fit: BoxFit.fill,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 16),
-                                                Expanded(
-                                                  child: Container(
-                                                    child: Column(
-                                                      mainAxisSize: MainAxisSize.min,
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        SizedBox(
-                                                          width: double.infinity,
-                                                          child: Text(
-                                                            'Text',
-                                                            style: TextStyle(
-                                                              color: Color(0xFF232323),
-                                                              fontSize: 16,
-                                                              fontFamily: 'IBM Plex Sans',
-                                                              fontWeight: FontWeight.w500,
-                                                              height: 0.09,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: double.infinity,
-                                                          child: Text(
-                                                            'Sheep',
-                                                            style: TextStyle(
-                                                              color: Color(0xFF52565D),
-                                                              fontSize: 14,
-                                                              fontFamily: 'IBM Plex Sans',
-                                                              fontWeight: FontWeight.w400,
-                                                              height: 0.10,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 375,
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                    decoration: BoxDecoration(color: Colors.white),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            height: 48,
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: 48,
-                                                  height: 48,
-                                                  clipBehavior: Clip.antiAlias,
-                                                  decoration: ShapeDecoration(
-                                                    color: Color(0xFFF9F5EC),
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(50),
-                                                    ),
-                                                  ),
-                                                  child: Stack(
-                                                    children: [
-                                                      Positioned(
-                                                        left: 0,
-                                                        top: 0,
-                                                        child: Container(
-                                                          width: 48,
-                                                          height: 48,
-                                                          decoration: BoxDecoration(
-                                                            image: DecorationImage(
-                                                              image: NetworkImage("https://via.placeholder.com/48x48"),
-                                                              fit: BoxFit.fill,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 16),
-                                                Expanded(
-                                                  child: Container(
-                                                    child: Column(
-                                                      mainAxisSize: MainAxisSize.min,
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        SizedBox(
-                                                          width: double.infinity,
-                                                          child: Text(
-                                                            'Text',
-                                                            style: TextStyle(
-                                                              color: Color(0xFF232323),
-                                                              fontSize: 16,
-                                                              fontFamily: 'IBM Plex Sans',
-                                                              fontWeight: FontWeight.w500,
-                                                              height: 0.09,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: double.infinity,
-                                                          child: Text(
-                                                            'Sheep',
-                                                            style: TextStyle(
-                                                              color: Color(0xFF52565D),
-                                                              fontSize: 14,
-                                                              fontFamily: 'IBM Plex Sans',
-                                                              fontWeight: FontWeight.w400,
-                                                              height: 0.10,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 375,
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                    decoration: BoxDecoration(color: Colors.white),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            height: 48,
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: 48,
-                                                  height: 48,
-                                                  clipBehavior: Clip.antiAlias,
-                                                  decoration: ShapeDecoration(
-                                                    color: Color(0xFFF9F5EC),
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(50),
-                                                    ),
-                                                  ),
-                                                  child: Stack(
-                                                    children: [
-                                                      Positioned(
-                                                        left: 0,
-                                                        top: 0,
-                                                        child: Container(
-                                                          width: 48,
-                                                          height: 48,
-                                                          decoration: BoxDecoration(
-                                                            image: DecorationImage(
-                                                              image: NetworkImage("https://via.placeholder.com/48x48"),
-                                                              fit: BoxFit.fill,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 16),
-                                                Expanded(
-                                                  child: Container(
-                                                    child: Column(
-                                                      mainAxisSize: MainAxisSize.min,
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        SizedBox(
-                                                          width: double.infinity,
-                                                          child: Text(
-                                                            'Text',
-                                                            style: TextStyle(
-                                                              color: Color(0xFF232323),
-                                                              fontSize: 16,
-                                                              fontFamily: 'IBM Plex Sans',
-                                                              fontWeight: FontWeight.w500,
-                                                              height: 0.09,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: double.infinity,
-                                                          child: Text(
-                                                            'Sheep',
-                                                            style: TextStyle(
-                                                              color: Color(0xFF52565D),
-                                                              fontSize: 14,
-                                                              fontFamily: 'IBM Plex Sans',
-                                                              fontWeight: FontWeight.w400,
-                                                              height: 0.10,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 375,
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                    decoration: BoxDecoration(color: Colors.white),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            height: 48,
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: 48,
-                                                  height: 48,
-                                                  clipBehavior: Clip.antiAlias,
-                                                  decoration: ShapeDecoration(
-                                                    color: Color(0xFFF9F5EC),
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(50),
-                                                    ),
-                                                  ),
-                                                  child: Stack(
-                                                    children: [
-                                                      Positioned(
-                                                        left: 0,
-                                                        top: 0,
-                                                        child: Container(
-                                                          width: 48,
-                                                          height: 48,
-                                                          decoration: BoxDecoration(
-                                                            image: DecorationImage(
-                                                              image: NetworkImage("https://via.placeholder.com/48x48"),
-                                                              fit: BoxFit.fill,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 16),
-                                                Expanded(
-                                                  child: Container(
-                                                    child: Column(
-                                                      mainAxisSize: MainAxisSize.min,
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        SizedBox(
-                                                          width: double.infinity,
-                                                          child: Text(
-                                                            'Text',
-                                                            style: TextStyle(
-                                                              color: Color(0xFF232323),
-                                                              fontSize: 16,
-                                                              fontFamily: 'IBM Plex Sans',
-                                                              fontWeight: FontWeight.w500,
-                                                              height: 0.09,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: double.infinity,
-                                                          child: Text(
-                                                            'Sheep',
-                                                            style: TextStyle(
-                                                              color: Color(0xFF52565D),
-                                                              fontSize: 14,
-                                                              fontFamily: 'IBM Plex Sans',
-                                                              fontWeight: FontWeight.w400,
-                                                              height: 0.10,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 375,
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                    decoration: BoxDecoration(color: Colors.white),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            height: 48,
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: 48,
-                                                  height: 48,
-                                                  decoration: ShapeDecoration(
-                                                    color: Color(0xFFF9F5EC),
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(50),
-                                                    ),
-                                                  ),
-                                                  child: Stack(
-                                                    children: [
-                                                      Positioned(
-                                                        left: 0,
-                                                        top: 0,
-                                                        child: Container(
-                                                          width: 48,
-                                                          height: 48,
-                                                          decoration: BoxDecoration(
-                                                            image: DecorationImage(
-                                                              image: NetworkImage("https://via.placeholder.com/48x48"),
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 16),
-                                                Expanded(
-                                                  child: Container(
-                                                    child: Column(
-                                                      mainAxisSize: MainAxisSize.min,
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        SizedBox(
-                                                          width: double.infinity,
-                                                          child: Text(
-                                                            'Text',
-                                                            style: TextStyle(
-                                                              color: Color(0xFF232323),
-                                                              fontSize: 16,
-                                                              fontFamily: 'IBM Plex Sans',
-                                                              fontWeight: FontWeight.w500,
-                                                              height: 0.09,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: double.infinity,
-                                                          child: Text(
-                                                            'Sheep',
-                                                            style: TextStyle(
-                                                              color: Color(0xFF52565D),
-                                                              fontSize: 14,
-                                                              fontFamily: 'IBM Plex Sans',
-                                                              fontWeight: FontWeight.w400,
-                                                              height: 0.10,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                                      );
+                                    }),
                               ),
-                            ),
+                            )
                           ],
                         ),
                       ),
                       const SizedBox(height: 32),
-                      Positioned(
-                        left: 0,
-                        top: 614,
-                        child: Container(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color(0x28CACBCD),
-                                      blurRadius: 8,
-                                      offset: Offset(0, -4),
-                                      spreadRadius: 0,
-                                    )
-                                  ],
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: 343,
-                                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: ShapeDecoration(
-                                        color: Color(0xFF0F5D31),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(24),
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'Confirm',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14,
-                                              fontFamily: 'IBM Plex Sans',
-                                              fontWeight: FontWeight.w500,
-                                              height: 0.12,
-                                              letterSpacing: 0.24,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(16),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0x28CACBCD),
+                                    blurRadius: 8,
+                                    offset: Offset(0, -4),
+                                    spreadRadius: 0,
+                                  )
+                                ],
                               ),
-                              Container(
-                                width: 375,
-                                height: 34,
-                                child: Stack(
-                                  children: [
-                                    Positioned(
-                                      left: 0,
-                                      top: 0,
-                                      child: Container(
-                                        width: 375,
-                                        height: 34,
-                                        decoration: BoxDecoration(color: Colors.white),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      left: 121,
-                                      top: 21,
-                                      child: Container(
-                                        width: 134,
-                                        height: 5,
-                                        decoration: ShapeDecoration(
-                                          color: Colors.black,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(100),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                              child: PrimaryButton(
+                                text: 'Confirm'.tr,
+                                minimumSize: const Size(0, 52),
+                                onPressed: () {
+                                  ref
+                                      .read(animalDamDetailsProvider.notifier)
+                                      .update((state) => selectedDam);
+                                  Navigator.pop(context);
+                                  // Append the selected children to the existing list
+                                  final List<MainAnimalDam>
+                                      existingSelectedDam =
+                                      ref.read(animalDamDetailsProvider);
+                                  existingSelectedDam.addAll(selectedDam);
+                                  existingSelectedDam.addAll(selectedMother);
+
+                                  final List<MainAnimalSire>
+                                      existingSelectedSire =
+                                      ref.read(animalSireDetailsProvider);
+                                  existingSelectedSire.addAll(selectedFather);
+
+                                  // for (MainAnimalDam dam in selectedDam) {
+                                  //   if (dam.mother != null) {
+                                 //     existingSelectedDam.add(dam.mother!);
+                                      //   }
+                                   // }
+                                },
+                              )),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showmainAnimalChilrenSelectionSheet(BuildContext context) async {
+    // Initialize an empty list
+    final ovianimals = ref.watch(ovianimalsProvider);
+
+    String searchQuery = '';
+    final selectedChildren = <BreedChildItem>[];
+
+    await showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      showDragHandle: false,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 35,
+                  height: 4,
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFFE3E5E7),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
+                  ),
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  padding: const EdgeInsets.only(
+                    top: 40,
+                    bottom: 50,
+                  ),
+                  decoration: const ShapeDecoration(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
+                      ),
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 32),
+                      SizedBox(
+                        width: 343,
+                        child: Text(
+                          'Add children'.tr,
+                          style: const TextStyle(
+                            color: Color(0xFF232323),
+                            fontSize: 34,
+                            fontFamily: 'Source Serif Pro',
+                            fontWeight: FontWeight.w600,
+                            height: 0.03,
+                            letterSpacing: 0.24,
                           ),
                         ),
+                      ),
+                      const SizedBox(height: 32),
+                      Expanded(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding:
+                              const EdgeInsets.symmetric(horizontal: 16),
+                              child: Container(
+                                decoration: ShapeDecoration(
+                                  shape: RoundedRectangleBorder(
+                                    side: const BorderSide(
+                                        width: 1, color: Color(0xFFE3E5E7)),
+                                    borderRadius: BorderRadius.circular(24),
+                                  ),
+                                ),
+                                child: TextField(
+                                    onChanged: (value) {
+                                      setState(() {
+                                        searchQuery = value.toLowerCase();
+                                      });
+                                    },
+                                    decoration: const InputDecoration(
+                                        hintText: "Search By Name Or ID",
+                                        prefixIcon: Icon(Icons.search),
+                                        border: InputBorder.none,
+                                        hintStyle: TextStyle(
+                                          color: Color(0xFFA2A6AC),
+                                          fontSize: 14,
+                                          fontFamily: 'IBM Plex Sans',
+                                          fontWeight: FontWeight.w400,
+                                          height: 0.10,
+                                        ))),
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16),
+                                child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: ovianimals.length,
+                                    itemBuilder: (context, index) {
+                                      final OviDetails = ovianimals[index];
+                                      final bool isSelected = selectedChildren.any(
+                                              (child) =>
+                                          child.animalName ==
+                                              OviDetails.animalName);
+
+                                      if (!OviDetails.animalName
+                                          .toLowerCase()
+                                          .contains(searchQuery) &&
+                                          !OviDetails.selectedAnimalType
+                                              .toLowerCase()
+                                              .contains(searchQuery)) {
+                                        return Container(); // Skip this item if it doesn't match the search query
+                                      }
+
+                                      return Material(
+                                        child: ListTile(
+                                          contentPadding: EdgeInsets.zero,
+                                          selected: isSelected,
+                                          selectedTileColor:
+                                          Colors.green.withOpacity(0.5),
+                                          shape: isSelected
+                                              ? RoundedRectangleBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(50.0),
+                                          )
+                                              : null,
+                                          leading: CircleAvatar(
+                                            radius: 25,
+                                            backgroundColor: Colors.grey[100],
+                                            backgroundImage: OviDetails
+                                                .selectedOviImage !=
+                                                null
+                                                ? FileImage(
+                                                OviDetails.selectedOviImage!)
+                                                : null,
+                                            child: OviDetails.selectedOviImage ==
+                                                null
+                                                ? const Icon(
+                                              Icons.camera_alt_outlined,
+                                              size: 50,
+                                              color: Colors.grey,
+                                            )
+                                                : null,
+                                          ),
+                                          title: Text(OviDetails.animalName),
+                                          subtitle: Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                  'Gender: ${OviDetails.selectedOviGender}'),
+                                              Text(
+                                                  'Mother: ${OviDetails.selectedOviDam.first.animalName}'),
+                                              if (OviDetails.selectedOviDam.first
+                                                  .mother !=
+                                                  null)
+                                                Column(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                        'Maternal Father: ${OviDetails.selectedOviDam.first.father!.animalName}'),
+                                                    if (OviDetails.selectedOviDam
+                                                        .first.mother !=
+                                                        null)
+                                                      Text(
+                                                          'Maternal Mother: ${OviDetails.selectedOviDam.first.mother!.animalName}'),
+                                                  ],
+                                                ),
+                                            ],
+                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              if (isSelected) {
+                                                selectedChildren.removeWhere(
+                                                      (child) =>
+                                                  child.animalName ==
+                                                      OviDetails.animalName,
+                                                );
+                                              } else {
+                                                // Use a default image (icon) if selectedOviImage is null
+                                                final File? oviImage =
+                                                    OviDetails.selectedOviImage;
+                                                MainAnimalDam mother = OviDetails
+                                                    .selectedOviDam.first;
+
+                                                MainAnimalSire father = OviDetails
+                                                    .selectedOviSire.first;
+
+                                                selectedChildren.add(BreedChildItem(
+                                                    OviDetails.animalName,
+                                                    oviImage,
+                                                    OviDetails.selectedOviGender
+                                                ));
+                                              }
+                                            });
+                                          },
+                                        ),
+                                      );
+                                    }),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(16),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0x28CACBCD),
+                                    blurRadius: 8,
+                                    offset: Offset(0, -4),
+                                    spreadRadius: 0,
+                                  )
+                                ],
+                              ),
+                              child: PrimaryButton(
+                                text: 'Confirm'.tr,
+                                minimumSize: const Size(0, 52),
+                                onPressed: () {
+                                  ref
+                                      .read(breedingChildrenDetailsProvider.notifier)
+                                      .update((state) => selectedChildren);
+                                  Navigator.pop(context);
+                                  // Append the selected children to the existing list
+                                  // final List<MainAnimalDam>
+                                  // existingSelectedDam =
+                                  // ref.read(animalDamDetailsProvider);
+                                  // existingSelectedDam.addAll(selectedDam);
+                                  // existingSelectedDam.addAll(selectedMother);
+                                  //
+                                  // final List<MainAnimalSire>
+                                  // existingSelectedSire =
+                                  // ref.read(animalSireDetailsProvider);
+                                  // existingSelectedSire.addAll(selectedFather);
+
+                                  // for (MainAnimalDam dam in selectedDam) {
+                                  //   if (dam.mother != null) {
+                                  //     existingSelectedDam.add(dam.mother!);
+                                  //   }
+                                  // }
+                                },
+                              )),
+                        ],
                       ),
                     ],
                   ),
@@ -1498,8 +1004,8 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
     // Add more country codes and names as needed
   ];
 
-  void _showDateSelectionSheet(BuildContext context) async {
-    final selectedAnimalType = ref.watch(selectedAnimalTypeProvider);
+  void _showDateSelectionSheet(BuildContext context, selectedAnimalType) async {
+
     // ignore: non_constant_identifier_names
     List<String> OvidateTypes = [
       'Date Of Hatching',
@@ -2067,9 +1573,9 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
       showDragHandle: true,
       builder: (BuildContext context) {
         return Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16 + MediaQuery.of(context).viewInsets.bottom),
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.7,
+            height: MediaQuery.of(context).size.height * 0.7 + MediaQuery.of(context).viewInsets.bottom,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -2269,6 +1775,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
     final selectedAnimalImage = ref.watch(selectedAnimalImageProvider);
     final animalDam = ref.watch(animalDamDetailsProvider);
     final animalSire = ref.watch(animalSireDetailsProvider);
+    final animalChildren = ref.watch(breedingChildrenDetailsProvider);
     final chips = ref.watch(selectedOviChipsProvider);
     final customFields = ref.watch(customOviTextFieldsProvider);
     final ovianimals = ref.watch(ovianimalsProvider);
@@ -2339,6 +1846,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
           ],
         ),
         body: SingleChildScrollView(
+          controller: _scrollController,
           child: Padding(
             padding: EdgeInsets.only(
                 left: globals.widthMediaQuery * 16,
@@ -2350,13 +1858,13 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                 Center(
                   child: GestureDetector(
                     child: CircleAvatar(
-                      radius: globals.widthMediaQuery * 60,
-                      backgroundColor: AppColors.grayscale10,
-                      backgroundImage: selectedAnimalImage != null ? FileImage(
-                          selectedAnimalImage) : AssetImage(
-                          speciesImages[selectedAnimalSpecies]!
-                          .path) as ImageProvider
-                    ),
+                        radius: globals.widthMediaQuery * 60,
+                        backgroundColor: AppColors.grayscale10,
+                        backgroundImage: selectedAnimalImage != null
+                            ? FileImage(selectedAnimalImage)
+                            : AssetImage(
+                                    speciesImages[selectedAnimalSpecies]!.path)
+                                as ImageProvider),
                   ),
                 ),
                 SizedBox(height: globals.heightMediaQuery * 16),
@@ -2515,10 +2023,10 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                             const Spacer(),
                             PrimaryTextButton(
                               onPressed: () {
-                                _showmainAnimalSireSelectionSheet(context);
+                                _showmainAnimalChilrenSelectionSheet(context);
                               },
                               status: TextStatus.idle,
-                              text: animalSire.first.animalName,
+                              text: animalChildren.isNotEmpty ? animalChildren.first.animalName : 'Add'.tr,
                               position: TextButtonPosition.right,
                             ),
                           ],
@@ -2920,7 +2428,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                   children: [
                     PrimaryTextButton(
                       onPressed: () {
-                        _showDateSelectionSheet(context);
+                        _showDateSelectionSheet(context, selectedAnimalType);
                       },
                       status: TextStatus.idle,
                       text: 'Add Date',
@@ -3152,180 +2660,3 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
     );
   }
 }
-
-// return Padding(
-// padding: EdgeInsets.only(
-// bottom: MediaQuery.of(context).viewInsets.bottom,
-// ),
-// child: Container(
-// height: MediaQuery.of(context).size.height * 0.8,
-// padding: const EdgeInsets.all(16.0),
-// child: Column(
-// crossAxisAlignment: CrossAxisAlignment.stretch,
-// children: [
-// const SizedBox(
-// height: 25,
-// ),
-// const Text(
-// "Select Dam",
-// style: TextStyle(
-// fontSize: 30,
-// fontWeight: FontWeight.bold,
-// ),
-// ),
-// const SizedBox(
-// height: 25,
-// ),
-// Row(
-// children: [
-// Expanded(
-// child: Container(
-// decoration: BoxDecoration(
-// borderRadius: BorderRadius.circular(50.0),
-// border: Border.all(),
-// ),
-// child: TextField(
-// onChanged: (value) {
-// setState(() {
-// searchQuery = value.toLowerCase();
-// });
-// },
-// decoration: const InputDecoration(
-// hintText: "Search By Name Or ID",
-// prefixIcon: Icon(Icons.search),
-// border: InputBorder.none,
-// ),
-// ),
-// ),
-// ),
-// ],
-// ),
-// Expanded(
-// child: ListView.builder(
-// shrinkWrap: true,
-// itemCount: ovianimals.length,
-// itemBuilder: (context, index) {
-// final OviDetails = ovianimals[index];
-//
-// final bool isSelected =
-// // ignore: iterable_contains_unrelated_type
-// selectedDam.contains(OviDetails.animalName);
-//
-// // Apply the filter here
-// if (!OviDetails.animalName
-//     .toLowerCase()
-//     .contains(searchQuery) &&
-// !OviDetails.selectedAnimalType
-//     .toLowerCase()
-//     .contains(searchQuery)) {
-// return Container(); // Skip this item if it doesn't match the search query
-// }
-//
-// return ListTile(
-// tileColor: isSelected
-// ? Colors.green.withOpacity(0.5)
-//     : null,
-// shape: isSelected
-// ? RoundedRectangleBorder(
-// borderRadius: BorderRadius.circular(50.0),
-// )
-//     : null,
-// leading: CircleAvatar(
-// radius: 25,
-// backgroundColor: Colors.grey[100],
-// backgroundImage:
-// OviDetails.selectedOviImage != null
-// ? FileImage(OviDetails.selectedOviImage!)
-//     : null,
-// child: OviDetails.selectedOviImage == null
-// ? const Icon(
-// Icons.camera_alt_outlined,
-// size: 50,
-// color: Colors.grey,
-// )
-//     : null,
-// ),
-// title: Text(OviDetails.animalName),
-// subtitle: Column(
-// crossAxisAlignment: CrossAxisAlignment.start,
-// children: [
-// Text('Gender: ${OviDetails.selectedOviGender}'),
-// Text(
-// 'Mother: ${OviDetails.selectedOviDam.first.animalName}'),
-// if (OviDetails.selectedOviDam.first.mother !=
-// null)
-// Column(
-// crossAxisAlignment:
-// CrossAxisAlignment.start,
-// children: [
-// Text(
-// 'Maternal Father: ${OviDetails.selectedOviDam.first.father!.animalName}'),
-// if (OviDetails
-//     .selectedOviDam.first.mother !=
-// null)
-// Text(
-// 'Maternal Mother: ${OviDetails.selectedOviDam.first.mother!.animalName}'),
-// ],
-// ),
-// ],
-// ),
-// onTap: () {
-// setState(() {
-// if (isSelected) {
-// selectedDam.removeWhere(
-// (dam) =>
-// dam.animalName == OviDetails.animalName,
-// );
-// } else {
-// // Use a default image (icon) if selectedOviImage is null
-// final File? oviImage =
-// OviDetails.selectedOviImage;
-// MainAnimalDam mother =
-// OviDetails.selectedOviDam.first;
-//
-// MainAnimalSire father =
-// OviDetails.selectedOviSire.first;
-//
-// selectedDam.add(MainAnimalDam(
-// OviDetails.animalName,
-// oviImage,
-// OviDetails.selectedOviGender,
-// mother: mother,
-// father: father));
-// selectedFather.add(father);
-// selectedMother.add(mother);
-// }
-// });
-// },
-// );
-// },
-// ),
-// ),
-// ElevatedButton(
-// onPressed: () {
-// ref
-//     .read(animalDamDetailsProvider.notifier)
-//     .update((state) => selectedDam);
-// Navigator.pop(context);
-// // Append the selected children to the existing list
-// final List<MainAnimalDam> existingSelectedDam =
-// ref.read(animalDamDetailsProvider);
-// existingSelectedDam.addAll(selectedDam);
-// existingSelectedDam.addAll(selectedMother);
-//
-// final List<MainAnimalSire> existingSelectedSire =
-// ref.read(animalSireDetailsProvider);
-// existingSelectedSire.addAll(selectedFather);
-//
-// // for (MainAnimalDam dam in selectedDam) {
-// //   if (dam.mother != null) {
-// //     existingSelectedDam.add(dam.mother!);
-// //   }
-// // }
-// },
-// child: const Text("Done"),
-// ),
-// ],
-// ),
-// ),
-// );
