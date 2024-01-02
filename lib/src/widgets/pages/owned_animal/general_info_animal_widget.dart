@@ -15,6 +15,7 @@ class GeneralInfoAnimalWidget extends ConsumerStatefulWidget {
   final VoidCallback onDateOfMatingPressed;
   final VoidCallback onDateOfDeathPressed;
   final VoidCallback onDateOfSalePressed;
+  final VoidCallback onDateOfHatchingPressed;
   final String type;
   final String age;
   final String sex;
@@ -31,6 +32,7 @@ class GeneralInfoAnimalWidget extends ConsumerStatefulWidget {
     required this.onDateOfMatingPressed,
     required this.onDateOfDeathPressed,
     required this.onDateOfSalePressed,
+    required this.onDateOfHatchingPressed,
     required this.type,
     required this.age,
     required this.sex,
@@ -116,7 +118,7 @@ class _GeneralInfoAnimalWidgetState
                   ),
                 ),
                 TableTextButton(
-                  onPressed: widget.onDateOfBirthPressed,
+                  onPressed: () {},
                   textButton: widget.OviDetails.selectedAnimalBreed,
                   textHead: "Breed",
                 ),
@@ -124,7 +126,7 @@ class _GeneralInfoAnimalWidgetState
                   visible: widget.OviDetails.selectedOviGender == 'Female' &&
                       widget.OviDetails.selectedAnimalType == 'Mammal',
                   child: TableTextButton(
-                    onPressed: widget.onDateOfBirthPressed,
+                    onPressed: widget.onDateOfWeaningPressed,
                     textButton: widget.OviDetails.selectedOviDates
                                 .containsKey('Date Of Weaning') &&
                             widget.OviDetails
@@ -142,7 +144,7 @@ class _GeneralInfoAnimalWidgetState
                   visible: widget.OviDetails.selectedOviGender == 'Female' &&
                       widget.OviDetails.selectedAnimalType == 'Oviparous',
                   child: TableTextButton(
-                    onPressed: widget.onDateOfBirthPressed,
+                    onPressed: widget.onDateOfHatchingPressed,
                     textButton: widget.OviDetails.selectedOviDates
                                 .containsKey('Date Of Hatching') &&
                             widget.OviDetails
@@ -157,7 +159,7 @@ class _GeneralInfoAnimalWidgetState
                   ),
                 ),
                 TableTextButton(
-                  onPressed: widget.onDateOfBirthPressed,
+                  onPressed: widget.onDateOfMatingPressed,
                   textButton: widget.OviDetails.selectedOviDates
                               .containsKey('Date Of Mating') &&
                           widget.OviDetails
@@ -170,7 +172,7 @@ class _GeneralInfoAnimalWidgetState
                   textHead: "Date of Mating",
                 ),
                 TableTextButton(
-                  onPressed: widget.onDateOfBirthPressed,
+                  onPressed: widget.onDateOfDeathPressed,
                   textButton: widget.OviDetails.selectedOviDates
                               .containsKey('Date Of Death') &&
                           widget.OviDetails.selectedOviDates['Date Of Death'] !=
@@ -182,7 +184,7 @@ class _GeneralInfoAnimalWidgetState
                   textHead: "Date of Death",
                 ),
                 TableTextButton(
-                  onPressed: widget.onDateOfBirthPressed,
+                  onPressed: widget.onDateOfSalePressed,
                   textButton: widget.OviDetails.selectedOviDates
                               .containsKey('Date Of Sale') &&
                           widget.OviDetails.selectedOviDates['Date Of Sale'] !=
@@ -196,7 +198,7 @@ class _GeneralInfoAnimalWidgetState
                 Visibility(
                   visible: widget.OviDetails.fieldName.isNotEmpty,
                   child: TableTextButton(
-                      onPressed: widget.onDateOfBirthPressed,
+                      onPressed: () {},
                       textButton: widget.OviDetails.fieldContent,
                       textHead: widget.OviDetails.fieldName),
                 ),

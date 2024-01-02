@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 
 import '../../data/classes.dart';
 import '../../theme/colors/colors.dart';
@@ -14,7 +16,7 @@ import '../medical/mammals_medical.dart';
 import 'edit_animal_details/new_editpage.dart';
 import 'sar_listofanimals.dart';
 
-class OwnedAnimalDetailsRegMode extends StatefulWidget {
+class OwnedAnimalDetailsRegMode extends ConsumerStatefulWidget {
   final String imagePath;
   final String title;
   final String geninfo;
@@ -33,19 +35,21 @@ class OwnedAnimalDetailsRegMode extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<OwnedAnimalDetailsRegMode> createState() =>
+  ConsumerState<OwnedAnimalDetailsRegMode> createState() =>
       _OwnedAnimalDetailsRegModeState();
 }
 
-class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
+class _OwnedAnimalDetailsRegModeState extends ConsumerState<OwnedAnimalDetailsRegMode>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool editMode = false;
+  late OviVariables oviDetails;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    oviDetails = widget.OviDetails;
   }
 
   @override
@@ -115,7 +119,7 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => EditAnimalGenInfo(
-                          OviDetails: widget.OviDetails,
+                          OviDetails: oviDetails,
                           breedingEvents: widget.breedingEvents,
                         ),
                       ),
@@ -152,10 +156,10 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
                         radius: MediaQuery.of(context).size.width * 0.16,
                         backgroundColor: Colors.grey[100],
                         backgroundImage:
-                            widget.OviDetails.selectedOviImage != null
-                                ? FileImage(widget.OviDetails.selectedOviImage!)
+                            oviDetails.selectedOviImage != null
+                                ? FileImage(oviDetails.selectedOviImage!)
                                 : null,
-                        child: widget.OviDetails.selectedOviImage == null
+                        child: oviDetails.selectedOviImage == null
                             ? const Icon(
                                 Icons.camera_alt_outlined,
                                 size: 50,
@@ -170,47 +174,47 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
                         Row(
                           children: [
                             Text(
-                              widget.OviDetails.animalName,
+                              oviDetails.animalName,
                               style:
                                   AppFonts.title4(color: AppColors.grayscale90),
                             ),
                           ],
                         ),
                       Text(
-                        widget.OviDetails.animalName,
+                        oviDetails.animalName,
                         style: AppFonts.title4(color: AppColors.grayscale90),
                       ),
                       Text(
-                        "ID #${widget.OviDetails.animalName}",
+                        "ID #${oviDetails.animalName}",
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
                       Text(
-                        'Father: ${widget.OviDetails.selectedOviSire.isNotEmpty ? widget.OviDetails.selectedOviSire.first.animalName : 'Unknown'}',
+                        'Father: ${oviDetails.selectedOviSire.isNotEmpty ? oviDetails.selectedOviSire.first.animalName : 'Unknown'}',
                       ),
                       Text(
-                        'Mother: ${widget.OviDetails.selectedOviDam.isNotEmpty ? widget.OviDetails.selectedOviDam.first.animalName : 'Unknown'}',
+                        'Mother: ${oviDetails.selectedOviDam.isNotEmpty ? oviDetails.selectedOviDam.first.animalName : 'Unknown'}',
                       ),
-                      if (widget.OviDetails.selectedOviSire.isNotEmpty &&
-                          widget.OviDetails.selectedOviSire.first.father !=
+                      if (oviDetails.selectedOviSire.isNotEmpty &&
+                          oviDetails.selectedOviSire.first.father !=
                               null)
                         Text(
-                          'Paternal Grandfather: ${widget.OviDetails.selectedOviSire.first.father!.animalName}',
+                          'Paternal Grandfather: ${oviDetails.selectedOviSire.first.father!.animalName}',
                         ),
-                      if (widget.OviDetails.selectedOviDam.isNotEmpty &&
-                          widget.OviDetails.selectedOviDam.first.mother != null)
+                      if (oviDetails.selectedOviDam.isNotEmpty &&
+                          oviDetails.selectedOviDam.first.mother != null)
                         Text(
-                          'Patenral Grandmother: ${widget.OviDetails.selectedOviSire.first.mother!.animalName}',
+                          'Patenral Grandmother: ${oviDetails.selectedOviSire.first.mother!.animalName}',
                         ),
-                      if (widget.OviDetails.selectedOviSire.isNotEmpty &&
-                          widget.OviDetails.selectedOviSire.first.father !=
+                      if (oviDetails.selectedOviSire.isNotEmpty &&
+                          oviDetails.selectedOviSire.first.father !=
                               null)
                         Text(
-                          'Maternal Grandfather: ${widget.OviDetails.selectedOviDam.first.father!.animalName}',
+                          'Maternal Grandfather: ${oviDetails.selectedOviDam.first.father!.animalName}',
                         ),
-                      if (widget.OviDetails.selectedOviDam.isNotEmpty &&
-                          widget.OviDetails.selectedOviDam.first.mother != null)
+                      if (oviDetails.selectedOviDam.isNotEmpty &&
+                          oviDetails.selectedOviDam.first.mother != null)
                         Text(
-                          'Maternal Grandmother: ${widget.OviDetails.selectedOviDam.first.mother!.animalName}',
+                          'Maternal Grandmother: ${oviDetails.selectedOviDam.first.mother!.animalName}',
                         ),
                       SizedBox(
                         height: globals.heightMediaQuery * 16,
@@ -225,7 +229,7 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
                               alignment: WrapAlignment.center,
                               spacing: 8.0,
                               runSpacing: 8.0,
-                              children: widget.OviDetails.selectedOviChips
+                              children: oviDetails.selectedOviChips
                                   .map((chip) {
                                 return CustomTag(
                                   label: chip,
@@ -276,14 +280,25 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
                                   // Content for the 'General' tab
                                   GeneralInfoAnimalWidget(
                                     onDateOfBirthPressed: () {},
-                                    onDateOfDeathPressed: () {},
-                                    onDateOfMatingPressed: () {},
-                                    onDateOfSalePressed: () {},
-                                    onDateOfWeaningPressed: () {},
+                                    onDateOfDeathPressed: () {
+                                      updateDateField('Date Of Death');
+                                    },
+                                    onDateOfMatingPressed: () {
+                                      updateDateField('Date Of Mating');
+                                    },
+                                    onDateOfSalePressed: () {
+                                      updateDateField('Date Of Sale');
+                                    },
+                                    onDateOfWeaningPressed: () {
+                                      updateDateField('Date Of Weaning');
+                                    },
+                                    onDateOfHatchingPressed: () {
+                                      updateDateField('Date Of Hatching');
+                                    },
                                     age: "3 years",
                                     type: "Mammal",
                                     sex: "Female",
-                                    OviDetails: widget.OviDetails,
+                                    OviDetails: oviDetails,
                                     breed: '',
                                     fieldName: '',
                                     fieldContent: '',
@@ -291,13 +306,13 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
 
                                   // Content for the 'Breeding' tab
                                   BreedingInfo(
-                                    OviDetails: widget.OviDetails,
+                                    OviDetails: oviDetails,
                                     breedingEvents: widget.breedingEvents,
                                   ),
 
                                   // Content for the 'Medical' tab
                                   MammalsMedical(
-                                    OviDetails: widget.OviDetails,
+                                    OviDetails: oviDetails,
                                   ),
                                 ],
                               ),
@@ -314,5 +329,19 @@ class _OwnedAnimalDetailsRegModeState extends State<OwnedAnimalDetailsRegMode>
         ),
       ),
     );
+  }
+
+  void updateDateField(dateType) {
+    if(!oviDetails.selectedOviDates.containsKey(dateType)) {
+      setState(() {
+        oviDetails.selectedOviDates[dateType] = DateTime.now();
+      });
+
+      ref.read(ovianimalsProvider.notifier).update((state) {
+        final index = state.indexWhere((animal) => animal.animalName == oviDetails.animalName);
+        state[index] = oviDetails;
+        return state;
+      });
+    }
   }
 }
