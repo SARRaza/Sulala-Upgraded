@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import '../../data/animal_filters.dart';
 import '../../data/classes.dart';
@@ -10,6 +11,11 @@ import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 
 import '../../widgets/controls_and_buttons/tags/tags.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
+import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
+import '../reg_mode/reg_home_page.dart';
+import '../reg_mode/show_filter_reg.dart';
+import 'drow_up_animal_breed.dart';
+import 'drow_up_animal_species.dart';
 import 'sar_listofanimals.dart';
 
 // ignore: must_be_immutable
@@ -24,8 +30,28 @@ class SarAnimalFilters extends ConsumerStatefulWidget {
 }
 
 class _SarAnimalFilters extends ConsumerState<SarAnimalFilters> {
-
   Map<String, String?> selectedAnimals = {};
+  Map<String, List<String>> visibleFilterItems = {};
+  List<Tag> currentStateTags = [
+    Tag(name: 'Borrowed'.tr, status: TagStatus.notActive),
+    Tag(name: 'Adopted'.tr, status: TagStatus.notActive),
+    Tag(name: 'Donated'.tr, status: TagStatus.notActive),
+    Tag(name: 'Escaped'.tr, status: TagStatus.notActive),
+    Tag(name: 'Stolen'.tr, status: TagStatus.notActive),
+    Tag(name: 'Transferred'.tr, status: TagStatus.notActive),
+  ];
+  List<Tag> medicalStateTags = [
+    Tag(name: 'Injured'.tr, status: TagStatus.notActive),
+    Tag(name: 'Sick'.tr, status: TagStatus.notActive),
+    Tag(name: 'Quarantined'.tr, status: TagStatus.notActive),
+    Tag(name: 'Medication'.tr, status: TagStatus.notActive),
+    Tag(name: 'Testing'.tr, status: TagStatus.notActive),
+  ];
+
+  List<Tag> otherStateTags = [
+    Tag(name: 'Sold'.tr, status: TagStatus.notActive),
+    Tag(name: 'Dead'.tr, status: TagStatus.notActive),
+  ];
 
   @override
   void initState() {
@@ -33,6 +59,9 @@ class _SarAnimalFilters extends ConsumerState<SarAnimalFilters> {
     for (var heading in filterItems.keys) {
       selectedAnimals[heading] = null;
     }
+    filterItems.forEach((heading, list) {
+      visibleFilterItems[heading] = list.take(3).toList();
+    });
   }
 
   void _showDialog(BuildContext context, String sectionHeading) {
@@ -371,8 +400,17 @@ class _SarAnimalFilters extends ConsumerState<SarAnimalFilters> {
               onPressed: () {
                 setState(() {
                   selectedAnimals.clear();
-                  for (var heading in filterItems.keys) {
+                  for (var heading in visibleFilterItems.keys) {
                     selectedAnimals[heading] = null;
+                  }
+                  for(var i = 0; i < currentStateTags.length; i++) {
+                    currentStateTags[i].status = TagStatus.notActive;
+                  }
+                  for(var i = 0; i < medicalStateTags.length; i++) {
+                    medicalStateTags[i].status = TagStatus.notActive;
+                  }
+                  for(var i = 0; i < otherStateTags.length; i++) {
+                    otherStateTags[i].status = TagStatus.notActive;
                   }
                 });
               },
@@ -391,7 +429,7 @@ class _SarAnimalFilters extends ConsumerState<SarAnimalFilters> {
       body: ListView(
         children: [
           for (var sectionIndex = 0;
-              sectionIndex < filterItems.length;
+              sectionIndex < visibleFilterItems.length;
               sectionIndex++)
             _buildSection(sectionIndex),
         ],
@@ -406,6 +444,21 @@ class _SarAnimalFilters extends ConsumerState<SarAnimalFilters> {
                 selectedFiltersList.add(value);
               }
             });
+            for (var tag in currentStateTags) {
+              if(tag.status == TagStatus.active) {
+                selectedFiltersList.add(tag.name);
+              }
+            }
+            for(var tag in medicalStateTags) {
+              if(tag.status == TagStatus.active) {
+                selectedFiltersList.add(tag.name);
+              }
+            }
+            for(var tag in otherStateTags) {
+              if(tag.status == TagStatus.active) {
+                selectedFiltersList.add(tag.name);
+              }
+            }
 
             ref
                 .read(selectedFiltersProvider.notifier)
@@ -447,12 +500,12 @@ class _SarAnimalFilters extends ConsumerState<SarAnimalFilters> {
   }
 
   Widget _buildSection(int sectionIndex) {
-    String sectionHeading = filterItems.keys.elementAt(sectionIndex);
-    List<String> sectionLanguages = filterItems[sectionHeading]!;
+    String sectionHeading = visibleFilterItems.keys.elementAt(sectionIndex);
+    List<String> sectionLanguages = visibleFilterItems[sectionHeading]!;
     String? selectedLanguage = selectedAnimals[sectionHeading];
 
-    bool showShowMoreButton =
-        sectionHeading != 'Animal Type' && sectionHeading != 'Animal Sex';
+    bool showShowMoreButton = filterItems[sectionHeading]!.length >
+        visibleFilterItems[sectionHeading]!.length;
 
     return Padding(
         padding: EdgeInsets.only(
@@ -479,8 +532,35 @@ class _SarAnimalFilters extends ConsumerState<SarAnimalFilters> {
                     PrimaryTextButton(
                       text: 'Show more',
                       onPressed: () {
-                        _showDialog(
-                            context, sectionHeading); // Show dialog on tap
+                        switch (sectionHeading) {
+                          case 'Animal Species':
+                            var speciesList = filterItems[sectionHeading]!
+                                .where((item) =>
+                                    !visibleFilterItems[sectionHeading]!
+                                        .contains(item))
+                                .toList();
+                            final animalType = selectedAnimals['Animal Type'];
+                            if (animalType == 'Mammal') {
+                              speciesList = speciesList
+                                  .where((element) =>
+                                      mammalSpeciesList.contains(element))
+                                  .toList();
+                            } else if (animalType == 'Oviparous') {
+                              speciesList = speciesList
+                                  .where((element) =>
+                                      oviparousSpeciesList.contains(element))
+                                  .toList();
+                            }
+                            _showAnimalSpecies(
+                                sectionHeading, context, speciesList);
+                            break;
+                          case 'Animal Breed':
+                            _showAnimalBreed(sectionHeading, context);
+                            break;
+                          case 'Tags':
+                            _showAnimalTags(context);
+                            break;
+                        }
                       },
                       status: TextStatus.idle,
                       position: TextButtonPosition.right,
@@ -517,6 +597,130 @@ class _SarAnimalFilters extends ConsumerState<SarAnimalFilters> {
         ));
   }
 
+  void _showAnimalSpecies(
+      String section, BuildContext context, List<String> speciesList) async {
+    List<String> filteredModalList = List.from(speciesList);
+    TextEditingController searchValue = TextEditingController();
+
+    DrowupAnimalSpecies drowupAnimalSpecies = DrowupAnimalSpecies(
+      searchValue: searchValue,
+      filteredModalList: filteredModalList,
+      modalAnimalSpeciesList: speciesList,
+      setState: setState,
+    );
+
+    drowupAnimalSpecies.resetSelection();
+
+    final selectedSpeciesValue = await showModalBottomSheet<String>(
+      showDragHandle: true,
+      backgroundColor: Colors.transparent,
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      builder: (BuildContext context) {
+        return drowupAnimalSpecies;
+      },
+    );
+
+    if (selectedSpeciesValue != null) {
+      setState(() {
+        visibleFilterItems[section]?.add(selectedSpeciesValue);
+        selectedAnimals[section] = selectedSpeciesValue;
+        visibleFilterItems['Animal Breed'] =
+            speciesToBreedsMap[selectedSpeciesValue]!;
+      });
+    }
+  }
+
+  void _showAnimalBreed(String section, BuildContext context) async {
+    final selectedAnimalSpecies = selectedAnimals['Animal Species'];
+    List<String> filteredBreedList = selectedAnimalSpecies != null
+        ? List.from(morespeciesToBreedsMap[selectedAnimalSpecies] ?? [])
+        : totalBreedsList;
+    TextEditingController searchValue = TextEditingController();
+
+    DrowupAnimalBreed drowupAnimalBreed = DrowupAnimalBreed(
+      searchValue: searchValue,
+      filteredBreedList: filteredBreedList,
+      setState: setState,
+      morespeciesToBreedsMap: morespeciesToBreedsMap,
+      selectedAnimalSpecies: selectedAnimalSpecies,
+    );
+
+    drowupAnimalBreed.resetSelection();
+
+    final selectedBreedValue = await showModalBottomSheet<String>(
+      showDragHandle: true,
+      backgroundColor: Colors.transparent,
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      builder: (BuildContext context) {
+        return drowupAnimalBreed;
+      },
+    );
+
+    if (selectedBreedValue != null) {
+      setState(() {
+        if (!visibleFilterItems[section]!.contains(selectedBreedValue)) {
+          visibleFilterItems[section]?.add(selectedBreedValue);
+        }
+        selectedAnimals[section] = selectedBreedValue;
+      });
+    }
+  }
+
+  Future<void> _showAnimalTags(context) async {
+    await showModalBottomSheet(
+      showDragHandle: true,
+      backgroundColor: Colors.transparent,
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      builder: (BuildContext context) {
+        return Container(
+          color: Colors.transparent,
+          child: DrowupWidget(
+            heightFactor: 0.73,
+            heading: "Tags".tr,
+            content: ShowFilterReg(
+              currentStateTags: currentStateTags,
+              medicalStateTags: medicalStateTags,
+              otherStateTags: otherStateTags,
+              updatedCurrentTagStatus: updateCurrentTagStatus,
+              updatedMedicalTagStatus: updateMedicalTagStatus,
+              updatedOtherTagStatus: updateOtherTagStatus,
+            ),
+          ),
+        );
+      },
+    );
+    setState(() {
+
+    });
+  }
+
+  void updateCurrentTagStatus(String tagName, TagStatus updatedStatus) {
+    final tagIndex = currentStateTags.indexWhere((tag) => tag.name == tagName);
+    if (tagIndex != -1) {
+      currentStateTags[tagIndex].status = updatedStatus;
+    }
+  }
+
+  void updateMedicalTagStatus(String tagName, TagStatus updatedStatus) {
+    final tagIndex = medicalStateTags.indexWhere((tag) => tag.name == tagName);
+    if (tagIndex != -1) {
+      medicalStateTags[tagIndex].status = updatedStatus;
+    }
+  }
+
+  void updateOtherTagStatus(String tagName, TagStatus updatedStatus) {
+    final tagIndex = otherStateTags.indexWhere((tag) => tag.name == tagName);
+    if (tagIndex != -1) {
+      otherStateTags[tagIndex].status = updatedStatus;
+    }
+  }
+
   Widget _buildListItem(
       String sectionHeading, String language, String? selectedLanguage) {
     bool isSelected = language == selectedLanguage;
@@ -527,6 +731,14 @@ class _SarAnimalFilters extends ConsumerState<SarAnimalFilters> {
 
     if (isMaleSelected && isBreedingStage && isPregnantOrLactating) {
       isSelected = false;
+    }
+    if (sectionHeading == 'Tags') {
+      isSelected = currentStateTags.any((tag) =>
+              tag.status == TagStatus.active && tag.name == language) ||
+          medicalStateTags.any((tag) =>
+              tag.status == TagStatus.active && tag.name == language) ||
+          otherStateTags.any(
+              (tag) => tag.status == TagStatus.active && tag.name == language);
     }
 
     Color borderColor = isSelected ? Colors.green : Colors.grey;
@@ -556,10 +768,46 @@ class _SarAnimalFilters extends ConsumerState<SarAnimalFilters> {
       ),
       onTap: () {
         setState(() {
+          if (sectionHeading == 'Tags') {
+            final currentStateIndex = currentStateTags.indexWhere((tag) => tag.name == language);
+            final medicalStateIndex = medicalStateTags.indexWhere((tag) => tag.name == language);
+            final otherStateIndex = otherStateTags.indexWhere((tag) => tag.name == language);
+            if(currentStateIndex != -1) {
+              currentStateTags[currentStateIndex].status = isSelected ? TagStatus.notActive : TagStatus.active;
+            }
+            if(medicalStateIndex != -1) {
+              medicalStateTags[medicalStateIndex].status = isSelected ? TagStatus.notActive : TagStatus.active;
+            }
+            if(otherStateIndex != -1) {
+              otherStateTags[otherStateIndex].status = isSelected ? TagStatus.notActive : TagStatus.active;
+            }
+            return;
+          }
           if (isSelected) {
             selectedAnimals[sectionHeading] = null;
           } else {
             selectedAnimals[sectionHeading] = language;
+          }
+          if (sectionHeading == 'Animal Type') {
+            final animalType = selectedAnimals[sectionHeading];
+            if (animalType == 'Mammal') {
+              visibleFilterItems['Animal Species'] =
+                  filterItems['Animal Species']!
+                      .where((element) => mammalSpeciesList.contains(element))
+                      .take(3)
+                      .toList();
+            } else if (animalType == 'Oviparous') {
+              visibleFilterItems['Animal Species'] =
+                  filterItems['Animal Species']!
+                      .where(
+                          (element) => oviparousSpeciesList.contains(element))
+                      .take(3)
+                      .toList();
+            }
+          } else if (sectionHeading == 'Animal Species' &&
+              selectedAnimals[sectionHeading] != null) {
+            visibleFilterItems['Animal Breed'] =
+                speciesToBreedsMap[selectedAnimals[sectionHeading]]!;
           }
         });
       },

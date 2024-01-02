@@ -16,14 +16,14 @@ class DrowupAnimalBreed extends ConsumerStatefulWidget {
   List<String> filteredBreedList = [];
 
   StateSetter setState;
-  String selectedAnimalSpecies;
+  String? selectedAnimalSpecies;
   Map<String, List<String>> morespeciesToBreedsMap = {};
 
   DrowupAnimalBreed(
       {super.key,
       required this.searchValue,
       required this.filteredBreedList,
-      required this.selectedAnimalSpecies,
+      this.selectedAnimalSpecies,
       required this.morespeciesToBreedsMap,
       required this.setState});
 
@@ -56,10 +56,12 @@ class _DrowupAnimalBreedState extends ConsumerState<DrowupAnimalBreed> {
                 setState(() {
                   value = widget.searchValue.text;
                   if (value.isNotEmpty) {
-                    List<String> breedsForSpecies =
+                    List<String> breedsForSpecies = widget.selectedAnimalSpecies
+                        != null ?
                         widget.morespeciesToBreedsMap[
                                 widget.selectedAnimalSpecies] ??
-                            [];
+                            [] : totalBreedsList;
+
                     widget.filteredBreedList = breedsForSpecies
                         .where((breed) =>
                             breed.toLowerCase().contains(value.toLowerCase()))
