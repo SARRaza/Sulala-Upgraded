@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import '../../data/animal_filters.dart';
 import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
@@ -23,14 +24,6 @@ class SarAnimalFilters extends ConsumerStatefulWidget {
 }
 
 class _SarAnimalFilters extends ConsumerState<SarAnimalFilters> {
-  Map<String, List<String>> filterItems = {
-    'Animal Type': ['Mammal', 'Oviparous'],
-    'Animal Species': ['Sheep', 'Cow', 'Horse'],
-    'Animal Breed': ['Altafai stoat', 'East Siberian stoat', 'Gobi stoat'],
-    'Animal Sex': ['Male', 'Female'],
-    'Breeding Stage': ['Ready for breeding', 'Pregnant', 'Lactating'],
-    'Tags': ['Borrowed', 'Adopted', 'Donated'],
-  };
 
   Map<String, String?> selectedAnimals = {};
 

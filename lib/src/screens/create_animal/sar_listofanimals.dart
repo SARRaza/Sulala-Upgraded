@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:sulala_upgrade/src/data/animal_filters.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import 'package:sulala_upgrade/src/screens/create_animal/sar_animalfilters.dart';
 import 'package:sulala_upgrade/src/widgets/pages/main_widgets/navigation_bar_reg_mode.dart';
@@ -143,15 +144,27 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
   ) {
     // Filter the OviAnimals list based on the filterQuery
     final filteredOviAnimals = ref.read(ovianimalsProvider).where((animal) {
-      // Add conditions to check against selected filters
-      return ref.read(selectedFiltersProvider).every((filter) {
-        // Add logic based on your data structure to match against filters
-        return animal.selectedAnimalType == filter ||
-            animal.selectedAnimalBreed == filter ||
-            // Add more conditions as needed
-            // ...
-            false;
-      });
+      final filters = ref.read(selectedFiltersProvider);
+      final animalType = filters.firstWhereOrNull((filter) =>
+          filterItems['Animal Type']!.contains(filter));
+      final animalSpecies = filters.firstWhereOrNull((filter) =>
+          filterItems['Animal Species']!.contains(filter));
+      final animalBreed = filters.firstWhereOrNull((filter) =>
+          filterItems['Animal Breed']!.contains(filter));
+      final animalSex = filters.firstWhereOrNull((filter) =>
+          filterItems['Animal Sex']!.contains(filter));
+      final breedingStage = filters.firstWhereOrNull((filter) =>
+          filterItems['Breeding Stage']!.contains(filter));
+      final tags = filters.firstWhereOrNull((filter) => filterItems['Tags']!
+          .contains(filter));
+
+      return (animalType == null || animal.selectedAnimalType == animalType) &&
+          (animalSpecies == null || animal.selectedAnimalSpecies ==
+              animalSpecies) && (animalBreed == null ||
+          animal.selectedAnimalBreed == animalBreed) && (animalSex == null ||
+          animal.selectedOviGender == animalSex) && (breedingStage == null ||
+          animal.selectedBreedingStage == breedingStage) && (tags == null ||
+          animal.selectedOviChips.contains(tags));
     }).toList();
     return RefreshIndicator(
       onRefresh: _refreshOviAnimals,
