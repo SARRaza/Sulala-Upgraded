@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../../data/classes.dart';
 import '../../../data/riverpod_globals.dart';
@@ -39,6 +40,7 @@ int generateUniqueId() {
 
 class _BreedingInfoState extends ConsumerState<BreedingInfo> {
   Set<String> addedChildIds = {};
+
   @override
   Widget build(BuildContext context) {
     List<Person> familyMembers = [
@@ -154,8 +156,23 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
             .read(ovianimalsProvider)[animalIndex]
             .breedingEvents[widget.OviDetails.animalName] ??
         [];
+    DateTime? lastBreedingDate;
+    DateTime? nextBreedingDate;
+    final now = DateTime.now();
     // Add persons based on the breeding events and children
     for (final breedingEvent in breedingEvents) {
+      if(breedingEvent.breedingDate.isNotEmpty) {
+        final dateSegments = breedingEvent.breedingDate.split('/');
+
+        final breedingDate = DateTime(int.parse(dateSegments[2]), int.parse(
+            dateSegments[1]), int.parse(dateSegments[0]));
+        if(breedingDate.isBefore(now) && (lastBreedingDate == null ||
+            breedingDate.isAfter(lastBreedingDate))) {
+          lastBreedingDate = breedingDate;
+        }
+      }
+
+
       for (final child in breedingEvent.children) {
         // Check if the child ID is already added, skip if it exists
         if (!addedChildIds.contains(child.animalName)) {
@@ -181,6 +198,14 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
         }
       }
     }
+    if(lastBreedingDate != null) {
+      nextBreedingDate = lastBreedingDate.add(Duration(
+          days: gestationPeriods[widget.OviDetails.selectedAnimalSpecies]!));
+      if(nextBreedingDate.isBefore(now)) {
+        nextBreedingDate = now;
+      }
+    }
+
     bool animalGender = true;
     return SingleChildScrollView(
       child: Column(
@@ -189,20 +214,25 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
           if (widget.OviDetails.selectedOviGender == 'Female')
             SizedBox(
               width: globals.widthMediaQuery * 343,
-              child: const OneInformationBlock(
-                  head1: 'Pregnant', subtitle1: 'Current State'),
+              child: OneInformationBlock(
+                  head1: 'Pregnancy status',
+                  subtitle1: widget.OviDetails.pregnant == true ? 'Pregnant' :
+                  'Not Pregnant'),
             ),
           if (animalGender)
             SizedBox(
               height: globals.heightMediaQuery * 8,
             ),
           if (widget.OviDetails.selectedOviGender == 'Female' &&
-              widget.OviDetails.selectedAnimalType == 'Oviparous')
+              widget.OviDetails.selectedAnimalType == 'Oviparous' && (
+              lastBreedingDate != null || nextBreedingDate != null))
             SizedBox(
               width: 343 * globals.widthMediaQuery,
-              child: const TwoInformationBlock(
-                head1: '12.02.2023',
-                head2: '12.02.2023',
+              child: TwoInformationBlock(
+                head1: lastBreedingDate != null ? DateFormat('dd.MM.yyyy')
+                    .format(lastBreedingDate) : '',
+                head2: nextBreedingDate != null ? DateFormat('dd.MM.yyyy')
+                    .format(nextBreedingDate) : '',
                 subtitle1: "Last Breeding Date",
                 subtitle2: 'Next Breeding Date',
               ),

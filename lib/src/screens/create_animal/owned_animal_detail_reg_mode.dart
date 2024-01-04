@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -7,6 +9,7 @@ import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../data/classes.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
+import '../../widgets/animal_info_modal_sheets.dart/animal_image_picker.dart';
 import '../../widgets/controls_and_buttons/tags/custom_tags.dart';
 import '../../widgets/pages/owned_animal/breeding_info.dart';
 import '../../widgets/pages/owned_animal/general_info_animal_widget.dart';
@@ -152,20 +155,23 @@ class _OwnedAnimalDetailsRegModeState extends ConsumerState<OwnedAnimalDetailsRe
                 child: Expanded(
                   child: Column(
                     children: [
-                      CircleAvatar(
-                        radius: MediaQuery.of(context).size.width * 0.16,
-                        backgroundColor: Colors.grey[100],
-                        backgroundImage:
-                            oviDetails.selectedOviImage != null
-                                ? FileImage(oviDetails.selectedOviImage!)
-                                : null,
-                        child: oviDetails.selectedOviImage == null
-                            ? const Icon(
-                                Icons.camera_alt_outlined,
-                                size: 50,
-                                color: Colors.grey,
-                              )
-                            : null,
+                      GestureDetector(
+                        onTap: () => _showImagePicker(context),
+                        child: CircleAvatar(
+                          radius: MediaQuery.of(context).size.width * 0.16,
+                          backgroundColor: Colors.grey[100],
+                          backgroundImage:
+                              oviDetails.selectedOviImage != null
+                                  ? FileImage(oviDetails.selectedOviImage!)
+                                  : null,
+                          child: oviDetails.selectedOviImage == null
+                              ? const Icon(
+                                  Icons.camera_alt_outlined,
+                                  size: 50,
+                                  color: Colors.grey,
+                                )
+                              : null,
+                        ),
                       ),
                       SizedBox(
                         height: globals.heightMediaQuery * 16,
@@ -313,6 +319,11 @@ class _OwnedAnimalDetailsRegModeState extends ConsumerState<OwnedAnimalDetailsRe
                                   // Content for the 'Medical' tab
                                   MammalsMedical(
                                     OviDetails: oviDetails,
+                                    pregnancyStatusUpdated: (status) {
+                                      setState(() {
+                                        oviDetails.pregnant = status;
+                                      });
+                                    },
                                   ),
                                 ],
                               ),
@@ -343,5 +354,25 @@ class _OwnedAnimalDetailsRegModeState extends ConsumerState<OwnedAnimalDetailsRe
         return state;
       });
     }
+  }
+
+  void _showImagePicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      builder: (BuildContext context) {
+        return AnimalImagePickerWidget(onImageSelected: (file) {
+          setState(() {
+            oviDetails.selectedOviImage = File(file.path);
+          });
+
+          ref.read(ovianimalsProvider.notifier).update((state) {
+            final index = state.indexWhere((animal) => animal.animalName == oviDetails.animalName);
+            state[index] = oviDetails;
+            return state;
+          });
+        });
+      },
+    );
   }
 }

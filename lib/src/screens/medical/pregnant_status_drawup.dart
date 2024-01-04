@@ -102,7 +102,7 @@ class PregnantStatusWidget extends StatelessWidget {
                       child: PrimaryButton(
                           text: 'Confirm',
                           onPressed: () {
-                            Navigator.pop(context);
+                            Navigator.pop(context, mammalpregnantStatuses);
                           }),
                     )
                   ],

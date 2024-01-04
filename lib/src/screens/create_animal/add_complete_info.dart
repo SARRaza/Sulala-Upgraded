@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
+import 'package:sulala_upgrade/src/widgets/animal_info_modal_sheets.dart/animal_image_picker.dart';
 
 import '../../data/classes.dart';
 import '../../data/place_holders.dart';
@@ -91,63 +92,10 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
       context: context,
       backgroundColor: Colors.white,
       builder: (BuildContext context) {
-        return SizedBox(
-          height: 150,
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 10,
-              ),
-              ListTile(
-                trailing: const Icon(
-                  Icons.chevron_right_rounded,
-                  color: AppColors.grayscale50,
-                ),
-                title: const Text('Camera'),
-                onTap: () async {
-                  Navigator.pop(context);
-                  final pickedAnimalImage =
-                      await _Animalpicker.pickImage(source: ImageSource.camera);
-                  if (pickedAnimalImage != null) {
-                    ref
-                        .read(selectedAnimalImageProvider.notifier)
-                        .update((state) => File(pickedAnimalImage.path));
-                    // setState(() {
-                    //   _selectedOviImage = File(pickedAnimalImage.path);
-                    // });
-                  }
-                },
-              ),
-              Container(
-                height: 1,
-                width: globals.widthMediaQuery * 343,
-                color: AppColors.grayscale20,
-              ),
-              ListTile(
-                trailing: const Icon(
-                  Icons.chevron_right_rounded,
-                  color: AppColors.grayscale50,
-                ),
-                title: const Text('Gallery'),
-                onTap: () async {
-                  Navigator.pop(context);
-                  final pickedAnimalImage = await _Animalpicker.pickImage(
-                      source: ImageSource.gallery);
-                  if (pickedAnimalImage != null) {
-                    ref
-                        .read(selectedAnimalImageProvider.notifier)
-                        .update((state) => File(pickedAnimalImage.path));
-                  }
-                },
-              ),
-              Container(
-                height: 1,
-                width: globals.widthMediaQuery * 343,
-                color: AppColors.grayscale20,
-              ),
-            ],
-          ),
-        );
+        return AnimalImagePickerWidget(onImageSelected: (file) {
+          ref.read(selectedAnimalImageProvider.notifier).update(
+                  (state) => file);
+        });
       },
     );
   }

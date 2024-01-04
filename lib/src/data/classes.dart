@@ -79,7 +79,7 @@ class OviVariables {
   final String selectedAnimalSpecies;
   final String selectedAnimalType;
   final List<String> selectedOviChips;
-  final File? selectedOviImage;
+  File? selectedOviImage;
   final String layingFrequency;
   final String eggsPerMonth;
   final String numOfEggs;
@@ -100,6 +100,7 @@ class OviVariables {
   final Map<String, List<VaccineDetails>> vaccineDetails;
   final Map<String, List<MedicalCheckupDetails>> checkUpDetails;
   final Map<String, List<SurgeryDetails>> surgeryDetails;
+  bool? pregnant;
 
   OviVariables({
     required this.selectedFilters,
@@ -142,6 +143,7 @@ class OviVariables {
     required this.dateOfLayingEggs,
     required this.checkUpDetails,
     required this.surgeryDetails,
+    this.pregnant
   });
   OviVariables copyWith(
       {List<String>? selectedFilters,

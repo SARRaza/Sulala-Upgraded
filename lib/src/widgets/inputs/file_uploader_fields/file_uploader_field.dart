@@ -1,8 +1,12 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../../data/riverpod_globals.dart';
 import '../../../theme/colors/colors.dart';
@@ -39,11 +43,35 @@ class _FileUploaderFieldState extends ConsumerState<FileUploaderField> {
 
   Future<void> _uploadFile(String filePath) async {
     // Simulate file upload process (you should implement your upload logic here)
-    for (int i = 0; i <= 100; i += 10) {
+    for (int i = 0; i <= 90; i += 10) {
       await Future.delayed(const Duration(milliseconds: 500));
       setState(() {
         _uploadProgress = i / 100;
       });
+    }
+    try {
+      // Get the directory where we can store app-specific files
+      final directory = await getApplicationDocumentsDirectory();
+
+      // Create a File instance for the selected file
+      final selectedFile = File(filePath);
+
+      // Create a new file path in the app's data directory
+      final String newFilePath = '${directory.path}/${selectedFile.uri.pathSegments.last}';
+
+      // Copy the file to the new location
+      await selectedFile.copy(newFilePath);
+
+      // Update the state to reflect the file has been saved
+      setState(() {
+        _uploadProgress = 1; // Assuming the file is saved, set progress to 100%
+        // You may also want to update other states or notify the user
+      });
+    } catch (e) {
+      // Handle errors (e.g., file not found, no permission, etc.)
+      if (kDebugMode) {
+        print("Error saving file: $e");
+      }
     }
   }
 

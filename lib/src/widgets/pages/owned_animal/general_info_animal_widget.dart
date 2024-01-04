@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:path_provider/path_provider.dart';
 import '../../../data/classes.dart';
 import '../../../data/riverpod_globals.dart';
+import '../../../screens/pdf/pdf_view_page.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 import '../../lists/table_lsit/table_textbutton.dart';
@@ -205,17 +210,22 @@ class _GeneralInfoAnimalWidgetState
                 SizedBox(
                   height: globals.heightMediaQuery * 24,
                 ),
-                Text(
-                  "Additional Notes",
-                  style: AppFonts.title5(color: AppColors.grayscale90),
-                ),
-                SizedBox(
-                  height: globals.heightMediaQuery * 14,
-                ),
-                Text(
-                  widget.OviDetails.notes,
-                  style: AppFonts.body1(color: AppColors.grayscale90),
-                ),
+                if(widget.OviDetails.notes.isNotEmpty)
+                  Column(
+                    children: [
+                      Text(
+                        "Additional Notes",
+                        style: AppFonts.title5(color: AppColors.grayscale90),
+                      ),
+                      SizedBox(
+                        height: globals.heightMediaQuery * 14,
+                      ),
+                      Text(
+                        widget.OviDetails.notes,
+                        style: AppFonts.body1(color: AppColors.grayscale90),
+                      ),
+                    ],
+                  ),
                 ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -223,36 +233,39 @@ class _GeneralInfoAnimalWidgetState
                   itemBuilder: (context, index) {
                     final fileName = uploadedFiles[index];
 
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.file_copy_outlined,
-                            color: AppColors.primary30,
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              fileName,
-                              style:
-                                  AppFonts.body1(color: AppColors.grayscale90),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                    return GestureDetector(
+                      onTap: () => showFile(fileName),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.file_copy_outlined,
+                              color: AppColors.primary30,
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          if (_loading)
+                            const SizedBox(width: 8),
                             Expanded(
-                              child: LinearProgressIndicator(
-                                value: _uploadProgress,
-                                valueColor: const AlwaysStoppedAnimation<Color>(
-                                  AppColors.primary30,
-                                ),
-                                backgroundColor: AppColors.grayscale10,
+                              child: Text(
+                                fileName,
+                                style:
+                                    AppFonts.body1(color: AppColors.grayscale90),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                        ],
+                            const SizedBox(width: 8),
+                            if (_loading)
+                              Expanded(
+                                child: LinearProgressIndicator(
+                                  value: _uploadProgress,
+                                  valueColor: const AlwaysStoppedAnimation<Color>(
+                                    AppColors.primary30,
+                                  ),
+                                  backgroundColor: AppColors.grayscale10,
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -266,5 +279,28 @@ class _GeneralInfoAnimalWidgetState
         ),
       ],
     );
+  }
+
+  Future<void> showFile(String fileName) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final String filePath = '${directory.path}/$fileName';
+    final file = File(filePath);
+    if(mounted) {
+      if (fileName.endsWith('.pdf')) {
+        // Open PDF
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PDFViewPage(file: file)),
+        );
+      } else {
+        // Open Image in a new screen or dialog
+        showDialog(
+          context: context,
+          builder: (context) => Dialog(
+            child: Image.file(file),
+          ),
+        );
+      }
+    }
   }
 }

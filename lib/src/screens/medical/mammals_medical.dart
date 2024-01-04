@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
@@ -26,7 +27,9 @@ import 'pregnant_status_drawup.dart';
 
 class MammalsMedical extends ConsumerStatefulWidget {
   final OviVariables OviDetails;
-  const MammalsMedical({super.key, required this.OviDetails});
+  final Function pregnancyStatusUpdated;
+  const MammalsMedical({super.key, required this.OviDetails,
+    required this.pregnancyStatusUpdated});
 
   @override
   ConsumerState<MammalsMedical> createState() => _MammalsMedicalState();
@@ -34,7 +37,6 @@ class MammalsMedical extends ConsumerStatefulWidget {
 
 bool _isMammalEditMode = false;
 bool? newMammalpregnantStatus;
-bool mammalpregnantStatuses = false;
 String newmammalmatingdate = 'ADD';
 String newmammalsonardate = 'ADD';
 String newmammalexpdeliverydate = 'ADD';
@@ -433,7 +435,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
   }
 
   void _showPregnantStatusSelection(BuildContext context) {
-    showModalBottomSheet(
+    showModalBottomSheet<bool>(
       showDragHandle: true,
       backgroundColor: Colors.transparent,
       context: context,
@@ -441,14 +443,12 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
       isDismissible: true,
       builder: (BuildContext context) {
         return PregnantStatusWidget(
-          mammalpregnantStatuses: mammalpregnantStatuses,
+          mammalpregnantStatuses: widget.OviDetails.pregnant,
           newMammalpregnantStatus: newMammalpregnantStatus,
         );
       },
-    ).then((_) {
-      setState(() {
-        newMammalpregnantStatus == mammalpregnantStatuses;
-      });
+    ).then((newStatus) {
+      widget.pregnancyStatusUpdated(newStatus);
     });
   }
 
@@ -641,7 +641,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Not Pregnant',
+                        widget.OviDetails.pregnant == true ? 'Pregnant'.tr : 'Not Pregnant'.tr,
                         style: AppFonts.body2(color: AppColors.grayscale90),
                       ),
                       const Icon(Icons.chevron_right_rounded,

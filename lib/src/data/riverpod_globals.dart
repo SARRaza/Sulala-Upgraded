@@ -263,6 +263,21 @@ Map<String, List<String>> morespeciesToBreedsMap = {
   'Gecko': ['Leopard Gecko', 'Crested Gecko', 'Tokay Gecko'],
 };
 
+Map<String, int> gestationPeriods = {
+  'Dog': 58, // Gestation period in days
+  'Cat': 64,
+  'Elephant': 640,
+  'Lion': 110,
+  'Monkey': 164, // This can vary greatly among species
+  'Bear': 180, // Depending on the species
+  'Tiger': 93,
+  'Giraffe': 400,
+  'Kangaroo': 31, // This is for the Eastern Grey Kangaroo
+  'Horse': 330,
+  'Zebra': 360,
+  'Panda': 95, // Giant Panda
+};
+
 final mammalSpeciesCountProvider = Provider<Map<String, int>>((ref) {
   final mammals = ref
       .watch(ovianimalsProvider)
