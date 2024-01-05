@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:sulala_upgrade/src/screens/create_animal/owned_animal_detail_reg_mode.dart';
 import '../../data/classes.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -15,6 +16,7 @@ class ParentsItem extends StatelessWidget {
   final String id;
   final String age;
   final OviVariables OviDetails;
+  final void Function()? onTap;
 
   const ParentsItem({
     Key? key, // Add 'Key?' type to the key parameter
@@ -24,6 +26,7 @@ class ParentsItem extends StatelessWidget {
     required this.sex,
     required this.age,
     required this.id,
+    this.onTap
   }) : super(key: key); // Call the super constructor with the provided key
 
   @override
@@ -36,43 +39,46 @@ class ParentsItem extends StatelessWidget {
       }
     }
 
-    return Column(
-      children: [
-        CircleAvatar(
-          backgroundColor: Colors.transparent,
-          backgroundImage: getImage(),
-          radius: 60 * globals.widthMediaQuery,
-        ),
-        SizedBox(height: 16 * globals.heightMediaQuery),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            sex.toLowerCase() != "male"
-                ? Image.asset(
-                    "assets/icons/frame/24px/16_Gender_female_1_5.png")
-                : Image.asset("assets/icons/frame/24px/16_Gender_male_1_5.png"),
-            SizedBox(width: globals.widthMediaQuery * 3.75),
-            Text(
-              name,
-              style: AppFonts.title5(
-                color: AppColors.grayscale90,
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          CircleAvatar(
+            backgroundColor: Colors.transparent,
+            backgroundImage: getImage(),
+            radius: 60 * globals.widthMediaQuery,
+          ),
+          SizedBox(height: 16 * globals.heightMediaQuery),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              sex.toLowerCase() != "male"
+                  ? Image.asset(
+                      "assets/icons/frame/24px/16_Gender_female_1_5.png")
+                  : Image.asset("assets/icons/frame/24px/16_Gender_male_1_5.png"),
+              SizedBox(width: globals.widthMediaQuery * 3.75),
+              Text(
+                name,
+                style: AppFonts.title5(
+                  color: AppColors.grayscale90,
+                ),
               ),
+            ],
+          ),
+          Text(
+            'ID #$id',
+            style: AppFonts.body2(
+              color: AppColors.grayscale80,
             ),
-          ],
-        ),
-        Text(
-          'ID #$id',
-          style: AppFonts.body2(
-            color: AppColors.grayscale80,
           ),
-        ),
-        Text(
-          age,
-          style: AppFonts.body2(
-            color: AppColors.grayscale80,
+          Text(
+            age,
+            style: AppFonts.body2(
+              color: AppColors.grayscale80,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

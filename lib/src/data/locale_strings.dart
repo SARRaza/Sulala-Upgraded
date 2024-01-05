@@ -15,7 +15,9 @@ class LocalStrings extends Translations {
           'Wannajoin': 'Want To Start Your Farm Right Now & Join',
           'Joinnow': 'Join Now',
           'SignIn': 'Sign In',
-          'Welcome': 'Welcome'
+          'Welcome': 'Welcome',
+          '1 year': '1 year',
+          'numYears': '%s years'
         },
         // Hindi Language
         'hi_IN': {

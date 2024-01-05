@@ -101,6 +101,7 @@ class OviVariables {
   final Map<String, List<MedicalCheckupDetails>> checkUpDetails;
   final Map<String, List<SurgeryDetails>> surgeryDetails;
   bool? pregnant;
+  int? _age;
 
   OviVariables({
     required this.selectedFilters,
@@ -232,6 +233,26 @@ class OviVariables {
       surgeryDetails: surgeryDetails ?? this.surgeryDetails,
     );
   }
+
+  int get age {
+    if(_age == null) {
+      DateTime currentDate = DateTime.now();
+      List birthDateSegments = dateOfBirth.split('/');
+      if(birthDateSegments.isEmpty) {
+        _age = 0;
+      } else {
+        DateTime birthDate = DateTime(int.parse(birthDateSegments[2]), int
+            .parse(birthDateSegments[1]), int.parse(birthDateSegments[0]));
+        int age = currentDate.year - birthDate.year;
+        if (currentDate.month < birthDate.month ||
+            (currentDate.month == birthDate.month && currentDate.day < birthDate.day)) {
+          age--;
+        }
+        _age = age;
+      }
+    }
+    return _age!;
+  }
 }
 
 class BreedingDetails {
@@ -264,7 +285,11 @@ class BreedingEventVariables {
   final List<BreedChildItem> children;
   final File? breeddam;
   final String breedingDate;
-  final String deliveryDate;
+  final String? deliveryDate;
+  final String? layingEggsDate;
+  final int? eggsNumber;
+  final String? incubationDate;
+  final String? hatchingDate;
   final String notes;
   final bool shouldAddEvent;
 
@@ -276,9 +301,10 @@ class BreedingEventVariables {
     required this.partner,
     required this.children,
     required this.breedingDate,
-    required this.deliveryDate,
+    this.deliveryDate,
     required this.notes,
     required this.shouldAddEvent,
+    this.layingEggsDate, this.eggsNumber, this.incubationDate, this.hatchingDate
   });
   BreedingEventVariables copyWith({
     String? eventNumber,

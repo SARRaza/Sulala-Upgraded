@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
@@ -44,6 +45,8 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
   List<BreedChildItem> selectedChildren = [];
   List<BreedingPartner> breedPartners = [];
 
+  final _eggsNumberController = TextEditingController();
+
   void setBreedingSelectedDate(DateTime breedingDate) {
     setState(() {
       ref.read(breedingDateProvider.notifier).update((state) {
@@ -61,6 +64,36 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
         state = DateFormat('dd/MM/yyyy').format(Deliverydate);
         return state;
       });
+    });
+  }
+
+  void setLayingEggsSelectedDate(DateTime layingEggsDate) {
+    ref.read(dateOfLayingEggsProvider.notifier).update((state) {
+      // Format the date as needed before updating the state
+      state = DateFormat('dd/MM/yyyy').format(layingEggsDate);
+      return state;
+    });
+  }
+
+  void setEggsNumber(String eggsNumber) {
+    ref.read(numOfEggsProvider.notifier).update((state) {
+      state = eggsNumber;
+      return state;
+    });
+  }
+
+  void setIncubationSelectedDate(DateTime incubationDate) {
+    ref.read(incubationDateProvider.notifier).update((state) {
+      // Format the date as needed before updating the state
+      state = DateFormat('dd/MM/yyyy').format(incubationDate);
+      return state;
+    });
+  }
+
+  void setHatchingSelectedDate(DateTime hatchingDate) {
+    ref.read(dateOfHatchingProvider.notifier).update((state) {
+      state = hatchingDate;
+      return state;
     });
   }
 
@@ -356,11 +389,12 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                         ref
                             .read(breedingPartnerProvider.notifier)
                             .update((state) => breedPartners);
+
+                        ref.read(breedingPartnerDetailsProvider.notifier)
+                            .update(
+                                (state) => "${breedPartners.last.animalName} (ID: 301)"
+                        );
                         Navigator.pop(context);
-                        // Append the selected children to the existing list
-                        final List<BreedingPartner> existingSelectedChildren =
-                            ref.read(breedingPartnerProvider);
-                        existingSelectedChildren.addAll(breedPartners);
                       },
                       child: const Text("Done"),
                     ),
@@ -547,43 +581,6 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                   ],
                 ),
                 SizedBox(height: 10 * globals.heightMediaQuery),
-                ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: partner.length,
-                  itemBuilder: (context, index) {
-                    final BreedingPartner child = partner[index];
-                    return ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: CircleAvatar(
-                        radius: globals.widthMediaQuery * 24,
-                        backgroundColor: Colors.transparent,
-                        backgroundImage: child.selectedOviImage != null
-                            ? FileImage(child.selectedOviImage!)
-                            : null,
-                        child: child.selectedOviImage == null
-                            ? const Icon(
-                                Icons.camera_alt_outlined,
-                                size: 50,
-                                color: Colors.grey,
-                              )
-                            : null,
-                      ),
-                      title: Text(
-                        child.animalName,
-                        style: AppFonts.headline4(color: AppColors.grayscale90),
-                      ),
-                      subtitle: Text(
-                        child.selectedOviGender,
-                        style: AppFonts.body2(color: AppColors.grayscale70),
-                      ),
-                      trailing: Text(
-                        'ID#131340',
-                        style: AppFonts.body2(color: AppColors.grayscale70),
-                      ),
-                    );
-                  },
-                ),
                 PrimaryDateField(
                   labelText: 'Breeding Date',
                   hintText: 'DD/MM/YYYY',
@@ -593,14 +590,49 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                   },
                 ),
                 SizedBox(height: 20 * globals.heightMediaQuery),
-                PrimaryDateField(
-                  labelText: 'Delivery Date',
-                  hintText: 'DD/MM/YYYY',
-                  onChanged: (value) {
-                    // Assuming value is a DateTime
-                    setDeliverySelectedDate(value);
-                  },
-                ),
+                if (widget.OviDetails.selectedAnimalType == 'Mammal')
+                  PrimaryDateField(
+                    labelText: 'Delivery Date',
+                    hintText: 'DD/MM/YYYY',
+                    onChanged: (value) {
+                      setDeliverySelectedDate(value);
+                    },
+                  ),
+                if (widget.OviDetails.selectedAnimalType == 'Oviparous')
+                  Column(
+                    children: [
+                      PrimaryDateField(
+                        labelText: 'Date of laying eggs'.tr,
+                        hintText: 'DD/MM/YYYY',
+                        onChanged: (value) {
+                          setLayingEggsSelectedDate(value);
+                        },
+                      ),
+                      PrimaryTextField(
+                        keyboardType: TextInputType.number,
+                        labelText: 'Number of eggs'.tr,
+                        hintText: '0',
+                        controller: _eggsNumberController,
+                        onChanged: (value) {
+                          setEggsNumber(value);
+                        },
+                      ),
+                      PrimaryDateField(
+                        labelText: 'Incubation date'.tr,
+                        hintText: 'DD/MM/YYYY',
+                        onChanged: (value) {
+                          setIncubationSelectedDate(value);
+                        },
+                      ),
+                      PrimaryDateField(
+                        labelText: 'Hatching date'.tr,
+                        hintText: 'DD/MM/YYYY',
+                        onChanged: (value) {
+                          setHatchingSelectedDate(value);
+                        },
+                      ),
+                    ],
+                  ),
                 SizedBox(height: 34 * globals.heightMediaQuery),
                 Text(
                   "Children",

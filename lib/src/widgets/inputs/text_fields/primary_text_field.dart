@@ -11,6 +11,7 @@ class PrimaryTextField extends ConsumerStatefulWidget {
   final ValueChanged<String>? onChanged;
   final ValueChanged<bool>? onErrorChanged;
   final TextEditingController controller;
+  final TextInputType? keyboardType;
 
   const PrimaryTextField({
     Key? key,
@@ -20,6 +21,7 @@ class PrimaryTextField extends ConsumerStatefulWidget {
     this.onErrorChanged,
     required this.controller,
     this.labelText,
+    this.keyboardType
   }) : super(key: key);
 
   @override
@@ -103,6 +105,7 @@ class _PrimaryTextFieldState extends ConsumerState<PrimaryTextField> {
             ),
           ),
           child: TextField(
+            keyboardType: widget.keyboardType,
             controller: widget.controller,
             onChanged: _onChanged,
             focusNode: _focusNode,

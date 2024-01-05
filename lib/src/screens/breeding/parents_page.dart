@@ -2,12 +2,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
+import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
+import 'package:sulala_upgrade/src/screens/create_animal/owned_animal_detail_reg_mode.dart';
 
 import '../../data/classes.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
+import '../../widgets/animal_info_modal_sheets.dart/animal_dam_modal.dart';
+import '../../widgets/animal_info_modal_sheets.dart/animal_sire_modal.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/other/parents_item.dart';
 
@@ -31,37 +36,22 @@ class ParentsPage extends ConsumerStatefulWidget {
 }
 
 class _ParentsPageState extends ConsumerState<ParentsPage> {
-  final List<Map<String, dynamic>> parents = [
-    {
-      'heading': 'Breeding Event 1',
-      'date': '02.09.2023',
-      'title': 'Loyce',
-      'subtitle': 'Male, 1 Year',
-      'trailing': 'ID #13542',
-      'avatarImage': 'assets/avatar1.png',
-    },
-    {
-      'heading': 'Breeding Event 2',
-      'date': '02.09.2023',
-      'title': 'Joyce',
-      'subtitle': 'Male, 3 Years',
-      'trailing': 'ID #13542',
-      'avatarImage': 'assets/avatar2.png',
-    },
-    {
-      'heading': 'Breeding Event 3',
-      'date': '02.09.2023',
-      'title': 'Angel',
-      'subtitle': 'Male, 3.5 Years',
-      'trailing': 'ID #13542',
-      'avatarImage': 'assets/avatar3.png',
-    },
-    // Your list of children data goes here
-  ];
+  late OviVariables? father;
+  late OviVariables? mother;
+
+  @override
+  void initState() {
+    father = ref.read(ovianimalsProvider).firstWhereOrNull((animal) => animal
+        .animalName == widget.OviDetails.selectedOviSire.first.animalName);
+    mother = ref.read(ovianimalsProvider).firstWhereOrNull((animal) => animal
+        .animalName == widget.OviDetails.selectedOviDam.first.animalName);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // final image = ref.watch(breedingChildrenDetailsProvider);
+
+
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
@@ -122,7 +112,7 @@ class _ParentsPageState extends ConsumerState<ParentsPage> {
               'Parents ',
               style: AppFonts.title3(color: AppColors.grayscale90),
             ),
-            parents.isEmpty
+            father == null || mother == null
                 ? Center(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -156,9 +146,7 @@ class _ParentsPageState extends ConsumerState<ParentsPage> {
                           height: 52 * globals.heightMediaQuery,
                           child: PrimaryButton(
                             text: 'Add Parents',
-                            onPressed: () {
-                              // Implement the logic to add children here
-                            },
+                            onPressed: addParents,
                           ),
                         ),
                       ],
@@ -176,26 +164,36 @@ class _ParentsPageState extends ConsumerState<ParentsPage> {
                             children: [
                               ParentsItem(
                                 id: '2222',
-                                name: widget.OviDetails.selectedOviSire.first
-                                    .animalName,
+                                name: father!.animalName,
                                 sex: 'Male',
-                                age: '7 years',
-                                imageFile: (widget.OviDetails.selectedOviSire
-                                    .first.selectedOviImage),
+                                age: '1 year'.trPlural('numYears', father!.age,
+                                    [father!.age.toString()]),
+                                imageFile: father!.selectedOviImage,
                                 OviDetails: widget.OviDetails,
+                                onTap: () => Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) =>
+                                        OwnedAnimalDetailsRegMode(imagePath: '',
+                                            title: '', geninfo: '',
+                                            OviDetails: father!,
+                                            breedingEvents: const []))),
                               ),
                             ],
                           ),
                           SizedBox(width: 55 * globals.widthMediaQuery),
                           ParentsItem(
                             id: '2222',
-                            name: widget
-                                .OviDetails.selectedOviDam.first.animalName,
+                            name: mother!.animalName,
                             sex: 'Female',
-                            age: '6 years',
-                            imageFile: (widget.OviDetails.selectedOviDam.first
-                                .selectedOviImage),
+                            age: '1 year'.trPlural('numYears', mother!.age,
+                                [mother!.age.toString()]),
+                            imageFile: mother!.selectedOviImage,
                             OviDetails: widget.OviDetails,
+                            onTap: () => Navigator.push(context,
+                                MaterialPageRoute(builder: (context) =>
+                                    OwnedAnimalDetailsRegMode(imagePath: '',
+                                        title: '', geninfo: '',
+                                        OviDetails: mother!,
+                                        breedingEvents: const []))),
                             // imageUrl:'https://www.ghorse.com/sites/default/files/img_0682.jpg',
                           ),
                         ],
@@ -251,5 +249,77 @@ class _ParentsPageState extends ConsumerState<ParentsPage> {
         ),
       ),
     );
+  }
+
+  int calculateAge(DateTime birthDate) {
+    DateTime currentDate = DateTime.now();
+    int age = currentDate.year - birthDate.year;
+    if (currentDate.month < birthDate.month ||
+        (currentDate.month == birthDate.month &&
+            currentDate.day < birthDate.day)) {
+      age--;
+    }
+    return age;
+  }
+
+  Future<void> addParents() async {
+    final ovianimals = ref.watch(ovianimalsProvider);
+    final selectedFather = <MainAnimalSire>[];
+    final selectedMother = <MainAnimalDam>[];
+    List<MainAnimalSire> selectedSire = [];
+    List<MainAnimalDam> selectedDam = [];
+
+    if(father == null) {
+      await showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.white,
+        showDragHandle: false,
+        isScrollControlled: true,
+        builder: (BuildContext context) {
+          return AnimalSireModal(
+              ovianimals: ovianimals,
+              selectedSire: selectedSire,
+              selectedFather: selectedFather,
+              selectedMother: selectedMother,
+              ref: ref,
+              selectedDam: selectedDam);
+        },
+      );
+    }
+
+    if(mounted && mother == null) {
+      await showModalBottomSheet(
+        context: context,
+        showDragHandle: false,
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        builder: (BuildContext context) {
+          return AnimalDamModal(
+              ovianimals: ovianimals,
+              selectedDam: selectedDam,
+              selectedFather: selectedFather,
+              selectedMother: selectedMother,
+              ref: ref);
+        },
+      );
+    }
+
+    final selectedOviSire = ref.read(animalSireDetailsProvider).first;
+    final selectedOviDam = ref.read(animalDamDetailsProvider).first;
+    final oviDetails = widget.OviDetails;
+    oviDetails.selectedOviSire[0] = selectedOviSire;
+    oviDetails.selectedOviDam[0] = selectedOviDam;
+    ref.read(ovianimalsProvider.notifier).update((state) {
+      final index = state.indexWhere((animal) => animal.animalName == oviDetails.animalName);
+      state[index] = oviDetails;
+      return state;
+    });
+    setState(() {
+      father ??= ref.read(ovianimalsProvider).firstWhereOrNull((animal) => animal
+            .animalName == selectedOviSire.animalName);
+
+      mother ??= ref.read(ovianimalsProvider).firstWhereOrNull((animal) => animal
+          .animalName == selectedOviDam.animalName);
+    });
   }
 }

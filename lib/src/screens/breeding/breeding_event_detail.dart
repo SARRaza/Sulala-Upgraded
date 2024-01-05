@@ -1,13 +1,16 @@
 // ignore_for_file: unnecessary_null_comparison, non_constant_identifier_names
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
+import 'package:sulala_upgrade/src/screens/create_animal/owned_animal_detail_reg_mode.dart';
 import '../../data/classes.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import 'edit_breeding_event_detail.dart';
 import 'list_of_childrens.dart';
 
-class BreedingEventDetails extends StatefulWidget {
+class BreedingEventDetails extends ConsumerStatefulWidget {
   final List<BreedingEventVariables> breedingEvents;
   final BreedingEventVariables breedingEvent;
   final OviVariables OviDetails;
@@ -20,10 +23,10 @@ class BreedingEventDetails extends StatefulWidget {
   });
 
   @override
-  State<BreedingEventDetails> createState() => _BreedingEventDetailsState();
+  ConsumerState<BreedingEventDetails> createState() => _BreedingEventDetailsState();
 }
 
-class _BreedingEventDetailsState extends State<BreedingEventDetails> {
+class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -144,13 +147,13 @@ class _BreedingEventDetailsState extends State<BreedingEventDetails> {
                       'Delivery Date',
                       style: AppFonts.body2(color: AppColors.grayscale70),
                     ),
-                    widget.breedingEvent.deliveryDate.isEmpty
+                    widget.breedingEvent.deliveryDate == null || widget.breedingEvent.deliveryDate!.isEmpty
                         ? Text(
                             'No Date Added',
                             style: AppFonts.body2(color: AppColors.grayscale90),
                           )
                         : Text(
-                            widget.breedingEvent.deliveryDate,
+                            widget.breedingEvent.deliveryDate!,
                             style: AppFonts.body2(color: AppColors.grayscale90),
                           ),
                   ],
@@ -179,15 +182,18 @@ class _BreedingEventDetailsState extends State<BreedingEventDetails> {
                   shrinkWrap: true,
                   itemCount: widget.breedingEvent.partner.length,
                   itemBuilder: (context, index) {
-                    final child = widget.breedingEvent.partner[index];
+                    final parent = widget.breedingEvent.partner[index];
                     return ListTile(
                       onTap: () {
+                        final childOviDetails = ref.read(ovianimalsProvider)
+                            .firstWhere((animal) => animal.animalName == parent
+                            .animalName);
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => BreedingEventChildrenList(
-                              // breedingEvents: widget.breedingEvents,
-                              OviDetails: widget.OviDetails,
-                            ),
+                            builder: (context) => OwnedAnimalDetailsRegMode(
+                                imagePath: '', title: '', geninfo: '',
+                                OviDetails: childOviDetails,
+                                breedingEvents: const [])
                           ),
                         );
                       },
@@ -195,10 +201,10 @@ class _BreedingEventDetailsState extends State<BreedingEventDetails> {
                       leading: CircleAvatar(
                         radius: globals.widthMediaQuery * 24,
                         backgroundColor: Colors.transparent,
-                        backgroundImage: child.selectedOviImage != null
-                            ? FileImage(child.selectedOviImage!)
+                        backgroundImage: parent.selectedOviImage != null
+                            ? FileImage(parent.selectedOviImage!)
                             : null,
-                        child: child.selectedOviImage == null
+                        child: parent.selectedOviImage == null
                             ? const Icon(
                                 Icons.camera_alt_outlined,
                                 size: 50,
@@ -207,11 +213,11 @@ class _BreedingEventDetailsState extends State<BreedingEventDetails> {
                             : null,
                       ),
                       title: Text(
-                        child.animalName,
+                        parent.animalName,
                         style: AppFonts.headline3(color: AppColors.grayscale90),
                       ),
                       subtitle: Text(
-                        child.selectedOviGender,
+                        parent.selectedOviGender,
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
                       trailing: Text(
@@ -251,13 +257,15 @@ class _BreedingEventDetailsState extends State<BreedingEventDetails> {
                           final child = widget.breedingEvent.children[index];
                           return ListTile(
                             onTap: () {
+                              final childOviDetails = ref.read(ovianimalsProvider)
+                                  .firstWhere((animal) => animal.animalName == child
+                                  .animalName);
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      BreedingEventChildrenList(
-                                    // breedingEvents: widget.breedingEvents,
-                                    OviDetails: widget.OviDetails,
-                                  ),
+                                    builder: (context) => OwnedAnimalDetailsRegMode(
+                                        imagePath: '', title: '', geninfo: '',
+                                        OviDetails: childOviDetails,
+                                        breedingEvents: const [])
                                 ),
                               );
                             },

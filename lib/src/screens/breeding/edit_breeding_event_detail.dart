@@ -53,7 +53,7 @@ class _EditBreedingEventDetailsState
     breedingEventNumberController.text = widget.breedingEvent.eventNumber;
 
     selectedBreedingDate = widget.breedingEvent.breedingDate;
-    selectedDeliveryDate = widget.breedingEvent.deliveryDate;
+    selectedDeliveryDate = widget.breedingEvent.deliveryDate?? '';
     selectedChildren = widget.breedingEvent.children;
     breedingEventNotesController.text = widget.breedingEvent.notes;
     breedPartners = widget.breedingEvent.partner;

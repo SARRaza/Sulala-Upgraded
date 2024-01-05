@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import '../../data/classes.dart';
@@ -56,6 +57,9 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
   }
 
   void addBreedingEvent(String eventNumber) {
+    final hatchingDate = ref.read(dateOfHatchingProvider);
+    final numOffEggs = ref.read(numOfEggsProvider);
+    
     final breedingEvent = BreedingEventVariables(
       eventNumber: ref.read(breedingEventNumberProvider),
       breeddam: ref.read(breeddamPictureProvider),
@@ -65,6 +69,11 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
       children: ref.read(breedingChildrenDetailsProvider),
       breedingDate: ref.read(breedingDateProvider),
       deliveryDate: ref.read(deliveryDateProvider),
+      layingEggsDate: ref.read(dateOfLayingEggsProvider),
+      eggsNumber: numOffEggs.isNotEmpty ? int.parse(numOffEggs) : 0,
+      incubationDate: ref.read(incubationDateProvider),
+      hatchingDate: hatchingDate != null ? DateFormat('dd/MM/yyyy').format(
+          hatchingDate) : null,
       notes: ref.read(breedingnotesProvider),
       shouldAddEvent: ref.read(shoudlAddEventProvider),
     );

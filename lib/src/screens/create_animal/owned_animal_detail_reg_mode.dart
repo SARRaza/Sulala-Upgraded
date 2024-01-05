@@ -93,15 +93,7 @@ class _OwnedAnimalDetailsRegModeState extends ConsumerState<OwnedAnimalDetailsRe
                   ),
                   onPressed: () {
                     // Handle close button press
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => UserListOfAnimals(
-                          shouldAddAnimal: false,
-                          breedingEvents: widget.breedingEvents,
-                        ),
-                      ),
-                    );
+                    Navigator.pop(context);
                   },
                 ),
               ),
@@ -215,7 +207,7 @@ class _OwnedAnimalDetailsRegModeState extends ConsumerState<OwnedAnimalDetailsRe
                           oviDetails.selectedOviSire.first.father !=
                               null)
                         Text(
-                          'Maternal Grandfather: ${oviDetails.selectedOviDam.first.father!.animalName}',
+                          'Maternal Grandfather: ${oviDetails.selectedOviSire.first.father!.animalName}',
                         ),
                       if (oviDetails.selectedOviDam.isNotEmpty &&
                           oviDetails.selectedOviDam.first.mother != null)
@@ -342,10 +334,30 @@ class _OwnedAnimalDetailsRegModeState extends ConsumerState<OwnedAnimalDetailsRe
     );
   }
 
-  void updateDateField(dateType) {
+  Future<void> updateDateField(dateType) async {
     if(!oviDetails.selectedOviDates.containsKey(dateType)) {
+      final DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1900),
+        lastDate: DateTime(2101),
+        builder: (BuildContext context, Widget? child) {
+          return Theme(
+            data: ThemeData.light().copyWith(
+              // Change the background color of the date picker
+              primaryColor: AppColors.primary30,
+              colorScheme: const ColorScheme.light(primary: AppColors.primary20),
+              buttonTheme:
+              const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+              // Here you can customize more colors if needed
+              // For example, you can change the header color, selected day color, etc.
+            ),
+            child: child!,
+          );
+        },
+      );
       setState(() {
-        oviDetails.selectedOviDates[dateType] = DateTime.now();
+        oviDetails.selectedOviDates[dateType] = pickedDate;
       });
 
       ref.read(ovianimalsProvider.notifier).update((state) {

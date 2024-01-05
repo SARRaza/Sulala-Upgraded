@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sulala_upgrade/src/data/classes.dart';
 
+import '../../../data/riverpod_globals.dart';
 import 'family_tree_item.dart';
 import 'family_tree_node.dart';
 import 'graph_painter.dart';
 import 'person.dart';
+
+enum BranchType { parents, children }
 
 class FamilyTreePage extends ConsumerStatefulWidget {
   final OviVariables OviDetails;
@@ -218,7 +221,8 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
                         node: node,
                         showGender: true,
                         key: node.key,
-                        onTap: (ItemType itemType) => handleTap(itemType, node),
+                        onTap: (ItemType itemType) => handleTap(itemType, node,
+                            BranchType.parents),
                       ),
                     ],
                   ))
@@ -248,7 +252,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
                           showGender: false,
                           key: node.key,
                           onTap: (ItemType itemType) =>
-                              handleTap(itemType, node)),
+                              handleTap(itemType, node, BranchType.children)),
                       if (node.expanded && node.children.isNotEmpty)
                         buildChildrenBranch(node.children)
                     ],
@@ -259,8 +263,12 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
     );
   }
 
-  void handleTap(ItemType itemType, FamilyTreeNode node) {
+  void handleTap(ItemType itemType, FamilyTreeNode node, BranchType branchType)
+  {
     if (itemType == ItemType.expandButton) {
+      if(node.person.name == 'ADD' && branchType == BranchType.parents) {
+
+      }
       setState(() {
         node.expanded = true;
       });
@@ -276,4 +284,66 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
           attachParents: true, attachChildren: true);
     });
   }
+
+  // Future<void> addParents() async {
+  //   final ovianimals = ref.watch(ovianimalsProvider);
+  //   final selectedFather = <MainAnimalSire>[];
+  //   final selectedMother = <MainAnimalDam>[];
+  //   List<MainAnimalSire> selectedSire = [];
+  //   List<MainAnimalDam> selectedDam = [];
+  //
+  //
+  //   if(father == null) {
+  //     await showModalBottomSheet(
+  //       context: context,
+  //       backgroundColor: Colors.white,
+  //       showDragHandle: false,
+  //       isScrollControlled: true,
+  //       builder: (BuildContext context) {
+  //         return AnimalSireModal(
+  //             ovianimals: ovianimals,
+  //             selectedSire: selectedSire,
+  //             selectedFather: selectedFather,
+  //             selectedMother: selectedMother,
+  //             ref: ref,
+  //             selectedDam: selectedDam);
+  //       },
+  //     );
+  //   }
+  //
+  //   if(mounted && mother == null) {
+  //     await showModalBottomSheet(
+  //       context: context,
+  //       showDragHandle: false,
+  //       backgroundColor: Colors.transparent,
+  //       isScrollControlled: true,
+  //       builder: (BuildContext context) {
+  //         return AnimalDamModal(
+  //             ovianimals: ovianimals,
+  //             selectedDam: selectedDam,
+  //             selectedFather: selectedFather,
+  //             selectedMother: selectedMother,
+  //             ref: ref);
+  //       },
+  //     );
+  //   }
+  //
+  //   final selectedOviSire = ref.read(animalSireDetailsProvider).first;
+  //   final selectedOviDam = ref.read(animalDamDetailsProvider).first;
+  //   final oviDetails = widget.OviDetails;
+  //   oviDetails.selectedOviSire[0] = selectedOviSire;
+  //   oviDetails.selectedOviDam[0] = selectedOviDam;
+  //   ref.read(ovianimalsProvider.notifier).update((state) {
+  //     final index = state.indexWhere((animal) => animal.animalName == oviDetails.animalName);
+  //     state[index] = oviDetails;
+  //     return state;
+  //   });
+  //   setState(() {
+  //     father ??= ref.read(ovianimalsProvider).firstWhereOrNull((animal) => animal
+  //         .animalName == selectedOviSire.animalName);
+  //
+  //     mother ??= ref.read(ovianimalsProvider).firstWhereOrNull((animal) => animal
+  //         .animalName == selectedOviDam.animalName);
+  //   });
+  // }
 }

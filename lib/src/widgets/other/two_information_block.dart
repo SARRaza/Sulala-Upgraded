@@ -8,12 +8,16 @@ class TwoInformationBlock extends StatelessWidget {
   final String head2;
   final String subtitle1;
   final String subtitle2;
+  final void Function()? onTap1;
+  final void Function()? onTap2;
 
   const TwoInformationBlock({
     required this.head1,
     required this.head2,
     required this.subtitle1,
     required this.subtitle2,
+    this.onTap1,
+    this.onTap2,
     Key? key,
   }) : super(key: key);
 
@@ -27,20 +31,23 @@ class TwoInformationBlock extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  head1,
-                  style: AppFonts.body2(color: AppColors.grayscale90),
-                ),
-                Text(
-                  subtitle1,
-                  style: AppFonts.caption2(color: AppColors.grayscale70),
-                ),
-              ],
+          GestureDetector(
+            onTap: onTap1,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    head1,
+                    style: AppFonts.body2(color: AppColors.grayscale90),
+                  ),
+                  Text(
+                    subtitle1,
+                    style: AppFonts.caption2(color: AppColors.grayscale70),
+                  ),
+                ],
+              ),
             ),
           ),
           Container(
@@ -48,20 +55,23 @@ class TwoInformationBlock extends StatelessWidget {
             width: 1,
             color: AppColors.grayscale30,
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  head2,
-                  style: AppFonts.body2(color: AppColors.grayscale90),
-                ),
-                Text(
-                  subtitle2,
-                  style: AppFonts.caption2(color: AppColors.grayscale70),
-                ),
-              ],
+          GestureDetector(
+            onTap: onTap2,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    head2,
+                    style: AppFonts.body2(color: AppColors.grayscale90),
+                  ),
+                  Text(
+                    subtitle2,
+                    style: AppFonts.caption2(color: AppColors.grayscale70),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

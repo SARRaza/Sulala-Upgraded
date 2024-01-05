@@ -53,7 +53,7 @@ final selectedDateProvider = StateProvider<String>((ref) => '');
 final medicalNeedsProvider = StateProvider<String>((ref) => '');
 final numOfEggsProvider = StateProvider<String>((ref) => '');
 final fieldNameProvider = StateProvider<String>((ref) => '');
-final incbationDateProvider = StateProvider<String>((ref) => '');
+final incubationDateProvider = StateProvider<String>((ref) => '');
 final fieldContentProvider = StateProvider<String>((ref) => '');
 final additionalnotesProvider = StateProvider<String>((ref) => '');
 final selectedOviGenderProvider = StateProvider<String>((ref) => '');
@@ -264,18 +264,33 @@ Map<String, List<String>> morespeciesToBreedsMap = {
 };
 
 Map<String, int> gestationPeriods = {
-  'Dog': 58, // Gestation period in days
-  'Cat': 64,
-  'Elephant': 640,
+  // Mammals
+  'Dog': 63,
+  'Cat': 66,
+  'Elephant': 650,
   'Lion': 110,
-  'Monkey': 164, // This can vary greatly among species
-  'Bear': 180, // Depending on the species
-  'Tiger': 93,
-  'Giraffe': 400,
-  'Kangaroo': 31, // This is for the Eastern Grey Kangaroo
-  'Horse': 330,
-  'Zebra': 360,
-  'Panda': 95, // Giant Panda
+  'Monkey': 174,
+  'Bear': 225,
+  'Tiger': 103,
+  'Giraffe': 430,
+  'Kangaroo': 34,
+  'Horse': 338,
+  'Zebra': 375,
+  'Panda': 135,
+
+  // Oviparous Animals (incubation periods)
+  'Duck': 28,
+  'Chicken': 21,
+  'Turtle': 60,
+  'Snake': 60,
+  'Crocodile': 80,
+  'Eagle': 35,
+  'Frog': 21,
+  'Fish': 14, // This can vary greatly depending on the species
+  'Penguin': 65,
+  'Alligator': 65,
+  'Salmon': 40, // This is the incubation period for eggs
+  'Gecko': 60,
 };
 
 final mammalSpeciesCountProvider = Provider<Map<String, int>>((ref) {

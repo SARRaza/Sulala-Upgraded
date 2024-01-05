@@ -104,18 +104,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
         fatherId: 100010,
         motherId: 100011,
       ),
-      // Person(
-      //     id: 100009,
-      //     name: widget.OviDetails.selectedOviSire.first.mother?.animalName ??
-      //         'Unknown',
-      //     gender: Gender.female,
-      //     image: widget.OviDetails.selectedOviSire.first.mother!
-      //                 .selectedOviImage !=
-      //             null
-      //         ? FileImage(widget
-      //             .OviDetails.selectedOviSire.first.mother!.selectedOviImage!)
-      //         : null,
-      //     status: 'Dead'),
+
       Person(
         id: 100009,
         name: widget.OviDetails.selectedOviSire.first.mother?.animalName ??
@@ -143,6 +132,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                   : null,
           status: 'Sold'),
     ];
+
     final animalIndex = ref.read(ovianimalsProvider).indexWhere(
           (animal) => animal.animalName == widget.OviDetails.animalName,
         );
@@ -161,17 +151,17 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
     final now = DateTime.now();
     // Add persons based on the breeding events and children
     for (final breedingEvent in breedingEvents) {
-      if(breedingEvent.breedingDate.isNotEmpty) {
+      if (breedingEvent.breedingDate.isNotEmpty) {
         final dateSegments = breedingEvent.breedingDate.split('/');
 
-        final breedingDate = DateTime(int.parse(dateSegments[2]), int.parse(
-            dateSegments[1]), int.parse(dateSegments[0]));
-        if(breedingDate.isBefore(now) && (lastBreedingDate == null ||
-            breedingDate.isAfter(lastBreedingDate))) {
+        final breedingDate = DateTime(int.parse(dateSegments[2]),
+            int.parse(dateSegments[1]), int.parse(dateSegments[0]));
+        if (breedingDate.isBefore(now) &&
+            (lastBreedingDate == null ||
+                breedingDate.isAfter(lastBreedingDate))) {
           lastBreedingDate = breedingDate;
         }
       }
-
 
       for (final child in breedingEvent.children) {
         // Check if the child ID is already added, skip if it exists
@@ -198,10 +188,10 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
         }
       }
     }
-    if(lastBreedingDate != null) {
+    if (lastBreedingDate != null) {
       nextBreedingDate = lastBreedingDate.add(Duration(
           days: gestationPeriods[widget.OviDetails.selectedAnimalSpecies]!));
-      if(nextBreedingDate.isBefore(now)) {
+      if (nextBreedingDate.isBefore(now)) {
         nextBreedingDate = now;
       }
     }
@@ -216,23 +206,26 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
               width: globals.widthMediaQuery * 343,
               child: OneInformationBlock(
                   head1: 'Pregnancy status',
-                  subtitle1: widget.OviDetails.pregnant == true ? 'Pregnant' :
-                  'Not Pregnant'),
+                  subtitle1: widget.OviDetails.pregnant == true
+                      ? 'Pregnant'
+                      : 'Not Pregnant'),
             ),
           if (animalGender)
             SizedBox(
               height: globals.heightMediaQuery * 8,
             ),
           if (widget.OviDetails.selectedOviGender == 'Female' &&
-              widget.OviDetails.selectedAnimalType == 'Oviparous' && (
-              lastBreedingDate != null || nextBreedingDate != null))
+              widget.OviDetails.selectedAnimalType == 'Oviparous' &&
+              (lastBreedingDate != null || nextBreedingDate != null))
             SizedBox(
               width: 343 * globals.widthMediaQuery,
               child: TwoInformationBlock(
-                head1: lastBreedingDate != null ? DateFormat('dd.MM.yyyy')
-                    .format(lastBreedingDate) : '',
-                head2: nextBreedingDate != null ? DateFormat('dd.MM.yyyy')
-                    .format(nextBreedingDate) : '',
+                head1: lastBreedingDate != null
+                    ? DateFormat('dd.MM.yyyy').format(lastBreedingDate)
+                    : '',
+                head2: nextBreedingDate != null
+                    ? DateFormat('dd.MM.yyyy').format(nextBreedingDate)
+                    : '',
                 subtitle1: "Last Breeding Date",
                 subtitle2: 'Next Breeding Date',
               ),
@@ -240,11 +233,20 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
           if (widget.OviDetails.selectedOviGender == 'Male')
             SizedBox(
               width: 343 * globals.widthMediaQuery,
-              child: const TwoInformationBlock(
-                head1: '12.02.2023',
-                head2: '12.02.2023',
+              child: TwoInformationBlock(
+                head1: widget.OviDetails.selectedOviDates
+                        .containsKey('Date Of Mating')
+                    ? DateFormat('dd.MM.yyyy').format(
+                        widget.OviDetails.selectedOviDates['Date Of Mating']!)
+                    : '',
+                head2: widget.OviDetails.selectedOviDates
+                        .containsKey('Next Date Of Mating')
+                    ? DateFormat('dd.MM.yyyy').format(widget
+                        .OviDetails.selectedOviDates['Next Date Of Mating']!)
+                    : 'Add',
                 subtitle1: "Date Of Mating",
-                subtitle2: 'Next Date Of Mating Date',
+                subtitle2: 'Next Date Of Mating',
+                onTap2: () => updateDateField('Next Date Of Mating'),
               ),
             ),
           if (animalGender)
@@ -387,5 +389,39 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
         ],
       ),
     );
+  }
+
+  Future<void> updateDateField(dateType) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2101),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            // Change the background color of the date picker
+            primaryColor: AppColors.primary30,
+            colorScheme: const ColorScheme.light(primary: AppColors.primary20),
+            buttonTheme:
+                const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            // Here you can customize more colors if needed
+            // For example, you can change the header color, selected day color, etc.
+          ),
+          child: child!,
+        );
+      },
+    );
+    setState(() {
+      widget.OviDetails.selectedOviDates[dateType] = pickedDate;
+    });
+
+    ref.read(ovianimalsProvider.notifier).update((state) {
+      final index = state
+          .indexWhere((animal) => animal.animalName == widget.OviDetails
+          .animalName);
+      state[index] = widget.OviDetails;
+      return state;
+    });
   }
 }

@@ -84,7 +84,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
       dateOfSonar: ref.read(dateOfSonarProvider),
       expDlvDate: ref.read(expDeliveryDateProvider),
       fieldName: ref.read(fieldNameProvider),
-      incubationDate: ref.read(incbationDateProvider),
+      incubationDate: ref.read(incubationDateProvider),
       fieldContent: ref.read(fieldContentProvider),
       notes: ref.read(additionalnotesProvider),
       selectedOviGender: ref.read(selectedOviGenderProvider),
