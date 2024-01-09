@@ -40,98 +40,99 @@ int generateUniqueId() {
 
 class _BreedingInfoState extends ConsumerState<BreedingInfo> {
   Set<String> addedChildIds = {};
+  List<Person> familyMembers = [];
 
   @override
   Widget build(BuildContext context) {
-    List<Person> familyMembers = [
-      Person(
-        id: 100001,
-        name: widget.OviDetails.animalName,
-        image: widget.OviDetails.selectedOviImage != null
-            ? FileImage(widget.OviDetails.selectedOviImage!)
-            : null,
-        status: 'Borrowed',
-        gender: Gender.male,
-        fatherId: 100002,
-        motherId: 100004,
-      ),
-      Person(
-          id: 100002,
-          name: widget.OviDetails.selectedOviSire.first.animalName,
-          image:
-              widget.OviDetails.selectedOviSire.first.selectedOviImage != null
-                  ? FileImage(
-                      widget.OviDetails.selectedOviSire.first.selectedOviImage!)
-                  : null,
-          gender: Gender.male,
-          fatherId: 100003,
-          motherId: 100009,
-          status: 'Borrowed'),
-      Person(
-        id: 100003,
-        name: widget.OviDetails.selectedOviSire.first.father?.animalName ??
-            'Unknown',
-        gender: Gender.male,
-        image:
-            widget.OviDetails.selectedOviSire.first.father?.selectedOviImage !=
-                    null
-                ? FileImage(widget
-                    .OviDetails.selectedOviSire.first.father!.selectedOviImage!)
-                : null,
-        status: 'Dead',
-      ),
-      Person(
-          id: 100011,
-          name: widget.OviDetails.selectedOviDam.first.mother?.animalName ??
-              'Unknown',
-          gender: Gender.female,
-          image:
-              widget.OviDetails.selectedOviDam.first.mother?.selectedOviImage !=
-                      null
-                  ? FileImage(widget.OviDetails.selectedOviDam.first.mother!
-                      .selectedOviImage!)
-                  : null,
-          status: 'Dead'),
-      Person(
-        id: 100004,
-        name: widget.OviDetails.selectedOviDam.first.animalName,
-        image: widget.OviDetails.selectedOviDam.first.selectedOviImage != null
-            ? FileImage(
-                widget.OviDetails.selectedOviDam.first.selectedOviImage!)
-            : null,
-        gender: Gender.female,
-        status: 'Sold',
-        fatherId: 100010,
-        motherId: 100011,
-      ),
-
-      Person(
-        id: 100009,
-        name: widget.OviDetails.selectedOviSire.first.mother?.animalName ??
-            'Unknown',
-        gender: Gender.female,
-        image:
-            widget.OviDetails.selectedOviSire.first.mother?.selectedOviImage !=
-                    null
-                ? FileImage(widget
-                    .OviDetails.selectedOviSire.first.mother!.selectedOviImage!)
-                : null,
-        status: 'Dead',
-      ),
-
-      Person(
-          id: 100010,
-          name: widget.OviDetails.selectedOviDam.first.father?.animalName ??
-              'Unknown',
-          gender: Gender.male,
-          image:
-              widget.OviDetails.selectedOviDam.first.father?.selectedOviImage !=
-                      null
-                  ? FileImage(widget.OviDetails.selectedOviDam.first.father!
-                      .selectedOviImage!)
-                  : null,
-          status: 'Sold'),
-    ];
+    // List<Person> familyMembers = [
+    //   Person(
+    //     id: 100001,
+    //     name: widget.OviDetails.animalName,
+    //     image: widget.OviDetails.selectedOviImage != null
+    //         ? FileImage(widget.OviDetails.selectedOviImage!)
+    //         : null,
+    //     status: 'Borrowed',
+    //     gender: Gender.male,
+    //     fatherId: 100002,
+    //     motherId: 100004,
+    //   ),
+    //   Person(
+    //       id: 100002,
+    //       name: widget.OviDetails.selectedOviSire.first.animalName,
+    //       image:
+    //           widget.OviDetails.selectedOviSire.first.selectedOviImage != null
+    //               ? FileImage(
+    //                   widget.OviDetails.selectedOviSire.first.selectedOviImage!)
+    //               : null,
+    //       gender: Gender.male,
+    //       fatherId: 100003,
+    //       motherId: 100009,
+    //       status: 'Borrowed'),
+    //   Person(
+    //     id: 100003,
+    //     name: widget.OviDetails.selectedOviSire.first.father?.animalName ??
+    //         'Unknown',
+    //     gender: Gender.male,
+    //     image:
+    //         widget.OviDetails.selectedOviSire.first.father?.selectedOviImage !=
+    //                 null
+    //             ? FileImage(widget
+    //                 .OviDetails.selectedOviSire.first.father!.selectedOviImage!)
+    //             : null,
+    //     status: 'Dead',
+    //   ),
+    //   Person(
+    //       id: 100011,
+    //       name: widget.OviDetails.selectedOviDam.first.mother?.animalName ??
+    //           'Unknown',
+    //       gender: Gender.female,
+    //       image:
+    //           widget.OviDetails.selectedOviDam.first.mother?.selectedOviImage !=
+    //                   null
+    //               ? FileImage(widget.OviDetails.selectedOviDam.first.mother!
+    //                   .selectedOviImage!)
+    //               : null,
+    //       status: 'Dead'),
+    //   Person(
+    //     id: 100004,
+    //     name: widget.OviDetails.selectedOviDam.first.animalName,
+    //     image: widget.OviDetails.selectedOviDam.first.selectedOviImage != null
+    //         ? FileImage(
+    //             widget.OviDetails.selectedOviDam.first.selectedOviImage!)
+    //         : null,
+    //     gender: Gender.female,
+    //     status: 'Sold',
+    //     fatherId: 100010,
+    //     motherId: 100011,
+    //   ),
+    //
+    //   Person(
+    //     id: 100009,
+    //     name: widget.OviDetails.selectedOviSire.first.mother?.animalName ??
+    //         'Unknown',
+    //     gender: Gender.female,
+    //     image:
+    //         widget.OviDetails.selectedOviSire.first.mother?.selectedOviImage !=
+    //                 null
+    //             ? FileImage(widget
+    //                 .OviDetails.selectedOviSire.first.mother!.selectedOviImage!)
+    //             : null,
+    //     status: 'Dead',
+    //   ),
+    //
+    //   Person(
+    //       id: 100010,
+    //       name: widget.OviDetails.selectedOviDam.first.father?.animalName ??
+    //           'Unknown',
+    //       gender: Gender.male,
+    //       image:
+    //           widget.OviDetails.selectedOviDam.first.father?.selectedOviImage !=
+    //                   null
+    //               ? FileImage(widget.OviDetails.selectedOviDam.first.father!
+    //                   .selectedOviImage!)
+    //               : null,
+    //       status: 'Sold'),
+    // ];
 
     final animalIndex = ref.read(ovianimalsProvider).indexWhere(
           (animal) => animal.animalName == widget.OviDetails.animalName,
@@ -323,7 +324,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                     MaterialPageRoute(
                       builder: (context) {
                         return FamilyTreePage(
-                          members: familyMembers,
+                          members: getFamilyMembers(),
                           selectedPersonId: 100001,
                           OviDetails: widget.OviDetails,
                         );
@@ -423,5 +424,27 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
       state[index] = widget.OviDetails;
       return state;
     });
+  }
+
+  List<Person> getFamilyMembers() {
+    familyMembers = [];
+    ref.read(ovianimalsProvider).forEach((animal) {
+      final person = Person(
+              id: animal.id,
+              name: animal.animalName,
+              image: animal.selectedOviImage != null
+                  ? FileImage(animal.selectedOviImage!)
+                  : null,
+              status: animal.selectedOviChips.join(','),
+              gender: animal.selectedOviGender == 'Maile' ? Gender.male : Gender
+                  .female,
+              fatherId: animal.selectedOviSire.isNotEmpty ? animal
+                  .selectedOviSire.first.id : null,
+              motherId: animal.selectedOviDam.isNotEmpty ? animal.selectedOviDam
+                  .first.id : null,
+            );
+      familyMembers.add(person);
+    });
+    return familyMembers;
   }
 }

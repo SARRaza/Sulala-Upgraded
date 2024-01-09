@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class Person {
   final int id;
-  final int? fatherId;
-  final int? motherId;
+  int? fatherId;
+  int? motherId;
   final String name;
   ImageProvider? image;
   String status;

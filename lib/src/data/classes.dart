@@ -6,6 +6,7 @@ class MainAnimalSire {
   String selectedOviGender;
   MainAnimalSire? father;
   MainAnimalDam? mother;
+  int? _id;
 
   MainAnimalSire(
     this.animalName,
@@ -14,6 +15,12 @@ class MainAnimalSire {
     this.father,
     this.mother,
   });
+
+  int get id {
+    _id ??= IdHelper.lettersToIndex(animalName);
+    return _id!;
+  }
+
 }
 
 class MainAnimalDam {
@@ -22,6 +29,7 @@ class MainAnimalDam {
   final String selectedOviGender;
   MainAnimalDam? mother;
   MainAnimalSire? father;
+  int? _id;
 
   MainAnimalDam(
     this.animalName,
@@ -30,6 +38,11 @@ class MainAnimalDam {
     this.mother,
     this.father,
   });
+
+  int get id {
+    _id ??= IdHelper.lettersToIndex(animalName);
+    return _id!;
+  }
 }
 
 class BreedingPartner {
@@ -102,6 +115,7 @@ class OviVariables {
   final Map<String, List<SurgeryDetails>> surgeryDetails;
   bool? pregnant;
   int? _age;
+  int? _id;
 
   OviVariables({
     required this.selectedFilters,
@@ -253,6 +267,12 @@ class OviVariables {
     }
     return _age!;
   }
+
+  int get id {
+    _id ??= IdHelper.lettersToIndex(animalName);
+    return _id!;
+  }
+
 }
 
 class BreedingDetails {
@@ -400,5 +420,15 @@ class SurgeryDetails {
         surgeryName: surgeryName ?? this.surgeryName,
         firstSurgery: firstSurgery ?? this.firstSurgery,
         secondSurgery: secondSurgery ?? this.secondSurgery);
+  }
+}
+
+class IdHelper {
+  static int lettersToIndex(String letters) {
+    var result = 0;
+    for (var i = 0; i < letters.length; i++) {
+      result = result * 26 + (letters.codeUnitAt(i) & 0x1f);
+    }
+    return result;
   }
 }

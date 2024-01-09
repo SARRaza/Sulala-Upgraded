@@ -1,10 +1,14 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sulala_upgrade/src/data/classes.dart';
 
 import '../../../data/riverpod_globals.dart';
+import '../../../widgets/animal_info_modal_sheets.dart/animal_dam_modal.dart';
+import '../../../widgets/animal_info_modal_sheets.dart/animal_sire_modal.dart';
 import 'family_tree_item.dart';
 import 'family_tree_node.dart';
 import 'graph_painter.dart';
@@ -31,12 +35,15 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
   Widget? graph;
   GlobalKey stackKey = GlobalKey();
   late FamilyTreeNode root;
+  late List<Person> members;
   Set<String> addedChildIds = {};
+
   @override
   void initState() {
-    _selectedPerson = widget.members
+    members = widget.members;
+    _selectedPerson = members
         .firstWhere((member) => member.id == widget.selectedPersonId);
-    root = createTree(widget.members, _selectedPerson,
+    root = createTree(members, _selectedPerson,
         attachParents: true, attachChildren: true);
 
     super.initState();
@@ -267,11 +274,12 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
   {
     if (itemType == ItemType.expandButton) {
       if(node.person.name == 'ADD' && branchType == BranchType.parents) {
-
+        addParent(node.person.gender);
+      } else {
+        setState(() {
+          node.expanded = true;
+        });
       }
-      setState(() {
-        node.expanded = true;
-      });
     } else {
       selectPerson(node.person.id);
     }
@@ -285,65 +293,68 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
     });
   }
 
-  // Future<void> addParents() async {
-  //   final ovianimals = ref.watch(ovianimalsProvider);
-  //   final selectedFather = <MainAnimalSire>[];
-  //   final selectedMother = <MainAnimalDam>[];
-  //   List<MainAnimalSire> selectedSire = [];
-  //   List<MainAnimalDam> selectedDam = [];
-  //
-  //
-  //   if(father == null) {
-  //     await showModalBottomSheet(
-  //       context: context,
-  //       backgroundColor: Colors.white,
-  //       showDragHandle: false,
-  //       isScrollControlled: true,
-  //       builder: (BuildContext context) {
-  //         return AnimalSireModal(
-  //             ovianimals: ovianimals,
-  //             selectedSire: selectedSire,
-  //             selectedFather: selectedFather,
-  //             selectedMother: selectedMother,
-  //             ref: ref,
-  //             selectedDam: selectedDam);
-  //       },
-  //     );
-  //   }
-  //
-  //   if(mounted && mother == null) {
-  //     await showModalBottomSheet(
-  //       context: context,
-  //       showDragHandle: false,
-  //       backgroundColor: Colors.transparent,
-  //       isScrollControlled: true,
-  //       builder: (BuildContext context) {
-  //         return AnimalDamModal(
-  //             ovianimals: ovianimals,
-  //             selectedDam: selectedDam,
-  //             selectedFather: selectedFather,
-  //             selectedMother: selectedMother,
-  //             ref: ref);
-  //       },
-  //     );
-  //   }
-  //
-  //   final selectedOviSire = ref.read(animalSireDetailsProvider).first;
-  //   final selectedOviDam = ref.read(animalDamDetailsProvider).first;
-  //   final oviDetails = widget.OviDetails;
-  //   oviDetails.selectedOviSire[0] = selectedOviSire;
-  //   oviDetails.selectedOviDam[0] = selectedOviDam;
-  //   ref.read(ovianimalsProvider.notifier).update((state) {
-  //     final index = state.indexWhere((animal) => animal.animalName == oviDetails.animalName);
-  //     state[index] = oviDetails;
-  //     return state;
-  //   });
-  //   setState(() {
-  //     father ??= ref.read(ovianimalsProvider).firstWhereOrNull((animal) => animal
-  //         .animalName == selectedOviSire.animalName);
-  //
-  //     mother ??= ref.read(ovianimalsProvider).firstWhereOrNull((animal) => animal
-  //         .animalName == selectedOviDam.animalName);
-  //   });
-  // }
+  Future<void> addParent(Gender gender) async {
+    final ovianimals = ref.watch(ovianimalsProvider);
+    final selectedFather = <MainAnimalSire>[];
+    final selectedMother = <MainAnimalDam>[];
+    List<MainAnimalSire> selectedSire = [];
+    List<MainAnimalDam> selectedDam = [];
+    final oviDetails = widget.OviDetails;
+
+    final selectedPersonIndex = members.indexWhere((person) => person.id ==
+        _selectedPerson.id);
+
+    if(gender == Gender.male) {
+      await showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.white,
+        showDragHandle: false,
+        isScrollControlled: true,
+        builder: (BuildContext context) {
+          return AnimalSireModal(
+              ovianimals: ovianimals,
+              selectedSire: selectedSire,
+              selectedFather: selectedFather,
+              selectedMother: selectedMother,
+              ref: ref,
+              selectedDam: selectedDam);
+        },
+      );
+      final selectedOviSire = ref.read(animalSireDetailsProvider).first;
+      oviDetails.selectedOviSire[0] = selectedOviSire;
+      _selectedPerson.fatherId = selectedOviSire.id;
+    } else if(gender == Gender.female) {
+      await showModalBottomSheet(
+        context: context,
+        showDragHandle: false,
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        builder: (BuildContext context) {
+          return AnimalDamModal(
+              ovianimals: ovianimals,
+              selectedDam: selectedDam,
+              selectedFather: selectedFather,
+              selectedMother: selectedMother,
+              ref: ref);
+        },
+      );
+      final selectedOviDam = ref.read(animalDamDetailsProvider).first;
+      oviDetails.selectedOviDam[0] = selectedOviDam;
+      _selectedPerson.motherId = selectedOviDam.id;
+    }
+
+    ref.read(ovianimalsProvider.notifier).update((state) {
+      final index = state.indexWhere((animal) => animal.animalName == oviDetails.animalName);
+      state[index] = oviDetails;
+      return state;
+    });
+    setState(() {
+      root = createTree(members, _selectedPerson,
+          attachParents: true, attachChildren: true);
+    });
+  }
+
+  Future<void> addChildren() async {
+
+  }
 }
