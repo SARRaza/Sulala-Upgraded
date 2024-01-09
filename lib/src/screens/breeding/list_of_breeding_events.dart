@@ -60,13 +60,16 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
     final hatchingDate = ref.read(dateOfHatchingProvider);
     final numOffEggs = ref.read(numOfEggsProvider);
 
+    final partner = ref.read(breedingPartnerProvider);
+    final children = ref.read(breedingChildrenDetailsProvider);
+    final ovianimals = ref.read(ovianimalsProvider);
     final breedingEvent = BreedingEventVariables(
       eventNumber: ref.read(breedingEventNumberProvider),
       breeddam: ref.read(breeddamPictureProvider),
       sire: ref.read(breedingSireDetailsProvider),
       dam: ref.read(breedingDamDetailsProvider),
-      partner: ref.read(breedingPartnerProvider),
-      children: ref.read(breedingChildrenDetailsProvider),
+      partner: partner,
+      children: children,
       breedingDate: ref.read(breedingDateProvider),
       deliveryDate: ref.read(deliveryDateProvider),
       layingEggsDate: ref.read(dateOfLayingEggsProvider),
@@ -85,15 +88,8 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
       } else {
         ref.read(breedingEventsProvider).insert(0, breedingEvent);
       }
-      final animalIndex = ref.read(ovianimalsProvider).indexWhere(
+      final animalIndex = ovianimals.indexWhere(
           (animal) => animal.animalName == widget.OviDetails.animalName);
-
-      MainAnimalSire? sire;
-      MainAnimalDam? dam;
-      if(widget.OviDetails.selectedOviGender == 'Male') {
-        sire = MainAnimalSire(widget.OviDetails.animalName, widget.OviDetails
-            .selectedOviImage, widget.OviDetails.selectedOviGender);
-      }
 
       if (animalIndex != -1) {
         ref.read(ovianimalsProvider)[animalIndex] =
@@ -108,6 +104,28 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
           ]
         },
         );
+      }
+
+      MainAnimalSire? sire;
+      MainAnimalDam? dam;
+      if(widget.OviDetails.selectedOviGender == 'Male') {
+        sire = MainAnimalSire(widget.OviDetails.animalName, widget.OviDetails
+            .selectedOviImage, widget.OviDetails.selectedOviGender);
+        dam = MainAnimalDam(partner.first.animalName, partner.first
+            .selectedOviImage, partner.first.selectedOviGender);
+      } else {
+        sire = MainAnimalSire(partner.first.animalName, partner.first
+            .selectedOviImage, partner.first.selectedOviGender);
+        dam = MainAnimalDam(widget.OviDetails.animalName, widget.OviDetails
+            .selectedOviImage, widget.OviDetails.selectedOviGender);
+      }
+
+      for (var child in children) {
+        final childIndex = ovianimals.indexWhere((animal) => animal.id == child
+            .id);
+        ref.read(ovianimalsProvider)[childIndex] = ref.read(
+            ovianimalsProvider)[childIndex].copyWith(selectedOviSire: [sire],
+            selectedOviDam: [dam]);
       }
     });
   }

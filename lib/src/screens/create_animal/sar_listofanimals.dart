@@ -65,6 +65,13 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
       breedingnotes: ref.read(breedingnotesProvider),
       shouldAddEvent: ref.read(shoudlAddEventProvider),
     );
+    final breedingEvent = BreedingEventVariables(
+        eventNumber: breedingeventNumber, sire: breedingDetails.breedsire,
+        dam: breedingDetails.breeddam, partner: breedingDetails.breedpartner,
+        children: breedingDetails.breedchildren, breedingDate: breedingDetails
+        .breedingDate, notes: breedingDetails.breedingnotes,
+        shouldAddEvent: breedingDetails.shouldAddEvent);
+
     // ignore: non_constant_identifier_names
     final OviDetails = OviVariables(
       animalName: animalName,
@@ -103,7 +110,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
       breeddeliveryDate: ref.read(deliveryDateProvider),
       breedingnotes: ref.read(breedingnotesProvider),
       shouldAddEvent: ref.read(shoudlAddEventProvider),
-      breedingEvents: {animalName: []},
+      breedingEvents: {animalName: [breedingEvent]},
       vaccineDetails: {animalName: []},
       checkUpDetails: {animalName: []},
       surgeryDetails: {animalName: []},
@@ -130,7 +137,6 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
         return state;
       });
     }
-    ref.read(breedingChildrenDetailsProvider.notifier).update((state) => []);
 
     setState(() {
       if (ref.read(ovianimalsProvider).isEmpty) {
