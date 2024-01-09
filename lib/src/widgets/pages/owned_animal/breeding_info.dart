@@ -325,7 +325,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                       builder: (context) {
                         return FamilyTreePage(
                           members: getFamilyMembers(),
-                          selectedPersonId: 100001,
+                          selectedPersonId: widget.OviDetails.id,
                           OviDetails: widget.OviDetails,
                         );
                       },
@@ -436,15 +436,28 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                   ? FileImage(animal.selectedOviImage!)
                   : null,
               status: animal.selectedOviChips.join(','),
-              gender: animal.selectedOviGender == 'Maile' ? Gender.male : Gender
+              gender: animal.selectedOviGender == 'Male' ? Gender.male : Gender
                   .female,
-              fatherId: animal.selectedOviSire.isNotEmpty ? animal
+              fatherId: animal.selectedOviSire.first.animalName != 'ADD' ? animal
                   .selectedOviSire.first.id : null,
-              motherId: animal.selectedOviDam.isNotEmpty ? animal.selectedOviDam
+              motherId: animal.selectedOviDam.first.animalName != 'ADD' ?
+              animal.selectedOviDam
                   .first.id : null,
             );
       familyMembers.add(person);
     });
+    for (var i = 0; i < familyMembers.length; i++) {
+      final member = familyMembers[i];
+      if(!familyMembers.any((otherMember) => otherMember.id == member.fatherId))
+      {
+        familyMembers[i].fatherId = null;
+      }
+      if(!familyMembers.any((otherMember) => otherMember.id == member.motherId))
+      {
+        familyMembers[i].motherId = null;
+      }
+    }
+
     return familyMembers;
   }
 }

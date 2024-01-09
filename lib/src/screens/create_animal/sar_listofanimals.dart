@@ -109,6 +109,29 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
       surgeryDetails: {animalName: []},
     );
 
+    final ovianimals = ref.read(ovianimalsProvider);
+    final breedingChildrenDetails = ref.read(breedingChildrenDetailsProvider);
+    for (var child in breedingChildrenDetails) {
+      final childIndex =
+          ovianimals.indexWhere((animal) => animal.id == child.id);
+
+      ref.read(ovianimalsProvider.notifier).update((state) {
+        if(OviDetails.selectedOviGender == 'Male') {
+          state[childIndex].selectedOviSire = [
+            MainAnimalSire(OviDetails.animalName, OviDetails.selectedOviImage,
+                OviDetails.selectedOviGender)
+          ];
+        } else {
+          state[childIndex].selectedOviDam = [
+            MainAnimalDam(OviDetails.animalName, OviDetails.selectedOviImage,
+                OviDetails.selectedOviGender)
+          ];
+        }
+        return state;
+      });
+    }
+    ref.read(breedingChildrenDetailsProvider.notifier).update((state) => []);
+
     setState(() {
       if (ref.read(ovianimalsProvider).isEmpty) {
         ref.read(ovianimalsProvider).add(OviDetails);
@@ -145,26 +168,27 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
     // Filter the OviAnimals list based on the filterQuery
     final filteredOviAnimals = ref.read(ovianimalsProvider).where((animal) {
       final filters = ref.read(selectedFiltersProvider);
-      final animalType = filters.firstWhereOrNull((filter) =>
-          filterItems['Animal Type']!.contains(filter));
-      final animalSpecies = filters.firstWhereOrNull((filter) =>
-          filterItems['Animal Species']!.contains(filter));
-      final animalBreed = filters.firstWhereOrNull((filter) =>
-          filterItems['Animal Breed']!.contains(filter));
-      final animalSex = filters.firstWhereOrNull((filter) =>
-          filterItems['Animal Sex']!.contains(filter));
-      final breedingStage = filters.firstWhereOrNull((filter) =>
-          filterItems['Breeding Stage']!.contains(filter));
-      final tags = filters.firstWhereOrNull((filter) => filterItems['Tags']!
-          .contains(filter));
+      final animalType = filters.firstWhereOrNull(
+          (filter) => filterItems['Animal Type']!.contains(filter));
+      final animalSpecies = filters.firstWhereOrNull(
+          (filter) => filterItems['Animal Species']!.contains(filter));
+      final animalBreed = filters.firstWhereOrNull(
+          (filter) => filterItems['Animal Breed']!.contains(filter));
+      final animalSex = filters.firstWhereOrNull(
+          (filter) => filterItems['Animal Sex']!.contains(filter));
+      final breedingStage = filters.firstWhereOrNull(
+          (filter) => filterItems['Breeding Stage']!.contains(filter));
+      final tags = filters
+          .firstWhereOrNull((filter) => filterItems['Tags']!.contains(filter));
 
       return (animalType == null || animal.selectedAnimalType == animalType) &&
-          (animalSpecies == null || animal.selectedAnimalSpecies ==
-              animalSpecies) && (animalBreed == null ||
-          animal.selectedAnimalBreed == animalBreed) && (animalSex == null ||
-          animal.selectedOviGender == animalSex) && (breedingStage == null ||
-          animal.selectedBreedingStage == breedingStage) && (tags == null ||
-          animal.selectedOviChips.contains(tags));
+          (animalSpecies == null ||
+              animal.selectedAnimalSpecies == animalSpecies) &&
+          (animalBreed == null || animal.selectedAnimalBreed == animalBreed) &&
+          (animalSex == null || animal.selectedOviGender == animalSex) &&
+          (breedingStage == null ||
+              animal.selectedBreedingStage == breedingStage) &&
+          (tags == null || animal.selectedOviChips.contains(tags));
     }).toList();
     return RefreshIndicator(
       onRefresh: _refreshOviAnimals,

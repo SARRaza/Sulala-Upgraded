@@ -21,7 +21,8 @@ class FamilyTreeItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if ((node.children.isNotEmpty || node.parents.isNotEmpty) &&
+    if ((node.children.isNotEmpty || node.parents.isNotEmpty || node.person.id
+        == 0) &&
         !selected &&
         !node.expanded) {
       return buildExpandButton();

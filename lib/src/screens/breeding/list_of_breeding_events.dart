@@ -59,7 +59,7 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
   void addBreedingEvent(String eventNumber) {
     final hatchingDate = ref.read(dateOfHatchingProvider);
     final numOffEggs = ref.read(numOfEggsProvider);
-    
+
     final breedingEvent = BreedingEventVariables(
       eventNumber: ref.read(breedingEventNumberProvider),
       breeddam: ref.read(breeddamPictureProvider),
@@ -72,8 +72,9 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
       layingEggsDate: ref.read(dateOfLayingEggsProvider),
       eggsNumber: numOffEggs.isNotEmpty ? int.parse(numOffEggs) : 0,
       incubationDate: ref.read(incubationDateProvider),
-      hatchingDate: hatchingDate != null ? DateFormat('dd/MM/yyyy').format(
-          hatchingDate) : null,
+      hatchingDate: hatchingDate != null
+          ? DateFormat('dd/MM/yyyy').format(hatchingDate)
+          : null,
       notes: ref.read(breedingnotesProvider),
       shouldAddEvent: ref.read(shoudlAddEventProvider),
     );
@@ -87,9 +88,17 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
       final animalIndex = ref.read(ovianimalsProvider).indexWhere(
           (animal) => animal.animalName == widget.OviDetails.animalName);
 
+      MainAnimalSire? sire;
+      MainAnimalDam? dam;
+      if(widget.OviDetails.selectedOviGender == 'Male') {
+        sire = MainAnimalSire(widget.OviDetails.animalName, widget.OviDetails
+            .selectedOviImage, widget.OviDetails.selectedOviGender);
+      }
+
       if (animalIndex != -1) {
         ref.read(ovianimalsProvider)[animalIndex] =
-            ref.read(ovianimalsProvider)[animalIndex].copyWith(breedingEvents: {
+            ref.read(ovianimalsProvider)[animalIndex].copyWith(
+                breedingEvents: {
           ...ref.read(ovianimalsProvider)[animalIndex].breedingEvents,
           widget.OviDetails.animalName: [
             ...ref
@@ -97,7 +106,8 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                 .breedingEvents[widget.OviDetails.animalName]!,
             breedingEvent
           ]
-        });
+        },
+        );
       }
     });
   }

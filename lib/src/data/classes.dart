@@ -67,16 +67,22 @@ class BreedChildItem {
   final String animalName;
   final File? selectedOviImage;
   final String selectedOviGender;
+  int? _id;
 
   BreedChildItem(
       this.animalName, this.selectedOviImage, this.selectedOviGender);
+
+  int get id {
+    _id ??= IdHelper.lettersToIndex(animalName);
+    return _id!;
+  }
 }
 
 class OviVariables {
   final List<String> selectedFilters;
   late final String animalName;
-  final List<MainAnimalSire> selectedOviSire;
-  final List<MainAnimalDam> selectedOviDam;
+  List<MainAnimalSire> selectedOviSire;
+  List<MainAnimalDam> selectedOviDam;
   late final String dateOfBirth;
   final String dateOfLayingEggs;
   final String dateOfSonar;
