@@ -13,6 +13,7 @@ class PrimaryDateField extends ConsumerStatefulWidget {
   final String? errorMessage;
   final ValueChanged<DateTime>? onChanged;
   final ValueChanged<bool>? onErrorChanged;
+  final String? initialValue;
 
   const PrimaryDateField({
     Key? key,
@@ -21,6 +22,7 @@ class PrimaryDateField extends ConsumerStatefulWidget {
     this.errorMessage,
     this.onChanged,
     this.onErrorChanged,
+    this.initialValue
   }) : super(key: key);
 
   @override
@@ -39,9 +41,14 @@ class _PrimaryDateFieldState extends ConsumerState<PrimaryDateField> {
     super.initState();
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
-
-    // Initialize the controller with the hintText
-    _textEditingController.text = widget.hintText;
+    _textEditingController.text = widget.initialValue?? '';
+    if(widget.initialValue != null) {
+      final valueSegments = widget.initialValue!.split('/');
+      if(valueSegments.length == 3) {
+        _selectedDate = DateTime(int.parse(valueSegments[2]), int.parse(
+            valueSegments[1]), int.parse(valueSegments[0]));
+      }
+    }
   }
 
   @override
@@ -58,16 +65,16 @@ class _PrimaryDateFieldState extends ConsumerState<PrimaryDateField> {
     });
 
     // Clear the hintText when the field gains focus
-    if (isFocused) {
-      if (_textEditingController.text == widget.hintText) {
-        _textEditingController.text = '';
-      }
-    } else {
-      // Restore the hintText if no date is selected and field loses focus
-      if (_selectedDate == null) {
-        _textEditingController.text = widget.hintText;
-      }
-    }
+    // if (isFocused) {
+    //   if (_textEditingController.text == widget.hintText) {
+    //     _textEditingController.text = '';
+    //   }
+    // } else {
+    //   // Restore the hintText if no date is selected and field loses focus
+    //   if (_selectedDate == null) {
+    //     _textEditingController.text = widget.hintText;
+    //   }
+    // }
   }
 
   void _selectDate(BuildContext context) async {
@@ -190,14 +197,13 @@ class _PrimaryDateFieldState extends ConsumerState<PrimaryDateField> {
                     ),
                     child: TextFormField(
                       controller: _textEditingController,
-                      enabled: false,
                       style: AppFonts.body2(
                         color: isDateSelected
                             ? AppColors.grayscale90
                             : hintTextColor,
                       ),
-                      decoration: const InputDecoration.collapsed(
-                        hintText: '',
+                      decoration: InputDecoration.collapsed(
+                        hintText: widget.hintText,
                       ),
                     ),
                   ),

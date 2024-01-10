@@ -5,17 +5,26 @@ import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 // ignore: must_be_immutable
-class PregnantStatusWidget extends StatelessWidget {
-  bool? newMammalpregnantStatus;
-  bool? mammalpregnantStatuses;
+class PregnantStatusWidget extends StatefulWidget {
+  bool mammalpregnantStatuses;
 
   PregnantStatusWidget(
-      {super.key, this.newMammalpregnantStatus, this.mammalpregnantStatuses});
+      {super.key, required this.mammalpregnantStatuses});
 
   @override
+  State<PregnantStatusWidget> createState() => _PregnantStatusWidgetState();
+}
+
+class _PregnantStatusWidgetState extends State<PregnantStatusWidget> {
+  late bool mammalpregnantStatuses;
+
+  @override
+  void initState() {
+    mammalpregnantStatuses = widget.mammalpregnantStatuses;
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
-    return StatefulBuilder(
-      builder: (BuildContext context, StateSetter setState) {
         return Container(
           color: Colors.transparent,
           child: DrowupWidget(
@@ -111,7 +120,5 @@ class PregnantStatusWidget extends StatelessWidget {
             ),
           ),
         );
-      },
-    );
   }
 }

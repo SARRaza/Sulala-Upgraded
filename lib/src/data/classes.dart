@@ -119,6 +119,8 @@ class OviVariables {
   final Map<String, List<VaccineDetails>> vaccineDetails;
   final Map<String, List<MedicalCheckupDetails>> checkUpDetails;
   final Map<String, List<SurgeryDetails>> surgeryDetails;
+  final List<File>? files;
+  final int? pregnanciesCount;
   bool? pregnant;
   int? _age;
   int? _id;
@@ -164,7 +166,9 @@ class OviVariables {
     required this.dateOfLayingEggs,
     required this.checkUpDetails,
     required this.surgeryDetails,
-    this.pregnant
+    this.pregnant,
+    this.files,
+    this.pregnanciesCount
   });
   OviVariables copyWith(
       {List<String>? selectedFilters,
@@ -202,10 +206,13 @@ class OviVariables {
       String? breeddeliveryDate,
       String? breedingnotes,
       bool? shouldAddEvent,
+        List<File>? files,
       Map<String, List<BreedingEventVariables>>? breedingEvents,
       Map<String, List<VaccineDetails>>? vaccineDetails,
       Map<String, List<MedicalCheckupDetails>>? checkUpDetails,
       Map<String, List<SurgeryDetails>>? surgeryDetails,
+        bool? pregnant,
+        int? pregnanciesCount,
       // ignore: non_constant_identifier_names
       String? BreedingDetails}) {
     return OviVariables(
@@ -251,6 +258,9 @@ class OviVariables {
       vaccineDetails: vaccineDetails ?? this.vaccineDetails,
       checkUpDetails: checkUpDetails ?? this.checkUpDetails,
       surgeryDetails: surgeryDetails ?? this.surgeryDetails,
+      files: files ?? this.files,
+      pregnant: pregnant ?? this.pregnant,
+      pregnanciesCount: pregnanciesCount ?? this.pregnanciesCount
     );
   }
 
@@ -342,6 +352,10 @@ class BreedingEventVariables {
     String? breedingDate,
     String? deliveryDate,
     String? notes,
+    String? layingEggsDate,
+    int? eggsNumber,
+    String? incubationDate,
+    String? hatchingDate,
 
     // ignore: non_constant_identifier_names
   }) {
@@ -356,6 +370,10 @@ class BreedingEventVariables {
       deliveryDate: deliveryDate ?? this.deliveryDate,
       notes: notes ?? this.notes,
       shouldAddEvent: shouldAddEvent,
+      layingEggsDate: layingEggsDate ?? this.layingEggsDate,
+      eggsNumber: eggsNumber ?? this.eggsNumber,
+      incubationDate: incubationDate ?? this.incubationDate,
+      hatchingDate: hatchingDate ?? this.hatchingDate,
     );
   }
 }

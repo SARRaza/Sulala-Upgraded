@@ -47,6 +47,11 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
 
   final _eggsNumberController = TextEditingController();
 
+  get dateOfHatching {
+    final date = ref.read(dateOfHatchingProvider);
+    return date != null ? DateFormat('dd/MM/yyyy').format(date) : '';
+  }
+
   void setBreedingSelectedDate(DateTime breedingDate) {
     setState(() {
       ref.read(breedingDateProvider.notifier).update((state) {
@@ -602,6 +607,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                   Column(
                     children: [
                       PrimaryDateField(
+                        initialValue: ref.read(dateOfLayingEggsProvider),
                         labelText: 'Date of laying eggs'.tr,
                         hintText: 'DD/MM/YYYY',
                         onChanged: (value) {
@@ -609,6 +615,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                         },
                       ),
                       PrimaryTextField(
+                        initialValue: ref.read(numOfEggsProvider),
                         keyboardType: TextInputType.number,
                         labelText: 'Number of eggs'.tr,
                         hintText: '0',
@@ -618,6 +625,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                         },
                       ),
                       PrimaryDateField(
+                        initialValue: ref.read(incubationDateProvider),
                         labelText: 'Incubation date'.tr,
                         hintText: 'DD/MM/YYYY',
                         onChanged: (value) {
@@ -625,6 +633,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                         },
                       ),
                       PrimaryDateField(
+                        initialValue: dateOfHatching,
                         labelText: 'Hatching date'.tr,
                         hintText: 'DD/MM/YYYY',
                         onChanged: (value) {
@@ -720,17 +729,18 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
           width: 343 * globals.widthMediaQuery,
           child: PrimaryButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ListOfBreedingEvents(
-                    shouldAddBreedEvent: true,
-                    OviDetails: widget.OviDetails,
-                    breedingEvents: widget.breedingEvents,
-                    // breedingEventNumberController: TextEditingController(),
-                  ),
-                ),
-              );
+              Navigator.pop(context, true);
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => ListOfBreedingEvents(
+              //       shouldAddBreedEvent: true,
+              //       OviDetails: widget.OviDetails,
+              //       breedingEvents: widget.breedingEvents,
+              //       // breedingEventNumberController: TextEditingController(),
+              //     ),
+              //   ),
+              // );
             },
             text: 'Create Event',
           ),

@@ -111,11 +111,15 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
       if(widget.OviDetails.selectedOviGender == 'Male') {
         sire = MainAnimalSire(widget.OviDetails.animalName, widget.OviDetails
             .selectedOviImage, widget.OviDetails.selectedOviGender);
-        dam = MainAnimalDam(partner.first.animalName, partner.first
-            .selectedOviImage, partner.first.selectedOviGender);
+        if(partner.isNotEmpty) {
+          dam = MainAnimalDam(partner.first.animalName, partner.first
+              .selectedOviImage, partner.first.selectedOviGender);
+        }
       } else {
-        sire = MainAnimalSire(partner.first.animalName, partner.first
-            .selectedOviImage, partner.first.selectedOviGender);
+        if(partner.isNotEmpty) {
+          sire = MainAnimalSire(partner.first.animalName, partner.first
+              .selectedOviImage, partner.first.selectedOviGender);
+        }
         dam = MainAnimalDam(widget.OviDetails.animalName, widget.OviDetails
             .selectedOviImage, widget.OviDetails.selectedOviGender);
       }
@@ -124,8 +128,9 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
         final childIndex = ovianimals.indexWhere((animal) => animal.id == child
             .id);
         ref.read(ovianimalsProvider)[childIndex] = ref.read(
-            ovianimalsProvider)[childIndex].copyWith(selectedOviSire: [sire],
-            selectedOviDam: [dam]);
+            ovianimalsProvider)[childIndex].copyWith(
+            selectedOviSire: sire != null ? [sire] : null,
+            selectedOviDam: dam != null ? [dam] : null);
       }
     });
   }
@@ -174,18 +179,7 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                 color: Colors.black,
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => OwnedAnimalDetailsRegMode(
-                      OviDetails: widget.OviDetails,
-                      imagePath: '',
-                      title: '',
-                      geninfo: '',
-                      breedingEvents: widget.breedingEvents,
-                    ),
-                  ),
-                );
+                Navigator.pop(context);
               },
             ),
           ),
@@ -214,9 +208,9 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                         breedingEvents: widget.breedingEvents,
                       ),
                     ),
-                  ).then((_) {
+                  ).then((shouldAddBreedEvent) {
                     // When returning from CreateBreedingEvents, add the new event
-                    if (ref.read(breedingEventNumberProvider).isNotEmpty) {
+                    if (shouldAddBreedEvent != null && shouldAddBreedEvent) {
                       addBreedingEvent(ref.read(breedingEventNumberProvider));
                     }
                   });

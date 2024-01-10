@@ -15,7 +15,14 @@ import '../../../theme/fonts/fonts.dart';
 // Create a Riverpod provider to hold the list of uploaded files
 
 class FileUploaderField extends ConsumerStatefulWidget {
-  const FileUploaderField({Key? key}) : super(key: key);
+  const FileUploaderField({Key? key, this.onFileUploaded = _defaultFunction}) :
+        super(key: key);
+  final void Function(File) onFileUploaded;
+
+  static void _defaultFunction(file) {
+    // This is the default empty function.
+    // It does nothing.
+  }
 
   @override
   ConsumerState<FileUploaderField> createState() => _FileUploaderFieldState();
@@ -60,7 +67,8 @@ class _FileUploaderFieldState extends ConsumerState<FileUploaderField> {
       final String newFilePath = '${directory.path}/${selectedFile.uri.pathSegments.last}';
 
       // Copy the file to the new location
-      await selectedFile.copy(newFilePath);
+      final newFile = await selectedFile.copy(newFilePath);
+      widget.onFileUploaded(newFile);
 
       // Update the state to reflect the file has been saved
       setState(() {
