@@ -1,6 +1,7 @@
 // ignore_for_file: unnecessary_null_comparison, non_constant_identifier_names
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import 'package:sulala_upgrade/src/screens/create_animal/owned_animal_detail_reg_mode.dart';
@@ -140,24 +141,31 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                 SizedBox(
                   height: 20 * globals.heightMediaQuery,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Delivery Date',
-                      style: AppFonts.body2(color: AppColors.grayscale70),
-                    ),
-                    widget.breedingEvent.deliveryDate == null || widget.breedingEvent.deliveryDate!.isEmpty
-                        ? Text(
-                            'No Date Added',
-                            style: AppFonts.body2(color: AppColors.grayscale90),
-                          )
-                        : Text(
-                            widget.breedingEvent.deliveryDate!,
-                            style: AppFonts.body2(color: AppColors.grayscale90),
-                          ),
-                  ],
-                ),
+                if (widget.OviDetails.selectedAnimalType == 'Mammal')
+                  buildDateRow('Delivery Date'.tr, widget.breedingEvent
+                      .deliveryDate),
+                if (widget.OviDetails.selectedAnimalType == 'Oviparous')
+                  Column(
+                    children: [
+                      buildDateRow('Date of laying eggs'.tr, widget
+                          .breedingEvent.layingEggsDate),
+                      SizedBox(
+                        height: 20 * globals.heightMediaQuery,
+                      ),
+                      buildNumberRow('Number of eggs'.tr, widget.breedingEvent
+                          .eggsNumber.toString()),
+                      SizedBox(
+                        height: 20 * globals.heightMediaQuery,
+                      ),
+                      buildDateRow('Incubation date'.tr, widget.breedingEvent
+                          .incubationDate),
+                      SizedBox(
+                        height: 20 * globals.heightMediaQuery,
+                      ),
+                      buildDateRow('Hatching date'.tr, widget.breedingEvent
+                          .hatchingDate)
+                    ],
+                  ),
                 SizedBox(
                   height: 10 * globals.heightMediaQuery,
                 ),
@@ -332,6 +340,48 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
           ),
         ),
       ),
+    );
+  }
+
+  Row buildDateRow(String label, String? value) {
+    return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    label,
+                    style: AppFonts.body2(color: AppColors.grayscale70),
+                  ),
+                  value == null || value.isEmpty
+                      ? Text(
+                          'No Date Added'.tr,
+                          style: AppFonts.body2(color: AppColors.grayscale90),
+                        )
+                      : Text(
+                          value,
+                          style: AppFonts.body2(color: AppColors.grayscale90),
+                        ),
+                ],
+                );
+  }
+
+  Row buildNumberRow(String label, String? value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: AppFonts.body2(color: AppColors.grayscale70),
+        ),
+        value == null || value.isEmpty
+            ? Text(
+          '0',
+          style: AppFonts.body2(color: AppColors.grayscale90),
+        )
+            : Text(
+          value,
+          style: AppFonts.body2(color: AppColors.grayscale90),
+        ),
+      ],
     );
   }
 }

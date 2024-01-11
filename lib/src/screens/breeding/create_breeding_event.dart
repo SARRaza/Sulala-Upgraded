@@ -45,11 +45,30 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
   List<BreedChildItem> selectedChildren = [];
   List<BreedingPartner> breedPartners = [];
 
-  final _eggsNumberController = TextEditingController();
+  late final TextEditingController _eggsNumberController;
+
+  late final TextEditingController _layingEggsDateController;
+
+  late final TextEditingController _incubationDateController;
+
+  late final TextEditingController _hatchingDateController;
+
 
   get dateOfHatching {
     final date = ref.read(dateOfHatchingProvider);
     return date != null ? DateFormat('dd/MM/yyyy').format(date) : '';
+  }
+
+  @override
+  void initState() {
+    _eggsNumberController = TextEditingController(text: ref.read(
+        numOfEggsProvider));
+    _layingEggsDateController = TextEditingController(text: ref.read(
+        dateOfLayingEggsProvider));
+    _incubationDateController = TextEditingController(text: ref.read(
+        incubationDateProvider));
+    _hatchingDateController = TextEditingController(text: dateOfHatching);
+    super.initState();
   }
 
   void setBreedingSelectedDate(DateTime breedingDate) {
@@ -607,7 +626,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                   Column(
                     children: [
                       PrimaryDateField(
-                        initialValue: ref.read(dateOfLayingEggsProvider),
+                        controller: _layingEggsDateController,
                         labelText: 'Date of laying eggs'.tr,
                         hintText: 'DD/MM/YYYY',
                         onChanged: (value) {
@@ -615,17 +634,16 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                         },
                       ),
                       PrimaryTextField(
-                        initialValue: ref.read(numOfEggsProvider),
+                        controller: _eggsNumberController,
                         keyboardType: TextInputType.number,
                         labelText: 'Number of eggs'.tr,
                         hintText: '0',
-                        controller: _eggsNumberController,
                         onChanged: (value) {
                           setEggsNumber(value);
                         },
                       ),
                       PrimaryDateField(
-                        initialValue: ref.read(incubationDateProvider),
+                        controller: _incubationDateController,
                         labelText: 'Incubation date'.tr,
                         hintText: 'DD/MM/YYYY',
                         onChanged: (value) {
@@ -633,7 +651,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                         },
                       ),
                       PrimaryDateField(
-                        initialValue: dateOfHatching,
+                        controller: _hatchingDateController,
                         labelText: 'Hatching date'.tr,
                         hintText: 'DD/MM/YYYY',
                         onChanged: (value) {

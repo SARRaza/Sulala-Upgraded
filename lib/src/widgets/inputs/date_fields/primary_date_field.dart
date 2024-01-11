@@ -13,7 +13,7 @@ class PrimaryDateField extends ConsumerStatefulWidget {
   final String? errorMessage;
   final ValueChanged<DateTime>? onChanged;
   final ValueChanged<bool>? onErrorChanged;
-  final String? initialValue;
+  final TextEditingController? controller;
 
   const PrimaryDateField({
     Key? key,
@@ -22,7 +22,7 @@ class PrimaryDateField extends ConsumerStatefulWidget {
     this.errorMessage,
     this.onChanged,
     this.onErrorChanged,
-    this.initialValue
+    this.controller
   }) : super(key: key);
 
   @override
@@ -34,21 +34,14 @@ class _PrimaryDateFieldState extends ConsumerState<PrimaryDateField> {
   late FocusNode _focusNode;
   bool isFocused = false;
 
-  final TextEditingController _textEditingController = TextEditingController();
+  late final TextEditingController _textEditingController;
 
   @override
   void initState() {
     super.initState();
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
-    _textEditingController.text = widget.initialValue?? '';
-    if(widget.initialValue != null) {
-      final valueSegments = widget.initialValue!.split('/');
-      if(valueSegments.length == 3) {
-        _selectedDate = DateTime(int.parse(valueSegments[2]), int.parse(
-            valueSegments[1]), int.parse(valueSegments[0]));
-      }
-    }
+    _textEditingController = widget.controller?? TextEditingController();
   }
 
   @override
@@ -64,17 +57,17 @@ class _PrimaryDateFieldState extends ConsumerState<PrimaryDateField> {
       isFocused = _focusNode.hasFocus;
     });
 
-    // Clear the hintText when the field gains focus
-    // if (isFocused) {
-    //   if (_textEditingController.text == widget.hintText) {
-    //     _textEditingController.text = '';
-    //   }
-    // } else {
-    //   // Restore the hintText if no date is selected and field loses focus
-    //   if (_selectedDate == null) {
-    //     _textEditingController.text = widget.hintText;
-    //   }
-    // }
+    //Clear the hintText when the field gains focus
+    if (isFocused) {
+      if (_textEditingController.text == widget.hintText) {
+        _textEditingController.text = '';
+      }
+    } else {
+      // Restore the hintText if no date is selected and field loses focus
+      if (_selectedDate == null) {
+        _textEditingController.text = widget.hintText;
+      }
+    }
   }
 
   void _selectDate(BuildContext context) async {

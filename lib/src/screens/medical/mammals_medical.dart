@@ -55,14 +55,12 @@ List<MedicalCheckupDetails> mammalmedicalCheckupDetailsList = [];
 List<SurgeryDetails> mammalsurgeryDetailsList = [];
 
 class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
-  final TextEditingController medicalNeedsController = TextEditingController();
-  final TextEditingController dateOfSonarController = TextEditingController();
-  final TextEditingController dateOfLayingEggsController =
-      TextEditingController();
-  final TextEditingController numOfEggsController = TextEditingController();
-  final TextEditingController expDlvDateController = TextEditingController();
-  final TextEditingController incubationDateController =
-      TextEditingController();
+  late final TextEditingController medicalNeedsController;
+  late final TextEditingController dateOfSonarController;
+  late final TextEditingController dateOfLayingEggsController;
+  late final TextEditingController numOfEggsController;
+  late final TextEditingController expDlvDateController;
+  late final TextEditingController incubationDateController;
   late String keptInOval;
 
   late int animalIndex;
@@ -71,13 +69,20 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
 
   late OviVariables animalDetails;
 
-  @override
-  void initState() {
-    super.initState();
-    medicalNeedsController.text = widget.OviDetails.medicalNeeds;
-    dateOfSonarController.text = widget.OviDetails.dateOfSonar;
-    keptInOval = widget.OviDetails.keptInOval;
-  }
+  List<File>? files;
+
+  late List<SurgeryDetails> surgeryDetailsList;
+  DateTime? nextVaccinationDate;
+  DateTime? lastCheckupDate;
+  DateTime? nextCheckupDate;
+  DateTime? matingDate;
+
+  late List<VaccineDetails> vaccineDetailsList;
+
+  late List<MedicalCheckupDetails> medicalCheckUpList;
+
+  bool initialized = false;
+
 
   void _showexpdeliveryDatePickerModalSheet() async {
     final DateTime? expdeliveryDate = await showDatePicker(
@@ -455,136 +460,148 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
 
   @override
   Widget build(BuildContext context) {
-    animalIndex = ref.read(ovianimalsProvider).indexWhere(
-        (animal) => animal.animalName == widget.OviDetails.animalName);
+    if(!initialized) {
+      medicalNeedsController = TextEditingController(text: widget.OviDetails
+          .medicalNeeds);
+      dateOfSonarController = TextEditingController(text: widget.OviDetails
+          .dateOfSonar);
+      keptInOval = widget.OviDetails.keptInOval;
+      animalIndex = ref.read(ovianimalsProvider).indexWhere(
+              (animal) => animal.animalName == widget.OviDetails.animalName);
 
-    animalDetails = ref.watch(ovianimalsProvider)[animalIndex];
+      animalDetails = ref.watch(ovianimalsProvider)[animalIndex];
 
-    final files = animalDetails.files;
+      files = animalDetails.files;
+      vaccineDetailsList = ref
+          .read(ovianimalsProvider)[animalIndex]
+          .vaccineDetails[widget.OviDetails.animalName] ??
+          [];
+      medicalCheckUpList = ref
+          .read(ovianimalsProvider)[animalIndex]
+          .checkUpDetails[widget.OviDetails.animalName] ??
+          [];
+      surgeryDetailsList = ref
+          .read(ovianimalsProvider)[animalIndex]
+          .surgeryDetails[widget.OviDetails.animalName] ??
+          [];
+      final now = DateTime.now();
+      final futureVaccinations = vaccineDetailsList
+          .where((details) =>
+      (details.firstDoseDate != null &&
+          details.firstDoseDate!.isAfter(now)) ||
+          (details.secondDoseDate != null &&
+              details.secondDoseDate!.isAfter(now)))
+          .toList();
+
+      for (var vaccination in futureVaccinations) {
+        if (vaccination.firstDoseDate != null &&
+            vaccination.firstDoseDate!.isAfter(now) &&
+            (nextVaccinationDate == null ||
+                vaccination.firstDoseDate!.isBefore(nextVaccinationDate!))) {
+          nextVaccinationDate = vaccination.firstDoseDate;
+        }
+        if (vaccination.secondDoseDate != null &&
+            vaccination.secondDoseDate!.isAfter(now) &&
+            (nextVaccinationDate == null ||
+                vaccination.secondDoseDate!.isBefore(nextVaccinationDate!))) {
+          nextVaccinationDate = vaccination.secondDoseDate;
+        }
+      }
+
+      final pastMedicalCheckups = medicalCheckUpList
+          .where((checkup) =>
+      (checkup.firstCheckUp != null &&
+          checkup.firstCheckUp!.isBefore(now)) ||
+          (checkup.secondCheckUp != null &&
+              checkup.secondCheckUp!.isBefore(now)))
+          .toList();
+
+      for (var checkup in pastMedicalCheckups) {
+        if (checkup.firstCheckUp != null &&
+            checkup.firstCheckUp!.isBefore(now) &&
+            (lastCheckupDate == null ||
+                checkup.firstCheckUp!.isBefore(lastCheckupDate!))) {
+          lastCheckupDate = checkup.firstCheckUp;
+        }
+        if (checkup.secondCheckUp != null &&
+            checkup.secondCheckUp!.isBefore(now) &&
+            (lastCheckupDate == null ||
+                checkup.secondCheckUp!.isBefore(lastCheckupDate!))) {
+          lastCheckupDate = checkup.secondCheckUp;
+        }
+      }
+      final futureMedicalCheckups = medicalCheckUpList
+          .where((checkup) =>
+      (checkup.firstCheckUp != null &&
+          checkup.firstCheckUp!.isAfter(now)) ||
+          (checkup.secondCheckUp != null &&
+              checkup.secondCheckUp!.isAfter(now)))
+          .toList();
+
+      for (var checkup in futureMedicalCheckups) {
+        if (checkup.firstCheckUp != null &&
+            checkup.firstCheckUp!.isAfter(now) &&
+            (nextCheckupDate == null ||
+                checkup.firstCheckUp!.isBefore(nextCheckupDate!))) {
+          nextCheckupDate = checkup.firstCheckUp;
+        }
+        if (checkup.secondCheckUp != null &&
+            checkup.secondCheckUp!.isAfter(now) &&
+            (nextCheckupDate == null ||
+                checkup.secondCheckUp!.isBefore(nextCheckupDate!))) {
+          nextCheckupDate = checkup.secondCheckUp;
+        }
+      }
+
+
+      if(animalDetails.selectedOviGender == 'Female' && animalDetails
+          .breedingEvents[animalDetails.animalName] != null) {
+        for(var event in animalDetails.breedingEvents[animalDetails.animalName]!) {
+          final breedingDateSegments = event.breedingDate.split('/');
+          final breedingDate = breedingDateSegments.length == 3 ? DateTime(int
+              .parse(breedingDateSegments[2]), int.parse(breedingDateSegments[1]),
+              int.parse(breedingDateSegments[0])) : null;
+          if(breedingDate != null && breedingDate.isBefore(now) && (matingDate ==
+              null || breedingDate.isAfter(matingDate!))) {
+            matingDate = breedingDate;
+            lastBreedingEvent = event;
+          }
+        }
+      }
+
+      DateTime? expectedDeliveryDate;
+      final isPregnant = animalDetails.pregnant?? false;
+      if(matingDate != null && isPregnant) {
+        final gestationPeriod = gestationPeriods[animalDetails
+            .selectedAnimalSpecies];
+        expectedDeliveryDate = calculateExpectedDeliveryDate(matingDate!,
+            gestationPeriod!);
+        expDlvDateController = TextEditingController(text: DateFormat(
+            'dd.MM.yyyy').format(expectedDeliveryDate));
+
+      } else {
+        expDlvDateController = TextEditingController();
+      }
+      if(animalDetails.selectedOviGender == 'Female' && animalDetails
+          .selectedAnimalType == 'Oviparous') {
+        if(lastBreedingEvent != null) {
+          dateOfLayingEggsController = TextEditingController(
+              text: lastBreedingEvent!.layingEggsDate?? '');
+          numOfEggsController = TextEditingController(text: (lastBreedingEvent!
+              .eggsNumber?? 0).toString());
+          incubationDateController = TextEditingController(
+              text: lastBreedingEvent!.incubationDate?? '');
+        }
+      }
+
+      initialized = true;
+    }
 
     if (animalIndex == -1) {
       // Animal not found, you can show an error message or handle it accordingly
       return const Center(
         child: Text('Animal not found.'),
       );
-    }
-
-    final vaccineDetailsList = ref
-            .read(ovianimalsProvider)[animalIndex]
-            .vaccineDetails[widget.OviDetails.animalName] ??
-        [];
-    final medicalCheckUpList = ref
-            .read(ovianimalsProvider)[animalIndex]
-            .checkUpDetails[widget.OviDetails.animalName] ??
-        [];
-    final surgeryDetailsList = ref
-            .read(ovianimalsProvider)[animalIndex]
-            .surgeryDetails[widget.OviDetails.animalName] ??
-        [];
-    final now = DateTime.now();
-    final futureVaccinations = vaccineDetailsList
-        .where((details) =>
-            (details.firstDoseDate != null &&
-                details.firstDoseDate!.isAfter(now)) ||
-            (details.secondDoseDate != null &&
-                details.secondDoseDate!.isAfter(now)))
-        .toList();
-
-    DateTime? nextVaccinationDate;
-    for (var vaccination in futureVaccinations) {
-      if (vaccination.firstDoseDate != null &&
-          vaccination.firstDoseDate!.isAfter(now) &&
-          (nextVaccinationDate == null ||
-              vaccination.firstDoseDate!.isBefore(nextVaccinationDate))) {
-        nextVaccinationDate = vaccination.firstDoseDate;
-      }
-      if (vaccination.secondDoseDate != null &&
-          vaccination.secondDoseDate!.isAfter(now) &&
-          (nextVaccinationDate == null ||
-              vaccination.secondDoseDate!.isBefore(nextVaccinationDate))) {
-        nextVaccinationDate = vaccination.secondDoseDate;
-      }
-    }
-
-    final pastMedicalCheckups = medicalCheckUpList
-        .where((checkup) =>
-            (checkup.firstCheckUp != null &&
-                checkup.firstCheckUp!.isBefore(now)) ||
-            (checkup.secondCheckUp != null &&
-                checkup.secondCheckUp!.isBefore(now)))
-        .toList();
-    DateTime? lastCheckupDate;
-    for (var checkup in pastMedicalCheckups) {
-      if (checkup.firstCheckUp != null &&
-          checkup.firstCheckUp!.isBefore(now) &&
-          (lastCheckupDate == null ||
-              checkup.firstCheckUp!.isBefore(lastCheckupDate))) {
-        lastCheckupDate = checkup.firstCheckUp;
-      }
-      if (checkup.secondCheckUp != null &&
-          checkup.secondCheckUp!.isBefore(now) &&
-          (lastCheckupDate == null ||
-              checkup.secondCheckUp!.isBefore(lastCheckupDate))) {
-        lastCheckupDate = checkup.secondCheckUp;
-      }
-    }
-    final futureMedicalCheckups = medicalCheckUpList
-        .where((checkup) =>
-            (checkup.firstCheckUp != null &&
-                checkup.firstCheckUp!.isAfter(now)) ||
-            (checkup.secondCheckUp != null &&
-                checkup.secondCheckUp!.isAfter(now)))
-        .toList();
-    DateTime? nextCheckupDate;
-    for (var checkup in futureMedicalCheckups) {
-      if (checkup.firstCheckUp != null &&
-          checkup.firstCheckUp!.isAfter(now) &&
-          (nextCheckupDate == null ||
-              checkup.firstCheckUp!.isBefore(nextCheckupDate))) {
-        nextCheckupDate = checkup.firstCheckUp;
-      }
-      if (checkup.secondCheckUp != null &&
-          checkup.secondCheckUp!.isAfter(now) &&
-          (nextCheckupDate == null ||
-              checkup.secondCheckUp!.isBefore(nextCheckupDate))) {
-        nextCheckupDate = checkup.secondCheckUp;
-      }
-    }
-    DateTime? matingDate;
-
-    if(animalDetails.selectedOviGender == 'Female' && animalDetails
-        .breedingEvents[animalDetails.animalName] != null) {
-      for(var event in animalDetails.breedingEvents[animalDetails.animalName]!) {
-        final breedingDateSegments = event.breedingDate.split('/');
-        final breedingDate = breedingDateSegments.length == 3 ? DateTime(int
-            .parse(breedingDateSegments[2]), int.parse(breedingDateSegments[1]),
-            int.parse(breedingDateSegments[0])) : null;
-        if(breedingDate != null && breedingDate.isBefore(now) && (matingDate ==
-            null || breedingDate.isAfter(matingDate))) {
-          matingDate = breedingDate;
-          lastBreedingEvent = event;
-        }
-      }
-    }
-
-    DateTime? expectedDeliveryDate;
-    final isPregnant = animalDetails.pregnant?? false;
-    if(matingDate != null && isPregnant) {
-      final gestationPeriod = gestationPeriods[animalDetails
-          .selectedAnimalSpecies];
-      expectedDeliveryDate = calculateExpectedDeliveryDate(matingDate,
-          gestationPeriod!);
-      expDlvDateController.text = DateFormat('dd.MM.yyyy').format(
-          expectedDeliveryDate);
-    }
-    if(animalDetails.selectedOviGender == 'Female' && animalDetails
-        .selectedAnimalType == 'Oviparous') {
-      if(lastBreedingEvent != null) {
-        dateOfLayingEggsController.text = lastBreedingEvent!.layingEggsDate?? '';
-        numOfEggsController.text = (lastBreedingEvent!.eggsNumber?? 0)
-            .toString();
-        incubationDateController.text = lastBreedingEvent!.incubationDate?? '';
-      }
     }
 
 
@@ -596,7 +613,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
             width: globals.widthMediaQuery * 343,
             child: OneInformationBlock(
                 head1: nextVaccinationDate != null
-                    ? DateFormat('dd.MM.yyyy').format(nextVaccinationDate)
+                    ? DateFormat('dd.MM.yyyy').format(nextVaccinationDate!)
                     : 'N/A',
                 subtitle1: 'Next Vaccination'),
           ),
@@ -607,10 +624,10 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
             width: 343 * globals.widthMediaQuery,
             child: TwoInformationBlock(
               head1: lastCheckupDate != null
-                  ? DateFormat('dd.MM.yyyy').format(lastCheckupDate)
+                  ? DateFormat('dd.MM.yyyy').format(lastCheckupDate!)
                   : 'N/A',
               head2: nextCheckupDate != null
-                  ? DateFormat('dd.MM.yyyy').format(nextCheckupDate)
+                  ? DateFormat('dd.MM.yyyy').format(nextCheckupDate!)
                   : 'N/A',
               subtitle1: "Last Check-up Date",
               subtitle2: 'Next Check-up Date',
@@ -718,7 +735,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                     ),
                     if(files != null)
                       Column(
-                      children: files.map((file) => GestureDetector(
+                      children: files!.map((file) => GestureDetector(
                         onTap: () => showFile(file),
                         child: Row(
                                   children: [
@@ -814,7 +831,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                     children: [
                       Text(
                         matingDate != null ? DateFormat('dd.MM.yyyy').format(
-                            matingDate) : 'N/A',
+                            matingDate!) : 'N/A',
                         style: AppFonts.body2(color: AppColors.grayscale90),
                       ),
                       const Icon(Icons.chevron_right_rounded,
