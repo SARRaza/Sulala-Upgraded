@@ -61,8 +61,8 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
           ),
           actions: [
             InkWell(
-              onTap: () {
-                Navigator.of(context).push(
+              onTap: () async {
+                await Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => EditBreedingEventDetails(
                       breedingEvents: widget.breedingEvents,
@@ -71,6 +71,9 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                     ),
                   ),
                 );
+                if(mounted) {
+                  Navigator.pop(context);
+                }
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),

@@ -1,5 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -117,14 +119,13 @@ class _EditVaccinationState extends ConsumerState<EditVaccination> {
                   onChanged: (value) => setState(() => secondDoseDate = value),
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
-                SizedBox(
-                  height: 220,
-                  width: double.infinity,
-                  child: Focus(
-                    onFocusChange:
-                        (hasFocus) {}, // Dummy onFocusChange callback
-                    child: const FileUploaderField(),
-                  ),
+                Focus(
+                  onFocusChange:
+                      (hasFocus) {}, // Dummy onFocusChange callback
+                  child: FileUploaderField(uploadedFiles: widget
+                      .selectedVaccine!.files != null ? widget
+                      .selectedVaccine!.files!.map((file) => file.path)
+                      .toList() : []),
                 ),
                 SizedBox(
                   height: 16 * globals.heightMediaQuery,
@@ -140,6 +141,8 @@ class _EditVaccinationState extends ConsumerState<EditVaccination> {
                         vaccineName: vaccineNameController.text,
                         firstDoseDate: firstDoseDate,
                         secondDoseDate: secondDoseDate,
+                            files: ref.read(uploadedFilesProvider).map((path) =>
+                                File(path)).toList()
                       );
 
                       // Update the vaccineDetailsList for the selected animal
@@ -160,14 +163,24 @@ class _EditVaccinationState extends ConsumerState<EditVaccination> {
                         final List<VaccineDetails> updatedList =
                             List<VaccineDetails>.from(currentList);
                         final int indexToUpdate = updatedList.indexWhere(
-                            (vaccine) => vaccine == widget.selectedVaccine);
+                            (vaccine) => vaccine.vaccineName == widget
+                                .selectedVaccine!.vaccineName);
 
                         if (indexToUpdate != -1) {
                           updatedList[indexToUpdate] = updatedVaccine;
-                          ref
-                                  .read(ovianimalsProvider)[animalIndex]
-                                  .vaccineDetails[
-                              widget.OviDetails.animalName] = updatedList;
+                          ref.read(ovianimalsProvider.notifier).update((state) {
+                            final vaccineDetails = state[animalIndex]
+                                .vaccineDetails;
+                            vaccineDetails[state[animalIndex].animalName] =
+                                updatedList;
+                            state[animalIndex] = state[animalIndex].copyWith(
+                                vaccineDetails: vaccineDetails);
+                            return state;
+                          });
+                          // ref
+                          //         .read(ovianimalsProvider)[animalIndex]
+                          //         .vaccineDetails[
+                          //     widget.OviDetails.animalName] = updatedList;
                         }
                       }
 

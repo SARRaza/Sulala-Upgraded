@@ -1,5 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -114,14 +116,12 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                   onChanged: (value) => setState(() => secondCheckUp = value),
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
-                SizedBox(
-                  height: 220,
-                  width: double.infinity,
-                  child: Focus(
-                    onFocusChange:
-                        (hasFocus) {}, // Dummy onFocusChange callback
-                    child: const FileUploaderField(),
-                  ),
+                Focus(
+                  onFocusChange:
+                      (hasFocus) {}, // Dummy onFocusChange callback
+                  child: FileUploaderField(uploadedFiles: widget
+                      .selectedCheckup!.files!.map((file) => file.path)
+                      .toList(),),
                 ),
                 SizedBox(
                   height: 16 * globals.heightMediaQuery,
@@ -137,6 +137,8 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                         checkupName: checkUpNameController.text,
                         firstCheckUp: firstCheckUp,
                         secondCheckUp: secondCheckUp,
+                            files: ref.read(uploadedFilesProvider).map((path) =>
+                                File(path)).toList()
                       );
 
                       // Update the vaccineDetailsList for the selected animal
@@ -160,11 +162,20 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                             (checkup) => checkup == widget.selectedCheckup);
 
                         if (indexToUpdate != -1) {
-                          updatedList[indexToUpdate] = updatedCheckUp;
-                          ref
-                                  .read(ovianimalsProvider)[animalIndex]
-                                  .checkUpDetails[
-                              widget.OviDetails.animalName] = updatedList;
+                          ref.read(ovianimalsProvider.notifier).update((state) {
+                            final checkupDetails = state[animalIndex]
+                                .checkUpDetails;
+                            checkupDetails[state[animalIndex].animalName]![indexToUpdate] = updatedCheckUp;
+                            state[animalIndex] = state[animalIndex].copyWith(
+                              checkUpDetails: checkupDetails
+                            );
+                            return state;
+                          });
+                          // updatedList[indexToUpdate] = updatedCheckUp;
+                          // ref
+                          //         .read(ovianimalsProvider)[animalIndex]
+                          //         .checkUpDetails[
+                          //     widget.OviDetails.animalName] = updatedList;
                         }
                       }
 

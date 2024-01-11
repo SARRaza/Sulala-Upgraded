@@ -7,6 +7,7 @@ import 'package:dotted_border/dotted_border.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sulala_upgrade/src/screens/pdf/file_view_page.dart';
 
 import '../../../data/riverpod_globals.dart';
 import '../../../theme/colors/colors.dart';
@@ -15,9 +16,11 @@ import '../../../theme/fonts/fonts.dart';
 // Create a Riverpod provider to hold the list of uploaded files
 
 class FileUploaderField extends ConsumerStatefulWidget {
-  const FileUploaderField({Key? key, this.onFileUploaded = _defaultFunction}) :
+  const FileUploaderField({Key? key, this.onFileUploaded = _defaultFunction,
+    this.uploadedFiles}) :
         super(key: key);
   final void Function(File) onFileUploaded;
+  final List<String>? uploadedFiles;
 
   static void _defaultFunction(file) {
     // This is the default empty function.
@@ -32,16 +35,15 @@ class _FileUploaderFieldState extends ConsumerState<FileUploaderField> {
   final bool _loading = false;
   double _uploadProgress = 0.0;
 
+  late final List<String> uploadedFiles;
+
   Future<void> _chooseFile(BuildContext context) async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles();
 
       if (result != null && result.files.isNotEmpty) {
-        // Add the uploaded file name to the provider
-        ref.read(uploadedFilesProvider).add(result.files.single.name);
-
         // Start uploading the file
-        await _uploadFile(result.files.single.path!);
+        _uploadFile(result.files.single.path!);
       }
     } catch (e) {
       // Handle any potential errors when picking the file
@@ -49,13 +51,6 @@ class _FileUploaderFieldState extends ConsumerState<FileUploaderField> {
   }
 
   Future<void> _uploadFile(String filePath) async {
-    // Simulate file upload process (you should implement your upload logic here)
-    for (int i = 0; i <= 90; i += 10) {
-      await Future.delayed(const Duration(milliseconds: 500));
-      setState(() {
-        _uploadProgress = i / 100;
-      });
-    }
     try {
       // Get the directory where we can store app-specific files
       final directory = await getApplicationDocumentsDirectory();
@@ -71,10 +66,14 @@ class _FileUploaderFieldState extends ConsumerState<FileUploaderField> {
       widget.onFileUploaded(newFile);
 
       // Update the state to reflect the file has been saved
-      setState(() {
+      if(mounted) {
+        setState(() {
+        ref.read(uploadedFilesProvider).add(newFilePath);
+        uploadedFiles.add(newFilePath);
         _uploadProgress = 1; // Assuming the file is saved, set progress to 100%
         // You may also want to update other states or notify the user
       });
+      }
     } catch (e) {
       // Handle errors (e.g., file not found, no permission, etc.)
       if (kDebugMode) {
@@ -89,48 +88,62 @@ class _FileUploaderFieldState extends ConsumerState<FileUploaderField> {
   }
 
   @override
+  void initState() {
+    ref.read(uploadedFilesProvider).clear();
+    if(widget.uploadedFiles != null) {
+      ref.read(uploadedFilesProvider).addAll(widget.uploadedFiles!.map(
+              (path) => path));
+    }
+
+    uploadedFiles = widget.uploadedFiles?? [];
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final List<String> uploadedFiles = ref.watch(uploadedFilesProvider);
     final borderColor =
         uploadedFiles.isNotEmpty ? AppColors.primary20 : AppColors.grayscale20;
 
-    final fileWidgets = uploadedFiles.map((fileName) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          children: [
-            const Icon(
-              Icons.file_copy_outlined,
-              color: AppColors.primary30,
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                fileName,
-                style: AppFonts.body1(color: AppColors.grayscale90),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+    final fileWidgets = uploadedFiles.map((filePath) {
+      return GestureDetector(
+        onTap: () => showFile(filePath),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            children: [
+              const Icon(
+                Icons.file_copy_outlined,
+                color: AppColors.primary30,
               ),
-            ),
-            const SizedBox(width: 8),
-            if (_loading)
+              const SizedBox(width: 8),
               Expanded(
-                child: LinearProgressIndicator(
-                  value: _uploadProgress,
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    AppColors.primary30,
-                  ),
-                  backgroundColor: AppColors.grayscale10,
+                child: Text(
+                  filePath.split('/').last,
+                  style: AppFonts.body1(color: AppColors.grayscale90),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-            IconButton(
-              onPressed: () => _deleteFile(context, fileName),
-              icon: const Icon(
-                Icons.delete_outline,
-                color: AppColors.error100,
+              const SizedBox(width: 8),
+              if (_loading)
+                Expanded(
+                  child: LinearProgressIndicator(
+                    value: _uploadProgress,
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                      AppColors.primary30,
+                    ),
+                    backgroundColor: AppColors.grayscale10,
+                  ),
+                ),
+              IconButton(
+                onPressed: () => _deleteFile(context, filePath),
+                icon: const Icon(
+                  Icons.delete_outline,
+                  color: AppColors.error100,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     }).toList();
@@ -199,17 +212,17 @@ class _FileUploaderFieldState extends ConsumerState<FileUploaderField> {
         const SizedBox(
           height: 16,
         ),
-        Expanded(
-          child: ListView.builder(
-            shrinkWrap: true,
-            reverse: true,
-            itemCount: uploadedFiles.length,
-            itemBuilder: (context, index) {
-              return fileWidgets[index];
-            },
-          ),
-        ),
+        Column(
+          children: fileWidgets
+        )
       ],
     );
+  }
+
+  void showFile(String filePath) {
+    final index = uploadedFiles.indexOf(filePath);
+    Navigator.push(context, MaterialPageRoute(builder: (context) =>
+        FileViewPage(files: uploadedFiles.map((path) => File(path)).toList(),
+          index: index,)));
   }
 }

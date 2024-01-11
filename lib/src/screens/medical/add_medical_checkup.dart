@@ -64,7 +64,9 @@ class _AddMedicalCheckUpState extends State<AddMedicalCheckUp> {
           child: Padding(
             padding: EdgeInsets.only(
                 left: 16 * globals.widthMediaQuery,
-                right: 16 * globals.widthMediaQuery),
+                right: 16 * globals.widthMediaQuery,
+                bottom: 52 * globals.heightMediaQuery + 10
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -93,14 +95,10 @@ class _AddMedicalCheckUpState extends State<AddMedicalCheckUp> {
                   onChanged: (value) => setState(() => secondDoseDate = value),
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
-                SizedBox(
-                  height: 220,
-                  width: double.infinity,
-                  child: Focus(
-                    onFocusChange:
-                        (hasFocus) {}, // Dummy onFocusChange callback
-                    child: const FileUploaderField(),
-                  ),
+                Focus(
+                  onFocusChange:
+                      (hasFocus) {}, // Dummy onFocusChange callback
+                  child: const FileUploaderField(),
                 ),
               ],
             ),

@@ -302,8 +302,8 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                         return Column(
                           children: <Widget>[
                             GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(
+                              onTap: () async {
+                                await Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) => BreedingEventDetails(
                                       breedingEvents: breedingEvents,
@@ -312,6 +312,7 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                                     ),
                                   ),
                                 );
+                                setState(() {});
                               },
                               child: Row(
                                 mainAxisAlignment:

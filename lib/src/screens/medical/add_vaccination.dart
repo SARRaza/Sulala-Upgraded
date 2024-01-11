@@ -65,7 +65,9 @@ class _AddVaccinationState extends State<AddVaccination> {
           child: Padding(
             padding: EdgeInsets.only(
                 left: 16 * globals.widthMediaQuery,
-                right: 16 * globals.widthMediaQuery),
+                right: 16 * globals.widthMediaQuery,
+                bottom: 52 * globals.heightMediaQuery + 10
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -95,7 +97,7 @@ class _AddVaccinationState extends State<AddVaccination> {
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 SizedBox(
-                  height: 220,
+                  //height: 220,
                   width: double.infinity,
                   child: Focus(
                     onFocusChange:

@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
@@ -47,6 +48,17 @@ class _EditBreedingEventDetailsState
   String selectedBreedingDate = '';
   String selectedDeliveryDate = '';
   bool isFirstTimeSelection = true;
+
+  late final TextEditingController _layingEggsDateController;
+
+  late final TextEditingController _eggsNumberController;
+
+  late final TextEditingController _incubationDateController;
+
+  late final TextEditingController _hatchingDateController;
+
+  bool initialized = false;
+
   @override
   void initState() {
     super.initState();
@@ -383,9 +395,52 @@ class _EditBreedingEventDetailsState
     });
   }
 
+  void setLayingEggsSelectedDate(DateTime layingEggsDate) {
+    ref.read(dateOfLayingEggsProvider.notifier).update((state) {
+      // Format the date as needed before updating the state
+      state = DateFormat('dd/MM/yyyy').format(layingEggsDate);
+      return state;
+    });
+  }
+
+  void setEggsNumber(String eggsNumber) {
+    ref.read(numOfEggsProvider.notifier).update((state) {
+      state = eggsNumber;
+      return state;
+    });
+  }
+
+  void setIncubationSelectedDate(DateTime incubationDate) {
+    ref.read(incubationDateProvider.notifier).update((state) {
+      // Format the date as needed before updating the state
+      state = DateFormat('dd/MM/yyyy').format(incubationDate);
+      return state;
+    });
+  }
+
+  void setHatchingSelectedDate(DateTime hatchingDate) {
+    ref.read(dateOfHatchingProvider.notifier).update((state) {
+      state = hatchingDate;
+      return state;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final selectedbreedPartner = ref.watch(breedingPartnerDetailsProvider);
+    if(!initialized) {
+      _layingEggsDateController = TextEditingController(text: widget.breedingEvent
+          .layingEggsDate);
+      _eggsNumberController = TextEditingController(text: widget.breedingEvent
+          .eggsNumber.toString());
+      _incubationDateController = TextEditingController(text: widget.breedingEvent
+          .incubationDate);
+      _hatchingDateController = TextEditingController(text: widget.breedingEvent
+          .hatchingDate);
+      initialized = true;
+    }
+
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -469,7 +524,8 @@ class _EditBreedingEventDetailsState
                 SizedBox(
                   height: 20 * globals.heightMediaQuery,
                 ),
-                PrimaryDateField(
+                if (widget.OviDetails.selectedAnimalType == 'Mammal')
+                  PrimaryDateField(
                   labelText: 'Delivery Date',
                   hintText: selectedDeliveryDate.isNotEmpty
                       ? selectedDeliveryDate
@@ -478,6 +534,44 @@ class _EditBreedingEventDetailsState
                     setDeliverySelectedDate(value);
                   },
                 ),
+                if (widget.OviDetails.selectedAnimalType == 'Oviparous')
+                  Column(
+                    children: [
+                      PrimaryDateField(
+                        controller: _layingEggsDateController,
+                        labelText: 'Date of laying eggs'.tr,
+                        hintText: 'DD/MM/YYYY',
+                        onChanged: (value) {
+                          setLayingEggsSelectedDate(value);
+                        },
+                      ),
+                      PrimaryTextField(
+                        controller: _eggsNumberController,
+                        keyboardType: TextInputType.number,
+                        labelText: 'Number of eggs'.tr,
+                        hintText: '0',
+                        onChanged: (value) {
+                          setEggsNumber(value);
+                        },
+                      ),
+                      PrimaryDateField(
+                        controller: _incubationDateController,
+                        labelText: 'Incubation date'.tr,
+                        hintText: 'DD/MM/YYYY',
+                        onChanged: (value) {
+                          setIncubationSelectedDate(value);
+                        },
+                      ),
+                      PrimaryDateField(
+                        controller: _hatchingDateController,
+                        labelText: 'Hatching date'.tr,
+                        hintText: 'DD/MM/YYYY',
+                        onChanged: (value) {
+                          setHatchingSelectedDate(value);
+                        },
+                      ),
+                    ],
+                  ),
                 SizedBox(
                   height: 20 * globals.heightMediaQuery,
                 ),
@@ -675,6 +769,10 @@ class _EditBreedingEventDetailsState
                         eventNumber: breedingEventNumberController.text,
                         breedingDate: selectedBreedingDate,
                         deliveryDate: selectedDeliveryDate,
+                        layingEggsDate: _layingEggsDateController.text,
+                        eggsNumber: int.parse(_eggsNumberController.text),
+                        incubationDate: _incubationDateController.text,
+                        hatchingDate: _hatchingDateController.text,
                         partner: breedPartners,
                         children: selectedChildren,
                       );
@@ -684,29 +782,20 @@ class _EditBreedingEventDetailsState
                               animal.animalName ==
                               widget.OviDetails.animalName);
 
-                      if (animalIndex == -1) {
-                        // Animal not found, you can show an error message or handle it accordingly
-                      }
-                      final breedingEvent = ref
-                              .read(ovianimalsProvider)[animalIndex]
-                              .breedingEvents[widget.OviDetails.animalName] ??
-                          [];
-                      final index = breedingEvent.indexOf(widget.breedingEvent);
-                      if (index >= 0) {
-                        breedingEvent[index] = updatedBreedingEventDetails;
-                      }
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ListOfBreedingEvents(
-                            shouldAddBreedEvent: false,
-                            OviDetails: widget.OviDetails,
-                            breedingEvents: widget.breedingEvents,
-                            // breedingEventNumberController:
-                            //     breedingEventNumberController,
-                          ),
-                        ),
-                      );
+
+                        ref.read(ovianimalsProvider.notifier).update((state)
+                        {
+                          final animal = state[animalIndex];
+                          final events = animal.breedingEvents[animal
+                              .animalName];
+                          final eventIndex = events!.indexWhere((event) => event
+                              .eventNumber == widget.breedingEvent.eventNumber);
+                          events[eventIndex] = updatedBreedingEventDetails;
+                          state[animalIndex] = state[animalIndex].copyWith(
+                              breedingEvents: {animal.animalName: events});
+                          return state;
+                        });
+                      Navigator.pop(context);
                     },
                   ),
                 ),

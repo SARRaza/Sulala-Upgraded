@@ -144,7 +144,7 @@ class _PrimaryDateFieldState extends ConsumerState<PrimaryDateField> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDateSelected = _selectedDate != null;
+    final bool isDateSelected = _textEditingController.text.isNotEmpty;
 
     final Color hintTextColor =
         isDateSelected ? AppColors.grayscale90 : AppColors.grayscale50;
