@@ -1,5 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -87,7 +89,9 @@ class _EditSurgeriesRecordsState extends ConsumerState<EditSurgeriesRecords> {
           child: Padding(
             padding: EdgeInsets.only(
                 left: 16 * globals.widthMediaQuery,
-                right: 16 * globals.widthMediaQuery),
+                right: 16 * globals.widthMediaQuery,
+                bottom: 52 * globals.heightMediaQuery + 10
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -116,14 +120,10 @@ class _EditSurgeriesRecordsState extends ConsumerState<EditSurgeriesRecords> {
                   onChanged: (value) => setState(() => secondSurgery = value),
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
-                SizedBox(
-                  height: 220,
-                  width: double.infinity,
-                  child: Focus(
-                    onFocusChange:
-                        (hasFocus) {}, // Dummy onFocusChange callback
-                    child: const FileUploaderField(),
-                  ),
+                Focus(
+                  onFocusChange:
+                      (hasFocus) {}, // Dummy onFocusChange callback
+                  child: const FileUploaderField(),
                 ),
                 SizedBox(
                   height: 16 * globals.heightMediaQuery,
@@ -139,6 +139,8 @@ class _EditSurgeriesRecordsState extends ConsumerState<EditSurgeriesRecords> {
                         surgeryName: surgeryNameController.text,
                         firstSurgery: firstSurgery,
                         secondSurgery: secondSurgery,
+                            files: ref.read(uploadedFilesProvider).map((path) =>
+                                File(path)).toList()
                       );
 
                       // Update the vaccineDetailsList for the selected animal

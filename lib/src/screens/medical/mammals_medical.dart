@@ -1362,8 +1362,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
           SizedBox(
             height: 14 * globals.heightMediaQuery,
           ),
-          surgeryDetailsList.isNotEmpty
-              ? ListView.builder(
+          if(surgeryDetailsList.isNotEmpty)
+              ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: surgeryDetailsList.length,
                   shrinkWrap:
@@ -1375,31 +1375,41 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                         surgeryDetailsList[index].surgeryName,
                         style: AppFonts.headline3(color: AppColors.grayscale90),
                       ),
-                      trailing: const Row(
+                      trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
-                            Icons.file_copy_outlined,
-                            color: AppColors.primary40,
+                          if(surgeryDetailsList[index].files != null && surgeryDetailsList[index].files!.isNotEmpty)
+                          IconButton(
+                            onPressed: () => showFiles(surgeryDetailsList[index].files!),
+                            icon: const Icon(
+                              Icons.file_copy_outlined,
+                              color: AppColors.primary40,
+                            ),
                           ),
-                          Icon(
-                            Icons.chevron_right_rounded,
-                            color: AppColors.primary40,
+                          const SizedBox(width: 8,),
+                          IconButton(
+                            onPressed: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditSurgeriesRecords(
+                                    breedingEvents: const [],
+                                    OviDetails: widget.OviDetails,
+                                    selectedSurgery: surgeryDetailsList[index],
+                                  ),
+                                ),
+                              );
+                              setState(() {
+
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.chevron_right_rounded,
+                              color: AppColors.primary40,
+                            ),
                           ),
                         ],
                       ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditSurgeriesRecords(
-                              breedingEvents: const [],
-                              OviDetails: widget.OviDetails,
-                              selectedSurgery: surgeryDetailsList[index],
-                            ),
-                          ),
-                        );
-                      },
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -1415,61 +1425,6 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                           ),
                         ],
                       ),
-                    );
-                  },
-                )
-              : ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.zero,
-                  itemCount: 3,
-                  shrinkWrap:
-                      true, // This allows the ListView to take only necessary space
-                  itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      contentPadding: EdgeInsets.fromLTRB(
-                          0,
-                          10 * globals.heightMediaQuery,
-                          0,
-                          10 * globals.heightMediaQuery),
-                      leading: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Surgeries 1",
-                              style: AppFonts.headline3(
-                                  color: AppColors.grayscale90),
-                            ),
-                            Text(
-                              '15.01.2022',
-                              style:
-                                  AppFonts.body2(color: AppColors.grayscale70),
-                            ),
-                          ]),
-                      trailing: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.file_copy_outlined,
-                            color: AppColors.primary40,
-                          ),
-                          Icon(
-                            Icons.chevron_right_rounded,
-                            color: AppColors.primary40,
-                          ),
-                        ],
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditSurgeriesRecords(
-                              breedingEvents: const [],
-                              OviDetails: widget.OviDetails,
-                              selectedSurgery: surgeryDetailsList[index],
-                            ),
-                          ),
-                        );
-                      },
                     );
                   },
                 ),
@@ -1506,6 +1461,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                                     surgeryName: surgeryName,
                                     firstSurgery: firstSurgery,
                                     secondSurgery: secondSurgery,
+                                    files: ref.read(uploadedFilesProvider).map((
+                                        path) => File(path)).toList()
                                   ),
                                 ],
                               },
