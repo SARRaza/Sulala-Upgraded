@@ -189,8 +189,8 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                 PrimaryTextField(
                   hintText: 'Enter Email'.tr,
                   controller: emailController,
-                  // errorMessage:
-                  //     emailHasError == true ? 'Invalid email address' : null,
+                  errorMessage:
+                      emailHasError == true ? 'Invalid email address'.tr : null,
                   onChanged: (value) {
                     setState(() {
                       ref
@@ -202,7 +202,7 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                   },
                   onErrorChanged: (hasError) {
                     setState(() {
-                      emailHasError != hasError; // Update the error state
+                      emailHasError = hasError; // Update the error state
                     });
                   },
                 ),
@@ -214,12 +214,20 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                     status: buttonStatus,
                     text: 'Continue'.tr,
                     onPressed: () {
-                      buttonStatus = PrimaryButtonStatus.loading;
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const AddSomeDetailsPage()),
-                      );
+                      if(emailController.text.isNotEmpty && !isValidEmail(
+                          emailController.text)) {
+                        setState(() {
+                          emailHasError = true;
+                        });
+                      }
+                      if(!emailHasError) {
+                        buttonStatus = PrimaryButtonStatus.loading;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const AddSomeDetailsPage()),
+                        );
+                      }
                     },
                   ),
                 ),

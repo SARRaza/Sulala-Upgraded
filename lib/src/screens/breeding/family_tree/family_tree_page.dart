@@ -321,7 +321,8 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
   }
 
   Future<void> addParent(Gender gender) async {
-    final ovianimals = ref.watch(ovianimalsProvider);
+    final ovianimals = ref.watch(ovianimalsProvider).where((animal) => animal.id
+        != _selectedPerson.id).toList();
     final selectedFather = <MainAnimalSire>[];
     final selectedMother = <MainAnimalDam>[];
     List<MainAnimalSire> selectedSire = [];
@@ -384,7 +385,8 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
   }
 
   Future<void> addChildren() async {
-    final ovianimals = ref.read(ovianimalsProvider);
+    final ovianimals = ref.read(ovianimalsProvider).where((animal) => animal.id
+        != _selectedPerson.id).toList();
     final selectedChildren = <BreedChildItem>[];
     await showModalBottomSheet(
       context: context,

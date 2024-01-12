@@ -1124,7 +1124,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                                   AppFonts.body2(color: AppColors.grayscale70),
                             ),
                             const Spacer(),
-                            ovianimals.isNotEmpty
+                            ovianimals.isNotEmpty && animalSire.isNotEmpty
                                 ? PrimaryTextButton(
                                     onPressed: () {
                                       _showmainAnimalSireSelectionSheet(

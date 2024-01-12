@@ -131,7 +131,11 @@ class _CreatePasswordState extends ConsumerState<CreatePassword> {
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       const AddPersonalInfoPage(),
-                                ));
+                                )).then((value) {
+                                  setState(() {
+                                    buttonStatus = PrimaryButtonStatus.idle;
+                                  });
+                            });
                           } else {
                             setState(() {
                               isPasswordValid = true;

@@ -49,9 +49,15 @@ class BreedingPartner {
   final String animalName;
   final File? selectedOviImage;
   final String selectedOviGender;
+  int? _id;
 
   BreedingPartner(
       this.animalName, this.selectedOviImage, this.selectedOviGender);
+
+  int get id {
+    _id ??= IdHelper.lettersToIndex(animalName);
+    return _id!;
+  }
 }
 
 class ReminderItem {

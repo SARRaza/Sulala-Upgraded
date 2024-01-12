@@ -73,7 +73,8 @@ class _EditBreedingEventDetailsState
 
   void _showBreedChildrenSelectionSheet(BuildContext context) async {
     // Initialize an empty list
-    final ovianimals = ref.watch(ovianimalsProvider);
+    final ovianimals = ref.watch(ovianimalsProvider).where((animal) => animal.id
+        != widget.OviDetails.id).toList();
 
     String searchQuery = '';
 
@@ -228,7 +229,8 @@ class _EditBreedingEventDetailsState
 
   void _showBreedPartnerSelectionSheet(BuildContext context) async {
     // Initialize an empty list
-    final ovianimals = ref.watch(ovianimalsProvider);
+    final ovianimals = ref.watch(ovianimalsProvider).where((animal) => animal.id
+        != widget.OviDetails.id).toList();
 
     String searchQuery = '';
 
@@ -609,17 +611,17 @@ class _EditBreedingEventDetailsState
                   shrinkWrap: true,
                   itemCount: breedPartners.length,
                   itemBuilder: (context, index) {
-                    final child = breedPartners[index];
+                    final partner = breedPartners[index];
                     return ListTile(
                       onTap: () {},
                       contentPadding: EdgeInsets.zero,
                       leading: CircleAvatar(
                         radius: globals.widthMediaQuery * 24,
                         backgroundColor: Colors.transparent,
-                        backgroundImage: child.selectedOviImage != null
-                            ? FileImage(child.selectedOviImage!)
+                        backgroundImage: partner.selectedOviImage != null
+                            ? FileImage(partner.selectedOviImage!)
                             : null,
-                        child: child.selectedOviImage == null
+                        child: partner.selectedOviImage == null
                             ? const Icon(
                                 Icons.camera_alt_outlined,
                                 size: 50,
@@ -628,15 +630,15 @@ class _EditBreedingEventDetailsState
                             : null,
                       ),
                       title: Text(
-                        child.animalName,
+                        partner.animalName,
                         style: AppFonts.headline3(color: AppColors.grayscale90),
                       ),
                       subtitle: Text(
-                        child.selectedOviGender,
+                        partner.selectedOviGender,
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
                       trailing: Text(
-                        'ID#131340',
+                        'ID#${partner.id}',
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
                     );
@@ -698,7 +700,7 @@ class _EditBreedingEventDetailsState
                                   AppFonts.body2(color: AppColors.grayscale70),
                             ),
                             trailing: Text(
-                              'ID#131340',
+                              'ID#${child.id}',
                               style:
                                   AppFonts.body2(color: AppColors.grayscale70),
                             ),
@@ -747,13 +749,9 @@ class _EditBreedingEventDetailsState
                   height: 16 * globals.heightMediaQuery,
                 ),
                 ParagraphTextField(
-                  hintText: breedingEventNotesController.text,
+                  controller: breedingEventNotesController,
+                  hintText: 'Add Notes'.tr,
                   maxLines: 6,
-                  onChanged: (value) {
-                    setState(() {
-                      TextEditingController(text: 'the notes');
-                    });
-                  },
                 ),
                 SizedBox(
                   height: 100 * globals.heightMediaQuery,
@@ -770,11 +768,13 @@ class _EditBreedingEventDetailsState
                         breedingDate: selectedBreedingDate,
                         deliveryDate: selectedDeliveryDate,
                         layingEggsDate: _layingEggsDateController.text,
-                        eggsNumber: int.parse(_eggsNumberController.text),
+                        eggsNumber: _eggsNumberController.text.isNum ? int
+                            .parse(_eggsNumberController.text) : null,
                         incubationDate: _incubationDateController.text,
                         hatchingDate: _hatchingDateController.text,
                         partner: breedPartners,
                         children: selectedChildren,
+                              notes: breedingEventNotesController.text
                       );
                       final animalIndex = ref
                           .read(ovianimalsProvider)
@@ -807,7 +807,7 @@ class _EditBreedingEventDetailsState
                   width: 343 * globals.widthMediaQuery,
                   child: NavigateButton(
                     text: 'Delete Event',
-                    onPressed: () {},
+                    onPressed: deleteEvent,
                   ),
                 ),
                 SizedBox(
@@ -819,5 +819,23 @@ class _EditBreedingEventDetailsState
         ),
       ),
     );
+  }
+
+  void deleteEvent() {
+    final animalIndex = ref
+        .read(ovianimalsProvider)
+        .indexWhere((animal) =>
+    animal.animalName ==
+        widget.OviDetails.animalName);
+    ref.read(ovianimalsProvider.notifier).update((state) {
+      final animal = state[animalIndex];
+      final events = animal.breedingEvents[animal
+          .animalName];
+      final eventIndex = events!.indexWhere((event) => event.eventNumber ==
+          widget.breedingEvent.eventNumber);
+      events.removeAt(eventIndex);
+      return state;
+    });
+    Navigator.pop(context, {'eventDeleted': true});
   }
 }

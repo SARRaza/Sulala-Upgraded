@@ -123,7 +123,8 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
 
   void _showBreedChildrenSelectionSheet(BuildContext context) async {
     // Initialize an empty list
-    final ovianimals = ref.watch(ovianimalsProvider);
+    final ovianimals = ref.watch(ovianimalsProvider).where((animal) => animal.id
+        != widget.OviDetails.id).toList();
 
     String searchQuery = '';
 
@@ -278,7 +279,8 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
 
   void _showBreedPartnerSelectionSheet(BuildContext context) async {
     // Initialize an empty list
-    final ovianimals = ref.watch(ovianimalsProvider);
+    final ovianimals = ref.watch(ovianimalsProvider).where((animal) => animal.id
+        != widget.OviDetails.id).toList();
 
     String searchQuery = '';
 
@@ -414,10 +416,12 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                             .read(breedingPartnerProvider.notifier)
                             .update((state) => breedPartners);
 
-                        ref.read(breedingPartnerDetailsProvider.notifier)
+                        if(breedPartners.isNotEmpty) {
+                          ref.read(breedingPartnerDetailsProvider.notifier)
                             .update(
-                                (state) => "${breedPartners.last.animalName} (ID: 301)"
+                                (state) => "${breedPartners.last.animalName} (ID: ${breedPartners.last.id})"
                         );
+                        }
                         Navigator.pop(context);
                       },
                       child: const Text("Done"),
@@ -556,6 +560,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 PrimaryTextField(
+                  keyboardType: TextInputType.number,
                   onChanged: (value) {
                     ref
                         .read(breedingEventNumberProvider.notifier)
@@ -697,7 +702,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
                       trailing: Text(
-                        'ID#131340',
+                        'ID#${child.id}',
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
                     );

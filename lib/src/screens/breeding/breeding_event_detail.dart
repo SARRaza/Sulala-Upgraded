@@ -28,8 +28,18 @@ class BreedingEventDetails extends ConsumerStatefulWidget {
 }
 
 class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
+  late BreedingEventVariables breedingEvent;
+
   @override
   Widget build(BuildContext context) {
+    final animals = ref.read(ovianimalsProvider);
+    final animalIndex = animals.indexWhere(
+            (animal) => animal.id == widget.OviDetails.id);
+    final eventIndex = widget.breedingEvents.indexWhere((event) => event.eventNumber
+        == widget.breedingEvent.eventNumber);
+    breedingEvent = animals[animalIndex].breedingEvents[widget.OviDetails
+        .animalName]![eventIndex];
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -61,19 +71,26 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
           ),
           actions: [
             InkWell(
-              onTap: () async {
-                await Navigator.of(context).push(
+              onTap: () {
+                Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => EditBreedingEventDetails(
                       breedingEvents: widget.breedingEvents,
                       OviDetails: widget.OviDetails,
-                      breedingEvent: widget.breedingEvent,
+                      breedingEvent: breedingEvent,
                     ),
                   ),
-                );
-                if(mounted) {
-                  Navigator.pop(context);
-                }
+                ).then((result) {
+                  if(result is Map && result['eventDeleted'] != null && result['eventDeleted'] == true) {
+                    Navigator.pop(context);
+                  } else {
+                    setState(() {
+
+                    });
+                  }
+                });
+
+
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -99,7 +116,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.breedingEvent.eventNumber,
+                  breedingEvent.eventNumber,
                   style: AppFonts.title3(
                     color: AppColors.grayscale90,
                   ),
@@ -130,13 +147,13 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                       'Breeding Date',
                       style: AppFonts.body2(color: AppColors.grayscale70),
                     ),
-                    widget.breedingEvent.breedingDate.isEmpty
+                    breedingEvent.breedingDate.isEmpty
                         ? Text(
                             'No Date Added',
                             style: AppFonts.body2(color: AppColors.grayscale90),
                           )
                         : Text(
-                            widget.breedingEvent.breedingDate,
+                            breedingEvent.breedingDate,
                             style: AppFonts.body2(color: AppColors.grayscale90),
                           ),
                   ],
@@ -145,27 +162,27 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                   height: 20 * globals.heightMediaQuery,
                 ),
                 if (widget.OviDetails.selectedAnimalType == 'Mammal')
-                  buildDateRow('Delivery Date'.tr, widget.breedingEvent
+                  buildDateRow('Delivery Date'.tr, breedingEvent
                       .deliveryDate),
                 if (widget.OviDetails.selectedAnimalType == 'Oviparous')
                   Column(
                     children: [
-                      buildDateRow('Date of laying eggs'.tr, widget
-                          .breedingEvent.layingEggsDate),
+                      buildDateRow('Date of laying eggs'.tr, breedingEvent
+                          .layingEggsDate),
                       SizedBox(
                         height: 20 * globals.heightMediaQuery,
                       ),
-                      buildNumberRow('Number of eggs'.tr, widget.breedingEvent
+                      buildNumberRow('Number of eggs'.tr, breedingEvent
                           .eggsNumber.toString()),
                       SizedBox(
                         height: 20 * globals.heightMediaQuery,
                       ),
-                      buildDateRow('Incubation date'.tr, widget.breedingEvent
+                      buildDateRow('Incubation date'.tr, breedingEvent
                           .incubationDate),
                       SizedBox(
                         height: 20 * globals.heightMediaQuery,
                       ),
-                      buildDateRow('Hatching date'.tr, widget.breedingEvent
+                      buildDateRow('Hatching date'.tr, breedingEvent
                           .hatchingDate)
                     ],
                   ),
@@ -191,19 +208,20 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                 ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: widget.breedingEvent.partner.length,
+                  itemCount: breedingEvent.partner.length,
                   itemBuilder: (context, index) {
-                    final parent = widget.breedingEvent.partner[index];
+                    final partner = breedingEvent.partner[index];
+                    final partnerOviDetails = ref.read(ovianimalsProvider)
+                        .firstWhere((animal) => animal.animalName == partner
+                        .animalName);
+
                     return ListTile(
                       onTap: () {
-                        final childOviDetails = ref.read(ovianimalsProvider)
-                            .firstWhere((animal) => animal.animalName == parent
-                            .animalName);
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => OwnedAnimalDetailsRegMode(
                                 imagePath: '', title: '', geninfo: '',
-                                OviDetails: childOviDetails,
+                                OviDetails: partnerOviDetails,
                                 breedingEvents: const [])
                           ),
                         );
@@ -212,10 +230,10 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                       leading: CircleAvatar(
                         radius: globals.widthMediaQuery * 24,
                         backgroundColor: Colors.transparent,
-                        backgroundImage: parent.selectedOviImage != null
-                            ? FileImage(parent.selectedOviImage!)
+                        backgroundImage: partner.selectedOviImage != null
+                            ? FileImage(partner.selectedOviImage!)
                             : null,
-                        child: parent.selectedOviImage == null
+                        child: partner.selectedOviImage == null
                             ? const Icon(
                                 Icons.camera_alt_outlined,
                                 size: 50,
@@ -224,15 +242,15 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                             : null,
                       ),
                       title: Text(
-                        parent.animalName,
+                        partner.animalName,
                         style: AppFonts.headline3(color: AppColors.grayscale90),
                       ),
                       subtitle: Text(
-                        parent.selectedOviGender,
+                        partner.selectedOviGender,
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
                       trailing: Text(
-                        'ID#131340',
+                        'ID#${partnerOviDetails.id}',
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
                     );
@@ -249,7 +267,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                 SizedBox(
                   height: 16 * globals.heightMediaQuery,
                 ),
-                widget.breedingEvent.children.isEmpty
+                breedingEvent.children.isEmpty
                     ? Column(
                         children: [
                           SizedBox(
@@ -263,14 +281,15 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                     : ListView.builder(
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        itemCount: widget.breedingEvent.children.length,
+                        itemCount: breedingEvent.children.length,
                         itemBuilder: (context, index) {
-                          final child = widget.breedingEvent.children[index];
+                          final child = breedingEvent.children[index];
+                          final childOviDetails = ref.read(ovianimalsProvider)
+                              .firstWhere((animal) => animal.animalName == child
+                              .animalName);
+
                           return ListTile(
                             onTap: () {
-                              final childOviDetails = ref.read(ovianimalsProvider)
-                                  .firstWhere((animal) => animal.animalName == child
-                                  .animalName);
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                     builder: (context) => OwnedAnimalDetailsRegMode(
@@ -306,7 +325,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                                   AppFonts.body2(color: AppColors.grayscale70),
                             ),
                             trailing: Text(
-                              'ID#131340',
+                              'ID#${childOviDetails.id}',
                               style:
                                   AppFonts.body2(color: AppColors.grayscale70),
                             ),
@@ -334,7 +353,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                   height: 16 * globals.heightMediaQuery,
                 ),
                 Text(
-                  widget.breedingEvent.notes,
+                  breedingEvent.notes,
                   // (widget.breedingEvent.notes),
                   style: AppFonts.body2(color: AppColors.grayscale70),
                 ),
