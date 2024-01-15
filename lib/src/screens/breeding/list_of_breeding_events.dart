@@ -276,12 +276,10 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                                       breedingEvents: widget.breedingEvents,
                                     ),
                                   ),
-                                ).then((_) {
+                                ).then((shouldAddBreedingEvent) {
                                   // When returning from CreateBreedingEvents, add the new event
-                                  if (widget.breedingEvents.first.eventNumber
-                                      .isNotEmpty) {
-                                    addBreedingEvent(widget
-                                        .breedingEvents.first.eventNumber);
+                                  if (shouldAddBreedingEvent != null && shouldAddBreedingEvent) {
+                                    addBreedingEvent(ref.read(breedingEventNumberProvider));
                                   }
                                 });
                               },

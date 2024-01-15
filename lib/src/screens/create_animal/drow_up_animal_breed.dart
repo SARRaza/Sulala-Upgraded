@@ -46,7 +46,7 @@ class _DrowupAnimalBreedState extends ConsumerState<DrowupAnimalBreed> {
       heading: 'Animal Breed',
       heightFactor: 0.9,
       content: SizedBox(
-        height: globals.heightMediaQuery * 530,
+        height: MediaQuery.of(context).size.height * 0.6,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

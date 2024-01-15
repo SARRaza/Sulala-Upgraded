@@ -153,7 +153,9 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
 
     if (pickedFile != null) {
       final selectedImage = File(pickedFile.path);
-      selectedOviImage = selectedImage;
+      setState(() {
+        selectedOviImage = selectedImage;
+      });
     }
   }
 
@@ -177,7 +179,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
     final pickedDate = await showDatePicker(
       context: context,
       // ignore: unnecessary_null_comparison
-      initialDate: widget.OviDetails.dateOfBirth != null
+      initialDate: widget.OviDetails.dateOfBirth.isNotEmpty
           ? DateFormat('dd/MM/yyyy').parse(widget.OviDetails.dateOfBirth)
           : DateTime.now(),
       firstDate: DateTime(2000),
@@ -292,7 +294,9 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
   void _deleteAvatar() {
     // Implement the logic to delete/reset the avatar
     ref.read(selectedAnimalImageProvider.notifier).update((state) => null);
-    setState(() {});
+    setState(() {
+      selectedOviImage = null;
+    });
   }
 
   void _changeAnimalImagepicker(BuildContext context) {
@@ -547,7 +551,6 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 padding: const EdgeInsets.all(16),
                 child: SizedBox(
                   width: double.infinity,
-                  height: MediaQuery.of(context).size.height * 0.65,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,

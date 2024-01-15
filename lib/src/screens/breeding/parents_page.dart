@@ -80,26 +80,6 @@ class _ParentsPageState extends ConsumerState<ParentsPage> {
             ),
           ),
         ),
-        actions: [
-          InkWell(
-            onTap: () {
-              // Handle edit button tap
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.grayscale10,
-                ),
-                child: const Image(
-                  image: AssetImage(
-                      'assets/icons/frame/24px/edit_icon_button.png'),
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
       body: Padding(
         padding: EdgeInsets.only(
@@ -163,7 +143,7 @@ class _ParentsPageState extends ConsumerState<ParentsPage> {
                           Column(
                             children: [
                               ParentsItem(
-                                id: '2222',
+                                id: father!.id.toString(),
                                 name: father!.animalName,
                                 sex: 'Male',
                                 age: '1 year'.trPlural('numYears', father!.age,
@@ -181,7 +161,7 @@ class _ParentsPageState extends ConsumerState<ParentsPage> {
                           ),
                           SizedBox(width: 55 * globals.widthMediaQuery),
                           ParentsItem(
-                            id: '2222',
+                            id: mother!.id.toString(),
                             name: mother!.animalName,
                             sex: 'Female',
                             age: '1 year'.trPlural('numYears', mother!.age,
@@ -263,7 +243,8 @@ class _ParentsPageState extends ConsumerState<ParentsPage> {
   }
 
   Future<void> addParents() async {
-    final ovianimals = ref.watch(ovianimalsProvider);
+    final ovianimals = ref.read(ovianimalsProvider).where((animal) => animal.id
+        != widget.OviDetails.id).toList();
     final selectedFather = <MainAnimalSire>[];
     final selectedMother = <MainAnimalDam>[];
     List<MainAnimalSire> selectedSire = [];

@@ -36,17 +36,16 @@ class _BreedingEventChildrenListState
         child: Text('Animal not found.'),
       );
     }
-
-    final breedingEvents = ref
-            .read(ovianimalsProvider)[animalIndex]
-            .breedingEvents[widget.OviDetails.animalName] ??
+    final animal = ref.read(ovianimalsProvider)[animalIndex];
+    final breedingEvents = animal.breedingEvents[widget.OviDetails.animalName]??
         [];
+
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
         centerTitle: true,
         title: Text(
-          'Harry',
+          animal.animalName,
           style: AppFonts.headline3(color: AppColors.grayscale90),
         ),
         backgroundColor: Colors.transparent,
@@ -102,7 +101,7 @@ class _BreedingEventChildrenListState
                                     color: AppColors.grayscale80),
                               ),
                               Text(
-                                '09/09/2023',
+                                breedingEvent.breedingDate,
                                 style: AppFonts.caption2(
                                     color: AppColors.grayscale80),
                               ),
@@ -154,7 +153,7 @@ class _BreedingEventChildrenListState
                                               color: AppColors.grayscale70),
                                         ),
                                   trailing: Text(
-                                    'ID #13542',
+                                    'ID #${child.id}',
                                     style: AppFonts.body2(
                                         color: AppColors.grayscale90),
                                   ),

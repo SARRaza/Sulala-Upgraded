@@ -406,7 +406,7 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
                                                 color: AppColors.grayscale70),
                                           ),
                                     trailing: Text(
-                                      'ID #13542',
+                                      'ID #${child.id}',
                                       style: AppFonts.body2(
                                           color: AppColors.grayscale90),
                                     ),
