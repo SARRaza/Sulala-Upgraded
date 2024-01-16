@@ -12,6 +12,7 @@ import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 import '../../../widgets/controls_and_buttons/buttons/sar_buttonwidget.dart';
 import '../../../widgets/controls_and_buttons/tags/custom_tags.dart';
+import '../../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
 import '../../../widgets/inputs/paragraph_text_fields/edit_paragraph_text_field.dart';
 import '../../../widgets/inputs/text_fields/primary_text_field.dart';
 import '../drow_up_animal_breed.dart';
@@ -292,7 +293,6 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
 // Set the initial value based on widget.OviDetails.dateOfBirth
 
   void _deleteAvatar() {
-    // Implement the logic to delete/reset the avatar
     ref.read(selectedAnimalImageProvider.notifier).update((state) => null);
     setState(() {
       selectedOviImage = null;
@@ -962,6 +962,9 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
         );
       },
     );
+    setState(() {
+
+    });
 
 // Inside _animalTagsModalSheet:
     if (result != null) {}
@@ -970,65 +973,66 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
   void _showOviFieldNameModal(BuildContext context) {
     // TextEditingController fieldname = TextEditingController();
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       backgroundColor: Colors.white,
       showDragHandle: true,
       builder: (BuildContext context) {
         return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.7,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Add Custom Field',
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
+          padding: EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0,
+              bottom: 16 + MediaQuery.of(context).viewInsets.bottom),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Add Custom Field',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(
-                  height: 35,
-                ),
-                PrimaryTextField(
-                    hintText: 'Enter Custom Field Name',
-                    labelText: 'Enter Field Name',
-                    controller: fieldNameController),
-                SizedBox(height: globals.heightMediaQuery * 130),
-                ButtonWidget(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    _showOviFieldContentModal(context);
-                  },
-                  buttonText: 'Confirm',
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 238, 238, 238),
-                          foregroundColor: Colors.black,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                          ),
+              ),
+              const SizedBox(
+                height: 35,
+              ),
+              PrimaryTextField(
+                  hintText: 'Enter Custom Field Name',
+                  labelText: 'Enter Field Name',
+                  controller: fieldNameController),
+              //SizedBox(height: globals.heightMediaQuery * 130),
+              const SizedBox(height: 32,),
+              ButtonWidget(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _showOviFieldContentModal(context);
+                },
+                buttonText: 'Confirm',
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromARGB(255, 238, 238, 238),
+                        foregroundColor: Colors.black,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
                         ),
-                        child: const Text('Cancel'),
                       ),
+                      child: const Text('Cancel'),
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         );
       },
@@ -1037,27 +1041,30 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
 
   void _showOviFieldContentModal(BuildContext context) {
     showModalBottomSheet(
+      isScrollControlled: true,
       showDragHandle: true,
       context: context,
       builder: (BuildContext context) {
         return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.50,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Add Text Area',
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
+          padding: EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0,
+              bottom: 16.0 + MediaQuery.of(context).viewInsets.bottom),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Add Text Area',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(
-                  height: 25,
-                ),
-                TextField(
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              SizedBox(
+                height: 116,
+                child: TextField(
                   maxLines: 5,
                   controller: fieldContentController,
                   decoration: InputDecoration(
@@ -1075,41 +1082,41 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 35,
-                ),
-                ButtonWidget(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  buttonText: 'Confirm',
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 238, 238, 238),
-                          foregroundColor: Colors.black,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                          ),
+              ),
+              const SizedBox(
+                height: 35,
+              ),
+              ButtonWidget(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                buttonText: 'Confirm',
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromARGB(255, 238, 238, 238),
+                        foregroundColor: Colors.black,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
                         ),
-                        child: const Text('Cancel'),
                       ),
+                      child: const Text('Cancel'),
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         );
       },
@@ -1711,23 +1718,25 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                           ),
                         ),
                       ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            // widget.OviDetails.selectedOviDates[fieldName] = null;
-                          });
-                        },
-                        child: const Icon(
-                          Icons.delete,
-                          color: Colors.red,
-                        ),
-                      ),
                     ],
                   ),
                   const SizedBox(height: 10),
                 ],
               ),
               _buildDateFields(),
+              Row(
+                children: [
+                  PrimaryTextButton(
+                    onPressed: () {
+                      _showDateSelectionSheet(context, selectedAnimalType);
+                    },
+                    status: TextStatus.idle,
+                    text: 'Add Date',
+                  ),
+                  const Icon(Icons.add_rounded,
+                      color: AppColors.primary40, size: 20),
+                ],
+              ),
               SizedBox(
                 height: globals.heightMediaQuery * 16,
               ),
@@ -1856,147 +1865,8 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 maxLines: 8,
                 notesController: notesController,
               ),
-              TextField(
-                controller: animalSireController,
-                decoration: InputDecoration(
-                  labelText: 'New Animal Sire',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-              TextField(
-                controller: animalDamController,
-                decoration: InputDecoration(
-                  labelText: 'New Animal Dam',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-              TextField(
-                controller: selectedBreedingStageController,
-                decoration: InputDecoration(
-                  labelText: 'New Breeding Stage',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-              TextField(
-                maxLines: 4,
-                controller: notesController,
-                decoration: InputDecoration(
-                  labelText: 'New Additional Notes',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-              TextField(
-                maxLines: 3,
-                controller: medicalNeedsController,
-                decoration: InputDecoration(
-                  labelText: 'New Medical Needs',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-              _buildDateFields(),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-              TextField(
-                controller: layingFrequencyController,
-                decoration: InputDecoration(
-                  labelText: 'New Laying Frequency',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-              TextField(
-                controller: eggsPerMonthController,
-                decoration: InputDecoration(
-                  labelText: 'New Eggs Per Month',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-              TextField(
-                controller: dateOfBirthController,
-                decoration: InputDecoration(
-                  labelText: 'New Date of Birth',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-              TextField(
-                controller: fieldNameController,
-                decoration: InputDecoration(
-                  labelText: fieldNameController.text.isNotEmpty
-                      ? fieldNameController.text
-                      : 'Custom Field Name',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.015),
-              TextField(
-                controller: fieldContentController,
-                decoration: InputDecoration(
-                  labelText: fieldContentController.text.isNotEmpty
-                      ? fieldContentController.text
-                      : 'Custom Field Content',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-              TextField(
-                controller: imageUrlController,
-                decoration: InputDecoration(
-                  labelText: 'Image URL',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-              Wrap(
-                spacing: 8.0,
-                runSpacing: 8.0,
-                children: chips.map((chip) {
-                  return CustomTag(
-                    label: chip,
-                    selected: true, // Since these are selected chips
-                    onTap: () {},
-                  );
-                }).toList(),
-              ),
-              TextButton(
-                onPressed: () {
-                  _animalTagsModalSheet();
-                },
-                child: const Text(
-                  'Add Tags +',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 36, 86, 38),
-                  ),
-                ),
+              SizedBox(
+                height: globals.heightMediaQuery * 16,
               ),
             ],
           ),
@@ -2055,6 +1925,92 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showDateSelectionSheet(BuildContext context, selectedAnimalType) async {
+    // ignore: non_constant_identifier_names
+    List<String> OvidateTypes = [
+      'Date Of Hatching',
+      'Date Of Death',
+      'Date Of Sale',
+    ];
+    // ignore: non_constant_identifier_names
+    List<String> MammaldateTypes = [
+      'Date Of Weaning',
+      'Date Of Mating',
+      'Date Of Death',
+      'Date Of Sale',
+    ];
+
+    await showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 10),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'Add Date ',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            if (selectedAnimalType == "Oviparous")
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: OvidateTypes.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Column(
+                      children: [
+                        ListTile(
+                          title: Text(OvidateTypes[index]),
+                          dense: true,
+                          minVerticalPadding: double.minPositive,
+                          trailing: const Icon(Icons.arrow_right_alt_rounded),
+                          onTap: () {
+                            Navigator.pop(context);
+                            _showDatePicker(context, OvidateTypes[index]);
+                          },
+                        ),
+                        const Divider(),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            if (selectedAnimalType == "Mammal")
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: MammaldateTypes.map((dateType) {
+                  return Column(
+                    children: [
+                      ListTile(
+                        title: Text(dateType),
+                        dense: true,
+                        minVerticalPadding: double.minPositive,
+                        trailing: const Icon(Icons.arrow_right_alt_rounded),
+                        onTap: () {
+                          Navigator.pop(context);
+                          _showDatePicker(
+                              context, dateType);
+                        },
+                      ),
+                      const Divider(),
+                    ],
+                  );
+                }).toList(),
+              ),
+          ],
+        );
+      },
     );
   }
 }
