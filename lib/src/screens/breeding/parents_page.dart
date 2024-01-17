@@ -41,10 +41,12 @@ class _ParentsPageState extends ConsumerState<ParentsPage> {
 
   @override
   void initState() {
-    father = ref.read(ovianimalsProvider).firstWhereOrNull((animal) => animal
-        .animalName == widget.OviDetails.selectedOviSire.first.animalName);
-    mother = ref.read(ovianimalsProvider).firstWhereOrNull((animal) => animal
-        .animalName == widget.OviDetails.selectedOviDam.first.animalName);
+    father = ref.read(ovianimalsProvider).firstWhereOrNull((animal) => widget
+        .OviDetails.selectedOviSire != null && animal.animalName == widget
+        .OviDetails.selectedOviSire!.animalName);
+    mother = ref.read(ovianimalsProvider).firstWhereOrNull((animal) => widget
+        .OviDetails.selectedOviDam != null && animal.animalName == widget
+        .OviDetails.selectedOviDam!.animalName);
     super.initState();
   }
 
@@ -278,29 +280,33 @@ class _ParentsPageState extends ConsumerState<ParentsPage> {
           return AnimalDamModal(
               ovianimals: ovianimals,
               selectedDam: selectedDam,
-              selectedFather: selectedFather,
-              selectedMother: selectedMother,
+              selectedFather: null,
+              selectedMother: null,
               ref: ref);
         },
       );
     }
 
-    final selectedOviSire = ref.read(animalSireDetailsProvider).first;
-    final selectedOviDam = ref.read(animalDamDetailsProvider).first;
+    final selectedOviSire = ref.read(animalSireDetailsProvider);
+    final selectedOviDam = ref.read(animalDamDetailsProvider);
     final oviDetails = widget.OviDetails;
-    oviDetails.selectedOviSire[0] = selectedOviSire;
-    oviDetails.selectedOviDam[0] = selectedOviDam;
+    oviDetails.selectedOviSire = selectedOviSire;
+    oviDetails.selectedOviDam = selectedOviDam;
     ref.read(ovianimalsProvider.notifier).update((state) {
       final index = state.indexWhere((animal) => animal.animalName == oviDetails.animalName);
       state[index] = oviDetails;
       return state;
     });
     setState(() {
-      father ??= ref.read(ovianimalsProvider).firstWhereOrNull((animal) => animal
+      if(selectedOviSire != null) {
+        father ??= ref.read(ovianimalsProvider).firstWhereOrNull((animal) => animal
             .animalName == selectedOviSire.animalName);
+      }
 
-      mother ??= ref.read(ovianimalsProvider).firstWhereOrNull((animal) => animal
-          .animalName == selectedOviDam.animalName);
+      if(selectedOviDam != null) {
+        mother ??= ref.read(ovianimalsProvider).firstWhereOrNull((animal) => animal
+            .animalName == selectedOviDam.animalName);
+      }
     });
   }
 }

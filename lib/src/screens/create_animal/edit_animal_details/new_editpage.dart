@@ -60,8 +60,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
       TextEditingController();
   final TextEditingController selectedBreedingStageController =
       TextEditingController();
-  final TextEditingController imageUrlController = TextEditingController();
-  late File? selectedOviImage = widget.OviDetails.selectedOviImage;
+  late ImageProvider? selectedOviImage = widget.OviDetails.selectedOviImage;
   Map<String, DateTime?> selectedOviDates = {}; // Add date fields here
   Map<String, String> animalImages = {
     'Mammal': 'assets/avatars/120px/Horse_avatar.png',
@@ -94,7 +93,6 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
     selectedAnimalSpeciesController.text =
         widget.OviDetails.selectedAnimalSpecies;
     selectedAnimalTypeController.text = widget.OviDetails.selectedAnimalType;
-    imageUrlController.text = widget.OviDetails.selectedOviImage?.path ?? '';
     selectedOviDates = widget.OviDetails.selectedOviDates;
     selectedBreedingStageController.text =
         widget.OviDetails.selectedBreedingStage;
@@ -153,7 +151,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
     final pickedFile = await ImagePicker().pickImage(source: source);
 
     if (pickedFile != null) {
-      final selectedImage = File(pickedFile.path);
+      final selectedImage = FileImage(File(pickedFile.path));
       setState(() {
         selectedOviImage = selectedImage;
       });
@@ -1187,9 +1185,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 child: CircleAvatar(
                   radius: 70,
                   backgroundColor: Colors.grey[100],
-                  backgroundImage: selectedOviImage != null
-                      ? FileImage(selectedOviImage!)
-                      : null,
+                  backgroundImage: selectedOviImage,
                   child: selectedOviImage == null
                       ? const Icon(
                           Icons.camera_alt_outlined,

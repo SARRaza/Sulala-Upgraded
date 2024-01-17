@@ -376,10 +376,7 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
                                     leading: CircleAvatar(
                                       radius: 24 * globals.widthMediaQuery,
                                       backgroundColor: Colors.transparent,
-                                      backgroundImage: child.selectedOviImage !=
-                                              null
-                                          ? FileImage(child.selectedOviImage!)
-                                          : null,
+                                      backgroundImage: child.selectedOviImage,
                                       child: child.selectedOviImage == null
                                           ? const Icon(
                                               Icons.camera_alt_outlined,

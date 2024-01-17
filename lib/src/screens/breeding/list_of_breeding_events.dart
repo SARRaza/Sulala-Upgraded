@@ -66,8 +66,8 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
     final breedingEvent = BreedingEventVariables(
       eventNumber: ref.read(breedingEventNumberProvider),
       breeddam: ref.read(breeddamPictureProvider),
-      sire: ref.read(breedingSireDetailsProvider),
-      dam: ref.read(breedingDamDetailsProvider),
+      sire: ref.read(breedingSireDetailsProvider)?? '',
+      dam: ref.read(breedingDamDetailsProvider)?? '',
       partner: partner,
       children: children,
       breedingDate: ref.read(breedingDateProvider),
@@ -129,8 +129,9 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
             .id);
         ref.read(ovianimalsProvider)[childIndex] = ref.read(
             ovianimalsProvider)[childIndex].copyWith(
-            selectedOviSire: sire != null ? [sire] : null,
-            selectedOviDam: dam != null ? [dam] : null);
+            selectedOviSire: sire,
+            selectedOviDam: dam
+        );
       }
     });
   }

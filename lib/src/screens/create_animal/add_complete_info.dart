@@ -72,6 +72,8 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
   final ImagePicker _Animalpicker = ImagePicker();
   final ScrollController _scrollController = ScrollController();
 
+  late String selectedAnimalSpecies;
+
   @override
   void initState() {
     _scrollController.addListener(() {
@@ -99,7 +101,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
         return AnimalImagePickerWidget(onImageSelected: (file) {
           ref
               .read(selectedAnimalImageProvider.notifier)
-              .update((state) => file);
+              .update((state) => FileImage(file));
         });
       },
     );
@@ -107,14 +109,15 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
 
   void _showmainAnimalSireSelectionSheet(BuildContext context) async {
     // Initialize an empty list
-    final ovianimals = ref.watch(ovianimalsProvider);
+    final ovianimals = ref.watch(ovianimalsProvider).where((animal) => animal
+        .selectedAnimalSpecies == selectedAnimalSpecies).toList();
 
     final selectedFather = <MainAnimalSire>[];
     final selectedMother = <MainAnimalDam>[];
 
     await showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.transparent,
       showDragHandle: false,
       isScrollControlled: true,
       builder: (BuildContext context) {
@@ -131,7 +134,8 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
 
   void _showmainAnimalDamSelectionSheet(BuildContext context) async {
     // Initialize an empty list
-    final ovianimals = ref.watch(ovianimalsProvider);
+    final ovianimals = ref.watch(ovianimalsProvider).where((animal) => animal
+        .selectedAnimalSpecies == selectedAnimalSpecies).toList();
 
     final selectedFather = <MainAnimalSire>[];
     final selectedMother = <MainAnimalDam>[];
@@ -144,8 +148,8 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
         return AnimalDamModal(
             ovianimals: ovianimals,
             selectedDam: selectedDam,
-            selectedFather: selectedFather,
-            selectedMother: selectedMother,
+            selectedFather: null,
+            selectedMother: null,
             ref: ref);
       },
     );
@@ -153,13 +157,14 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
 
   void _showmainAnimalChilrenSelectionSheet(BuildContext context) async {
     // Initialize an empty list
-    final ovianimals = ref.watch(ovianimalsProvider);
+    final ovianimals = ref.watch(ovianimalsProvider).where((animal) => animal
+        .selectedAnimalSpecies == selectedAnimalSpecies).toList();
 
     final selectedChildren = <BreedChildItem>[];
 
     await showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.transparent,
       showDragHandle: false,
       isScrollControlled: true,
       builder: (BuildContext context) {
@@ -953,14 +958,21 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
   @override
   Widget build(BuildContext context) {
     final selectedAnimalType = ref.watch(selectedAnimalTypeProvider);
-    final selectedAnimalImage = ref.watch(selectedAnimalImageProvider);
+    var selectedAnimalImage = ref.read(selectedAnimalImageProvider);
     final animalDam = ref.watch(animalDamDetailsProvider);
     final animalSire = ref.watch(animalSireDetailsProvider);
     final animalChildren = ref.watch(breedingChildrenDetailsProvider);
     final chips = ref.watch(selectedOviChipsProvider);
     final customFields = ref.watch(customOviTextFieldsProvider);
     final ovianimals = ref.watch(ovianimalsProvider);
-    final selectedAnimalSpecies = ref.read(selectedAnimalSpeciesProvider);
+    selectedAnimalSpecies = ref.read(selectedAnimalSpeciesProvider);
+    if(selectedAnimalImage == null && speciesImages[selectedAnimalSpecies] !=
+        null) {
+      selectedAnimalImage = AssetImage(speciesImages[selectedAnimalSpecies]!
+          .path);
+      Future.delayed(Duration.zero, () => ref.read(selectedAnimalImageProvider
+          .notifier).update((state) => selectedAnimalImage));
+    }
 
     return SafeArea(
       child: Scaffold(
@@ -1041,11 +1053,8 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                     child: CircleAvatar(
                         radius: globals.widthMediaQuery * 60,
                         backgroundColor: AppColors.grayscale10,
-                        backgroundImage: selectedAnimalImage != null
-                            ? FileImage(selectedAnimalImage)
-                            : AssetImage(
-                                    speciesImages[selectedAnimalSpecies]!.path)
-                                as ImageProvider),
+                        backgroundImage: selectedAnimalImage
+                    ),
                   ),
                 ),
                 SizedBox(height: globals.heightMediaQuery * 16),
@@ -1124,17 +1133,17 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                                   AppFonts.body2(color: AppColors.grayscale70),
                             ),
                             const Spacer(),
-                            ovianimals.isNotEmpty && animalSire.isNotEmpty
-                                ? PrimaryTextButton(
+                            ovianimals.isNotEmpty ?
+                            PrimaryTextButton(
                                     onPressed: () {
                                       _showmainAnimalSireSelectionSheet(
                                           context);
                                     },
                                     status: TextStatus.idle,
-                                    text: animalSire.first.animalName,
+                                    text: animalSire != null ? animalSire
+                                        .animalName : 'Add'.tr,
                                     position: TextButtonPosition.right,
-                                  )
-                                : const Text('No Animals'),
+                                  ) : Text('No Animals'.tr),
                           ],
                         ),
                         SizedBox(height: globals.heightMediaQuery * 16),
@@ -1152,10 +1161,11 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                                       _showmainAnimalDamSelectionSheet(context);
                                     },
                                     status: TextStatus.idle,
-                                    text: animalDam.first.animalName,
+                                    text: animalDam != null ? animalDam
+                                        .animalName : 'Add'.tr,
                                     position: TextButtonPosition.right,
                                   )
-                                : const Text('No Animals'),
+                                : Text('No Animals'.tr),
                           ],
                         ),
                       ],

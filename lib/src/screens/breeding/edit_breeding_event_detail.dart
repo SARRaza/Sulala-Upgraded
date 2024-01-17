@@ -165,10 +165,7 @@ class _EditBreedingEventDetailsState
                             leading: CircleAvatar(
                               radius: 25,
                               backgroundColor: Colors.grey[100],
-                              backgroundImage:
-                                  OviDetails.selectedOviImage != null
-                                      ? FileImage(OviDetails.selectedOviImage!)
-                                      : null,
+                              backgroundImage: OviDetails.selectedOviImage,
                               child: OviDetails.selectedOviImage == null
                                   ? const Icon(
                                       Icons.camera_alt_outlined,
@@ -189,7 +186,7 @@ class _EditBreedingEventDetailsState
                                   );
                                 } else {
                                   // Use a default image (icon) if selectedOviImage is null
-                                  final File? oviImage =
+                                  final ImageProvider? oviImage =
                                       OviDetails.selectedOviImage;
 
                                   selectedChildren.add(BreedChildItem(
@@ -321,10 +318,7 @@ class _EditBreedingEventDetailsState
                             leading: CircleAvatar(
                               radius: 25,
                               backgroundColor: Colors.grey[100],
-                              backgroundImage:
-                                  OviDetails.selectedOviImage != null
-                                      ? FileImage(OviDetails.selectedOviImage!)
-                                      : null,
+                              backgroundImage: OviDetails.selectedOviImage,
                               child: OviDetails.selectedOviImage == null
                                   ? const Icon(
                                       Icons.camera_alt_outlined,
@@ -345,7 +339,7 @@ class _EditBreedingEventDetailsState
                                   );
                                 } else {
                                   // Use a default image (icon) if selectedOviImage is null
-                                  final File? oviImage =
+                                  final ImageProvider? oviImage =
                                       OviDetails.selectedOviImage;
 
                                   breedPartners.add(BreedingPartner(
@@ -590,7 +584,7 @@ class _EditBreedingEventDetailsState
                     ),
                     PrimaryTextButton(
                       status: TextStatus.idle,
-                      text: selectedbreedPartner,
+                      text: selectedbreedPartner?? 'Add'.tr,
                       onPressed: () {
                         // Navigator.push(
                         //     context,
@@ -618,9 +612,7 @@ class _EditBreedingEventDetailsState
                       leading: CircleAvatar(
                         radius: globals.widthMediaQuery * 24,
                         backgroundColor: Colors.transparent,
-                        backgroundImage: partner.selectedOviImage != null
-                            ? FileImage(partner.selectedOviImage!)
-                            : null,
+                        backgroundImage: partner.selectedOviImage,
                         child: partner.selectedOviImage == null
                             ? const Icon(
                                 Icons.camera_alt_outlined,
@@ -678,9 +670,7 @@ class _EditBreedingEventDetailsState
                             leading: CircleAvatar(
                               radius: globals.widthMediaQuery * 24,
                               backgroundColor: Colors.transparent,
-                              backgroundImage: child.selectedOviImage != null
-                                  ? FileImage(child.selectedOviImage!)
-                                  : null,
+                              backgroundImage: child.selectedOviImage,
                               child: child.selectedOviImage == null
                                   ? const Icon(
                                       Icons.camera_alt_outlined,

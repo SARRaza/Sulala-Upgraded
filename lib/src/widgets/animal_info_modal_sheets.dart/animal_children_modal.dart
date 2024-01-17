@@ -157,12 +157,7 @@ class _AnimalChildrenModalState extends State<AnimalChildrenModal> {
                                   leading: CircleAvatar(
                                     radius: 25,
                                     backgroundColor: Colors.grey[100],
-                                    backgroundImage:
-                                    OviDetails.selectedOviImage !=
-                                        null
-                                        ? FileImage(OviDetails
-                                        .selectedOviImage!)
-                                        : null,
+                                    backgroundImage: OviDetails.selectedOviImage,
                                     child: OviDetails
                                         .selectedOviImage ==
                                         null
@@ -181,23 +176,24 @@ class _AnimalChildrenModalState extends State<AnimalChildrenModal> {
                                       Text(
                                           'Gender: ${OviDetails.selectedOviGender}'),
                                       Text(
-                                          'Mother: ${OviDetails.selectedOviDam.first.animalName}'),
-                                      if (OviDetails.selectedOviDam
-                                          .first.mother !=
+                                          'Mother: ${OviDetails.selectedOviDam
+                                              != null ? OviDetails
+                                              .selectedOviDam!.animalName : 'Unknown'.tr}'),
+                                      if (OviDetails.selectedOviDam != null &&
+                                          OviDetails.selectedOviDam!.father !=
                                           null)
                                         Column(
                                           crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                                'Maternal Father: ${OviDetails.selectedOviDam.first.father!.animalName}'),
+                                                'Maternal Father: ${OviDetails.selectedOviDam!.father!.animalName}'),
                                             if (OviDetails
-                                                .selectedOviDam
-                                                .first
+                                                .selectedOviDam!
                                                 .mother !=
                                                 null)
                                               Text(
-                                                  'Maternal Mother: ${OviDetails.selectedOviDam.first.mother!.animalName}'),
+                                                  'Maternal Mother: ${OviDetails.selectedOviDam!.mother!.animalName}'),
                                           ],
                                         ),
                                     ],
@@ -212,15 +208,15 @@ class _AnimalChildrenModalState extends State<AnimalChildrenModal> {
                                         );
                                       } else {
                                         // Use a default image (icon) if selectedOviImage is null
-                                        final File? oviImage =
+                                        final ImageProvider? oviImage =
                                             OviDetails.selectedOviImage;
-                                        MainAnimalDam mother =
+                                        MainAnimalDam? mother =
                                             OviDetails
-                                                .selectedOviDam.first;
+                                                .selectedOviDam;
 
-                                        MainAnimalSire father =
+                                        MainAnimalSire? father =
                                             OviDetails
-                                                .selectedOviSire.first;
+                                                .selectedOviSire;
 
                                         widget.selectedChildren.add(
                                             BreedChildItem(

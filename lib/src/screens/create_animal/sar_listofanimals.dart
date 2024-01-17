@@ -56,8 +56,8 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
 
   void addOviAnimal(String animalName, String breedingeventNumber) {
     final breedingDetails = BreedingDetails(
-      breedsire: ref.read(breedingSireDetailsProvider),
-      breeddam: ref.read(breedingDamDetailsProvider),
+      breedsire: ref.read(breedingSireDetailsProvider)?? '',
+      breeddam: ref.read(breedingDamDetailsProvider)?? '',
       breedpartner: ref.read(breedingPartnerProvider),
       breedchildren: ref.read(breedingChildrenDetailsProvider),
       breedingDate: ref.read(breedingDateProvider),
@@ -102,8 +102,8 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
       selectedOviChips: ref.read(selectedOviChipsProvider),
       selectedOviImage: ref.read(selectedAnimalImageProvider),
       selectedFilters: ref.read(selectedFiltersProvider),
-      breedsire: ref.read(breedingSireDetailsProvider),
-      breeddam: ref.read(breedingDamDetailsProvider),
+      breedsire: ref.read(breedingSireDetailsProvider)?? '',
+      breeddam: ref.read(breedingDamDetailsProvider)?? '',
       breedpartner: ref.read(breedingPartnerProvider),
       breedchildren: ref.read(breedingChildrenDetailsProvider),
       breedingDate: ref.read(breedingDateProvider),
@@ -124,15 +124,13 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
 
       ref.read(ovianimalsProvider.notifier).update((state) {
         if(OviDetails.selectedOviGender == 'Male') {
-          state[childIndex].selectedOviSire = [
-            MainAnimalSire(OviDetails.animalName, OviDetails.selectedOviImage,
-                OviDetails.selectedOviGender)
-          ];
+          state[childIndex].selectedOviSire = MainAnimalSire(OviDetails
+              .animalName, OviDetails.selectedOviImage,
+                OviDetails.selectedOviGender);
         } else {
-          state[childIndex].selectedOviDam = [
-            MainAnimalDam(OviDetails.animalName, OviDetails.selectedOviImage,
-                OviDetails.selectedOviGender)
-          ];
+          state[childIndex].selectedOviDam = MainAnimalDam(OviDetails
+              .animalName, OviDetails.selectedOviImage,
+                OviDetails.selectedOviGender);
         }
         return state;
       });
@@ -386,11 +384,8 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                                     child: CircleAvatar(
                                       radius: globals.widthMediaQuery * 24,
                                       backgroundColor: Colors.transparent,
-                                      backgroundImage:
-                                          OviDetails.selectedOviImage != null
-                                              ? FileImage(
-                                                  OviDetails.selectedOviImage!)
-                                              : null,
+                                      backgroundImage: OviDetails
+                                          .selectedOviImage,
                                       child: OviDetails.selectedOviImage == null
                                           ? const Icon(
                                               Icons.camera_alt_outlined,

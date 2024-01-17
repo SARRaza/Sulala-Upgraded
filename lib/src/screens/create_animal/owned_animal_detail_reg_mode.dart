@@ -152,10 +152,7 @@ class _OwnedAnimalDetailsRegModeState extends ConsumerState<OwnedAnimalDetailsRe
                         child: CircleAvatar(
                           radius: MediaQuery.of(context).size.width * 0.16,
                           backgroundColor: Colors.grey[100],
-                          backgroundImage:
-                              oviDetails.selectedOviImage != null
-                                  ? FileImage(oviDetails.selectedOviImage!)
-                                  : null,
+                          backgroundImage: oviDetails.selectedOviImage,
                           child: oviDetails.selectedOviImage == null
                               ? const Icon(
                                   Icons.camera_alt_outlined,
@@ -187,32 +184,34 @@ class _OwnedAnimalDetailsRegModeState extends ConsumerState<OwnedAnimalDetailsRe
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
                       Text(
-                        'Father: ${oviDetails.selectedOviSire.isNotEmpty ? oviDetails.selectedOviSire.first.animalName : 'Unknown'}',
+                        'Father: ${oviDetails.selectedOviSire != null ? oviDetails.selectedOviSire!.animalName : 'Unknown'}',
                       ),
                       Text(
-                        'Mother: ${oviDetails.selectedOviDam.isNotEmpty ? oviDetails.selectedOviDam.first.animalName : 'Unknown'}',
+                        'Mother: ${oviDetails.selectedOviDam != null ? oviDetails.selectedOviDam!.animalName : 'Unknown'}',
                       ),
-                      if (oviDetails.selectedOviSire.isNotEmpty &&
-                          oviDetails.selectedOviSire.first.father !=
+                      if (oviDetails.selectedOviSire != null &&
+                          oviDetails.selectedOviSire!.father !=
                               null)
                         Text(
-                          'Paternal Grandfather: ${oviDetails.selectedOviSire.first.father!.animalName}',
+                          'Paternal Grandfather: ${oviDetails.selectedOviSire!
+                              .father!.animalName}',
                         ),
-                      if (oviDetails.selectedOviDam.isNotEmpty &&
-                          oviDetails.selectedOviDam.first.mother != null)
+                      if (oviDetails.selectedOviDam != null &&
+                          oviDetails.selectedOviDam!.mother != null)
                         Text(
-                          'Patenral Grandmother: ${oviDetails.selectedOviSire.first.mother!.animalName}',
+                          'Patenral Grandmother: ${oviDetails.selectedOviDam!
+                              .mother!.animalName}',
                         ),
-                      if (oviDetails.selectedOviSire.isNotEmpty &&
-                          oviDetails.selectedOviSire.first.father !=
+                      if (oviDetails.selectedOviSire != null &&
+                          oviDetails.selectedOviSire!.father !=
                               null)
                         Text(
-                          'Maternal Grandfather: ${oviDetails.selectedOviSire.first.father!.animalName}',
+                          'Maternal Grandfather: ${oviDetails.selectedOviSire!.father!.animalName}',
                         ),
-                      if (oviDetails.selectedOviDam.isNotEmpty &&
-                          oviDetails.selectedOviDam.first.mother != null)
+                      if (oviDetails.selectedOviDam != null &&
+                          oviDetails.selectedOviDam!.mother != null)
                         Text(
-                          'Maternal Grandmother: ${oviDetails.selectedOviDam.first.mother!.animalName}',
+                          'Maternal Grandmother: ${oviDetails.selectedOviDam!.mother!.animalName}',
                         ),
                       SizedBox(
                         height: globals.heightMediaQuery * 16,
@@ -375,7 +374,7 @@ class _OwnedAnimalDetailsRegModeState extends ConsumerState<OwnedAnimalDetailsRe
       builder: (BuildContext context) {
         return AnimalImagePickerWidget(onImageSelected: (file) {
           setState(() {
-            oviDetails.selectedOviImage = File(file.path);
+            oviDetails.selectedOviImage = FileImage(file);
           });
 
           ref.read(ovianimalsProvider.notifier).update((state) {

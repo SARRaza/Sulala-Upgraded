@@ -173,9 +173,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
               id: generateUniqueId(),
               name: child.animalName,
               gender: Gender.male, // Change this accordingly
-              image: child.selectedOviImage != null
-                  ? FileImage(child.selectedOviImage!)
-                  : null,
+              image: child.selectedOviImage,
               status: 'Borrowed',
               fatherId: 100001,
 
@@ -432,17 +430,12 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
       final person = Person(
               id: animal.id,
               name: animal.animalName,
-              image: animal.selectedOviImage != null
-                  ? FileImage(animal.selectedOviImage!)
-                  : null,
+              image: animal.selectedOviImage,
               status: animal.selectedOviChips.join(','),
               gender: animal.selectedOviGender == 'Male' ? Gender.male : Gender
                   .female,
-              fatherId: animal.selectedOviSire.first.animalName != 'ADD' ? animal
-                  .selectedOviSire.first.id : null,
-              motherId: animal.selectedOviDam.first.animalName != 'ADD' ?
-              animal.selectedOviDam
-                  .first.id : null,
+              fatherId: animal.selectedOviSire?.id,
+              motherId: animal.selectedOviDam?.id
             );
       familyMembers.add(person);
     });

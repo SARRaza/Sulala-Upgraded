@@ -124,7 +124,8 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
   void _showBreedChildrenSelectionSheet(BuildContext context) async {
     // Initialize an empty list
     final ovianimals = ref.watch(ovianimalsProvider).where((animal) => animal.id
-        != widget.OviDetails.id).toList();
+        != widget.OviDetails.id && animal.selectedAnimalSpecies == widget
+        .OviDetails.selectedAnimalSpecies).toList();
 
     String searchQuery = '';
 
@@ -215,10 +216,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                             leading: CircleAvatar(
                               radius: 25,
                               backgroundColor: Colors.grey[100],
-                              backgroundImage:
-                                  OviDetails.selectedOviImage != null
-                                      ? FileImage(OviDetails.selectedOviImage!)
-                                      : null,
+                              backgroundImage: OviDetails.selectedOviImage,
                               child: OviDetails.selectedOviImage == null
                                   ? const Icon(
                                       Icons.camera_alt_outlined,
@@ -239,7 +237,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                                   );
                                 } else {
                                   // Use a default image (icon) if selectedOviImage is null
-                                  final File? oviImage =
+                                  final ImageProvider? oviImage =
                                       OviDetails.selectedOviImage;
 
                                   selectedChildren.add(BreedChildItem(
@@ -280,7 +278,8 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
   void _showBreedPartnerSelectionSheet(BuildContext context) async {
     // Initialize an empty list
     final ovianimals = ref.watch(ovianimalsProvider).where((animal) => animal.id
-        != widget.OviDetails.id).toList();
+        != widget.OviDetails.id && animal.selectedAnimalSpecies == widget
+        .OviDetails.selectedAnimalSpecies).toList();
 
     String searchQuery = '';
 
@@ -371,10 +370,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                             leading: CircleAvatar(
                               radius: 25,
                               backgroundColor: Colors.grey[100],
-                              backgroundImage:
-                                  OviDetails.selectedOviImage != null
-                                      ? FileImage(OviDetails.selectedOviImage!)
-                                      : null,
+                              backgroundImage: OviDetails.selectedOviImage,
                               child: OviDetails.selectedOviImage == null
                                   ? const Icon(
                                       Icons.camera_alt_outlined,
@@ -395,7 +391,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                                   );
                                 } else {
                                   // Use a default image (icon) if selectedOviImage is null
-                                  final File? oviImage =
+                                  final ImageProvider? oviImage =
                                       OviDetails.selectedOviImage;
 
                                   breedPartners.add(BreedingPartner(
@@ -596,7 +592,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                     ),
                     PrimaryTextButton(
                       status: TextStatus.idle,
-                      text: selectedbreedPartner,
+                      text: selectedbreedPartner?? 'Add'.tr,
                       onPressed: () {
                         // Navigator.push(
                         //     context,
@@ -682,9 +678,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                       leading: CircleAvatar(
                         radius: globals.widthMediaQuery * 24,
                         backgroundColor: Colors.transparent,
-                        backgroundImage: child.selectedOviImage != null
-                            ? FileImage(child.selectedOviImage!)
-                            : null,
+                        backgroundImage: child.selectedOviImage,
                         child: child.selectedOviImage == null
                             ? const Icon(
                                 Icons.camera_alt_outlined,

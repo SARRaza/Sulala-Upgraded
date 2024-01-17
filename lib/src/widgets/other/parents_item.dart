@@ -10,7 +10,7 @@ import '../../theme/fonts/fonts.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 class ParentsItem extends StatelessWidget {
-  final File? imageFile;
+  final ImageProvider? imageFile;
   final String name;
   final String sex;
   final String id;
@@ -33,7 +33,7 @@ class ParentsItem extends StatelessWidget {
   Widget build(BuildContext context) {
     ImageProvider<Object>? getImage() {
       if (imageFile != null) {
-        return FileImage(imageFile!);
+        return imageFile!;
       } else {
         return const AssetImage("assets/avatars/120px/Horse.png");
       }

@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
+
 class MainAnimalSire {
   String animalName;
-  File? selectedOviImage;
+  ImageProvider? selectedOviImage;
   String selectedOviGender;
   MainAnimalSire? father;
   MainAnimalDam? mother;
@@ -25,7 +27,7 @@ class MainAnimalSire {
 
 class MainAnimalDam {
   final String animalName;
-  final File? selectedOviImage;
+  final ImageProvider? selectedOviImage;
   final String selectedOviGender;
   MainAnimalDam? mother;
   MainAnimalSire? father;
@@ -47,7 +49,7 @@ class MainAnimalDam {
 
 class BreedingPartner {
   final String animalName;
-  final File? selectedOviImage;
+  final ImageProvider? selectedOviImage;
   final String selectedOviGender;
   int? _id;
 
@@ -71,7 +73,7 @@ class ReminderItem {
 
 class BreedChildItem {
   final String animalName;
-  final File? selectedOviImage;
+  final ImageProvider? selectedOviImage;
   final String selectedOviGender;
   int? _id;
 
@@ -87,8 +89,8 @@ class BreedChildItem {
 class OviVariables {
   final List<String> selectedFilters;
   late final String animalName;
-  List<MainAnimalSire> selectedOviSire;
-  List<MainAnimalDam> selectedOviDam;
+  MainAnimalSire? selectedOviSire;
+  MainAnimalDam? selectedOviDam;
   late final String dateOfBirth;
   final String dateOfLayingEggs;
   final String dateOfSonar;
@@ -104,7 +106,7 @@ class OviVariables {
   final String selectedAnimalSpecies;
   final String selectedAnimalType;
   final List<String> selectedOviChips;
-  File? selectedOviImage;
+  ImageProvider? selectedOviImage;
   final String layingFrequency;
   final String eggsPerMonth;
   final String numOfEggs;
@@ -179,8 +181,8 @@ class OviVariables {
   OviVariables copyWith(
       {List<String>? selectedFilters,
       String? animalName,
-      List<MainAnimalSire>? selectedOviSire,
-      List<MainAnimalDam>? selectedOviDam,
+      MainAnimalSire? selectedOviSire,
+      MainAnimalDam? selectedOviDam,
       String? dateOfBirth,
       String? dateOfLayingEggs,
       String? dateOfSonar,
@@ -197,7 +199,7 @@ class OviVariables {
       String? selectedAnimalSpecies,
       String? selectedAnimalType,
       List<String>? selectedOviChips,
-      File? selectedOviImage,
+      ImageProvider? selectedOviImage,
       String? layingFrequency,
       String? eggsPerMonth,
       String? selectedBreedingStage,

@@ -230,9 +230,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                       leading: CircleAvatar(
                         radius: globals.widthMediaQuery * 24,
                         backgroundColor: Colors.transparent,
-                        backgroundImage: partner.selectedOviImage != null
-                            ? FileImage(partner.selectedOviImage!)
-                            : null,
+                        backgroundImage: partner.selectedOviImage,
                         child: partner.selectedOviImage == null
                             ? const Icon(
                                 Icons.camera_alt_outlined,
@@ -303,9 +301,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                             leading: CircleAvatar(
                               radius: globals.widthMediaQuery * 24,
                               backgroundColor: Colors.transparent,
-                              backgroundImage: child.selectedOviImage != null
-                                  ? FileImage(child.selectedOviImage!)
-                                  : null,
+                              backgroundImage: child.selectedOviImage,
                               child: child.selectedOviImage == null
                                   ? const Icon(
                                       Icons.camera_alt_outlined,

@@ -20,8 +20,8 @@ class AnimalDamModal extends StatefulWidget {
 
   final List<OviVariables> ovianimals;
   final List<MainAnimalDam> selectedDam;
-  final List<MainAnimalSire> selectedFather;
-  final List<MainAnimalDam> selectedMother;
+  final MainAnimalSire? selectedFather;
+  final MainAnimalDam? selectedMother;
   final WidgetRef ref;
 
   @override
@@ -162,11 +162,7 @@ class _AnimalDamModalState extends State<AnimalDamModal> {
                                     radius: 25,
                                     backgroundColor: Colors.grey[100],
                                     backgroundImage: OviDetails
-                                        .selectedOviImage !=
-                                        null
-                                        ? FileImage(
-                                        OviDetails.selectedOviImage!)
-                                        : null,
+                                        .selectedOviImage,
                                     child: OviDetails.selectedOviImage ==
                                         null
                                         ? const Icon(
@@ -184,21 +180,21 @@ class _AnimalDamModalState extends State<AnimalDamModal> {
                                       Text(
                                           'Gender: ${OviDetails.selectedOviGender}'),
                                       Text(
-                                          'Mother: ${OviDetails.selectedOviDam.first.animalName}'),
-                                      if (OviDetails.selectedOviDam.first
-                                          .mother !=
-                                          null)
+                                          'Mother: ${OviDetails.selectedOviDam
+                                              != null ? OviDetails.selectedOviDam!.animalName : 'Unknown'.tr}'),
+                                      if (OviDetails.selectedOviDam != null)
                                         Column(
                                           crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                           children: [
-                                            Text(
-                                                'Maternal Father: ${OviDetails.selectedOviDam.first.father!.animalName}'),
-                                            if (OviDetails.selectedOviDam
-                                                .first.mother !=
+                                            if(OviDetails.selectedOviDam!.father != null)
+                                              Text(
+                                                'Maternal Father: ${OviDetails.selectedOviDam!.father!.animalName}'),
+                                            if (OviDetails.selectedOviDam!
+                                                .mother !=
                                                 null)
                                               Text(
-                                                  'Maternal Mother: ${OviDetails.selectedOviDam.first.mother!.animalName}'),
+                                                  'Maternal Mother: ${OviDetails.selectedOviDam!.mother!.animalName}'),
                                           ],
                                         ),
                                     ],
@@ -213,13 +209,13 @@ class _AnimalDamModalState extends State<AnimalDamModal> {
                                         );
                                       } else {
                                         // Use a default image (icon) if selectedOviImage is null
-                                        final File? oviImage =
+                                        final ImageProvider? oviImage =
                                             OviDetails.selectedOviImage;
-                                        MainAnimalDam mother = OviDetails
-                                            .selectedOviDam.first;
+                                        MainAnimalDam? mother = OviDetails
+                                            .selectedOviDam;
 
-                                        MainAnimalSire father = OviDetails
-                                            .selectedOviSire.first;
+                                        MainAnimalSire? father = OviDetails
+                                            .selectedOviSire;
 
                                         widget.selectedDam.add(MainAnimalDam(
                                             OviDetails.animalName,
@@ -227,8 +223,6 @@ class _AnimalDamModalState extends State<AnimalDamModal> {
                                             OviDetails.selectedOviGender,
                                             mother: mother,
                                             father: father));
-                                        widget.selectedFather.add(father);
-                                        widget.selectedMother.add(mother);
                                       }
                                     });
                                   },
@@ -266,19 +260,18 @@ class _AnimalDamModalState extends State<AnimalDamModal> {
                         onPressed: () {
                           widget.ref
                               .read(animalDamDetailsProvider.notifier)
-                              .update((state) => widget.selectedDam);
+                              .update((state) => widget.selectedDam.last);
                           Navigator.pop(context);
                           // Append the selected children to the existing list
-                          final List<MainAnimalDam>
-                          existingSelectedDam =
-                          widget.ref.read(animalDamDetailsProvider);
-                          existingSelectedDam.addAll(widget.selectedDam);
-                          existingSelectedDam.addAll(widget.selectedMother);
-
-                          final List<MainAnimalSire>
-                          existingSelectedSire =
-                          widget.ref.read(animalSireDetailsProvider);
-                          existingSelectedSire.addAll(widget.selectedFather);
+                          // MainAnimalDam? existingSelectedDam = widget.ref.read(
+                          //     animalDamDetailsProvider);
+                          // existingSelectedDam = widget.selectedDam.last;
+                          // existingSelectedDam.addAll(widget.selectedMother);
+                          //
+                          // final List<MainAnimalSire>
+                          // existingSelectedSire =
+                          // widget.ref.read(animalSireDetailsProvider);
+                          // existingSelectedSire.addAll(widget.selectedFather);
 
                           // for (MainAnimalDam dam in selectedDam) {
                           //   if (dam.mother != null) {

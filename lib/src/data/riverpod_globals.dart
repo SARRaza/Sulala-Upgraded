@@ -43,7 +43,7 @@ final selectedAnimalSpeciesProvider = StateProvider<String>((ref) => '');
 final selectedAnimalBreedsProvider = StateProvider<String>((ref) => '');
 
 // Enter Complete Info Global Varibales
-final selectedAnimalImageProvider = StateProvider<File?>((ref) => null);
+final selectedAnimalImageProvider = StateProvider<ImageProvider?>((ref) => null);
 final animalNameProvider = StateProvider<String>((ref) => '');
 final shoudlAddAnimalProvider = StateProvider<bool>((ref) => false);
 final layingFrequencyProvider = StateProvider<String>((ref) => '');
@@ -68,9 +68,9 @@ final dateOfLayingEggsProvider = StateProvider<String>((ref) => '');
 final dateOfSonarProvider = StateProvider<String>((ref) => '');
 final expDeliveryDateProvider = StateProvider<String>((ref) => '');
 final breedingEventNumberProvider = StateProvider<String>((ref) => '');
-final breedingSireDetailsProvider = StateProvider<String>((ref) => 'Add');
-final breedingDamDetailsProvider = StateProvider<String>((ref) => 'Add');
-final breedingPartnerDetailsProvider = StateProvider<String>((ref) => 'Add');
+final breedingSireDetailsProvider = StateProvider<String?>((ref) => null);
+final breedingDamDetailsProvider = StateProvider<String?>((ref) => null);
+final breedingPartnerDetailsProvider = StateProvider<String?>((ref) => null);
 final breedingDateProvider = StateProvider<String>((ref) => '');
 final deliveryDateProvider = StateProvider<String>((ref) => '');
 final breedingnotesProvider = StateProvider<String>((ref) => '');
@@ -88,9 +88,9 @@ final surgeryDetailsProvider = StateProvider<List<SurgeryDetails>>((ref) => []);
 // final grandmotherNamesProvider = StateProvider<String>((ref) => 'Add');
 
 final animalSireDetailsProvider =
-    StateProvider<List<MainAnimalSire>>((ref) => []);
+    StateProvider<MainAnimalSire?>((ref) => null);
 final animalDamDetailsProvider =
-    StateProvider<List<MainAnimalDam>>((ref) => []);
+    StateProvider<MainAnimalDam?>((ref) => null);
 
 // Reg Home Page Pie Chart Global Variables
 final mammalCountProvider = Provider<int>((ref) {
