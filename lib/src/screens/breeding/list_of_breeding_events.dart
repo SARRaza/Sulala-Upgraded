@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
@@ -47,94 +48,6 @@ class ListOfBreedingEvents extends ConsumerStatefulWidget {
 
 class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
   String filterQuery = '';
-  @override
-  void initState() {
-    super.initState();
-    // Add the initial breeding event to the list
-    if (widget.shouldAddBreedEvent) {
-      addBreedingEvent(ref.read(breedingEventNumberProvider));
-    }
-  }
-
-  void addBreedingEvent(String eventNumber) {
-    final hatchingDate = ref.read(dateOfHatchingProvider);
-    final numOffEggs = ref.read(numOfEggsProvider);
-
-    final partner = ref.read(breedingPartnerProvider);
-    final children = ref.read(breedingChildrenDetailsProvider);
-    final ovianimals = ref.read(ovianimalsProvider);
-    final breedingEvent = BreedingEventVariables(
-      eventNumber: ref.read(breedingEventNumberProvider),
-      breeddam: ref.read(breeddamPictureProvider),
-      sire: ref.read(breedingSireDetailsProvider)?? '',
-      dam: ref.read(breedingDamDetailsProvider)?? '',
-      partner: partner,
-      children: children,
-      breedingDate: ref.read(breedingDateProvider),
-      deliveryDate: ref.read(deliveryDateProvider),
-      layingEggsDate: ref.read(dateOfLayingEggsProvider),
-      eggsNumber: numOffEggs.isNotEmpty ? int.parse(numOffEggs) : 0,
-      incubationDate: ref.read(incubationDateProvider),
-      hatchingDate: hatchingDate != null
-          ? DateFormat('dd/MM/yyyy').format(hatchingDate)
-          : null,
-      notes: ref.read(breedingnotesProvider),
-      shouldAddEvent: ref.read(shoudlAddEventProvider),
-    );
-
-    setState(() {
-      if (ref.read(breedingEventsProvider).isEmpty) {
-        ref.read(breedingEventsProvider).add(breedingEvent);
-      } else {
-        ref.read(breedingEventsProvider).insert(0, breedingEvent);
-      }
-      final animalIndex = ovianimals.indexWhere(
-          (animal) => animal.animalName == widget.OviDetails.animalName);
-
-      if (animalIndex != -1) {
-        ref.read(ovianimalsProvider)[animalIndex] =
-            ref.read(ovianimalsProvider)[animalIndex].copyWith(
-                breedingEvents: {
-          ...ref.read(ovianimalsProvider)[animalIndex].breedingEvents,
-          widget.OviDetails.animalName: [
-            ...ref
-                .read(ovianimalsProvider)[animalIndex]
-                .breedingEvents[widget.OviDetails.animalName]!,
-            breedingEvent
-          ]
-        },
-        );
-      }
-
-      MainAnimalSire? sire;
-      MainAnimalDam? dam;
-      if(widget.OviDetails.selectedOviGender == 'Male') {
-        sire = MainAnimalSire(widget.OviDetails.animalName, widget.OviDetails
-            .selectedOviImage, widget.OviDetails.selectedOviGender);
-        if(partner.isNotEmpty) {
-          dam = MainAnimalDam(partner.first.animalName, partner.first
-              .selectedOviImage, partner.first.selectedOviGender);
-        }
-      } else {
-        if(partner.isNotEmpty) {
-          sire = MainAnimalSire(partner.first.animalName, partner.first
-              .selectedOviImage, partner.first.selectedOviGender);
-        }
-        dam = MainAnimalDam(widget.OviDetails.animalName, widget.OviDetails
-            .selectedOviImage, widget.OviDetails.selectedOviGender);
-      }
-
-      for (var child in children) {
-        final childIndex = ovianimals.indexWhere((animal) => animal.id == child
-            .id);
-        ref.read(ovianimalsProvider)[childIndex] = ref.read(
-            ovianimalsProvider)[childIndex].copyWith(
-            selectedOviSire: sire,
-            selectedOviDam: dam
-        );
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -198,10 +111,10 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                   Icons.add,
                   color: Colors.black,
                 ),
-                onPressed: () {
+                onPressed: () async {
                   ref.read(breedingDateProvider.notifier).update((state) => '');
                   ref.read(deliveryDateProvider.notifier).update((state) => '');
-                  Navigator.push(
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => CreateBreedingEvents(
@@ -209,11 +122,9 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                         breedingEvents: widget.breedingEvents,
                       ),
                     ),
-                  ).then((shouldAddBreedEvent) {
-                    // When returning from CreateBreedingEvents, add the new event
-                    if (shouldAddBreedEvent != null && shouldAddBreedEvent) {
-                      addBreedingEvent(ref.read(breedingEventNumberProvider));
-                    }
+                  );
+                  setState(() {
+
                   });
                 },
               ),
@@ -278,10 +189,9 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                                     ),
                                   ),
                                 ).then((shouldAddBreedingEvent) {
-                                  // When returning from CreateBreedingEvents, add the new event
-                                  if (shouldAddBreedingEvent != null && shouldAddBreedingEvent) {
-                                    addBreedingEvent(ref.read(breedingEventNumberProvider));
-                                  }
+                                  setState(() {
+
+                                  });
                                 });
                               },
                               text: 'Add Breeding Event',
@@ -298,44 +208,77 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                       itemBuilder: (context, index) {
                         final breedingEvent = breedingEvents[index];
 
-                        return Column(
-                          children: <Widget>[
-                            GestureDetector(
-                              onTap: () async {
-                                await Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => BreedingEventDetails(
-                                      breedingEvents: breedingEvents,
-                                      OviDetails: widget.OviDetails,
-                                      breedingEvent: breedingEvent,
+                        return Dismissible(
+                          key: UniqueKey(),
+                          direction: DismissDirection.endToStart, // Enable swipe from right to left
+                          background: Container(
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.only(right: 20),
+                            color: Colors.red, // Background color for delete action
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
+                          ),
+                          confirmDismiss: _confirmEventDeletion,
+                          onDismissed: (direction) {
+                            // Handle item dismissal here
+                            setState(() {
+                              breedingEvents.removeAt(index);
+                              ref.read(ovianimalsProvider.notifier).update((
+                                  state) {
+                                final animalIndex = state.indexWhere(
+                                        (animal) => animal.id == widget
+                                            .OviDetails.id);
+                                state[animalIndex] = state[animalIndex]
+                                    .copyWith(
+                                    breedingEvents: {
+                                      state[animalIndex].animalName: breedingEvents
+                                    });
+
+                                return state;
+                              });
+                            });
+                          },
+                          child: Column(
+                            children: <Widget>[
+                              GestureDetector(
+                                onTap: () async {
+                                  await Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => BreedingEventDetails(
+                                        breedingEvents: breedingEvents,
+                                        OviDetails: widget.OviDetails,
+                                        breedingEvent: breedingEvent,
+                                      ),
                                     ),
-                                  ),
-                                );
-                                setState(() {});
-                              },
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  breedingEvent.eventNumber.isEmpty
-                                      ? const Text('New Event')
-                                      : Text(
-                                          breedingEvent.eventNumber,
-                                          style: AppFonts.body2(
-                                              color: AppColors.grayscale90),
-                                        ),
-                                  const Icon(
-                                    Icons.chevron_right_rounded,
-                                    color: AppColors.grayscale50,
-                                    size: 30,
-                                  ),
-                                ],
+                                  );
+                                  setState(() {});
+                                },
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    breedingEvent.eventNumber.isEmpty
+                                        ? const Text('New Event')
+                                        : Text(
+                                            breedingEvent.eventNumber,
+                                            style: AppFonts.body2(
+                                                color: AppColors.grayscale90),
+                                          ),
+                                    const Icon(
+                                      Icons.chevron_right_rounded,
+                                      color: AppColors.grayscale50,
+                                      size: 30,
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            const Divider(
-                              height: 25,
-                            ),
-                          ],
+                              const Divider(
+                                height: 25,
+                              ),
+                            ],
+                          ),
                         );
                       },
                     ),
@@ -345,4 +288,31 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
       ),
     );
   }
+
+  Future<bool?> _confirmEventDeletion(DismissDirection direction) async {
+    // Show a confirmation dialog
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirm Delete'.tr),
+          content: Text('Are you sure you want to delete this breeding event?'
+              .tr),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              // Dismisses the dialog and returns false
+              child: Text('Cancel'.tr),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              // Dismisses the dialog and returns true
+              child: Text('Delete'.tr),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }

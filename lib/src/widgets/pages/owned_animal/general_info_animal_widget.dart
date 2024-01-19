@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sulala_upgrade/src/screens/reg_mode/image_view_page.dart';
 import '../../../data/classes.dart';
 import '../../../data/riverpod_globals.dart';
 import '../../../screens/pdf/pdf_view_page.dart';
@@ -201,11 +202,13 @@ class _GeneralInfoAnimalWidgetState
                   textHead: "Date of Sale",
                 ),
                 Visibility(
-                  visible: widget.OviDetails.fieldName.isNotEmpty,
-                  child: TableTextButton(
-                      onPressed: () {},
-                      textButton: widget.OviDetails.fieldContent,
-                      textHead: widget.OviDetails.fieldName),
+                  visible: widget.OviDetails.customFields != null,
+                  child: Column(
+                    children: widget.OviDetails.customFields!.keys.map((fieldName) => TableTextButton(
+                        onPressed: () {},
+                        textButton: widget.OviDetails.customFields![fieldName]!,
+                        textHead: fieldName)).toList(),
+                  ),
                 ),
                 SizedBox(
                   height: globals.heightMediaQuery * 24,
@@ -231,10 +234,10 @@ class _GeneralInfoAnimalWidgetState
                   shrinkWrap: true,
                   itemCount: uploadedFiles.length,
                   itemBuilder: (context, index) {
-                    final fileName = uploadedFiles[index];
+                    final filePath = uploadedFiles[index];
 
                     return GestureDetector(
-                      onTap: () => showFile(fileName),
+                      onTap: () => showFile(filePath),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Row(
@@ -246,7 +249,7 @@ class _GeneralInfoAnimalWidgetState
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                fileName,
+                                filePath.split('/').last,
                                 style:
                                     AppFonts.body1(color: AppColors.grayscale90),
                                 maxLines: 1,
@@ -281,25 +284,18 @@ class _GeneralInfoAnimalWidgetState
     );
   }
 
-  Future<void> showFile(String fileName) async {
-    final directory = await getApplicationDocumentsDirectory();
-    final String filePath = '${directory.path}/$fileName';
+  void showFile(String filePath) {
     final file = File(filePath);
     if(mounted) {
-      if (fileName.endsWith('.pdf')) {
+      if (filePath.endsWith('.pdf')) {
         // Open PDF
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => PDFViewPage(file: file)),
         );
       } else {
-        // Open Image in a new screen or dialog
-        showDialog(
-          context: context,
-          builder: (context) => Dialog(
-            child: Image.file(file),
-          ),
-        );
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>
+            ImageViewPage(imageProvider: FileImage(file))));
       }
     }
   }

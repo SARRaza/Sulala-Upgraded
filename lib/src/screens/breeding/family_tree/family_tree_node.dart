@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'person.dart';
 
 class FamilyTreeNode {
-  final Person person;
+  final Person? person;
   final List<FamilyTreeNode> parents;
   final List<FamilyTreeNode> children;
   final GlobalKey key = GlobalKey();

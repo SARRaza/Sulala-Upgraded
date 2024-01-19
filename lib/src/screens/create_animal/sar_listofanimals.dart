@@ -55,28 +55,10 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
   }
 
   void addOviAnimal(String animalName, String breedingeventNumber) {
-    final breedingDetails = BreedingDetails(
-      breedsire: ref.read(breedingSireDetailsProvider)?? '',
-      breeddam: ref.read(breedingDamDetailsProvider)?? '',
-      breedpartner: ref.read(breedingPartnerProvider),
-      breedchildren: ref.read(breedingChildrenDetailsProvider),
-      breedingDate: ref.read(breedingDateProvider),
-      breeddeliveryDate: ref.read(deliveryDateProvider),
-      breedingnotes: ref.read(breedingnotesProvider),
-      shouldAddEvent: ref.read(shoudlAddEventProvider),
-    );
-    final breedingEvent = BreedingEventVariables(
-        eventNumber: breedingeventNumber, sire: breedingDetails.breedsire,
-        dam: breedingDetails.breeddam, partner: breedingDetails.breedpartner,
-        children: breedingDetails.breedchildren, breedingDate: breedingDetails
-        .breedingDate, notes: breedingDetails.breedingnotes,
-        shouldAddEvent: breedingDetails.shouldAddEvent);
-
     // ignore: non_constant_identifier_names
     final OviDetails = OviVariables(
       animalName: animalName,
       breedingeventNumber: breedingeventNumber,
-      breedingDetails: breedingDetails,
       medicalNeeds: ref.read(medicalNeedsProvider),
       shouldAddAnimal: ref.read(shoudlAddAnimalProvider),
       selectedBreedingStage: ref.read(selectedBreedingStageProvider),
@@ -90,9 +72,8 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
       numOfEggs: ref.read(numOfEggsProvider),
       dateOfSonar: ref.read(dateOfSonarProvider),
       expDlvDate: ref.read(expDeliveryDateProvider),
-      fieldName: ref.read(fieldNameProvider),
       incubationDate: ref.read(incubationDateProvider),
-      fieldContent: ref.read(fieldContentProvider),
+      customFields: ref.read(customOviTextFieldsProvider),
       notes: ref.read(additionalnotesProvider),
       selectedOviGender: ref.read(selectedOviGenderProvider),
       selectedOviDates: ref.read(selectedOviDatesProvider),
@@ -110,7 +91,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
       breeddeliveryDate: ref.read(deliveryDateProvider),
       breedingnotes: ref.read(breedingnotesProvider),
       shouldAddEvent: ref.read(shoudlAddEventProvider),
-      breedingEvents: {animalName: [breedingEvent]},
+      breedingEvents: {animalName: []},
       vaccineDetails: {animalName: []},
       checkUpDetails: {animalName: []},
       surgeryDetails: {animalName: []},
@@ -194,6 +175,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
               animal.selectedBreedingStage == breedingStage) &&
           (tags == null || animal.selectedOviChips.contains(tags));
     }).toList();
+
     return RefreshIndicator(
       onRefresh: _refreshOviAnimals,
       color: AppColors.primary40,
@@ -397,8 +379,8 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                                   ),
                                   title: Text(OviDetails.animalName),
                                   subtitle: Text(OviDetails.selectedAnimalType),
-                                  onTap: () {
-                                    Navigator.of(context).push(
+                                  onTap: () async {
+                                    await Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             OwnedAnimalDetailsRegMode(
@@ -410,6 +392,9 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                                         ),
                                       ),
                                     );
+                                    setState(() {
+
+                                    });
                                   },
                                 ));
                           },

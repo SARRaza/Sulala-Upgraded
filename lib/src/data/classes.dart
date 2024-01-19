@@ -96,8 +96,7 @@ class OviVariables {
   final String dateOfSonar;
   final String expDlvDate;
   final String incubationDate;
-  final String fieldName;
-  final String fieldContent;
+  final Map<String, String>? customFields;
   final String keptInOval;
   final String notes;
   final String selectedOviGender;
@@ -116,13 +115,13 @@ class OviVariables {
   final String breedingeventNumber;
   final String breedsire;
   final String breeddam;
-  final List<BreedingPartner> breedpartner;
+  final BreedingPartner? breedpartner;
   final List<BreedChildItem> breedchildren;
   final String breedingDate;
   final String breeddeliveryDate;
   final String breedingnotes;
   final bool shouldAddEvent;
-  final BreedingDetails breedingDetails;
+  final BreedingDetails? breedingDetails;
   final Map<String, List<BreedingEventVariables>> breedingEvents;
   final Map<String, List<VaccineDetails>> vaccineDetails;
   final Map<String, List<MedicalCheckupDetails>> checkUpDetails;
@@ -143,8 +142,7 @@ class OviVariables {
     required this.expDlvDate,
     required this.incubationDate,
     required this.selectedOviGender,
-    required this.fieldName,
-    required this.fieldContent,
+    this.customFields,
     required this.numOfEggs,
     required this.keptInOval,
     required this.notes,
@@ -162,13 +160,13 @@ class OviVariables {
     required this.breedingeventNumber,
     required this.breedsire,
     required this.breeddam,
-    required this.breedpartner,
+    this.breedpartner,
     required this.breedchildren,
     required this.breedingDate,
     required this.breeddeliveryDate,
     required this.breedingnotes,
     required this.shouldAddEvent,
-    required this.breedingDetails,
+    this.breedingDetails,
     required this.breedingEvents,
     required this.vaccineDetails,
     required this.dateOfLayingEggs,
@@ -208,7 +206,7 @@ class OviVariables {
       String? breedingeventNumber,
       String? breedsire,
       String? breeddam,
-      List<BreedingPartner>? breedpartner,
+      BreedingPartner? breedpartner,
       List<BreedChildItem>? breedchildren,
       String? breedingDate,
       String? breeddeliveryDate,
@@ -219,10 +217,11 @@ class OviVariables {
       Map<String, List<VaccineDetails>>? vaccineDetails,
       Map<String, List<MedicalCheckupDetails>>? checkUpDetails,
       Map<String, List<SurgeryDetails>>? surgeryDetails,
+        Map<String, String>? customFields,
         bool? pregnant,
         int? pregnanciesCount,
       // ignore: non_constant_identifier_names
-      String? BreedingDetails}) {
+        BreedingDetails? BreedingDetails}) {
     return OviVariables(
       selectedFilters: selectedFilters ?? this.selectedFilters,
       animalName: animalName ?? this.animalName,
@@ -232,8 +231,7 @@ class OviVariables {
       dateOfLayingEggs: dateOfLayingEggs ?? this.dateOfLayingEggs,
       dateOfSonar: dateOfSonar ?? this.dateOfSonar,
       expDlvDate: expDlvDate ?? this.expDlvDate,
-      fieldName: fieldName ?? this.fieldName,
-      fieldContent: fieldContent ?? this.fieldContent,
+      customFields: customFields ?? this.customFields,
       notes: notes ?? this.notes,
       incubationDate: incubationDate ?? this.incubationDate,
       keptInOval: keptInOval ?? this.keptInOval,
@@ -259,7 +257,7 @@ class OviVariables {
       breedingDate: breedingDate ?? this.breedingDate,
       breeddeliveryDate: breeddeliveryDate ?? this.breeddeliveryDate,
       breedingnotes: breedingnotes ?? this.breedingnotes,
-      breedpartner: breedpartner ?? this.breedpartner,
+      breedpartner: breedpartner,
       shouldAddEvent: shouldAddEvent ?? this.shouldAddEvent,
       breedingDetails: breedingDetails,
       breedingEvents: breedingEvents ?? this.breedingEvents,
@@ -325,7 +323,7 @@ class BreedingEventVariables {
   final String eventNumber;
   final String sire;
   final String dam;
-  final List<BreedingPartner> partner;
+  final BreedingPartner? partner;
   final List<BreedChildItem> children;
   final File? breeddam;
   final String breedingDate;
@@ -354,7 +352,7 @@ class BreedingEventVariables {
     String? eventNumber,
     String? sire,
     String? dam,
-    List<BreedingPartner>? partner,
+    BreedingPartner? partner,
     List<BreedChildItem>? children,
     File? breeddam,
     String? breedingDate,

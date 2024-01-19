@@ -27,6 +27,14 @@ class AnimalChildrenModal extends StatefulWidget {
 
 class _AnimalChildrenModalState extends State<AnimalChildrenModal> {
   String searchQuery = '';
+  late List<BreedChildItem> selectedChildren;
+
+  @override
+  void initState() {
+    selectedChildren = widget.selectedChildren;
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +136,7 @@ class _AnimalChildrenModalState extends State<AnimalChildrenModal> {
                             itemBuilder: (context, index) {
                               final OviDetails = widget.ovianimals[index];
                               final bool isSelected =
-                              widget.selectedChildren.any((child) =>
+                              selectedChildren.any((child) =>
                               child.animalName ==
                                   OviDetails.animalName);
 
@@ -201,7 +209,7 @@ class _AnimalChildrenModalState extends State<AnimalChildrenModal> {
                                   onTap: () {
                                     setState(() {
                                       if (isSelected) {
-                                        widget.selectedChildren.removeWhere(
+                                        selectedChildren.removeWhere(
                                               (child) =>
                                           child.animalName ==
                                               OviDetails.animalName,
@@ -218,7 +226,7 @@ class _AnimalChildrenModalState extends State<AnimalChildrenModal> {
                                             OviDetails
                                                 .selectedOviSire;
 
-                                        widget.selectedChildren.add(
+                                        selectedChildren.add(
                                             BreedChildItem(
                                                 OviDetails.animalName,
                                                 oviImage,
@@ -259,11 +267,7 @@ class _AnimalChildrenModalState extends State<AnimalChildrenModal> {
                         text: 'Confirm'.tr,
                         minimumSize: const Size(0, 52),
                         onPressed: () {
-                          widget.ref
-                              .read(breedingChildrenDetailsProvider
-                              .notifier)
-                              .update((state) => widget.selectedChildren);
-                          Navigator.pop(context);
+                          Navigator.pop(context, selectedChildren);
                           // Append the selected children to the existing list
                           // final List<MainAnimalDam>
                           // existingSelectedDam =

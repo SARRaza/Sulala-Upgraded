@@ -61,7 +61,7 @@ final selectedOviDatesProvider =
     StateProvider<Map<String, DateTime?>>((ref) => {});
 final keptInOvalProvider = StateProvider<String>((ref) => '');
 final selectedOviChipsProvider = StateProvider<List<String>>((ref) => []);
-final customOviTextFieldsProvider = StateProvider<List<Widget>>((ref) => []);
+final customOviTextFieldsProvider = StateProvider<Map<String, String>>((ref) => {});
 final selectedFiltersProvider = StateProvider<List<String>>((ref) => []);
 final dateOfBirthProvider = StateProvider<String>((ref) => '');
 final dateOfLayingEggsProvider = StateProvider<String>((ref) => '');
@@ -347,4 +347,4 @@ final breedingChildrenDetailsProvider =
 final remindersProvider = StateProvider<List<ReminderItem>>((ref) => []);
 
 final breedingPartnerProvider =
-    StateProvider<List<BreedingPartner>>((ref) => []);
+    StateProvider<BreedingPartner?>((ref) => null);

@@ -365,19 +365,19 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
                                 ],
                               ),
                             ),
-                            if (breedingEvent.partner.isNotEmpty)
+                            if (breedingEvent.partner != null)
                               ListView.builder(
                                 shrinkWrap: true,
-                                itemCount: breedingEvent.partner.length,
+                                itemCount: 1,
                                 itemBuilder: (context, index) {
-                                  final child = breedingEvent.partner[index];
+                                  final partner = breedingEvent.partner!;
                                   return ListTile(
                                     contentPadding: EdgeInsets.zero,
                                     leading: CircleAvatar(
                                       radius: 24 * globals.widthMediaQuery,
                                       backgroundColor: Colors.transparent,
-                                      backgroundImage: child.selectedOviImage,
-                                      child: child.selectedOviImage == null
+                                      backgroundImage: partner.selectedOviImage,
+                                      child: partner.selectedOviImage == null
                                           ? const Icon(
                                               Icons.camera_alt_outlined,
                                               size: 50,
@@ -386,24 +386,24 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
                                           : null,
                                     ),
                                     title: Text(
-                                      child.animalName,
+                                      partner.animalName,
                                       style: AppFonts.headline3(
                                           color: AppColors.grayscale90),
                                     ),
                                     // ignore: unnecessary_null_comparison
-                                    subtitle: child.selectedOviGender.isEmpty
+                                    subtitle: partner.selectedOviGender.isEmpty
                                         ? Text(
                                             'Gender Not Selected',
                                             style: AppFonts.body2(
                                                 color: AppColors.grayscale70),
                                           )
                                         : Text(
-                                            child.selectedOviGender,
+                                            partner.selectedOviGender,
                                             style: AppFonts.body2(
                                                 color: AppColors.grayscale70),
                                           ),
                                     trailing: Text(
-                                      'ID #${child.id}',
+                                      'ID #${partner.id}',
                                       style: AppFonts.body2(
                                           color: AppColors.grayscale90),
                                     ),

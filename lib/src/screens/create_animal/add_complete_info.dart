@@ -19,6 +19,7 @@ import '../../theme/fonts/fonts.dart';
 import '../../widgets/animal_info_modal_sheets.dart/animal_children_modal.dart';
 import '../../widgets/animal_info_modal_sheets.dart/animal_dam_modal.dart';
 import '../../widgets/animal_info_modal_sheets.dart/animal_sire_modal.dart';
+import '../../widgets/animal_info_modal_sheets.dart/animal_tags_modal.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/buttons/sar_buttonwidget.dart';
 import '../../widgets/controls_and_buttons/tags/custom_tags.dart';
@@ -29,6 +30,7 @@ import '../../widgets/inputs/date_fields/primary_date_field.dart';
 import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/paragraph_text_fields/paragraph_text_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
+import '../../widgets/other/custom_field.dart';
 import 'sar_listofanimals.dart';
 
 class CreateOviCumMammal extends ConsumerStatefulWidget {
@@ -320,421 +322,15 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
     }
   }
 
-  void _animalTagsModalSheet() async {
+  void _showAnimalTagsModalSheet() async {
     final result = await showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
       isScrollControlled: true,
       showDragHandle: true,
       builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height * 0.65,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Tags',
-                        style: AppFonts.title2(color: AppColors.grayscale90),
-                      ),
-                      const SizedBox(height: 25),
-                      Text(
-                        'Current State',
-                        style: AppFonts.headline3(color: AppColors.grayscale90),
-                      ),
-                      SizedBox(
-                        height: globals.heightMediaQuery * 10,
-                      ),
-                      Wrap(
-                        spacing: 8.0,
-                        runSpacing: 8.0,
-                        children: [
-                          CustomTag(
-                            label: 'Borrowed',
-                            selected: ref
-                                .read(selectedOviChipsProvider)
-                                .contains('Borrowed'),
-                            onTap: () {
-                              setState(() {
-                                if (ref
-                                    .read(selectedOviChipsProvider)
-                                    .contains('Borrowed')) {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .remove('Borrowed');
-                                } else {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .add('Borrowed');
-                                }
-                              });
-                            },
-                          ),
-                          CustomTag(
-                            label: 'Adopted',
-                            selected: ref
-                                .read(selectedOviChipsProvider)
-                                .contains('Adopted'),
-                            onTap: () {
-                              setState(() {
-                                if (ref
-                                    .read(selectedOviChipsProvider)
-                                    .contains('Adopted')) {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .remove('Adopted');
-                                } else {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .add('Adopted');
-                                }
-                              });
-                            },
-                          ),
-                          CustomTag(
-                            label: 'Donated',
-                            selected: ref
-                                .read(selectedOviChipsProvider)
-                                .contains('Donated'),
-                            onTap: () {
-                              setState(() {
-                                if (ref
-                                    .read(selectedOviChipsProvider)
-                                    .contains('Donated')) {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .remove('Donated');
-                                } else {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .add('Donated');
-                                }
-                              });
-                            },
-                          ),
-                          CustomTag(
-                            label: 'Escaped',
-                            selected: ref
-                                .read(selectedOviChipsProvider)
-                                .contains('Escaped'),
-                            onTap: () {
-                              setState(() {
-                                if (ref
-                                    .read(selectedOviChipsProvider)
-                                    .contains('Escaped')) {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .remove('Escaped');
-                                } else {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .add('Escaped');
-                                }
-                              });
-                            },
-                          ),
-                          CustomTag(
-                            label: 'Stolen',
-                            selected: ref
-                                .read(selectedOviChipsProvider)
-                                .contains('Stolen'),
-                            onTap: () {
-                              setState(() {
-                                if (ref
-                                    .read(selectedOviChipsProvider)
-                                    .contains('Stolen')) {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .remove('Stolen');
-                                } else {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .add('Stolen');
-                                }
-                              });
-                            },
-                          ),
-                          CustomTag(
-                            label: 'Trasnferred',
-                            selected: ref
-                                .read(selectedOviChipsProvider)
-                                .contains('Trasnferred'),
-                            onTap: () {
-                              setState(() {
-                                if (ref
-                                    .read(selectedOviChipsProvider)
-                                    .contains('Trasnferred')) {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .remove('Trasnferred');
-                                } else {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .add('Trasnferred');
-                                }
-                              });
-                            },
-                          ),
-
-                          // Add more chips here
-                        ],
-                      ),
-                      SizedBox(
-                        height: globals.heightMediaQuery * 20,
-                      ),
-                      Text(
-                        'Medical State',
-                        style: AppFonts.headline3(color: AppColors.grayscale90),
-                      ),
-                      SizedBox(
-                        height: globals.heightMediaQuery * 10,
-                      ),
-                      Wrap(
-                        spacing: 8.0,
-                        runSpacing: 8.0,
-                        children: [
-                          CustomTag(
-                            label: 'Injured',
-                            selected: ref
-                                .read(selectedOviChipsProvider)
-                                .contains('Injured'),
-                            onTap: () {
-                              setState(() {
-                                if (ref
-                                    .read(selectedOviChipsProvider)
-                                    .contains('Injured')) {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .remove('Injured');
-                                } else {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .add('Injured');
-                                }
-                              });
-                            },
-                          ),
-                          CustomTag(
-                            label: 'Sick',
-                            selected: ref
-                                .read(selectedOviChipsProvider)
-                                .contains('Sick'),
-                            onTap: () {
-                              setState(() {
-                                if (ref
-                                    .read(selectedOviChipsProvider)
-                                    .contains('Sick')) {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .remove('Sick');
-                                } else {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .add('Sick');
-                                }
-                              });
-                            },
-                          ),
-                          CustomTag(
-                            label: 'Quarantined',
-                            selected: ref
-                                .read(selectedOviChipsProvider)
-                                .contains('Quarantined'),
-                            onTap: () {
-                              setState(() {
-                                if (ref
-                                    .read(selectedOviChipsProvider)
-                                    .contains('Quarantined')) {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .remove('Quarantined');
-                                } else {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .add('Quarantined');
-                                }
-                              });
-                            },
-                          ),
-                          CustomTag(
-                            label: 'Medication',
-                            selected: ref
-                                .read(selectedOviChipsProvider)
-                                .contains('Medication'),
-                            onTap: () {
-                              setState(() {
-                                if (ref
-                                    .read(selectedOviChipsProvider)
-                                    .contains('Medication')) {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .remove('Medication');
-                                } else {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .add('Medication');
-                                }
-                              });
-                            },
-                          ),
-                          CustomTag(
-                            label: 'Testing',
-                            selected: ref
-                                .read(selectedOviChipsProvider)
-                                .contains('Testing'),
-                            onTap: () {
-                              setState(() {
-                                if (ref
-                                    .read(selectedOviChipsProvider)
-                                    .contains('Testing')) {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .remove('Testing');
-                                } else {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .add('Testing');
-                                }
-                              });
-                            },
-                          ),
-                          CustomTag(
-                            label: 'Pregnant',
-                            selected: ref
-                                .read(selectedOviChipsProvider)
-                                .contains('Pregnant'),
-                            onTap: () {
-                              setState(() {
-                                if (ref
-                                    .read(selectedOviChipsProvider)
-                                    .contains('Pregnant')) {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .remove('Pregnant');
-                                } else {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .add('Pregnant');
-                                }
-                              });
-                            },
-                          ),
-                          CustomTag(
-                            label: 'Lactating',
-                            selected: ref
-                                .read(selectedOviChipsProvider)
-                                .contains('Lactating'),
-                            onTap: () {
-                              setState(() {
-                                if (ref
-                                    .read(selectedOviChipsProvider)
-                                    .contains('Lactating')) {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .remove('Lactating');
-                                } else {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .add('Lactating');
-                                }
-                              });
-                            },
-                          ),
-
-                          // Add more chips here
-                        ],
-                      ),
-                      SizedBox(
-                        height: globals.heightMediaQuery * 20,
-                      ),
-                      const Text(
-                        'Other',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(
-                        height: globals.heightMediaQuery * 10,
-                      ),
-                      Wrap(
-                        spacing: 8.0,
-                        runSpacing: 8.0,
-                        children: [
-                          CustomTag(
-                            label: 'Sold',
-                            selected: ref
-                                .read(selectedOviChipsProvider)
-                                .contains('Sold'),
-                            onTap: () {
-                              setState(() {
-                                if (ref
-                                    .read(selectedOviChipsProvider)
-                                    .contains('Sold')) {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .remove('Sold');
-                                } else {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .add('Sold');
-                                }
-                              });
-                            },
-                          ),
-                          CustomTag(
-                            label: 'Dead',
-                            selected: ref
-                                .read(selectedOviChipsProvider)
-                                .contains('Dead'),
-                            onTap: () {
-                              setState(() {
-                                if (ref
-                                    .read(selectedOviChipsProvider)
-                                    .contains('Dead')) {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .remove('Dead');
-                                } else {
-                                  ref
-                                      .read(selectedOviChipsProvider)
-                                      .add('Dead');
-                                }
-                              });
-                            },
-                          ),
-                          // Add more chips here
-                        ],
-                      ),
-                      const SizedBox(height: 77.0),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Row(children: [
-                          Expanded(
-                            child: PrimaryButton(
-                              onPressed: () {
-                                Navigator.of(context)
-                                    .pop(ref.read(selectedOviChipsProvider));
-                              },
-                              status: PrimaryButtonStatus.idle,
-                              text: 'Save',
-                            ),
-                          ),
-                        ]),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        );
+        return AnimalTagsModal(selectedTags: ref.read(
+            selectedOviChipsProvider));
       },
     );
 
@@ -914,45 +510,10 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
     final fieldName = ref.read(fieldNameProvider);
     final fieldContent = ref.read(fieldContentProvider);
 
-    ref.read(customOviTextFieldsProvider).add(
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(fieldName,
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
-                  IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed: () {
-                      ref.read(customOviTextFieldsProvider).removeLast();
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                    borderSide: const BorderSide(
-                      color: Colors.grey,
-                      width: 2.0,
-                    ),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 12.0,
-                    horizontal: 16.0,
-                  ),
-                ),
-                controller: TextEditingController(text: fieldContent),
-              ),
-              const SizedBox(height: 15),
-            ],
-          ),
-        );
+    ref.read(customOviTextFieldsProvider.notifier).update((state) {
+      state[fieldName] = fieldContent;
+      return state;
+    });
   }
 
   @override
@@ -1204,24 +765,53 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: animalChildren.length,
+                          itemBuilder: (context, index) {
+                            final BreedChildItem child = animalChildren[index];
+                            return ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: CircleAvatar(
+                                radius: globals.widthMediaQuery * 24,
+                                backgroundColor: Colors.transparent,
+                                backgroundImage: child.selectedOviImage,
+                                child: child.selectedOviImage == null
+                                    ? const Icon(
+                                  Icons.camera_alt_outlined,
+                                  size: 50,
+                                  color: Colors.grey,
+                                )
+                                    : null,
+                              ),
+                              title: Text(
+                                child.animalName,
+                                style: AppFonts.headline4(color: AppColors.grayscale90),
+                              ),
+                              subtitle: Text(
+                                child.selectedOviGender,
+                                style: AppFonts.body2(color: AppColors.grayscale70),
+                              ),
+                              trailing: Text(
+                                'ID#${child.id}',
+                                style: AppFonts.body2(color: AppColors.grayscale70),
+                              ),
+                            );
+                          },
+                        ),
                         Row(
                           children: [
-                            Text(
-                              'Children',
-                              style:
-                                  AppFonts.body2(color: AppColors.grayscale70),
-                            ),
-                            const Spacer(),
-                            PrimaryTextButton(
+                            TextButton(
                               onPressed: () {
                                 _showmainAnimalChilrenSelectionSheet(context);
                               },
-                              status: TextStatus.idle,
-                              text: animalChildren.isNotEmpty
-                                  ? animalChildren.first.animalName
-                                  : 'Add'.tr,
-                              position: TextButtonPosition.right,
+                              child: Text(
+                                "Add Children",
+                                style: AppFonts.body1(color: AppColors.primary40),
+                              ),
                             ),
+                            const Icon(Icons.add, color: AppColors.primary40),
                           ],
                         ),
                       ],
@@ -1658,7 +1248,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                   children: [
                     PrimaryTextButton(
                       onPressed: () {
-                        _animalTagsModalSheet();
+                        _showAnimalTagsModalSheet();
                       },
                       status: TextStatus.idle,
                       text: 'Add Tags',
@@ -1681,7 +1271,17 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                 ),
                 SizedBox(height: globals.heightMediaQuery * 16),
                 Column(
-                  children: customFields,
+                  children: customFields.keys.map((fieldName) => CustomField(
+                    fieldName: fieldName,
+                    fieldContent: customFields[fieldName]!,
+                    onDelete: () {
+                      ref.read(customOviTextFieldsProvider.notifier).update((
+                          state) {
+                        state.remove(fieldName);
+                        return state;
+                      });
+                    },
+                  )).toList(),
                 ),
                 Row(
                   children: [
@@ -1716,14 +1316,10 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                   },
                 ),
                 SizedBox(height: globals.heightMediaQuery * 16),
-                SizedBox(
-                  height: 270,
-                  width: double.infinity,
-                  child: Focus(
-                    onFocusChange:
-                        (hasFocus) {}, // Dummy onFocusChange callback
-                    child: const FileUploaderField(),
-                  ),
+                Focus(
+                  onFocusChange:
+                      (hasFocus) {}, // Dummy onFocusChange callback
+                  child: const FileUploaderField(),
                 ),
               ],
             ),
@@ -1853,4 +1449,8 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
     );
   }
 }
+
+
+
+
 

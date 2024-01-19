@@ -2,14 +2,17 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
+import 'package:sulala_upgrade/src/screens/reg_mode/image_view_page.dart';
 
 import '../../data/classes.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/animal_info_modal_sheets.dart/animal_image_picker.dart';
+import '../../widgets/animal_info_modal_sheets.dart/animal_tags_modal.dart';
 import '../../widgets/controls_and_buttons/tags/custom_tags.dart';
 import '../../widgets/pages/owned_animal/breeding_info.dart';
 import '../../widgets/pages/owned_animal/general_info_animal_widget.dart';
@@ -42,7 +45,8 @@ class OwnedAnimalDetailsRegMode extends ConsumerStatefulWidget {
       _OwnedAnimalDetailsRegModeState();
 }
 
-class _OwnedAnimalDetailsRegModeState extends ConsumerState<OwnedAnimalDetailsRegMode>
+class _OwnedAnimalDetailsRegModeState
+    extends ConsumerState<OwnedAnimalDetailsRegMode>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool editMode = false;
@@ -52,7 +56,7 @@ class _OwnedAnimalDetailsRegModeState extends ConsumerState<OwnedAnimalDetailsRe
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    oviDetails = widget.OviDetails;
+    oviDetails = widget.OviDetails.copyWith();
   }
 
   @override
@@ -114,7 +118,7 @@ class _OwnedAnimalDetailsRegModeState extends ConsumerState<OwnedAnimalDetailsRe
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => EditAnimalGenInfo(
-                          OviDetails: oviDetails,
+                          animalId: oviDetails.id,
                           breedingEvents: widget.breedingEvents,
                         ),
                       ),
@@ -148,7 +152,7 @@ class _OwnedAnimalDetailsRegModeState extends ConsumerState<OwnedAnimalDetailsRe
                   child: Column(
                     children: [
                       GestureDetector(
-                        onTap: () => _showImagePicker(context),
+                        onTap: _viewImage,
                         child: CircleAvatar(
                           radius: MediaQuery.of(context).size.width * 0.16,
                           backgroundColor: Colors.grey[100],
@@ -183,36 +187,6 @@ class _OwnedAnimalDetailsRegModeState extends ConsumerState<OwnedAnimalDetailsRe
                         "ID #${oviDetails.animalName}",
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
-                      Text(
-                        'Father: ${oviDetails.selectedOviSire != null ? oviDetails.selectedOviSire!.animalName : 'Unknown'}',
-                      ),
-                      Text(
-                        'Mother: ${oviDetails.selectedOviDam != null ? oviDetails.selectedOviDam!.animalName : 'Unknown'}',
-                      ),
-                      if (oviDetails.selectedOviSire != null &&
-                          oviDetails.selectedOviSire!.father !=
-                              null)
-                        Text(
-                          'Paternal Grandfather: ${oviDetails.selectedOviSire!
-                              .father!.animalName}',
-                        ),
-                      if (oviDetails.selectedOviDam != null &&
-                          oviDetails.selectedOviDam!.mother != null)
-                        Text(
-                          'Patenral Grandmother: ${oviDetails.selectedOviDam!
-                              .mother!.animalName}',
-                        ),
-                      if (oviDetails.selectedOviSire != null &&
-                          oviDetails.selectedOviSire!.father !=
-                              null)
-                        Text(
-                          'Maternal Grandfather: ${oviDetails.selectedOviSire!.father!.animalName}',
-                        ),
-                      if (oviDetails.selectedOviDam != null &&
-                          oviDetails.selectedOviDam!.mother != null)
-                        Text(
-                          'Maternal Grandmother: ${oviDetails.selectedOviDam!.mother!.animalName}',
-                        ),
                       SizedBox(
                         height: globals.heightMediaQuery * 16,
                       ),
@@ -226,13 +200,20 @@ class _OwnedAnimalDetailsRegModeState extends ConsumerState<OwnedAnimalDetailsRe
                               alignment: WrapAlignment.center,
                               spacing: 8.0,
                               runSpacing: 8.0,
-                              children: oviDetails.selectedOviChips
-                                  .map((chip) {
+                              children: oviDetails.selectedOviChips.isEmpty ? [
+                                CustomTag(
+                                  label: 'Add+'.tr,
+                                  selected:
+                                  true, // Since these are selected chips
+                                  onTap: _showAnimalTagsModalSheet,
+                                )
+                              ]
+                                  : oviDetails.selectedOviChips.map((chip) {
                                 return CustomTag(
                                   label: chip,
                                   selected:
                                       true, // Since these are selected chips
-                                  onTap: () {},
+                                  onTap: _showAnimalTagsModalSheet,
                                 );
                               }).toList(),
                             ),
@@ -334,37 +315,36 @@ class _OwnedAnimalDetailsRegModeState extends ConsumerState<OwnedAnimalDetailsRe
   }
 
   Future<void> updateDateField(dateType) async {
-    if(!oviDetails.selectedOviDates.containsKey(dateType)) {
-      final DateTime? pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(1900),
-        lastDate: DateTime(2101),
-        builder: (BuildContext context, Widget? child) {
-          return Theme(
-            data: ThemeData.light().copyWith(
-              // Change the background color of the date picker
-              primaryColor: AppColors.primary30,
-              colorScheme: const ColorScheme.light(primary: AppColors.primary20),
-              buttonTheme:
-              const ButtonThemeData(textTheme: ButtonTextTheme.primary),
-              // Here you can customize more colors if needed
-              // For example, you can change the header color, selected day color, etc.
-            ),
-            child: child!,
-          );
-        },
-      );
-      setState(() {
-        oviDetails.selectedOviDates[dateType] = pickedDate;
-      });
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: oviDetails.selectedOviDates[dateType]?? DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2101),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            // Change the background color of the date picker
+            primaryColor: AppColors.primary30,
+            colorScheme: const ColorScheme.light(primary: AppColors.primary20),
+            buttonTheme:
+                const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            // Here you can customize more colors if needed
+            // For example, you can change the header color, selected day color, etc.
+          ),
+          child: child!,
+        );
+      },
+    );
+    setState(() {
+      oviDetails.selectedOviDates[dateType] = pickedDate;
+    });
 
-      ref.read(ovianimalsProvider.notifier).update((state) {
-        final index = state.indexWhere((animal) => animal.animalName == oviDetails.animalName);
-        state[index] = oviDetails;
-        return state;
-      });
-    }
+    ref.read(ovianimalsProvider.notifier).update((state) {
+      final index = state
+          .indexWhere((animal) => animal.animalName == oviDetails.animalName);
+      state[index] = oviDetails;
+      return state;
+    });
   }
 
   void _showImagePicker(BuildContext context) {
@@ -378,12 +358,43 @@ class _OwnedAnimalDetailsRegModeState extends ConsumerState<OwnedAnimalDetailsRe
           });
 
           ref.read(ovianimalsProvider.notifier).update((state) {
-            final index = state.indexWhere((animal) => animal.animalName == oviDetails.animalName);
+            final index = state.indexWhere(
+                (animal) => animal.animalName == oviDetails.animalName);
             state[index] = oviDetails;
             return state;
           });
         });
       },
     );
+  }
+
+  void _viewImage() {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) =>
+            ImageViewPage(imageProvider: oviDetails.selectedOviImage!)));
+  }
+
+  void _showAnimalTagsModalSheet() async {
+    final result = await showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (BuildContext context) {
+        return AnimalTagsModal(selectedTags: oviDetails.selectedOviChips);
+      },
+    );
+
+    if (result != null) {
+      setState(() {
+        oviDetails = oviDetails.copyWith(selectedOviChips: result);
+        ref.read(ovianimalsProvider.notifier).update((state) {
+          final animalIndex = state.indexWhere((animal) => animal.id ==
+              oviDetails.id);
+          state[animalIndex] = oviDetails;
+          return state;
+        });
+      });
+    }
   }
 }

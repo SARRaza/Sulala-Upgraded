@@ -208,12 +208,11 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                 ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: breedingEvent.partner.length,
+                  itemCount: breedingEvent.partner != null ? 1 : 0,
                   itemBuilder: (context, index) {
-                    final partner = breedingEvent.partner[index];
+                    final partner = breedingEvent.partner;
                     final partnerOviDetails = ref.read(ovianimalsProvider)
-                        .firstWhere((animal) => animal.animalName == partner
-                        .animalName);
+                        .firstWhere((animal) => animal.animalName == partner!.animalName);
 
                     return ListTile(
                       onTap: () {
@@ -230,7 +229,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                       leading: CircleAvatar(
                         radius: globals.widthMediaQuery * 24,
                         backgroundColor: Colors.transparent,
-                        backgroundImage: partner.selectedOviImage,
+                        backgroundImage: partner!.selectedOviImage,
                         child: partner.selectedOviImage == null
                             ? const Icon(
                                 Icons.camera_alt_outlined,
