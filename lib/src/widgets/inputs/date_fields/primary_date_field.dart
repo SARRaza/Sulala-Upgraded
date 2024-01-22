@@ -42,6 +42,16 @@ class _PrimaryDateFieldState extends ConsumerState<PrimaryDateField> {
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
     _textEditingController = widget.controller?? TextEditingController();
+    _textEditingController.addListener(() {
+      if(!_textEditingController.text.startsWith('D')) {
+        setState(() {
+          final dateSegments = _textEditingController.text.split('/').map((segment
+              ) => int.parse(segment)).toList();
+          _selectedDate = DateTime(dateSegments[2], dateSegments[1],
+              dateSegments[0]);
+        });
+      }
+    });
   }
 
   @override

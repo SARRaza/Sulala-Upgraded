@@ -38,12 +38,11 @@ class CreateBreedingEvents extends ConsumerStatefulWidget {
 }
 
 class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
-  final TextEditingController _breedingeventnumberController =
+  final TextEditingController _breedingEventNumberController =
       TextEditingController();
   String selectedBreedDam = 'Add';
   BreedingPartner? selectedBreedPartner;
   String selectedDeliveryDate = '';
-  BreedingPartner? breedPartners;
   List<BreedChildItem> selectedChildren = [];
 
   final TextEditingController _eggsNumberController = TextEditingController();
@@ -57,6 +56,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
   final TextEditingController _breedingDateController = TextEditingController();
 
   final TextEditingController _deliveryDateController = TextEditingController();
+  final TextEditingController _notesController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +110,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                         .read(breedingEventNumberProvider.notifier)
                         .update((state) => value);
                   },
-                  controller: _breedingeventnumberController,
+                  controller: _breedingEventNumberController,
                   hintText: 'Enter Breeding Number',
                   labelText: 'Breeding Number',
                 ),
@@ -160,6 +160,16 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                   labelText: 'Breeding Date',
                   hintText: 'DD/MM/YYYY',
                   controller: _breedingDateController,
+                  onChanged: (breedingDate) {
+                    if(widget.OviDetails.selectedAnimalType == 'Mammal') {
+                      _fillDeliveryDate(breedingDate, widget.OviDetails
+                          .selectedAnimalSpecies);
+                    } else if(widget.OviDetails.selectedAnimalType ==
+                        'Oviparous') {
+                      _fillDates(breedingDate, widget.OviDetails
+                          .selectedAnimalSpecies);
+                    }
+                  },
                 ),
                 SizedBox(height: 20 * globals.heightMediaQuery),
                 if (widget.OviDetails.selectedAnimalType == 'Mammal')
@@ -274,7 +284,8 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
           width: 343 * globals.widthMediaQuery,
           child: PrimaryButton(
             onPressed: () {
-              Navigator.pop(context, true);
+              _createBreedingEvent();
+              Navigator.pop(context);
             },
             text: 'Create Event',
           ),
@@ -287,7 +298,6 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
   void _showBreedChildrenSelectionSheet(BuildContext context) async {
     // Initialize an empty list
     final ovianimals = ref.read(ovianimalsProvider);
-    final breedingPartner = ref.read(breedingPartnerProvider);
 
     final newSelectedChildren = await showModalBottomSheet(
       context: context,
@@ -301,16 +311,19 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                     animal.id != widget.OviDetails.id &&
                     animal.selectedAnimalSpecies ==
                         widget.OviDetails.selectedAnimalSpecies &&
-                    (breedingPartner == null ||
-                        animal.id != breedingPartner.id))
+                    (selectedBreedPartner == null ||
+                        animal.id != selectedBreedPartner!.id))
                 .toList(),
             selectedChildren: selectedChildren,
             ref: ref);
       },
     );
-    setState(() {
-      selectedChildren = newSelectedChildren;
-    });
+    if(newSelectedChildren != null) {
+      setState(() {
+        selectedChildren = newSelectedChildren;
+      });
+    }
+
   }
 
   void _showBreedPartnerSelectionSheet(BuildContext context) async {
@@ -420,53 +433,11 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
   // ];
 
 
-  void createBreedingEvent(String eventNumber) {
-    final hatchingDate = ref.read(dateOfHatchingProvider);
-    final numOffEggs = ref.read(numOfEggsProvider);
-    final partner = ref.read(breedingPartnerProvider);
-    final children = ref.read(breedingChildrenDetailsProvider);
+  void _createBreedingEvent() {
+    final numOffEggs = _eggsNumberController.text;
+    final partner = selectedBreedPartner;
+    final children = selectedChildren;
     final ovianimals = ref.read(ovianimalsProvider);
-    final breedingEvent = BreedingEventVariables(
-      eventNumber: ref.read(breedingEventNumberProvider),
-      breeddam: ref.read(breeddamPictureProvider),
-      sire: ref.read(breedingSireDetailsProvider) ?? '',
-      dam: ref.read(breedingDamDetailsProvider) ?? '',
-      partner: partner,
-      children: children,
-      breedingDate: ref.read(breedingDateProvider),
-      deliveryDate: ref.read(deliveryDateProvider),
-      layingEggsDate: ref.read(dateOfLayingEggsProvider),
-      eggsNumber: numOffEggs.isNotEmpty ? int.parse(numOffEggs) : 0,
-      incubationDate: ref.read(incubationDateProvider),
-      hatchingDate: hatchingDate != null
-          ? DateFormat('dd/MM/yyyy').format(hatchingDate)
-          : null,
-      notes: ref.read(breedingnotesProvider),
-      shouldAddEvent: ref.read(shoudlAddEventProvider),
-    );
-
-    if (ref.read(breedingEventsProvider).isEmpty) {
-      ref.read(breedingEventsProvider).add(breedingEvent);
-    } else {
-      ref.read(breedingEventsProvider).insert(0, breedingEvent);
-    }
-    final animalIndex = ovianimals.indexWhere(
-        (animal) => animal.animalName == widget.OviDetails.animalName);
-
-    if (animalIndex != -1) {
-      ref.read(ovianimalsProvider)[animalIndex] =
-          ref.read(ovianimalsProvider)[animalIndex].copyWith(
-        breedingEvents: {
-          ...ref.read(ovianimalsProvider)[animalIndex].breedingEvents,
-          widget.OviDetails.animalName: [
-            ...ref
-                .read(ovianimalsProvider)[animalIndex]
-                .breedingEvents[widget.OviDetails.animalName]!,
-            breedingEvent
-          ]
-        },
-      );
-    }
 
     MainAnimalSire? sire;
     MainAnimalDam? dam;
@@ -492,10 +463,68 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
 
     for (var child in children) {
       final childIndex =
-          ovianimals.indexWhere((animal) => animal.id == child.id);
+      ovianimals.indexWhere((animal) => animal.id == child.id);
       ref.read(ovianimalsProvider)[childIndex] = ref
           .read(ovianimalsProvider)[childIndex]
           .copyWith(selectedOviSire: sire, selectedOviDam: dam);
     }
+
+    final breedingEvent = BreedingEventVariables(
+      eventNumber: _breedingEventNumberController.text,
+      breeddam: dam?.selectedOviImage,
+      sire: sire?.animalName ?? '',
+      dam: dam?.animalName ?? '',
+      partner: partner,
+      children: children,
+      breedingDate: _breedingDateController.text,
+      deliveryDate: _deliveryDateController.text,
+      layingEggsDate: _layingEggsDateController.text,
+      eggsNumber: numOffEggs.isNotEmpty ? int.parse(numOffEggs) : 0,
+      incubationDate: _incubationDateController.text,
+      hatchingDate: _hatchingDateController.text,
+      notes: _notesController.text,
+      shouldAddEvent: true
+    );
+
+    if (ref.read(breedingEventsProvider).isEmpty) {
+      ref.read(breedingEventsProvider).add(breedingEvent);
+    } else {
+      ref.read(breedingEventsProvider).insert(0, breedingEvent);
+    }
+    final animalIndex = ovianimals.indexWhere(
+        (animal) => animal.animalName == widget.OviDetails.animalName);
+
+    if (animalIndex != -1) {
+      ref.read(ovianimalsProvider)[animalIndex] =
+          ref.read(ovianimalsProvider)[animalIndex].copyWith(
+        breedingEvents: {
+          ...ref.read(ovianimalsProvider)[animalIndex].breedingEvents,
+          widget.OviDetails.animalName: [
+            ...ref
+                .read(ovianimalsProvider)[animalIndex]
+                .breedingEvents[widget.OviDetails.animalName]!,
+            breedingEvent
+          ]
+        },
+      );
+    }
+  }
+
+  void _fillDeliveryDate(DateTime breedingDate, String animalSpecies) {
+    final deliveryDate = breedingDate.add(Duration(days: gestationPeriods[
+      animalSpecies]!));
+    _deliveryDateController.text = DateFormat('dd/MM/yyyy').format(deliveryDate);
+  }
+
+  void _fillDates(DateTime breedingDate, String animalSpecies) {
+    final layingDate = breedingDate.add(Duration(days: breedingToLayingPeriods[
+      animalSpecies]!));
+    final formattedLayingDate = DateFormat('dd/MM/yyyy').format(layingDate);
+    _layingEggsDateController.text = formattedLayingDate;
+    _incubationDateController.text = formattedLayingDate;
+    final hatchingDate = layingDate.add(Duration(days: incubationPeriods[
+      animalSpecies]!));
+    _hatchingDateController.text = DateFormat('dd/MM/yyyy').format(
+        hatchingDate);
   }
 }

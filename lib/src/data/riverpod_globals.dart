@@ -277,8 +277,24 @@ Map<String, int> gestationPeriods = {
   'Horse': 338,
   'Zebra': 375,
   'Panda': 135,
+};
 
-  // Oviparous Animals (incubation periods)
+Map<String, int> breedingToLayingPeriods = {
+  'Duck': 7,         // Ducks may lay eggs about a week after mating
+  'Chicken': 1,      // Chickens can lay an egg a day or two after mating
+  'Turtle': 30,      // Turtles might lay eggs about a month after mating
+  'Snake': 30,       // Snakes often lay eggs around a month after mating
+  'Crocodile': 30,   // Crocodiles usually lay eggs about a month after mating
+  'Eagle': 40,       // Eagles lay eggs several weeks after mating
+  'Frog': 7,         // Frogs lay eggs shortly after mating
+  'Fish': 2,         // Many fish species lay eggs within a few days after mating/spawning
+  'Penguin': 15,     // Penguins may lay eggs a couple of weeks after mating
+  'Alligator': 35,   // Alligators typically lay eggs about a month after mating
+  'Salmon': 3,       // Salmon lay eggs shortly after spawning
+  'Gecko': 20,       // Geckos might lay eggs a few weeks after mating
+};
+
+Map<String, int> incubationPeriods = {
   'Duck': 28,
   'Chicken': 21,
   'Turtle': 60,
@@ -286,10 +302,10 @@ Map<String, int> gestationPeriods = {
   'Crocodile': 80,
   'Eagle': 35,
   'Frog': 21,
-  'Fish': 14, // This can vary greatly depending on the species
+  'Fish': 14,
   'Penguin': 65,
   'Alligator': 65,
-  'Salmon': 40, // This is the incubation period for eggs
+  'Salmon': 40,
   'Gecko': 60,
 };
 

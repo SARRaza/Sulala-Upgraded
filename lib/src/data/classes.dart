@@ -325,7 +325,7 @@ class BreedingEventVariables {
   final String dam;
   final BreedingPartner? partner;
   final List<BreedChildItem> children;
-  final File? breeddam;
+  final ImageProvider? breeddam;
   final String breedingDate;
   final String? deliveryDate;
   final String? layingEggsDate;
@@ -354,7 +354,7 @@ class BreedingEventVariables {
     String? dam,
     BreedingPartner? partner,
     List<BreedChildItem>? children,
-    File? breeddam,
+    ImageProvider? breeddam,
     String? breedingDate,
     String? deliveryDate,
     String? notes,

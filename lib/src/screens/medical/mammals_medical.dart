@@ -572,7 +572,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
 
       DateTime? expectedDeliveryDate;
       final isPregnant = animalDetails.pregnant?? false;
-      if(matingDate != null && isPregnant) {
+      if(widget.OviDetails.selectedOviGender == 'Female' && widget.OviDetails
+          .selectedAnimalType == 'Mammal' && matingDate != null && isPregnant) {
         final gestationPeriod = gestationPeriods[animalDetails
             .selectedAnimalSpecies];
         expectedDeliveryDate = calculateExpectedDeliveryDate(matingDate!,
