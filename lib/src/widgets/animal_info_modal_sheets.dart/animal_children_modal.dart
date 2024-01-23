@@ -3,31 +3,37 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:sulala_upgrade/src/helpers/breeding_helper.dart';
 
 import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
 import '../controls_and_buttons/buttons/primary_button.dart';
 
-class AnimalChildrenModal extends StatefulWidget {
+class AnimalChildrenModal extends ConsumerStatefulWidget {
   const AnimalChildrenModal({
     super.key,
-    required this.ovianimals,
+    required this.selectedAnimal,
+    required this.selectedFather,
+    required this.selectedMother,
     required this.selectedChildren,
-    required this.ref,
+    this.selectedPartner
   });
 
-  final List<OviVariables> ovianimals;
+  final OviVariables selectedAnimal;
+  final MainAnimalSire? selectedFather;
+  final MainAnimalDam? selectedMother;
   final List<BreedChildItem> selectedChildren;
-
-  final WidgetRef ref;
+  final BreedingPartner? selectedPartner;
 
   @override
-  State<AnimalChildrenModal> createState() => _AnimalChildrenModalState();
+  ConsumerState<AnimalChildrenModal> createState() => _AnimalChildrenModalState();
 }
 
-class _AnimalChildrenModalState extends State<AnimalChildrenModal> {
+class _AnimalChildrenModalState extends ConsumerState<AnimalChildrenModal> {
   String searchQuery = '';
   late List<BreedChildItem> selectedChildren;
+  late List<OviVariables> animals;
+  late BreedingHelper _breedingHelper;
 
   @override
   void initState() {
@@ -38,6 +44,12 @@ class _AnimalChildrenModalState extends State<AnimalChildrenModal> {
 
   @override
   Widget build(BuildContext context) {
+    _breedingHelper = BreedingHelper(ref);
+    animals = _breedingHelper.getPossibleChildren(widget.selectedAnimal
+        .copyWith(selectedOviSire: widget.selectedFather, selectedOviDam: widget
+        .selectedMother, breedchildren: selectedChildren, breedpartner: widget
+        .selectedPartner));
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -132,9 +144,9 @@ class _AnimalChildrenModalState extends State<AnimalChildrenModal> {
                         const EdgeInsets.symmetric(horizontal: 16),
                         child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: widget.ovianimals.length,
+                            itemCount: animals.length,
                             itemBuilder: (context, index) {
-                              final OviDetails = widget.ovianimals[index];
+                              final OviDetails = animals[index];
                               final bool isSelected =
                               selectedChildren.any((child) =>
                               child.animalName ==
@@ -295,4 +307,6 @@ class _AnimalChildrenModalState extends State<AnimalChildrenModal> {
       ],
     );
   }
+
+
 }

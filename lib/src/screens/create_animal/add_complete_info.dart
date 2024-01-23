@@ -114,8 +114,6 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
     final ovianimals = ref.watch(ovianimalsProvider).where((animal) => animal
         .selectedAnimalSpecies == selectedAnimalSpecies).toList();
 
-    final selectedFather = <MainAnimalSire>[];
-    final selectedMother = <MainAnimalDam>[];
 
     await showModalBottomSheet(
       context: context,
@@ -123,13 +121,10 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
       showDragHandle: false,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return AnimalSireModal(
-            ovianimals: ovianimals,
-            selectedSire: selectedSire,
-            selectedFather: selectedFather,
-            selectedMother: selectedMother,
-            ref: ref,
-            selectedDam: selectedDam);
+        return AnimalSireModal(selectedAnimal: _getSelectedAnimal(),
+          selectedFather: ref.read(animalSireDetailsProvider),
+          selectedMother: ref.read(animalDamDetailsProvider),
+          selectedChildren: ref.read(breedingChildrenDetailsProvider),);
       },
     );
   }
@@ -147,12 +142,10 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return AnimalDamModal(
-            ovianimals: ovianimals,
-            selectedDam: selectedDam,
-            selectedFather: null,
-            selectedMother: null,
-            ref: ref);
+        return AnimalDamModal(selectedAnimal: _getSelectedAnimal(),
+          selectedFather: ref.read(animalSireDetailsProvider),
+          selectedMother: ref.read(animalDamDetailsProvider),
+          selectedChildren: ref.read(breedingChildrenDetailsProvider));
       },
     );
   }
@@ -170,8 +163,10 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
       showDragHandle: false,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return AnimalChildrenModal(ovianimals: ovianimals,
-                selectedChildren: selectedChildren, ref: ref);
+        return AnimalChildrenModal(selectedAnimal: _getSelectedAnimal(),
+          selectedFather: ref.read(animalSireDetailsProvider),
+          selectedMother: ref.read(animalDamDetailsProvider),
+          selectedChildren: ref.read(breedingChildrenDetailsProvider),);
 
       },
     );
@@ -1446,6 +1441,50 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
           return Container(); // Return an empty container if selectedDate is null
         }
       }).toList(),
+    );
+  }
+
+  OviVariables _getSelectedAnimal() {
+    final animalName = _nameController.text;
+    return OviVariables(
+      animalName: animalName,
+      breedingeventNumber: '',
+      medicalNeeds: ref.read(medicalNeedsProvider),
+      shouldAddAnimal: ref.read(shoudlAddAnimalProvider),
+      selectedBreedingStage: ref.read(selectedBreedingStageProvider),
+      layingFrequency: ref.read(layingFrequencyProvider),
+      eggsPerMonth: ref.read(eggsPerMonthProvider),
+      selectedOviSire: ref.read(animalSireDetailsProvider),
+      selectedOviDam: ref.read(animalDamDetailsProvider),
+      dateOfBirth: ref.read(dateOfBirthProvider),
+      keptInOval: ref.read(keptInOvalProvider),
+      dateOfLayingEggs: ref.read(dateOfLayingEggsProvider),
+      numOfEggs: ref.read(numOfEggsProvider),
+      dateOfSonar: ref.read(dateOfSonarProvider),
+      expDlvDate: ref.read(expDeliveryDateProvider),
+      incubationDate: ref.read(incubationDateProvider),
+      customFields: ref.read(customOviTextFieldsProvider),
+      notes: ref.read(additionalnotesProvider),
+      selectedOviGender: ref.read(selectedOviGenderProvider),
+      selectedOviDates: ref.read(selectedOviDatesProvider),
+      selectedAnimalBreed: ref.read(selectedAnimalBreedsProvider),
+      selectedAnimalSpecies: ref.read(selectedAnimalSpeciesProvider),
+      selectedAnimalType: ref.read(selectedAnimalTypeProvider),
+      selectedOviChips: ref.read(selectedOviChipsProvider),
+      selectedOviImage: ref.read(selectedAnimalImageProvider),
+      selectedFilters: ref.read(selectedFiltersProvider),
+      breedsire: ref.read(breedingSireDetailsProvider)?? '',
+      breeddam: ref.read(breedingDamDetailsProvider)?? '',
+      breedpartner: ref.read(breedingPartnerProvider),
+      breedchildren: ref.read(breedingChildrenDetailsProvider),
+      breedingDate: ref.read(breedingDateProvider),
+      breeddeliveryDate: ref.read(deliveryDateProvider),
+      breedingnotes: ref.read(breedingnotesProvider),
+      shouldAddEvent: ref.read(shoudlAddEventProvider),
+      breedingEvents: {animalName: []},
+      vaccineDetails: {animalName: []},
+      checkUpDetails: {animalName: []},
+      surgeryDetails: {animalName: []},
     );
   }
 }

@@ -305,17 +305,11 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
-        return AnimalChildrenModal(
-            ovianimals: ovianimals
-                .where((animal) =>
-                    animal.id != widget.OviDetails.id &&
-                    animal.selectedAnimalSpecies ==
-                        widget.OviDetails.selectedAnimalSpecies &&
-                    (selectedBreedPartner == null ||
-                        animal.id != selectedBreedPartner!.id))
-                .toList(),
-            selectedChildren: selectedChildren,
-            ref: ref);
+        return AnimalChildrenModal(selectedAnimal: widget.OviDetails,
+          selectedFather: widget.OviDetails.selectedOviSire,
+          selectedMother: widget.OviDetails.selectedOviDam,
+          selectedChildren: selectedChildren,
+          selectedPartner: selectedBreedPartner,);
       },
     );
     if(newSelectedChildren != null) {
@@ -335,15 +329,10 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
       showDragHandle: true,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return AnimalPartnerModal(
-            ovianimals: ovianimals
-                .where((animal) =>
-                    animal.id != widget.OviDetails.id &&
-                    animal.selectedAnimalSpecies ==
-                        widget.OviDetails.selectedAnimalSpecies &&
-                    !selectedChildren
-                        .any((child) => child.animalName == animal.animalName))
-                .toList());
+        return AnimalPartnerModal(selectedPartner: selectedBreedPartner,
+          selectedAnimal: widget.OviDetails, selectedFather: widget.OviDetails
+              .selectedOviSire, selectedMother: widget.OviDetails
+              .selectedOviDam, selectedChildren: selectedChildren,);
       },
     );
     if (selectedPartnerId != null && selectedPartnerId > 0) {

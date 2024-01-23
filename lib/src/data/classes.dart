@@ -274,7 +274,7 @@ class OviVariables {
     if(_age == null) {
       DateTime currentDate = DateTime.now();
       List birthDateSegments = dateOfBirth.split('/');
-      if(birthDateSegments.isEmpty) {
+      if(birthDateSegments.isEmpty || birthDateSegments.length < 3) {
         _age = 0;
       } else {
         DateTime birthDate = DateTime(int.parse(birthDateSegments[2]), int

@@ -6,35 +6,47 @@ import 'package:get/get.dart';
 
 import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
+import '../../helpers/breeding_helper.dart';
 import '../controls_and_buttons/buttons/primary_button.dart';
 
-class AnimalSireModal extends StatefulWidget {
+class AnimalSireModal extends ConsumerStatefulWidget {
   const AnimalSireModal({
     super.key,
-    required this.ovianimals,
-    required this.selectedSire,
+    required this.selectedAnimal,
     required this.selectedFather,
     required this.selectedMother,
-    required this.ref,
-    required this.selectedDam,
+    required this.selectedChildren,
   });
-
-  final List<OviVariables> ovianimals;
-  final List<MainAnimalSire> selectedSire;
-  final List<MainAnimalSire> selectedFather;
-  final List<MainAnimalDam> selectedMother;
-  final WidgetRef ref;
-  final List<MainAnimalDam> selectedDam;
+  final OviVariables selectedAnimal;
+  final MainAnimalSire? selectedFather;
+  final MainAnimalDam? selectedMother;
+  final List<BreedChildItem> selectedChildren;
 
   @override
-  State<AnimalSireModal> createState() => _AnimalSireModalState();
+  ConsumerState<AnimalSireModal> createState() => _AnimalSireModalState();
 }
 
-class _AnimalSireModalState extends State<AnimalSireModal> {
+class _AnimalSireModalState extends ConsumerState<AnimalSireModal> {
   String searchQuery = '';
+  MainAnimalSire? selectedFather;
+  late List<OviVariables> animals;
+  late BreedingHelper _breedingHelper;
+
+  @override
+  void initState() {
+    selectedFather = widget.selectedFather;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    _breedingHelper = BreedingHelper(ref);
+    animals = _breedingHelper.getPossibleFathers(widget.selectedAnimal
+        .copyWith(selectedOviSire: selectedFather,
+        selectedOviDam: widget.selectedMother, breedchildren: widget
+            .selectedChildren)
+    );
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -131,13 +143,11 @@ class _AnimalSireModalState extends State<AnimalSireModal> {
                             horizontal: 16),
                         child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: widget.ovianimals.length,
+                            itemCount: animals.length,
                             itemBuilder: (context, index) {
-                              final OviDetails = widget.ovianimals[index];
-                              final bool isSelected = widget.selectedSire.any(
-                                      (sire) =>
-                                  sire.animalName ==
-                                      OviDetails.animalName);
+                              final OviDetails = animals[index];
+                              final bool isSelected = selectedFather != null &&
+                                  selectedFather!.id == OviDetails.id;
 
                               if (!OviDetails.animalName
                                   .toLowerCase()
@@ -214,11 +224,7 @@ class _AnimalSireModalState extends State<AnimalSireModal> {
                                   onTap: () {
                                     setState(() {
                                       if (isSelected) {
-                                        widget.selectedSire.removeWhere(
-                                              (sire) =>
-                                          sire.animalName ==
-                                              OviDetails.animalName,
-                                        );
+                                        selectedFather = null;
                                       } else {
                                         // Use a default image (icon) if selectedOviImage is null
                                         final ImageProvider? oviImage =
@@ -229,18 +235,12 @@ class _AnimalSireModalState extends State<AnimalSireModal> {
                                         MainAnimalSire? father = OviDetails
                                             .selectedOviSire;
 
-                                        widget.selectedSire.add(MainAnimalSire(
+                                        selectedFather = MainAnimalSire(
                                             OviDetails.animalName,
                                             oviImage,
                                             OviDetails.selectedOviGender,
                                             mother: mother,
-                                            father: father));
-                                        if(father != null) {
-                                          widget.selectedFather.add(father);
-                                        }
-                                        if(mother != null) {
-                                          widget.selectedMother.add(mother);
-                                        }
+                                            father: father);
 
                                       }
                                     });
@@ -277,28 +277,27 @@ class _AnimalSireModalState extends State<AnimalSireModal> {
                         text: 'Confirm'.tr,
                         minimumSize: const Size(0, 52),
                         onPressed: () {
-                          widget.ref
+                          ref
                               .read(animalSireDetailsProvider.notifier)
-                              .update((state) => widget.selectedSire.last);
+                              .update((state) => selectedFather);
                           Navigator.pop(context);
                           // Append the selected children to the existing list
                           final List<MainAnimalDam> existingSelectedDam = [];
-                          final animalDamDetails = widget.ref.read(
+                          final animalDamDetails = ref.read(
                               animalDamDetailsProvider);
                           if(animalDamDetails != null) {
                             existingSelectedDam.add(animalDamDetails);
                           }
-                          existingSelectedDam.addAll(widget.selectedDam);
-                          existingSelectedDam.addAll(widget.selectedMother);
 
                           final List<MainAnimalSire> existingSelectedSire = [];
-                          final animalSireDetails = widget.ref.read(
+                          final animalSireDetails = ref.read(
                               animalSireDetailsProvider);
                           if(animalSireDetails != null) {
                             existingSelectedSire.add(animalSireDetails);
                           }
-
-                          existingSelectedSire.addAll(widget.selectedFather);
+                          if(selectedFather != null) {
+                            existingSelectedSire.add(selectedFather!);
+                          }
 
                           // for (MainAnimalDam dam in selectedDam) {
                           //   if (dam.mother != null) {

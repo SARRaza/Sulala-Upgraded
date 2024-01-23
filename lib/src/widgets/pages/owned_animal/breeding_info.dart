@@ -451,6 +451,10 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
       }
     }
 
+    for (var member in familyMembers) {
+      print("${member.name}(${member.id}) from ${member.fatherId} and ${member.motherId}");
+    }
+
     return familyMembers;
   }
 }

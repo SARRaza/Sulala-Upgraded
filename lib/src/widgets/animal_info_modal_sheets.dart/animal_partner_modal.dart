@@ -1,22 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/classes.dart';
+import '../../helpers/breeding_helper.dart';
 
-class AnimalPartnerModal extends StatefulWidget {
+class AnimalPartnerModal extends ConsumerStatefulWidget {
   const AnimalPartnerModal({
     super.key,
-    required this.ovianimals,
+    required this.selectedPartner,
+    required this.selectedAnimal,
+    required this.selectedFather,
+    required this.selectedMother,
+    required this.selectedChildren,
   });
 
-  final List<OviVariables> ovianimals;
+  final BreedingPartner? selectedPartner;
+  final OviVariables selectedAnimal;
+  final MainAnimalSire? selectedFather;
+  final MainAnimalDam? selectedMother;
+  final List<BreedChildItem> selectedChildren;
 
   @override
-  State<AnimalPartnerModal> createState() => _AnimalPartnerModalState();
+  ConsumerState<AnimalPartnerModal> createState() => _AnimalPartnerModalState();
 }
 
-class _AnimalPartnerModalState extends State<AnimalPartnerModal> {
+class _AnimalPartnerModalState extends ConsumerState<AnimalPartnerModal> {
   String searchQuery = '';
   int selectedPartnerId = 0;
+  late List<OviVariables> animals;
+  late BreedingHelper _breedingHelper;
+
+  @override
+  void initState() {
+    selectedPartnerId = widget.selectedPartner?.id?? 0;
+    _breedingHelper = BreedingHelper(ref);
+    animals = _breedingHelper.getPossiblePartners(widget.selectedAnimal
+        .copyWith(selectedOviSire: widget.selectedFather,
+        selectedOviDam: widget.selectedMother, breedchildren: widget
+            .selectedChildren)
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,9 +94,9 @@ class _AnimalPartnerModalState extends State<AnimalPartnerModal> {
             Expanded(
               child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: widget.ovianimals.length,
+                itemCount: animals.length,
                 itemBuilder: (context, index) {
-                  final OviDetails = widget.ovianimals[index];
+                  final OviDetails = animals[index];
                   final isSelected = OviDetails.id == selectedPartnerId;
                   // Apply the filter here
                   if (!OviDetails.animalName

@@ -6,33 +6,48 @@ import 'package:get/get.dart';
 
 import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
+import '../../helpers/breeding_helper.dart';
 import '../controls_and_buttons/buttons/primary_button.dart';
 
-class AnimalDamModal extends StatefulWidget {
+class AnimalDamModal extends ConsumerStatefulWidget {
   const AnimalDamModal({
     super.key,
-    required this.ovianimals,
-    required this.selectedDam,
+    required this.selectedAnimal,
     required this.selectedFather,
     required this.selectedMother,
-    required this.ref,
+    required this.selectedChildren,
   });
 
-  final List<OviVariables> ovianimals;
-  final List<MainAnimalDam> selectedDam;
+  final OviVariables selectedAnimal;
   final MainAnimalSire? selectedFather;
   final MainAnimalDam? selectedMother;
-  final WidgetRef ref;
+  final List<BreedChildItem> selectedChildren;
 
   @override
-  State<AnimalDamModal> createState() => _AnimalDamModalState();
+  ConsumerState<AnimalDamModal> createState() => _AnimalDamModalState();
 }
 
-class _AnimalDamModalState extends State<AnimalDamModal> {
+class _AnimalDamModalState extends ConsumerState<AnimalDamModal> {
   String searchQuery = '';
+  MainAnimalDam? selectedMother;
+  late List<OviVariables> animals;
+
+  late BreedingHelper _breedingHelper;
+
+  @override
+  void initState() {
+    selectedMother = widget.selectedMother;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    _breedingHelper = BreedingHelper(ref);
+    animals = _breedingHelper.getPossibleMothers(widget.selectedAnimal
+        .copyWith(selectedOviSire: widget.selectedFather,
+        selectedOviDam: selectedMother, breedchildren: widget.selectedChildren)
+    );
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -129,13 +144,12 @@ class _AnimalDamModalState extends State<AnimalDamModal> {
                             horizontal: 16),
                         child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: widget.ovianimals.length,
+                            itemCount: animals.length,
                             itemBuilder: (context, index) {
-                              final OviDetails = widget.ovianimals[index];
-                              final bool isSelected = widget.selectedDam.any(
-                                      (dam) =>
-                                  dam.animalName ==
-                                      OviDetails.animalName);
+                              final OviDetails = animals[index];
+                              final bool isSelected = selectedMother != null &&
+                                  selectedMother!.id == OviDetails.id;
+
 
                               if (!OviDetails.animalName
                                   .toLowerCase()
@@ -202,11 +216,7 @@ class _AnimalDamModalState extends State<AnimalDamModal> {
                                   onTap: () {
                                     setState(() {
                                       if (isSelected) {
-                                        widget.selectedDam.removeWhere(
-                                              (dam) =>
-                                          dam.animalName ==
-                                              OviDetails.animalName,
-                                        );
+                                        selectedMother = null;
                                       } else {
                                         // Use a default image (icon) if selectedOviImage is null
                                         final ImageProvider? oviImage =
@@ -217,12 +227,12 @@ class _AnimalDamModalState extends State<AnimalDamModal> {
                                         MainAnimalSire? father = OviDetails
                                             .selectedOviSire;
 
-                                        widget.selectedDam.add(MainAnimalDam(
+                                        selectedMother = MainAnimalDam(
                                             OviDetails.animalName,
                                             oviImage,
                                             OviDetails.selectedOviGender,
                                             mother: mother,
-                                            father: father));
+                                            father: father);
                                       }
                                     });
                                   },
@@ -258,9 +268,9 @@ class _AnimalDamModalState extends State<AnimalDamModal> {
                         text: 'Confirm'.tr,
                         minimumSize: const Size(0, 52),
                         onPressed: () {
-                          widget.ref
+                          ref
                               .read(animalDamDetailsProvider.notifier)
-                              .update((state) => widget.selectedDam.last);
+                              .update((state) => selectedMother);
                           Navigator.pop(context);
                           // Append the selected children to the existing list
                           // MainAnimalDam? existingSelectedDam = widget.ref.read(

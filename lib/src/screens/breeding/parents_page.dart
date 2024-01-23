@@ -247,28 +247,34 @@ class _ParentsPageState extends ConsumerState<ParentsPage> {
   Future<void> addParents() async {
     final ovianimals = ref.read(ovianimalsProvider).where((animal) => animal.id
         != widget.OviDetails.id).toList();
-    final selectedFather = <MainAnimalSire>[];
-    final selectedMother = <MainAnimalDam>[];
-    List<MainAnimalSire> selectedSire = [];
-    List<MainAnimalDam> selectedDam = [];
+    var selectedFather = father != null ? MainAnimalSire(father!.animalName,
+        father!.selectedOviImage, 'Male') : null;
+    var selectedMother = mother != null ? MainAnimalDam(mother!.animalName,
+        mother!.selectedOviImage, 'Female') : null;
+
+    final selectedChildren = ref.read(ovianimalsProvider).where((animal
+        ) => (animal.selectedOviSire != null && animal.selectedOviSire!.id ==
+        widget.OviDetails.id) || (animal.selectedOviDam != null && animal
+        .selectedOviDam!.id == widget.OviDetails.id)).toList().map((animal) =>
+        BreedChildItem(animal.animalName, animal.selectedOviImage, animal
+            .selectedOviGender)).toList();
+
 
     if(father == null) {
       await showModalBottomSheet(
         context: context,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         showDragHandle: false,
         isScrollControlled: true,
         builder: (BuildContext context) {
-          return AnimalSireModal(
-              ovianimals: ovianimals,
-              selectedSire: selectedSire,
-              selectedFather: selectedFather,
-              selectedMother: selectedMother,
-              ref: ref,
-              selectedDam: selectedDam);
+          return AnimalSireModal(selectedAnimal: widget.OviDetails,
+            selectedFather: selectedFather, selectedMother: selectedMother,
+            selectedChildren: selectedChildren,);
         },
       );
     }
+
+    selectedFather = ref.read(animalSireDetailsProvider);
 
     if(mounted && mother == null) {
       await showModalBottomSheet(
@@ -277,35 +283,32 @@ class _ParentsPageState extends ConsumerState<ParentsPage> {
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
         builder: (BuildContext context) {
-          return AnimalDamModal(
-              ovianimals: ovianimals,
-              selectedDam: selectedDam,
-              selectedFather: null,
-              selectedMother: null,
-              ref: ref);
+          return AnimalDamModal(selectedAnimal: widget.OviDetails,
+            selectedFather: selectedFather, selectedMother: selectedMother,
+            selectedChildren: selectedChildren,);
         },
       );
     }
 
-    final selectedOviSire = ref.read(animalSireDetailsProvider);
-    final selectedOviDam = ref.read(animalDamDetailsProvider);
+
+    selectedMother = ref.read(animalDamDetailsProvider);
     final oviDetails = widget.OviDetails;
-    oviDetails.selectedOviSire = selectedOviSire;
-    oviDetails.selectedOviDam = selectedOviDam;
+    oviDetails.selectedOviSire = selectedFather;
+    oviDetails.selectedOviDam = selectedMother;
     ref.read(ovianimalsProvider.notifier).update((state) {
       final index = state.indexWhere((animal) => animal.animalName == oviDetails.animalName);
       state[index] = oviDetails;
       return state;
     });
     setState(() {
-      if(selectedOviSire != null) {
+      if(selectedFather != null) {
         father ??= ref.read(ovianimalsProvider).firstWhereOrNull((animal) => animal
-            .animalName == selectedOviSire.animalName);
+            .animalName == selectedFather!.animalName);
       }
 
-      if(selectedOviDam != null) {
+      if(selectedMother != null) {
         mother ??= ref.read(ovianimalsProvider).firstWhereOrNull((animal) => animal
-            .animalName == selectedOviDam.animalName);
+            .animalName == selectedMother!.animalName);
       }
     });
   }
