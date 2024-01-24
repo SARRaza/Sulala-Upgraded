@@ -277,10 +277,7 @@ class _AnimalSireModalState extends ConsumerState<AnimalSireModal> {
                         text: 'Confirm'.tr,
                         minimumSize: const Size(0, 52),
                         onPressed: () {
-                          ref
-                              .read(animalSireDetailsProvider.notifier)
-                              .update((state) => selectedFather);
-                          Navigator.pop(context);
+                          Navigator.pop(context, selectedFather);
                           // Append the selected children to the existing list
                           final List<MainAnimalDam> existingSelectedDam = [];
                           final animalDamDetails = ref.read(

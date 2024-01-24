@@ -261,7 +261,7 @@ class _ParentsPageState extends ConsumerState<ParentsPage> {
 
 
     if(father == null) {
-      await showModalBottomSheet(
+      selectedFather = await showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
         showDragHandle: false,
@@ -274,10 +274,8 @@ class _ParentsPageState extends ConsumerState<ParentsPage> {
       );
     }
 
-    selectedFather = ref.read(animalSireDetailsProvider);
-
     if(mounted && mother == null) {
-      await showModalBottomSheet(
+      selectedMother = await showModalBottomSheet(
         context: context,
         showDragHandle: false,
         backgroundColor: Colors.transparent,
@@ -290,8 +288,6 @@ class _ParentsPageState extends ConsumerState<ParentsPage> {
       );
     }
 
-
-    selectedMother = ref.read(animalDamDetailsProvider);
     final oviDetails = widget.OviDetails;
     oviDetails.selectedOviSire = selectedFather;
     oviDetails.selectedOviDam = selectedMother;

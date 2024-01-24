@@ -268,10 +268,7 @@ class _AnimalDamModalState extends ConsumerState<AnimalDamModal> {
                         text: 'Confirm'.tr,
                         minimumSize: const Size(0, 52),
                         onPressed: () {
-                          ref
-                              .read(animalDamDetailsProvider.notifier)
-                              .update((state) => selectedMother);
-                          Navigator.pop(context);
+                          Navigator.pop(context, selectedMother);
                           // Append the selected children to the existing list
                           // MainAnimalDam? existingSelectedDam = widget.ref.read(
                           //     animalDamDetailsProvider);

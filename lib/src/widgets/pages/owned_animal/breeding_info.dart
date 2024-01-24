@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import '../../../data/classes.dart';
 import '../../../data/riverpod_globals.dart';
 import '../../../screens/breeding/family_tree/family_tree_page.dart';
-import '../../../screens/breeding/family_tree/person.dart';
 import '../../../screens/breeding/list_of_breeding_events.dart';
 import '../../../screens/breeding/list_of_mates.dart';
 
@@ -40,7 +39,7 @@ int generateUniqueId() {
 
 class _BreedingInfoState extends ConsumerState<BreedingInfo> {
   Set<String> addedChildIds = {};
-  List<Person> familyMembers = [];
+  List<OviVariables> familyMembers = [];
 
   @override
   Widget build(BuildContext context) {
@@ -161,29 +160,6 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
             (lastBreedingDate == null ||
                 breedingDate.isAfter(lastBreedingDate))) {
           lastBreedingDate = breedingDate;
-        }
-      }
-
-      for (final child in breedingEvent.children) {
-        // Check if the child ID is already added, skip if it exists
-        if (!addedChildIds.contains(child.animalName)) {
-          // Add the child as a new Person if it doesn't exist in the addedChildIds list
-          familyMembers.add(
-            Person(
-              id: generateUniqueId(),
-              name: child.animalName,
-              gender: Gender.male, // Change this accordingly
-              image: child.selectedOviImage,
-              status: 'Borrowed',
-              fatherId: 100001,
-
-              // motherId: 100002 // Change this accordingly
-              // Add other details as needed
-              // Example: image, gender, fatherId, motherId, status, etc.
-            ),
-          );
-          // Add the child ID to the addedChildIds set to avoid duplication
-          addedChildIds.add(child.animalName);
         }
       }
     }
@@ -322,9 +298,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                     MaterialPageRoute(
                       builder: (context) {
                         return FamilyTreePage(
-                          members: getFamilyMembers(),
-                          selectedPersonId: widget.OviDetails.id,
-                          OviDetails: widget.OviDetails,
+                          selectedAnimalId: widget.OviDetails.id,
                         );
                       },
                     ),
@@ -422,39 +396,5 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
       state[index] = widget.OviDetails;
       return state;
     });
-  }
-
-  List<Person> getFamilyMembers() {
-    familyMembers = [];
-    ref.read(ovianimalsProvider).forEach((animal) {
-      final person = Person(
-              id: animal.id,
-              name: animal.animalName,
-              image: animal.selectedOviImage,
-              status: animal.selectedOviChips.join(','),
-              gender: animal.selectedOviGender == 'Male' ? Gender.male : Gender
-                  .female,
-              fatherId: animal.selectedOviSire?.id,
-              motherId: animal.selectedOviDam?.id
-            );
-      familyMembers.add(person);
-    });
-    for (var i = 0; i < familyMembers.length; i++) {
-      final member = familyMembers[i];
-      if(!familyMembers.any((otherMember) => otherMember.id == member.fatherId))
-      {
-        familyMembers[i].fatherId = null;
-      }
-      if(!familyMembers.any((otherMember) => otherMember.id == member.motherId))
-      {
-        familyMembers[i].motherId = null;
-      }
-    }
-
-    for (var member in familyMembers) {
-      print("${member.name}(${member.id}) from ${member.fatherId} and ${member.motherId}");
-    }
-
-    return familyMembers;
   }
 }

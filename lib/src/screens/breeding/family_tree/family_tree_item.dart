@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'family_tree_node.dart';
-import 'person.dart';
 
 enum ItemType { personCard, expandButton }
 
@@ -21,7 +20,7 @@ class FamilyTreeItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if ((node.children.isNotEmpty || node.parents.isNotEmpty || node.person == null) &&
+    if ((node.children.isNotEmpty || node.parents.isNotEmpty || node.animal == null) &&
         !selected &&
         !node.expanded) {
       return buildExpandButton();
@@ -78,9 +77,9 @@ class FamilyTreeItem extends StatelessWidget {
                             borderRadius: BorderRadius.circular(60),
                           ),
                         ),
-                        child: node.person!.image != null
+                        child: node.animal!.selectedOviImage != null
                             ? Image(
-                                image: node.person!.image!,
+                                image: node.animal!.selectedOviImage!,
                               )
                             : null),
                   ),
@@ -102,7 +101,7 @@ class FamilyTreeItem extends StatelessWidget {
                       SizedBox(
                         width: 72,
                         child: Text(
-                          node.person!.name,
+                          node.animal!.animalName,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                               color: Color(0xFF232323),
@@ -117,7 +116,8 @@ class FamilyTreeItem extends StatelessWidget {
                         SizedBox(
                             width: 16,
                             height: 16,
-                            child: Image.asset(node.person!.gender == Gender.male
+                            child: Image.asset(node.animal!.selectedOviGender ==
+                                'Male'
                                 ? 'assets/avatars/48px/gender_male.png'
                                 : 'assets/avatars/80px/gender_female.png')),
                     ],
@@ -125,7 +125,7 @@ class FamilyTreeItem extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'ID #${node.person!.id}',
+                  'ID #${node.animal!.id}',
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Color(0xFF43464C),
@@ -141,10 +141,10 @@ class FamilyTreeItem extends StatelessWidget {
                   child: SizedBox(
                     width: 72,
                     child: Text(
-                      node.person!.status,
+                      node.animal!.selectedOviChips.join(', '),
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: node.person!.status.toLowerCase() == 'dead'
+                        color: node.animal!.selectedOviChips.contains('Dead')
                             ? const Color(0xFFFF3E2C)
                             : const Color(0xFF43464C),
                         fontSize: 10,

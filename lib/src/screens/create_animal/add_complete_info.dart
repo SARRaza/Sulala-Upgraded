@@ -115,7 +115,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
         .selectedAnimalSpecies == selectedAnimalSpecies).toList();
 
 
-    await showModalBottomSheet(
+    final animalSire = await showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       showDragHandle: false,
@@ -127,6 +127,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
           selectedChildren: ref.read(breedingChildrenDetailsProvider),);
       },
     );
+    ref.read(animalSireDetailsProvider.notifier).update((state) => animalSire);
   }
 
   void _showmainAnimalDamSelectionSheet(BuildContext context) async {
@@ -136,7 +137,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
 
     final selectedFather = <MainAnimalSire>[];
     final selectedMother = <MainAnimalDam>[];
-    await showModalBottomSheet(
+    final animalDam = await showModalBottomSheet(
       context: context,
       showDragHandle: false,
       backgroundColor: Colors.transparent,
@@ -148,6 +149,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
           selectedChildren: ref.read(breedingChildrenDetailsProvider));
       },
     );
+    ref.read(animalDamDetailsProvider.notifier).update((state) => animalDam);
   }
 
   void _showmainAnimalChilrenSelectionSheet(BuildContext context) async {
