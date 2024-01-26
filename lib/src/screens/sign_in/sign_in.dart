@@ -206,7 +206,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                   setState(() {
                                     savedPhoneNumber = value;
                                   });
-                                }),
+                                }, controller: TextEditingController(),),
                               SizedBox(height: globals.heightMediaQuery * 24),
                               SizedBox(
                                 height: globals.heightMediaQuery * 52,

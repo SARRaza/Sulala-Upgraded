@@ -198,7 +198,7 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                 Text("Contact Details".tr,
                     style: AppFonts.headline3(color: AppColors.grayscale90)),
                 SizedBox(height: 24 * globals.heightMediaQuery),
-                const PhoneNumberField(),
+                PhoneNumberField(controller: TextEditingController(),),
                 SizedBox(height: 16 * globals.heightMediaQuery),
                 PrimaryTextField(
                   onChanged: (value) {

@@ -32,6 +32,7 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
   String? savedPhoneNumber;
   String? savedEmail;
   bool emailHasError = false;
+  bool phoneHasError = false;
 
   PrimaryButtonStatus buttonStatus = PrimaryButtonStatus.idle;
   @override
@@ -44,28 +45,28 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
     emailController.text = ref.read(emailAdressProvider);
   }
 
-  void saveEmailAddress(String emailAddress) {
-    if (isValidEmail(emailAddress)) {
+  void _saveEmailAddress(String emailAddress) {
+    if (_isValidEmail(emailAddress)) {
       setState(() {
         savedEmail = emailAddress;
       });
     }
   }
 
-  void savePhoneNumber(String phoneNumber) {
-    if (isValidPhoneNumber(phoneNumber)) {
+  void _savePhoneNumber(String phoneNumber) {
+    if (_isValidPhoneNumber(phoneNumber)) {
       setState(() {
         savedPhoneNumber = phoneNumber;
       });
     }
   }
 
-  bool isValidEmail(String email) {
+  bool _isValidEmail(String email) {
     final emailRegExp = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
     return emailRegExp.hasMatch(email);
   }
 
-  bool isValidPhoneNumber(String phoneNumber) {
+  bool _isValidPhoneNumber(String phoneNumber) {
     final phoneRegExp = RegExp(r'^[0-9]+$');
     return phoneRegExp.hasMatch(phoneNumber);
   }
@@ -183,7 +184,9 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                         .tr,
                     style: AppFonts.body2(color: AppColors.grayscale70)),
                 SizedBox(height: globals.heightMediaQuery * 24),
-                const PhoneNumberField(),
+                PhoneNumberField(
+                  controller: phoneController,
+                ),
                 SizedBox(height: globals.heightMediaQuery * 20),
                 const SizedBox(height: 8),
                 PrimaryTextField(
@@ -192,13 +195,9 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                   errorMessage:
                       emailHasError == true ? 'Invalid email address'.tr : null,
                   onChanged: (value) {
-                    setState(() {
                       ref
                           .read(emailAdressProvider.notifier)
                           .update((state) => value);
-
-                      // emailHasError = false;
-                    });
                   },
                   onErrorChanged: (hasError) {
                     setState(() {
@@ -214,13 +213,18 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                     status: buttonStatus,
                     text: 'Continue'.tr,
                     onPressed: () {
-                      if(emailController.text.isNotEmpty && !isValidEmail(
+                      if(emailController.text.isNotEmpty && !_isValidEmail(
                           emailController.text)) {
                         setState(() {
                           emailHasError = true;
                         });
                       }
-                      if(!emailHasError) {
+                      if(phoneController.text.isNotEmpty && !_isValidPhoneNumber(phoneController.text)) {
+                        setState(() {
+                          phoneHasError = true;
+                        });
+                      }
+                      if(!emailHasError && !phoneHasError) {
                         buttonStatus = PrimaryButtonStatus.loading;
                         Navigator.push(
                           context,
