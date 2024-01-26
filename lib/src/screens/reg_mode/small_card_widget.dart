@@ -59,7 +59,7 @@ class _SmallCardWidgetState extends State<SmallCardWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     widget.icon,
-                    SizedBox(height: globals.heightMediaQuery * 12),
+                    SizedBox(height: globals.heightMediaQuery * 10),
                     Text(widget.animalData.animal,
                         style: AppFonts.body2(color: AppColors.grayscale100)),
                     SizedBox(height: globals.heightMediaQuery * 3),

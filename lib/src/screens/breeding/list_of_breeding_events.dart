@@ -11,6 +11,7 @@ import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
+import '../../widgets/dialogs/confirm_delete_dialog.dart';
 import '../create_animal/owned_animal_detail_reg_mode.dart';
 import 'breeding_event_detail.dart';
 import 'create_breeding_event.dart';
@@ -294,25 +295,12 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
     return showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Confirm Delete'.tr),
-          content: Text('Are you sure you want to delete this breeding event?'
-              .tr),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              // Dismisses the dialog and returns false
-              child: Text('Cancel'.tr),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              // Dismisses the dialog and returns true
-              child: Text('Delete'.tr),
-            ),
-          ],
-        );
+        return ConfirmDeleteDialog(
+          content: 'Are you sure you want to delete this breeding event?'.tr,);
       },
     );
   }
 
 }
+
+

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/classes.dart';
+import 'package:sulala_upgrade/src/screens/breeding/create_breeding_event.dart';
 
 import '../../../data/riverpod_globals.dart';
 import '../../../widgets/animal_info_modal_sheets.dart/animal_children_modal.dart';
@@ -397,74 +398,13 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
   }
 
   Future<void> addChildren() async {
-    final selectedAnimal = ref
-        .read(ovianimalsProvider)
-        .firstWhere((animal) => animal.id == _selectedAnimal.id);
-
-
-    final fatherDetails = ref.read(ovianimalsProvider).firstWhereOrNull((animal
-        ) => selectedAnimal.selectedOviSire != null && animal.id ==
-        selectedAnimal.selectedOviSire!.id);
-    var selectedFather = fatherDetails != null ? MainAnimalSire(fatherDetails
-        .animalName, fatherDetails.selectedOviImage, 'Male') : null;
-    final motherDetails = ref.read(ovianimalsProvider).firstWhereOrNull((animal
-        ) => selectedAnimal.selectedOviDam != null && animal.id ==
-        selectedAnimal.selectedOviDam!.id);
-    var selectedMother = motherDetails != null ? MainAnimalDam(motherDetails
-        .animalName, motherDetails.selectedOviImage, 'Female') : null;
-
-    final selectedChildren = <BreedChildItem>[];
-    for (var node in root.children) {
-      if(node.animal != null) {
-        selectedChildren.add(BreedChildItem(node.animal!.animalName, node
-            .animal!.selectedOviImage, node.animal!.selectedOviGender));
-      }
-    }
-    final breedingChildrenDetails = await showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      showDragHandle: false,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return AnimalChildrenModal(selectedAnimal: selectedAnimal,
-          selectedFather: selectedFather,
-          selectedMother: selectedMother,
-          selectedChildren: selectedChildren,);
-      },
-    );
-
-    if(breedingChildrenDetails != null) {
-      setState(() {
-        for (var child in breedingChildrenDetails) {
-          final selectedPersonIndex =
-          animals.indexWhere((animal) => animal.id == _selectedAnimal.id);
-          final childIndex =
-          animals.indexWhere((animal) => animal.id == child.id);
-
-          ref.read(ovianimalsProvider.notifier).update((state) {
-            final selectedPerson = state[selectedPersonIndex];
-            if (selectedPerson.selectedOviGender == 'Male') {
-              state[childIndex].selectedOviSire = MainAnimalSire(
-                  selectedPerson.animalName,
-                  selectedPerson.selectedOviImage,
-                  selectedPerson.selectedOviGender);
-              animals[childIndex].selectedOviSire = state[childIndex]
-                  .selectedOviSire;
-            } else {
-              state[childIndex].selectedOviDam = MainAnimalDam(
-                  selectedPerson.animalName,
-                  selectedPerson.selectedOviImage,
-                  selectedPerson.selectedOviGender);
-              animals[childIndex].selectedOviDam = state[childIndex]
-                  .selectedOviDam;
-            }
-            return state;
-          });
-        }
-        root = createTree(_selectedAnimal, attachParents: true,
-            attachChildren: true);
-        ref.read(breedingChildrenDetailsProvider.notifier).update((state) => []);
-      });
-    }
+    await Navigator.push(context, MaterialPageRoute(builder: (context) =>
+        CreateBreedingEvents(OviDetails: _selectedAnimal,
+            breedingEvents: const [])));
+    setState(() {
+      animals = ref.read(ovianimalsProvider);
+      root = createTree(_selectedAnimal, attachParents: true,
+          attachChildren: true);
+    });
   }
 }
