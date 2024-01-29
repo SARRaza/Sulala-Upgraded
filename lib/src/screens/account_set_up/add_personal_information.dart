@@ -184,7 +184,9 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                         .tr,
                     style: AppFonts.body2(color: AppColors.grayscale70)),
                 SizedBox(height: globals.heightMediaQuery * 24),
-                const PhoneNumberField(),
+                PhoneNumberField(
+                  controller: phoneController,
+                ),
                 SizedBox(height: globals.heightMediaQuery * 20),
                 const SizedBox(height: 8),
                 PrimaryTextField(
@@ -216,19 +218,28 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                         setState(() {
                           emailHasError = true;
                         });
+                      } else {
+                        emailHasError = false;
                       }
                       if(phoneController.text.isNotEmpty && !_isValidPhoneNumber(phoneController.text)) {
                         setState(() {
                           phoneHasError = true;
                         });
+                      } else {
+                        phoneHasError = false;
                       }
+
                       if(!emailHasError && !phoneHasError) {
                         buttonStatus = PrimaryButtonStatus.loading;
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const AddSomeDetailsPage()),
-                        );
+                        ).then((value) {
+                          setState(() {
+                            buttonStatus = PrimaryButtonStatus.idle;
+                          });
+                        });
                       }
                     },
                   ),

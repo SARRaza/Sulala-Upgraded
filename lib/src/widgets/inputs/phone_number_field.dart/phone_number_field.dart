@@ -12,11 +12,13 @@ import '../draw_ups/draw_up_widget.dart';
 class PhoneNumberField extends ConsumerStatefulWidget {
   final String? label;
   final Function(String)? onSave;
+  final TextEditingController? controller;
 
   const PhoneNumberField({
     Key? key,
     this.label,
     this.onSave,
+    this.controller
   }) : super(key: key);
 
   @override
@@ -27,7 +29,7 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
   Color _borderColor = AppColors.grayscale20;
   Color _backgroundColor = AppColors.grayscale0;
   final FocusNode _focusNode = FocusNode();
-  final TextEditingController _textEditingController = TextEditingController();
+  late final TextEditingController _textEditingController;
   bool _hasError = false;
   CountryInfo? selectedCountry;
 
@@ -57,6 +59,7 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
   @override
   void initState() {
     super.initState();
+    _textEditingController = widget.controller?? TextEditingController();
     _textEditingController.text = ref.read(phoneNumberProvider);
     _focusNode.addListener(_onFocusChange);
   }
