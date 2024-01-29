@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sulala_upgrade/src/widgets/styled_dismissible.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
@@ -103,8 +104,7 @@ class _NotificationListState extends State<NotificationList> {
                     final notification = notifications[index];
                     final timeAgo =
                         formatTimeAgo(notification['time'] as DateTime);
-                    return Dismissible(
-                      key: Key(notification['title']),
+                    return StyledDismissible(
                       onDismissed: (direction) {
                         // Remove the item from the list
                         setState(() {

@@ -202,11 +202,13 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                   },
                                 )
                               else
-                                PhoneNumberField(onSave: (value) {
-                                  setState(() {
-                                    savedPhoneNumber = value;
-                                  });
-                                }, controller: TextEditingController(),),
+                                PhoneNumberField(
+                                  onSave: (value) {
+                                    setState(() {
+                                      savedPhoneNumber = value;
+                                    });
+                                  },
+                                ),
                               SizedBox(height: globals.heightMediaQuery * 24),
                               SizedBox(
                                 height: globals.heightMediaQuery * 52,

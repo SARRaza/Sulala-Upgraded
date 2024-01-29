@@ -37,8 +37,20 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
             (animal) => animal.id == widget.OviDetails.id);
     final eventIndex = widget.breedingEvents.indexWhere((event) => event.eventNumber
         == widget.breedingEvent.eventNumber);
-    breedingEvent = animals[animalIndex].breedingEvents[widget.OviDetails
-        .animalName]![eventIndex];
+
+    breedingEvent = ref.read(breedingEventsProvider).firstWhere((event) => event
+        .sire?.id == widget.OviDetails.id || event.dam?.id == widget.OviDetails
+        .id);
+    if(breedingEvent.partner?.id == widget.OviDetails.id) {
+      breedingEvent = breedingEvent.copyWith(partner: breedingEvent.sire?.id ==
+          widget.OviDetails.id ? BreedingPartner(breedingEvent.dam!.animalName,
+          breedingEvent.dam!.selectedOviImage, breedingEvent.dam!
+              .selectedOviGender) : BreedingPartner(breedingEvent.sire!
+          .animalName, breedingEvent.sire!.selectedOviImage, breedingEvent.sire!
+          .selectedOviGender));
+    }
+
+
 
     return SafeArea(
       child: Scaffold(

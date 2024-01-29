@@ -10,6 +10,7 @@ import 'package:sulala_upgrade/src/screens/pdf/file_view_page.dart';
 import 'package:sulala_upgrade/src/widgets/dialogs/confirm_delete_dialog.dart';
 import 'package:sulala_upgrade/src/widgets/inputs/draw_ups/draw_up_widget.dart';
 import 'package:sulala_upgrade/src/widgets/inputs/text_fields/primary_text_field.dart';
+import 'package:sulala_upgrade/src/widgets/styled_dismissible.dart';
 import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
@@ -88,6 +89,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
   late List<MedicalCheckupDetails> medicalCheckUpList;
 
   bool initialized = false;
+
+  late List<BreedingEventVariables> breedingEvents;
 
   @override
   Widget build(BuildContext context) {
@@ -179,9 +182,11 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
       }
     }
 
-    final breedingEvents = animalDetails.breedingEvents[animalDetails
-        .animalName];
-    lastBreedingEvent = breedingEvents!.isNotEmpty ? breedingEvents.last : null;
+    breedingEvents = ref.read(breedingEventsProvider).where((event
+        ) => event.sire?.id == animalDetails.id || event.dam?.id ==
+        animalDetails.id).toList();
+
+    lastBreedingEvent = breedingEvents.isNotEmpty ? breedingEvents.last : null;
     if(lastBreedingEvent != null) {
       final breedingDateSegments = lastBreedingEvent!.breedingDate.split('/');
       final breedingDate = breedingDateSegments.length == 3
@@ -697,18 +702,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
               shrinkWrap:
               true, // This allows the ListView to take only necessary space
               itemBuilder: (BuildContext context, int index) {
-                return Dismissible(
-                  key: UniqueKey(),
-                  direction: DismissDirection.endToStart, // Enable swipe from right to left
-                  background: Container(
-                    alignment: Alignment.centerRight,
-                    padding: const EdgeInsets.only(right: 20),
-                    color: Colors.red, // Background color for delete action
-                    child: const Icon(
-                      Icons.delete,
-                      color: Colors.white,
-                    ),
-                  ),
+                return StyledDismissible(
                   confirmDismiss: _confirmDeletion,
                   onDismissed: (direction) {
                     setState(() {
@@ -888,18 +882,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
               shrinkWrap:
               true, // This allows the ListView to take only necessary space
               itemBuilder: (BuildContext context, int index) {
-                return Dismissible(
-                  key: UniqueKey(),
-                  direction: DismissDirection.endToStart, // Enable swipe from right to left
-                  background: Container(
-                    alignment: Alignment.centerRight,
-                    padding: const EdgeInsets.only(right: 20),
-                    color: Colors.red, // Background color for delete action
-                    child: const Icon(
-                      Icons.delete,
-                      color: Colors.white,
-                    ),
-                  ),
+                return StyledDismissible(
                   confirmDismiss: _confirmDeletion,
                   onDismissed: (direction) {
                     setState(() {
@@ -1078,18 +1061,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
               shrinkWrap:
               true, // This allows the ListView to take only necessary space
               itemBuilder: (BuildContext context, int index) {
-                return Dismissible(
-                  key: UniqueKey(),
-                  direction: DismissDirection.endToStart, // Enable swipe from right to left
-                  background: Container(
-                    alignment: Alignment.centerRight,
-                    padding: const EdgeInsets.only(right: 20),
-                    color: Colors.red, // Background color for delete action
-                    child: const Icon(
-                      Icons.delete,
-                      color: Colors.white,
-                    ),
-                  ),
+                return StyledDismissible(
                   confirmDismiss: _confirmDeletion,
                   onDismissed: (direction) {
                     setState(() {
@@ -1374,19 +1346,12 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
     }
 
     if (dateOfLayingEggs != null && lastBreedingEvent != null) {
-      final breedingEvents =
-          animalDetails.breedingEvents[animalDetails.animalName];
-      final eventIndex = breedingEvents!.indexWhere(
+      final eventIndex = breedingEvents.indexWhere(
           (event) => event.eventNumber == lastBreedingEvent!.eventNumber);
-      ref.read(ovianimalsProvider.notifier).update((state) {
-        final events =
-            state[animalIndex].breedingEvents[animalDetails.animalName];
-        events![eventIndex] = events[eventIndex].copyWith(
-            layingEggsDate: DateFormat('dd/MM/yyyy').format(dateOfLayingEggs));
-        state[animalIndex] = state[animalIndex]
-            .copyWith(breedingEvents: {animalDetails.animalName: events});
-        return state;
-      });
+      breedingEvents[eventIndex] = breedingEvents[eventIndex].copyWith(
+          layingEggsDate: DateFormat('dd/MM/yyyy').format(dateOfLayingEggs));
+      ref.read(breedingEventsProvider.notifier).update((state
+          ) => breedingEvents);
     }
   }
 
@@ -1444,22 +1409,15 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
     );
 
     if (lastBreedingEvent != null) {
-      final breedingEvents =
-          animalDetails.breedingEvents[animalDetails.animalName];
-      final eventIndex = breedingEvents!.indexWhere(
+      final eventIndex = breedingEvents.indexWhere(
           (event) => event.eventNumber == lastBreedingEvent!.eventNumber);
-      ref.read(ovianimalsProvider.notifier).update((state) {
-        final events =
-            state[animalIndex].breedingEvents[animalDetails.animalName];
-        final eggsNumber = numOfEggsController.text.isNum
-            ? int.parse(numOfEggsController.text)
-            : 0;
-        events![eventIndex] =
-            events[eventIndex].copyWith(eggsNumber: eggsNumber);
-        state[animalIndex] = state[animalIndex]
-            .copyWith(breedingEvents: {animalDetails.animalName: events});
-        return state;
-      });
+      final eggsNumber = numOfEggsController.text.isNum
+          ? int.parse(numOfEggsController.text)
+          : 0;
+      breedingEvents[eventIndex] = breedingEvents[eventIndex].copyWith(
+          eggsNumber: eggsNumber);
+      ref.read(breedingEventsProvider.notifier).update((state
+          ) => breedingEvents);
     }
   }
 

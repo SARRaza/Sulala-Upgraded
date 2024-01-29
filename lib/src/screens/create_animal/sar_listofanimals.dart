@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -5,6 +7,7 @@ import 'package:sulala_upgrade/src/data/animal_filters.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import 'package:sulala_upgrade/src/screens/create_animal/sar_animalfilters.dart';
 import 'package:sulala_upgrade/src/widgets/pages/main_widgets/navigation_bar_reg_mode.dart';
+import 'package:sulala_upgrade/src/widgets/styled_dismissible.dart';
 import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
@@ -91,10 +94,10 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
       breeddeliveryDate: ref.read(deliveryDateProvider),
       breedingnotes: ref.read(breedingnotesProvider),
       shouldAddEvent: ref.read(shoudlAddEventProvider),
-      breedingEvents: {animalName: []},
       vaccineDetails: {animalName: []},
       checkUpDetails: {animalName: []},
       surgeryDetails: {animalName: []},
+      files: ref.read(uploadedFilesProvider).map((path) => File(path)).toList()
     );
 
     final ovianimals = ref.read(ovianimalsProvider);
@@ -323,21 +326,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                           itemBuilder: (context, index) {
                             // ignore: non_constant_identifier_names
                             final OviDetails = filteredOviAnimals[index];
-                            return Dismissible(
-                                key:
-                                    UniqueKey(), // Provide a unique key for each item
-                                direction: DismissDirection
-                                    .endToStart, // Enable swipe from right to left
-                                background: Container(
-                                  alignment: Alignment.centerRight,
-                                  padding: const EdgeInsets.only(right: 20),
-                                  color: Colors
-                                      .red, // Background color for delete action
-                                  child: const Icon(
-                                    Icons.delete,
-                                    color: Colors.white,
-                                  ),
-                                ),
+                            return StyledDismissible(
                                 onDismissed: (direction) {
                                   // Handle item dismissal here
                                   setState(() {

@@ -208,7 +208,7 @@ class _OwnedAnimalDetailsRegModeState
                                   onTap: _showAnimalTagsModalSheet,
                                 )
                               ]
-                                  : oviDetails.selectedOviChips.map((chip) {
+                                  : oviDetails.selectedOviChips.take(2).map((chip) {
                                 return CustomTag(
                                   label: chip,
                                   selected:
@@ -217,6 +217,11 @@ class _OwnedAnimalDetailsRegModeState
                                 );
                               }).toList(),
                             ),
+                            if(oviDetails.selectedOviChips.length > 2)
+                              TextButton(onPressed: _showAnimalTagsModalSheet,
+                                  child: const Text('See more',
+                                    style: TextStyle(color: AppColors.primary50
+                                    ),)),
                             SizedBox(
                               height: globals.heightMediaQuery * 32,
                             ),
@@ -397,4 +402,5 @@ class _OwnedAnimalDetailsRegModeState
       });
     }
   }
+
 }

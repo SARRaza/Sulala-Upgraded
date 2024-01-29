@@ -26,13 +26,13 @@ class AnimalPartnerModal extends ConsumerStatefulWidget {
 
 class _AnimalPartnerModalState extends ConsumerState<AnimalPartnerModal> {
   String searchQuery = '';
-  int selectedPartnerId = 0;
+  BreedingPartner? selectedPartner;
   late List<OviVariables> animals;
   late BreedingHelper _breedingHelper;
 
   @override
   void initState() {
-    selectedPartnerId = widget.selectedPartner?.id?? 0;
+    selectedPartner = widget.selectedPartner;
     _breedingHelper = BreedingHelper(ref);
     animals = _breedingHelper.getPossiblePartners(widget.selectedAnimal
         .copyWith(selectedOviSire: widget.selectedFather,
@@ -97,7 +97,7 @@ class _AnimalPartnerModalState extends ConsumerState<AnimalPartnerModal> {
                 itemCount: animals.length,
                 itemBuilder: (context, index) {
                   final OviDetails = animals[index];
-                  final isSelected = OviDetails.id == selectedPartnerId;
+                  final isSelected = OviDetails.id == selectedPartner?.id;
                   // Apply the filter here
                   if (!OviDetails.animalName
                       .toLowerCase()
@@ -133,7 +133,9 @@ class _AnimalPartnerModalState extends ConsumerState<AnimalPartnerModal> {
                     subtitle: Text(OviDetails.selectedAnimalType),
                     onTap: () {
                       setState(() {
-                        selectedPartnerId = OviDetails.id;
+                        selectedPartner = BreedingPartner(OviDetails.animalName,
+                            OviDetails.selectedOviImage, OviDetails
+                                .selectedOviGender);
                       });
                     },
                   );
@@ -142,7 +144,7 @@ class _AnimalPartnerModalState extends ConsumerState<AnimalPartnerModal> {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context, selectedPartnerId);
+                Navigator.pop(context, selectedPartner);
               },
               child: const Text("Done"),
             ),

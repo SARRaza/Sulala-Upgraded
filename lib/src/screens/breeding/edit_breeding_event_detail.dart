@@ -67,10 +67,20 @@ class _EditBreedingEventDetailsState
     breedingEventNumberController.text = widget.breedingEvent.eventNumber;
 
     selectedBreedingDate = widget.breedingEvent.breedingDate;
-    selectedDeliveryDate = widget.breedingEvent.deliveryDate?? '';
+    selectedDeliveryDate = widget.breedingEvent.deliveryDate ?? '';
     selectedChildren = widget.breedingEvent.children;
     breedingEventNotesController.text = widget.breedingEvent.notes;
     breedPartner = widget.breedingEvent.partner;
+    if(breedPartner?.id == widget.OviDetails.id) {
+      breedPartner = widget.breedingEvent.sire?.id ==
+          widget.OviDetails.id ? BreedingPartner(widget.breedingEvent.dam!
+          .animalName,
+          widget.breedingEvent.dam!.selectedOviImage, widget.breedingEvent.dam!
+              .selectedOviGender) : BreedingPartner(widget.breedingEvent.sire!
+          .animalName, widget.breedingEvent.sire!.selectedOviImage, widget
+          .breedingEvent.sire!
+          .selectedOviGender);
+    }
   }
 
   void _showBreedChildrenSelectionSheet(BuildContext context) async {
@@ -83,37 +93,45 @@ class _EditBreedingEventDetailsState
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
-        return AnimalChildrenModal(selectedAnimal: widget.OviDetails,
+        return AnimalChildrenModal(
+          selectedAnimal: widget.OviDetails,
           selectedFather: widget.OviDetails.selectedOviSire,
           selectedMother: widget.OviDetails.selectedOviDam,
           selectedChildren: selectedChildren,
-          selectedPartner: breedPartner,);
+          selectedPartner: breedPartner,
+        );
       },
     );
-    if(newSelectedChildren != null) {
+    if (newSelectedChildren != null) {
       setState(() {
         selectedChildren = newSelectedChildren;
       });
     }
-
   }
 
   void _showBreedPartnerSelectionSheet(BuildContext context) async {
     // Initialize an empty list
     final ovianimals = ref.watch(ovianimalsProvider);
 
-
-    await showModalBottomSheet(
+    final newPartner = await showModalBottomSheet(
       context: context,
       showDragHandle: true,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return AnimalPartnerModal(selectedPartner: breedPartner,
-          selectedAnimal: widget.OviDetails, selectedFather: widget.OviDetails
-              .selectedOviSire, selectedMother: widget.OviDetails
-              .selectedOviDam, selectedChildren: selectedChildren,);
+        return AnimalPartnerModal(
+          selectedPartner: breedPartner,
+          selectedAnimal: widget.OviDetails,
+          selectedFather: widget.OviDetails.selectedOviSire,
+          selectedMother: widget.OviDetails.selectedOviDam,
+          selectedChildren: selectedChildren,
+        );
       },
     );
+    if(newPartner != null) {
+      setState(() {
+        breedPartner = newPartner;
+      });
+    }
   }
 
   void setBreedingSelectedDate(DateTime breedingDate) {
@@ -163,18 +181,17 @@ class _EditBreedingEventDetailsState
   @override
   Widget build(BuildContext context) {
     final selectedbreedPartner = ref.watch(breedingPartnerDetailsProvider);
-    if(!initialized) {
-      _layingEggsDateController = TextEditingController(text: widget.breedingEvent
-          .layingEggsDate);
-      _eggsNumberController = TextEditingController(text: widget.breedingEvent
-          .eggsNumber.toString());
-      _incubationDateController = TextEditingController(text: widget.breedingEvent
-          .incubationDate);
-      _hatchingDateController = TextEditingController(text: widget.breedingEvent
-          .hatchingDate);
+    if (!initialized) {
+      _layingEggsDateController =
+          TextEditingController(text: widget.breedingEvent.layingEggsDate);
+      _eggsNumberController = TextEditingController(
+          text: widget.breedingEvent.eggsNumber.toString());
+      _incubationDateController =
+          TextEditingController(text: widget.breedingEvent.incubationDate);
+      _hatchingDateController =
+          TextEditingController(text: widget.breedingEvent.hatchingDate);
       initialized = true;
     }
-
 
     return SafeArea(
       child: Scaffold(
@@ -261,14 +278,14 @@ class _EditBreedingEventDetailsState
                 ),
                 if (widget.OviDetails.selectedAnimalType == 'Mammal')
                   PrimaryDateField(
-                  labelText: 'Delivery Date',
-                  hintText: selectedDeliveryDate.isNotEmpty
-                      ? selectedDeliveryDate
-                      : "DD/MM/YYYY",
-                  onChanged: (value) {
-                    setDeliverySelectedDate(value);
-                  },
-                ),
+                    labelText: 'Delivery Date',
+                    hintText: selectedDeliveryDate.isNotEmpty
+                        ? selectedDeliveryDate
+                        : "DD/MM/YYYY",
+                    onChanged: (value) {
+                      setDeliverySelectedDate(value);
+                    },
+                  ),
                 if (widget.OviDetails.selectedAnimalType == 'Oviparous')
                   Column(
                     children: [
@@ -323,7 +340,7 @@ class _EditBreedingEventDetailsState
                     ),
                     PrimaryTextButton(
                       status: TextStatus.idle,
-                      text: selectedbreedPartner?? 'Add'.tr,
+                      text: selectedbreedPartner ?? 'Add'.tr,
                       onPressed: () {
                         // Navigator.push(
                         //     context,
@@ -491,39 +508,54 @@ class _EditBreedingEventDetailsState
                   child: PrimaryButton(
                     text: 'Save Changes',
                     onPressed: () {
-                      final updatedBreedingEventDetails =
-                          widget.breedingEvent.copyWith(
-                        eventNumber: breedingEventNumberController.text,
-                        breedingDate: selectedBreedingDate,
-                        deliveryDate: selectedDeliveryDate,
-                        layingEggsDate: _layingEggsDateController.text,
-                        eggsNumber: _eggsNumberController.text.isNum ? int
-                            .parse(_eggsNumberController.text) : null,
-                        incubationDate: _incubationDateController.text,
-                        hatchingDate: _hatchingDateController.text,
-                        partner: breedPartner,
-                        children: selectedChildren,
-                              notes: breedingEventNotesController.text
-                      );
-                      final animalIndex = ref
-                          .read(ovianimalsProvider)
-                          .indexWhere((animal) =>
-                              animal.animalName ==
-                              widget.OviDetails.animalName);
+                      MainAnimalSire? sire;
+                      MainAnimalDam? dam;
+                      if (widget.OviDetails.selectedOviGender == 'Male') {
+                        sire = MainAnimalSire(
+                            widget.OviDetails.animalName,
+                            widget.OviDetails.selectedOviImage,
+                            widget.OviDetails.selectedOviGender);
+                        if (breedPartner != null) {
+                          dam = MainAnimalDam(
+                              breedPartner!.animalName,
+                              breedPartner!.selectedOviImage,
+                              breedPartner!.selectedOviGender);
+                        }
+                      } else {
+                        if (breedPartner != null) {
+                          sire = MainAnimalSire(
+                              breedPartner!.animalName,
+                              breedPartner!.selectedOviImage,
+                              breedPartner!.selectedOviGender);
+                        }
+                        dam = MainAnimalDam(
+                            widget.OviDetails.animalName,
+                            widget.OviDetails.selectedOviImage,
+                            widget.OviDetails.selectedOviGender);
+                      }
 
-
-                        ref.read(ovianimalsProvider.notifier).update((state)
-                        {
-                          final animal = state[animalIndex];
-                          final events = animal.breedingEvents[animal
-                              .animalName];
-                          final eventIndex = events!.indexWhere((event) => event
-                              .eventNumber == widget.breedingEvent.eventNumber);
-                          events[eventIndex] = updatedBreedingEventDetails;
-                          state[animalIndex] = state[animalIndex].copyWith(
-                              breedingEvents: {animal.animalName: events});
-                          return state;
-                        });
+                      final updatedBreedingEventDetails = widget.breedingEvent
+                          .copyWith(
+                              eventNumber: breedingEventNumberController.text,
+                              breedingDate: selectedBreedingDate,
+                              deliveryDate: selectedDeliveryDate,
+                              layingEggsDate: _layingEggsDateController.text,
+                              eggsNumber: _eggsNumberController.text.isNum
+                                  ? int.parse(_eggsNumberController.text)
+                                  : null,
+                              incubationDate: _incubationDateController.text,
+                              hatchingDate: _hatchingDateController.text,
+                              partner: breedPartner,
+                              children: selectedChildren,
+                              notes: breedingEventNotesController.text,
+                              sire: sire,
+                              dam: dam);
+                      ref.read(breedingEventsProvider.notifier).update((state) {
+                        final eventIndex = state.indexWhere(
+                            (event) => event.id == widget.breedingEvent.id);
+                        state[eventIndex] = updatedBreedingEventDetails;
+                        return state;
+                      });
                       Navigator.pop(context);
                     },
                   ),
@@ -551,20 +583,10 @@ class _EditBreedingEventDetailsState
   }
 
   void deleteEvent() {
-    final animalIndex = ref
-        .read(ovianimalsProvider)
-        .indexWhere((animal) =>
-    animal.animalName ==
-        widget.OviDetails.animalName);
-    ref.read(ovianimalsProvider.notifier).update((state) {
-      final animal = state[animalIndex];
-      final events = animal.breedingEvents[animal
-          .animalName];
-      final eventIndex = events!.indexWhere((event) => event.eventNumber ==
-          widget.breedingEvent.eventNumber);
-      events.removeAt(eventIndex);
-      return state;
-    });
+    ref
+        .read(breedingEventsProvider)
+        .removeWhere((event) => event.id == widget.breedingEvent.id);
+
     Navigator.pop(context, {'eventDeleted': true});
   }
 }

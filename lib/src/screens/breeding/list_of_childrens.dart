@@ -38,8 +38,10 @@ class _BreedingEventChildrenListState
       );
     }
     final selectedAnimal = ref.read(ovianimalsProvider)[animalIndex];
-    final breedingEvents = selectedAnimal.breedingEvents[widget.OviDetails.animalName]??
-        [];
+    final breedingEvents = ref.read(breedingEventsProvider).where((event
+        ) => event.sire?.id == widget.OviDetails.id || event.dam?.id == widget
+        .OviDetails.id).toList();
+
     final otherChildren = ref.read(ovianimalsProvider).where((animal) => (animal
         .selectedOviSire?.id == selectedAnimal.id || animal.selectedOviDam?.id
         == selectedAnimal.id) && !breedingEvents.any((event) => event.children

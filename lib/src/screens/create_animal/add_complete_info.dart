@@ -1483,7 +1483,6 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
       breeddeliveryDate: ref.read(deliveryDateProvider),
       breedingnotes: ref.read(breedingnotesProvider),
       shouldAddEvent: ref.read(shoudlAddEventProvider),
-      breedingEvents: {animalName: []},
       vaccineDetails: {animalName: []},
       checkUpDetails: {animalName: []},
       surgeryDetails: {animalName: []},

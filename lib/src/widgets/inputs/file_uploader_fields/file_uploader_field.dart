@@ -17,10 +17,11 @@ import '../../../theme/fonts/fonts.dart';
 
 class FileUploaderField extends ConsumerStatefulWidget {
   const FileUploaderField({Key? key, this.onFileUploaded = _defaultFunction,
-    this.uploadedFiles}) :
+    this.uploadedFiles, this.onDelete}) :
         super(key: key);
   final void Function(File) onFileUploaded;
   final List<String>? uploadedFiles;
+  final Function(String)? onDelete;
 
   static void _defaultFunction(file) {
     // This is the default empty function.
@@ -82,9 +83,16 @@ class _FileUploaderFieldState extends ConsumerState<FileUploaderField> {
     }
   }
 
-  void _deleteFile(BuildContext context, String fileName) {
+  void _deleteFile(BuildContext context, String filePath) {
     // Remove the file from the provider
-    ref.read(uploadedFilesProvider).remove(fileName);
+    ref.read(uploadedFilesProvider).remove(filePath);
+    setState(() {
+      uploadedFiles.remove(filePath);
+    });
+
+    if(widget.onDelete != null) {
+      widget.onDelete!(filePath);
+    }
   }
 
   @override

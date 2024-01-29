@@ -194,8 +194,7 @@ class _SignUpState extends ConsumerState<SignUp>
                                   },
                                 )
                               else
-                                PhoneNumberField(
-                                  controller: TextEditingController(),),
+                                const PhoneNumberField(),
                               SizedBox(
                                 height: globals.heightMediaQuery * 24,
                               ),

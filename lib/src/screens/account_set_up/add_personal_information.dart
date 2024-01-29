@@ -184,9 +184,7 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                         .tr,
                     style: AppFonts.body2(color: AppColors.grayscale70)),
                 SizedBox(height: globals.heightMediaQuery * 24),
-                PhoneNumberField(
-                  controller: phoneController,
-                ),
+                const PhoneNumberField(),
                 SizedBox(height: globals.heightMediaQuery * 20),
                 const SizedBox(height: 8),
                 PrimaryTextField(

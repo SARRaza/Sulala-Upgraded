@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/widgets/styled_dismissible.dart';
 import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
@@ -61,11 +62,9 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
         child: Text('Animal not found.'),
       );
     }
-
-    final breedingEvents = ref
-            .read(ovianimalsProvider)[animalIndex]
-            .breedingEvents[widget.OviDetails.animalName] ??
-        [];
+    final breedingEvents = ref.read(breedingEventsProvider).where((event
+        ) => event.sire?.id == widget.OviDetails.id || event.dam?.id == widget
+        .OviDetails.id).toList();
 
     // Filter the breeding events based on the query
     return Scaffold(
@@ -209,36 +208,14 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                       itemBuilder: (context, index) {
                         final breedingEvent = breedingEvents[index];
 
-                        return Dismissible(
-                          key: UniqueKey(),
-                          direction: DismissDirection.endToStart, // Enable swipe from right to left
-                          background: Container(
-                            alignment: Alignment.centerRight,
-                            padding: const EdgeInsets.only(right: 20),
-                            color: Colors.red, // Background color for delete action
-                            child: const Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                            ),
-                          ),
+                        return StyledDismissible(
                           confirmDismiss: _confirmEventDeletion,
                           onDismissed: (direction) {
                             // Handle item dismissal here
                             setState(() {
                               breedingEvents.removeAt(index);
-                              ref.read(ovianimalsProvider.notifier).update((
-                                  state) {
-                                final animalIndex = state.indexWhere(
-                                        (animal) => animal.id == widget
-                                            .OviDetails.id);
-                                state[animalIndex] = state[animalIndex]
-                                    .copyWith(
-                                    breedingEvents: {
-                                      state[animalIndex].animalName: breedingEvents
-                                    });
-
-                                return state;
-                              });
+                              ref.read(breedingEventsProvider.notifier).update((
+                                  state) => breedingEvents);
                             });
                           },
                           child: Column(

@@ -51,11 +51,10 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
       // Animal not found, you can show an error message or handle it accordingly
       return const SizedBox(); // Placeholder Widget, adjust as needed
     }
+    final breedingEvents = ref.read(breedingEventsProvider).where((event
+        ) => event.sire?.id == widget.OviDetails.id || event.dam?.id == widget
+        .OviDetails.id).toList();
 
-    final breedingEvents = ref
-            .read(ovianimalsProvider)[animalIndex]
-            .breedingEvents[widget.OviDetails.animalName] ??
-        [];
     DateTime? lastBreedingDate;
     DateTime? nextBreedingDate;
     final now = DateTime.now();

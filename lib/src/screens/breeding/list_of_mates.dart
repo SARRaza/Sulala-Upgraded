@@ -226,11 +226,21 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
         child: Text('Animal not found.'),
       );
     }
+    final breedingEvents = ref.read(breedingEventsProvider).where((event
+        ) => event.sire?.id == widget.OviDetails.id || event.dam?.id == widget
+        .OviDetails.id).map((event) {
+          if(event.partner?.id == widget.OviDetails.id) {
+            return event.copyWith(partner: event.sire?.id == widget.OviDetails
+                .id ? BreedingPartner(event.dam!.animalName, event.dam!
+                .selectedOviImage, event.dam!.selectedOviGender) :
+            BreedingPartner(event.sire!.animalName, event.sire!
+                .selectedOviImage, event.sire!.selectedOviGender));
+          } else {
+            return event;
+          }
+    }).toList();
 
-    final breedingEvents = ref
-            .read(ovianimalsProvider)[animalIndex]
-            .breedingEvents[widget.OviDetails.animalName] ??
-        [];
+
 
     // Filter the breeding events based on the query
     return Scaffold(
@@ -256,18 +266,7 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
                 color: Colors.black,
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => OwnedAnimalDetailsRegMode(
-                      OviDetails: widget.OviDetails,
-                      imagePath: '',
-                      title: '',
-                      geninfo: '',
-                      breedingEvents: const [],
-                    ),
-                  ),
-                );
+                Navigator.pop(context);
               },
             ),
           ),

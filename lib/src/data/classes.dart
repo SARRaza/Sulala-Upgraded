@@ -122,7 +122,6 @@ class OviVariables {
   final String breedingnotes;
   final bool shouldAddEvent;
   final BreedingDetails? breedingDetails;
-  final Map<String, List<BreedingEventVariables>> breedingEvents;
   final Map<String, List<VaccineDetails>> vaccineDetails;
   final Map<String, List<MedicalCheckupDetails>> checkUpDetails;
   final Map<String, List<SurgeryDetails>> surgeryDetails;
@@ -167,7 +166,6 @@ class OviVariables {
     required this.breedingnotes,
     required this.shouldAddEvent,
     this.breedingDetails,
-    required this.breedingEvents,
     required this.vaccineDetails,
     required this.dateOfLayingEggs,
     required this.checkUpDetails,
@@ -213,7 +211,6 @@ class OviVariables {
       String? breedingnotes,
       bool? shouldAddEvent,
         List<File>? files,
-      Map<String, List<BreedingEventVariables>>? breedingEvents,
       Map<String, List<VaccineDetails>>? vaccineDetails,
       Map<String, List<MedicalCheckupDetails>>? checkUpDetails,
       Map<String, List<SurgeryDetails>>? surgeryDetails,
@@ -260,7 +257,6 @@ class OviVariables {
       breedpartner: breedpartner,
       shouldAddEvent: shouldAddEvent ?? this.shouldAddEvent,
       breedingDetails: breedingDetails,
-      breedingEvents: breedingEvents ?? this.breedingEvents,
       vaccineDetails: vaccineDetails ?? this.vaccineDetails,
       checkUpDetails: checkUpDetails ?? this.checkUpDetails,
       surgeryDetails: surgeryDetails ?? this.surgeryDetails,
@@ -320,9 +316,10 @@ class BreedingDetails {
 }
 
 class BreedingEventVariables {
+  final int id;
   final String eventNumber;
-  final String sire;
-  final String dam;
+  final MainAnimalSire? sire;
+  final MainAnimalDam? dam;
   final BreedingPartner? partner;
   final List<BreedChildItem> children;
   final ImageProvider? breeddam;
@@ -336,10 +333,11 @@ class BreedingEventVariables {
   final bool shouldAddEvent;
 
   BreedingEventVariables({
+    required this.id,
     required this.eventNumber,
     this.breeddam,
-    required this.sire,
-    required this.dam,
+    this.sire,
+    this.dam,
     required this.partner,
     required this.children,
     required this.breedingDate,
@@ -349,9 +347,10 @@ class BreedingEventVariables {
     this.layingEggsDate, this.eggsNumber, this.incubationDate, this.hatchingDate
   });
   BreedingEventVariables copyWith({
+    int? id,
     String? eventNumber,
-    String? sire,
-    String? dam,
+    MainAnimalSire? sire,
+    MainAnimalDam? dam,
     BreedingPartner? partner,
     List<BreedChildItem>? children,
     ImageProvider? breeddam,
@@ -362,10 +361,12 @@ class BreedingEventVariables {
     int? eggsNumber,
     String? incubationDate,
     String? hatchingDate,
+    bool? shouldAddEvent
 
     // ignore: non_constant_identifier_names
   }) {
     return BreedingEventVariables(
+      id: id?? this.id,
       eventNumber: eventNumber ?? this.eventNumber,
       sire: sire ?? this.sire,
       dam: dam ?? this.dam,
@@ -375,7 +376,7 @@ class BreedingEventVariables {
       breeddam: breeddam ?? this.breeddam,
       deliveryDate: deliveryDate ?? this.deliveryDate,
       notes: notes ?? this.notes,
-      shouldAddEvent: shouldAddEvent,
+      shouldAddEvent: shouldAddEvent ?? this.shouldAddEvent,
       layingEggsDate: layingEggsDate ?? this.layingEggsDate,
       eggsNumber: eggsNumber ?? this.eggsNumber,
       incubationDate: incubationDate ?? this.incubationDate,

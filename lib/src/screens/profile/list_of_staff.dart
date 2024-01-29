@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -334,7 +335,7 @@ class _ListOfStaffState extends State<ListOfStaff> {
                   TextFormField(
                     style: AppFonts.body2(color: AppColors.grayscale90),
                     initialValue: truncateTextWithEllipsis(
-                        'https://exampleccccccccdddddddddddc.com',
+                        'https://example.com',
                         30), // Replace with your link value from the backend
                     readOnly: true,
                     decoration: InputDecoration(
@@ -374,7 +375,7 @@ class _ListOfStaffState extends State<ListOfStaff> {
                 width: double.infinity,
                 height: 52 * heightMediaQuery,
                 child: PrimaryButton(
-                  onPressed: () {},
+                  onPressed: _shareLink,
                   text: 'Share Link',
                 ),
               ),
@@ -383,5 +384,9 @@ class _ListOfStaffState extends State<ListOfStaff> {
         );
       },
     );
+  }
+
+  void _shareLink() {
+    Share.share('https://example.com');
   }
 }

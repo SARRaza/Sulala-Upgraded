@@ -12,13 +12,11 @@ import '../draw_ups/draw_up_widget.dart';
 class PhoneNumberField extends ConsumerStatefulWidget {
   final String? label;
   final Function(String)? onSave;
-  final TextEditingController controller;
 
   const PhoneNumberField({
     Key? key,
     this.label,
     this.onSave,
-    required this.controller,
   }) : super(key: key);
 
   @override
@@ -29,15 +27,15 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
   Color _borderColor = AppColors.grayscale20;
   Color _backgroundColor = AppColors.grayscale0;
   final FocusNode _focusNode = FocusNode();
-
-  bool hasError = false;
+  final TextEditingController _textEditingController = TextEditingController();
+  bool _hasError = false;
   CountryInfo? selectedCountry;
 
   void _clearText() {
-    widget.controller.clear();
+    _textEditingController.clear();
     // Reset error state when clearing text
     setState(() {
-      hasError = false;
+      _hasError = false;
       _borderColor = AppColors.grayscale20;
       _backgroundColor = AppColors.grayscale0;
     });
@@ -48,24 +46,24 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
     bool isValidPhoneNumber = int.tryParse(value) != null;
 
     setState(() {
-      hasError = !isValidPhoneNumber;
+      _hasError = !isValidPhoneNumber;
       _borderColor =
-          isValidPhoneNumber ? AppColors.primary30 : AppColors.error100;
+      isValidPhoneNumber ? AppColors.primary30 : AppColors.error100;
       _backgroundColor =
-          isValidPhoneNumber ? AppColors.grayscale0 : AppColors.error10;
+      isValidPhoneNumber ? AppColors.grayscale0 : AppColors.error10;
     });
   }
 
   @override
   void initState() {
-    widget.controller.text = ref.read(phoneNumberProvider);
-    _focusNode.addListener(_onFocusChange);
     super.initState();
+    _textEditingController.text = ref.read(phoneNumberProvider);
+    _focusNode.addListener(_onFocusChange);
   }
 
   @override
   void dispose() {
-    widget.controller.dispose();
+    _textEditingController.dispose();
     _focusNode.dispose();
     super.dispose();
   }
@@ -73,17 +71,13 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
   void _onFocusChange() {
     setState(() {
       _borderColor = _focusNode.hasFocus
-          ? (hasError ? AppColors.error100 : AppColors.primary30)
-          : (hasError ? AppColors.error100 : AppColors.grayscale20);
+          ? (_hasError ? AppColors.error100 : AppColors.primary30)
+          : (_hasError ? AppColors.error100 : AppColors.grayscale20);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if(widget.controller.text.isNotEmpty) {
-      _validatePhoneNumber(widget.controller.text);
-    }
-
     return Focus(
       focusNode: _focusNode,
       child: Column(
@@ -102,7 +96,7 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
               ],
             ),
           if (widget.label == null) _buildPhoneNumberField(),
-          if (hasError)
+          if (_hasError)
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
@@ -178,7 +172,7 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: TextField(
-                    controller: widget.controller,
+                    controller: _textEditingController,
                     onChanged: (value) {
                       ref
                           .read(phoneNumberProvider.notifier)
@@ -186,7 +180,7 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
                       _validatePhoneNumber(value);
                       setState(() {
                         phoneNumber = value;
-                        if (!hasError && widget.onSave != null) {
+                        if (!_hasError && widget.onSave != null) {
                           widget.onSave!(countryCode + phoneNumber);
                         }
                       });
@@ -199,16 +193,16 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
                       hintStyle: AppFonts.body1(color: AppColors.grayscale50),
                       suffixIcon: phoneNumber.isNotEmpty
                           ? InkWell(
-                              onTap: () {
-                                setState(() {
-                                  _clearText();
-                                  phoneNumber = "";
-                                });
-                              },
-                              child: Image.asset(
-                                'assets/icons/frame/24px/20_Clear_form.png',
-                              ),
-                            )
+                        onTap: () {
+                          setState(() {
+                            _clearText();
+                            phoneNumber = "";
+                          });
+                        },
+                        child: Image.asset(
+                          'assets/icons/frame/24px/20_Clear_form.png',
+                        ),
+                      )
                           : null,
                     ),
                   ),
@@ -254,13 +248,13 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
 
 
 // Functions to be used in the example page:
-  // String? savedPhoneNumber;
+// String? savedPhoneNumber;
 
-  // void savePhoneNumber(String phoneNumber) {
-  //   setState(() {
-  //     savedPhoneNumber = phoneNumber;
-  //   });
-  // }
+// void savePhoneNumber(String phoneNumber) {
+//   setState(() {
+//     savedPhoneNumber = phoneNumber;
+//   });
+// }
 
 //ExamplePage build:
 // Center(
