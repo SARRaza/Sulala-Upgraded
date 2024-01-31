@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import '../../data/place_holders.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -81,8 +82,8 @@ class _DrowupAnimalSpeciesState extends ConsumerState<DrowupAnimalSpecies> {
                         children: [
                           CircleAvatar(
                             radius: globals.widthMediaQuery * 24,
-                            backgroundImage: const AssetImage(
-                                'assets/avatars/120px/Horse_avatar.png'),
+                            backgroundImage: AssetImage(speciesImages[widget
+                                .filteredModalList[index]]!.path),
                             backgroundColor: Colors.transparent,
                           ),
                           SizedBox(

@@ -75,6 +75,9 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
   final ScrollController _scrollController = ScrollController();
 
   late String selectedAnimalSpecies;
+  final _customFieldNameFormKey = GlobalKey<FormState>();
+  final _customFieldNameController = TextEditingController();
+  final _customFieldContentController = TextEditingController();
 
   @override
   void initState() {
@@ -339,7 +342,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
   }
 
   void _showOviFieldNameModal(BuildContext context) {
-    TextEditingController fieldname = TextEditingController();
+    _customFieldNameController.clear();
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -352,62 +355,73 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
               right: 16,
               top: 16,
               bottom: 16 + MediaQuery.of(context).viewInsets.bottom),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Add Custom Field',
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(
-                height: 35,
-              ),
-              PrimaryTextField(
-                  hintText: 'Enter Custom Field Name',
-                  labelText: 'Enter Field Name',
-                  onChanged: (value) {
-                    ref
-                        .read(fieldNameProvider.notifier)
-                        .update((state) => value);
-                  },
-                  controller: fieldname),
-              SizedBox(height: globals.heightMediaQuery * 130),
-              ButtonWidget(
-                onPressed: () {
-                  Navigator.pop(context);
-                  _showOviFieldContentModal(context);
-                },
-                buttonText: 'Confirm',
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 238, 238, 238),
-                        foregroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                      ),
-                      child: const Text('Cancel'),
-                    ),
+          child: Form(
+            key: _customFieldNameFormKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Add Custom Field',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
-              ),
-            ],
+                ),
+                const SizedBox(
+                  height: 35,
+                ),
+                PrimaryTextField(
+                    validator: (value) {
+                      if(value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                    hintText: 'Enter Custom Field Name',
+                    labelText: 'Enter Field Name',
+                    onChanged: (value) {
+                      ref
+                          .read(fieldNameProvider.notifier)
+                          .update((state) => value);
+                    },
+                    controller: _customFieldNameController),
+                const SizedBox(height: 32),
+                ButtonWidget(
+                  onPressed: () {
+                    if(_customFieldNameFormKey.currentState!.validate()) {
+                      Navigator.pop(context);
+                      _showOviFieldContentModal(context);
+                    }
+                  },
+                  buttonText: 'Confirm',
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 238, 238, 238),
+                          foregroundColor: Colors.black,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                        ),
+                        child: const Text('Cancel'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -415,6 +429,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
   }
 
   void _showOviFieldContentModal(BuildContext context) {
+    _customFieldContentController.clear();
     showModalBottomSheet(
       isScrollControlled: true,
       showDragHandle: true,
@@ -461,6 +476,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                       .read(fieldContentProvider.notifier)
                       .update((state) => value);
                 },
+                controller: _customFieldContentController,
               ),
               const SizedBox(
                 height: 35,
@@ -504,13 +520,11 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
   }
 
   void _addNewOviTextField(BuildContext context) {
-    final fieldName = ref.read(fieldNameProvider);
-    final fieldContent = ref.read(fieldContentProvider);
+    final fieldName = _customFieldNameController.text;
+    final fieldContent = _customFieldContentController.text;
 
-    ref.read(customOviTextFieldsProvider.notifier).update((state) {
-      state[fieldName] = fieldContent;
-      return state;
-    });
+    ref.read(customOviTextFieldsProvider.notifier).update((state) => {...state,
+      fieldName: fieldContent});
   }
 
   @override
@@ -1273,10 +1287,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                     fieldContent: customFields[fieldName]!,
                     onDelete: () {
                       ref.read(customOviTextFieldsProvider.notifier).update((
-                          state) {
-                        state.remove(fieldName);
-                        return state;
-                      });
+                          state) => Map.from(state)..remove(fieldName));
                     },
                   )).toList(),
                 ),
@@ -1356,8 +1367,8 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: ref
-          .read(selectedOviDatesProvider.notifier)
-          .state
+          .watch(selectedOviDatesProvider)
+          //.state
           .keys
           .map((dateType) {
         final selectedDate =

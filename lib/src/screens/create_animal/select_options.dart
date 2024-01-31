@@ -182,7 +182,7 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
               ref.read(animalNameProvider.notifier).update((state) => '');
               ref
                   .read(selectedOviGenderProvider.notifier)
-                  .update((state) => '');
+                  .update((state) => 'Unknown');
               ref.read(layingFrequencyProvider.notifier).update((state) => '');
               ref.read(eggsPerMonthProvider.notifier).update((state) => '');
               ref

@@ -57,6 +57,13 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
 
   final TextEditingController _deliveryDateController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
+  late final int eventId;
+
+  @override
+  void initState() {
+    eventId = (DateTime.timestamp().millisecondsSinceEpoch / 1000000).round();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +130,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                       style: AppFonts.body2(color: AppColors.grayscale70),
                     ),
                     Text(
-                      '001-1',
+                      eventId.toString(),
                       style: AppFonts.body2(color: AppColors.grayscale90),
                     ),
                   ],
@@ -245,19 +252,19 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                     );
                   },
                 ),
-                Row(
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        _showBreedChildrenSelectionSheet(context);
-                      },
-                      child: Text(
+                TextButton(
+                  onPressed: () {
+                    _showBreedChildrenSelectionSheet(context);
+                  },
+                  child: Row(
+                    children: [
+                      Text(
                         "Add Children",
                         style: AppFonts.body1(color: AppColors.primary40),
                       ),
-                    ),
-                    const Icon(Icons.add, color: AppColors.primary40),
-                  ],
+                      const Icon(Icons.add, color: AppColors.primary40),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 Text(
@@ -455,7 +462,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
     }
 
     final breedingEvent = BreedingEventVariables(
-      id: DateTime.timestamp().millisecondsSinceEpoch,
+      id: eventId,
       eventNumber: _breedingEventNumberController.text,
       breeddam: dam?.selectedOviImage,
       sire: sire,

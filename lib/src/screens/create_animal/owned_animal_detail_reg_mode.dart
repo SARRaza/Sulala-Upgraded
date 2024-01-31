@@ -184,7 +184,7 @@ class _OwnedAnimalDetailsRegModeState
                         style: AppFonts.title4(color: AppColors.grayscale90),
                       ),
                       Text(
-                        "ID #${oviDetails.animalName}",
+                        "ID #${oviDetails.id}",
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
                       SizedBox(
@@ -200,28 +200,34 @@ class _OwnedAnimalDetailsRegModeState
                               alignment: WrapAlignment.center,
                               spacing: 8.0,
                               runSpacing: 8.0,
-                              children: oviDetails.selectedOviChips.isEmpty ? [
-                                CustomTag(
-                                  label: 'Add+'.tr,
-                                  selected:
-                                  true, // Since these are selected chips
-                                  onTap: _showAnimalTagsModalSheet,
-                                )
-                              ]
-                                  : oviDetails.selectedOviChips.take(2).map((chip) {
-                                return CustomTag(
-                                  label: chip,
-                                  selected:
-                                      true, // Since these are selected chips
-                                  onTap: _showAnimalTagsModalSheet,
-                                );
-                              }).toList(),
+                              children: oviDetails.selectedOviChips.isEmpty
+                                  ? [
+                                      CustomTag(
+                                        label: 'Add+'.tr,
+                                        selected:
+                                            true, // Since these are selected chips
+                                        onTap: _showAnimalTagsModalSheet,
+                                      )
+                                    ]
+                                  : oviDetails.selectedOviChips
+                                      .take(2)
+                                      .map((chip) {
+                                      return CustomTag(
+                                        label: chip,
+                                        selected:
+                                            true, // Since these are selected chips
+                                        onTap: _showAnimalTagsModalSheet,
+                                      );
+                                    }).toList(),
                             ),
-                            if(oviDetails.selectedOviChips.length > 2)
-                              TextButton(onPressed: _showAnimalTagsModalSheet,
-                                  child: const Text('See more',
-                                    style: TextStyle(color: AppColors.primary50
-                                    ),)),
+                            if (oviDetails.selectedOviChips.length > 2)
+                              TextButton(
+                                  onPressed: _showAnimalTagsModalSheet,
+                                  child: const Text(
+                                    'See more',
+                                    style:
+                                        TextStyle(color: AppColors.primary50),
+                                  )),
                             SizedBox(
                               height: globals.heightMediaQuery * 32,
                             ),
@@ -322,7 +328,7 @@ class _OwnedAnimalDetailsRegModeState
   Future<void> updateDateField(dateType) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: oviDetails.selectedOviDates[dateType]?? DateTime.now(),
+      initialDate: oviDetails.selectedOviDates[dateType] ?? DateTime.now(),
       firstDate: DateTime(1900),
       lastDate: DateTime(2101),
       builder: (BuildContext context, Widget? child) {
@@ -340,16 +346,18 @@ class _OwnedAnimalDetailsRegModeState
         );
       },
     );
-    setState(() {
-      oviDetails.selectedOviDates[dateType] = pickedDate;
-    });
+    if (pickedDate != null) {
+      setState(() {
+        oviDetails.selectedOviDates[dateType] = pickedDate;
+      });
+      ref.read(ovianimalsProvider.notifier).update((state) {
+        final index = state
+            .indexWhere((animal) => animal.animalName == oviDetails.animalName);
+        state[index] = oviDetails;
+        return state;
+      });
+    }
 
-    ref.read(ovianimalsProvider.notifier).update((state) {
-      final index = state
-          .indexWhere((animal) => animal.animalName == oviDetails.animalName);
-      state[index] = oviDetails;
-      return state;
-    });
   }
 
   void _showImagePicker(BuildContext context) {
@@ -394,13 +402,12 @@ class _OwnedAnimalDetailsRegModeState
       setState(() {
         oviDetails = oviDetails.copyWith(selectedOviChips: result);
         ref.read(ovianimalsProvider.notifier).update((state) {
-          final animalIndex = state.indexWhere((animal) => animal.id ==
-              oviDetails.id);
+          final animalIndex =
+              state.indexWhere((animal) => animal.id == oviDetails.id);
           state[animalIndex] = oviDetails;
           return state;
         });
       });
     }
   }
-
 }

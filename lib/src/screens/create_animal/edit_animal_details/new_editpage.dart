@@ -90,9 +90,9 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
   final _fieldNameController = TextEditingController();
   final _fieldContentController = TextEditingController();
 
-  late TextEditingController _animalNameController;
-
-  late TextEditingController _notesController;
+  late final TextEditingController _animalNameController;
+  late final TextEditingController _notesController;
+  late final TextEditingController _birthDayController;
 
   late List<File>? uploadedFiles;
   
@@ -111,6 +111,8 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
     _notesController.addListener(() {
       animalDetails = animalDetails.copyWith(notes: _notesController.text);
     });
+    _birthDayController = TextEditingController(text: animalDetails
+        .dateOfBirth);
     super.initState();
   }
 
@@ -121,13 +123,13 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Edit ',
-              style: AppFonts.headline3(color: AppColors.grayscale90),
-            ),
-            Text(
-              animalDetails.animalName,
-              style: AppFonts.headline3(color: AppColors.grayscale90),
+            Container(
+              constraints: const BoxConstraints(maxWidth: 130),
+              child: Text(
+                'Edit ${animalDetails.animalName}',
+                style: AppFonts.headline3(color: AppColors.grayscale90),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),
@@ -694,7 +696,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                                 ),
                               ),
                               readOnly: true,
-                              initialValue: animalDetails.dateOfBirth,),
+                              controller: _birthDayController,),
                             // child: Text(fieldName),
                           ),
                         ),
@@ -866,7 +868,8 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.only(left: 16, top: 16, right: 16, bottom: 16 +
+            MediaQuery.of(context).viewInsets.bottom),
         child: ElevatedButton(
           onPressed: () {
 
@@ -875,7 +878,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 .animalId);
             animalDetails = animalDetails.copyWith(
               files: ref.read(uploadedFilesProvider).map((path) => File(path))
-                  .toList()
+                  .toList(),
             );
             if (index >= 0) {
               oviAnimals[index] = animalDetails;
@@ -946,9 +949,8 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
     );
 
     if (pickedDate != null) {
-      setState(() {
-        animalDetails = animalDetails.copyWith(dateOfBirth: DateFormat('dd/MM/yyyy').format(pickedDate));
-      });
+      _birthDayController.text = DateFormat('dd/MM/yyyy').format(pickedDate);
+      animalDetails.dateOfBirth = _birthDayController.text;
     }
   }
 
@@ -1052,7 +1054,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
   void _deleteAvatar() {
     ref.read(selectedAnimalImageProvider.notifier).update((state) => null);
     setState(() {
-      animalDetails = animalDetails.copyWith(selectedOviImage: null);
+      animalDetails.selectedOviImage = null;
     });
   }
 

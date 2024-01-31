@@ -176,94 +176,100 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
           (animalSex == null || animal.selectedOviGender == animalSex) &&
           (breedingStage == null ||
               animal.selectedBreedingStage == breedingStage) &&
-          (tags == null || animal.selectedOviChips.contains(tags));
+          (tags == null || animal.selectedOviChips.contains(tags)) && (
+          filterQuery.isEmpty || animal.animalName.toLowerCase().contains(
+              filterQuery.toLowerCase()));
     }).toList();
 
-    return RefreshIndicator(
-      onRefresh: _refreshOviAnimals,
-      color: AppColors.primary40,
-      child: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            scrolledUnderElevation: 0.0,
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-            automaticallyImplyLeading: false,
-            title: Padding(
-              padding: EdgeInsets.only(left: globals.widthMediaQuery * 16),
-              child: Text(
-                'Animals'.tr,
-                style: AppFonts.title3(color: AppColors.grayscale90),
-              ),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          scrolledUnderElevation: 0.0,
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          automaticallyImplyLeading: false,
+          title: Padding(
+            padding: EdgeInsets.only(left: globals.widthMediaQuery * 16),
+            child: Text(
+              'Animals'.tr,
+              style: AppFonts.title3(color: AppColors.grayscale90),
             ),
-            leadingWidth: globals.widthMediaQuery * 56,
-            leading: Padding(
-                padding: EdgeInsets.only(left: globals.widthMediaQuery * 16),
-                child: Container(
-                  decoration: const BoxDecoration(
-                      color: AppColors.grayscale10, shape: BoxShape.circle),
-                  child: IconButton(
-                    padding: EdgeInsets.zero,
-                    icon: Icon(
-                      Icons.arrow_back_rounded,
-                      color: Colors.black,
-                      size: globals.widthMediaQuery * 24,
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const NavigationBarRegMode(),
-                        ),
-                      );
-                    }, // Call the addAnimal function when the button is pressed
-                  ),
-                )),
-            actions: [
-              IconButton(
-                padding: EdgeInsets.only(right: globals.widthMediaQuery * 16),
-                icon: Container(
-                    width: MediaQuery.of(context).size.width * 0.1,
-                    height: MediaQuery.of(context).size.width * 0.1,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.primary50,
-                    ),
-                    child: const Icon(
-                      Icons.add,
-                      color: Colors.white,
-                    )),
-                onPressed: () {
-                  ref
-                      .read(selectedAnimalTypeProvider.notifier)
-                      .update((state) => '');
-                  ref
-                      .read(selectedAnimalSpeciesProvider.notifier)
-                      .update((state) => '');
-                  ref
-                      .read(selectedAnimalBreedsProvider.notifier)
-                      .update((state) => '');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CreateAnimalPage(
-                        breedingEvents: widget.breedingEvents,
-                      ),
-                    ),
-                  ).then((_) {
-                    // When returning from CreateBreedingEvents, add the new event
-                    if (ref.read(animalNameProvider).isNotEmpty) {
-                      addOviAnimal(
-                        ref.read(animalNameProvider),
-                        ref.read(breedingEventNumberProvider),
-                      );
-                    }
-                  });
-                }, // Call the addAnimal function when the button is pressed
-              ),
-            ],
           ),
-          body: SingleChildScrollView(
+          leadingWidth: globals.widthMediaQuery * 56,
+          leading: Padding(
+              padding: EdgeInsets.only(left: globals.widthMediaQuery * 16),
+              child: Container(
+                decoration: const BoxDecoration(
+                    color: AppColors.grayscale10, shape: BoxShape.circle),
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  icon: Icon(
+                    Icons.arrow_back_rounded,
+                    color: Colors.black,
+                    size: globals.widthMediaQuery * 24,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const NavigationBarRegMode(),
+                      ),
+                    );
+                  }, // Call the addAnimal function when the button is pressed
+                ),
+              )),
+          actions: [
+            IconButton(
+              padding: EdgeInsets.only(right: globals.widthMediaQuery * 16),
+              icon: Container(
+                  width: MediaQuery.of(context).size.width * 0.1,
+                  height: MediaQuery.of(context).size.width * 0.1,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.primary50,
+                  ),
+                  child: const Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  )),
+              onPressed: () {
+                ref
+                    .read(selectedAnimalTypeProvider.notifier)
+                    .update((state) => '');
+                ref
+                    .read(selectedAnimalSpeciesProvider.notifier)
+                    .update((state) => '');
+                ref
+                    .read(selectedAnimalBreedsProvider.notifier)
+                    .update((state) => '');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateAnimalPage(
+                      breedingEvents: widget.breedingEvents,
+                    ),
+                  ),
+                ).then((_) {
+                  // When returning from CreateBreedingEvents, add the new event
+                  if (ref.read(animalNameProvider).isNotEmpty) {
+                    addOviAnimal(
+                      ref.read(animalNameProvider),
+                      ref.read(breedingEventNumberProvider),
+                    );
+                  }
+                });
+              }, // Call the addAnimal function when the button is pressed
+            ),
+          ],
+        ),
+        body: RefreshIndicator(
+          onRefresh: _refreshOviAnimals,
+          notificationPredicate: (ScrollNotification notification) {
+            return notification.depth == 1;
+          },
+          color: AppColors.primary40,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Padding(
               padding: EdgeInsets.only(
                   left: globals.widthMediaQuery * 16,
@@ -320,7 +326,6 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                   ),
                   filteredOviAnimals.isNotEmpty
                       ? ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: filteredOviAnimals.length,
                           itemBuilder: (context, index) {

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../data/classes.dart';
@@ -63,13 +64,16 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
       if (breedingEvent.breedingDate.isNotEmpty) {
         final dateSegments = breedingEvent.breedingDate.split('/');
 
-        final breedingDate = DateTime(int.parse(dateSegments[2]),
-            int.parse(dateSegments[1]), int.parse(dateSegments[0]));
-        if (breedingDate.isBefore(now) &&
-            (lastBreedingDate == null ||
-                breedingDate.isAfter(lastBreedingDate))) {
-          lastBreedingDate = breedingDate;
+        if(dateSegments.every((segment) => segment.isNum)) {
+          final breedingDate = DateTime(int.parse(dateSegments[2]),
+              int.parse(dateSegments[1]), int.parse(dateSegments[0]));
+          if (breedingDate.isBefore(now) &&
+              (lastBreedingDate == null ||
+                  breedingDate.isAfter(lastBreedingDate))) {
+            lastBreedingDate = breedingDate;
+          }
         }
+
       }
     }
     if (lastBreedingDate != null) {

@@ -144,7 +144,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                       style: AppFonts.body2(color: AppColors.grayscale70),
                     ),
                     Text(
-                      '001-1',
+                      breedingEvent.id.toString(),
                       style: AppFonts.body2(color: AppColors.grayscale90),
                     ),
                   ],

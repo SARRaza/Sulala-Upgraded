@@ -104,7 +104,9 @@ class _BreedingEventChildrenListState
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Event Number: ${breedingEvent.eventNumber}',
+                                'Event Number: ${breedingEvent.eventNumber
+                                    .isNotEmpty ? breedingEvent.eventNumber :
+                                'empty'.tr}',
                                 style: AppFonts.caption1(
                                     color: AppColors.grayscale80),
                               ),

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/screens/sign_in/sign_in.dart';
 
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/tags/tags.dart';
+import '../sign_up/join_now.dart';
 
 class AnimalDetails extends StatefulWidget {
   final String imagePath;
@@ -170,7 +172,8 @@ class _AnimalDetailsState extends State<AnimalDetails> {
         width: globals.widthMediaQuery * 150,
         child: PrimaryButton(
           text: "Start your farm",
-          onPressed: () {},
+          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (
+              context) => const JoinNow())),
           status: PrimaryButtonStatus.idle,
           position: PrimaryButtonPosition.primary,
         ),
