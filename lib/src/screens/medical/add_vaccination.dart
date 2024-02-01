@@ -20,6 +20,7 @@ class _AddVaccinationState extends State<AddVaccination> {
   TextEditingController vaccineNameController = TextEditingController();
   DateTime? firstDoseDate;
   DateTime? secondDoseDate;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -68,44 +69,53 @@ class _AddVaccinationState extends State<AddVaccination> {
                 right: 16 * globals.widthMediaQuery,
                 bottom: 52 * globals.heightMediaQuery + 10
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Add Vaccination",
-                  style: AppFonts.title3(color: AppColors.grayscale90),
-                ),
-                SizedBox(
-                  height: 32 * globals.heightMediaQuery,
-                ),
-                PrimaryTextField(
-                  hintText: 'Vaccine Name',
-                  controller: vaccineNameController,
-                  labelText: 'Vaccine Name',
-                ),
-                SizedBox(height: 24 * globals.heightMediaQuery),
-                PrimaryDateField(
-                  hintText: 'Date Of Vaccination',
-                  labelText: 'Date Of Vaccination',
-                  onChanged: (value) => setState(() => firstDoseDate = value),
-                ),
-                SizedBox(height: 24 * globals.heightMediaQuery),
-                PrimaryDateField(
-                  hintText: 'Date Of Next Vaccination',
-                  labelText: 'Date Of Next Vaccination',
-                  onChanged: (value) => setState(() => secondDoseDate = value),
-                ),
-                SizedBox(height: 24 * globals.heightMediaQuery),
-                SizedBox(
-                  //height: 220,
-                  width: double.infinity,
-                  child: Focus(
-                    onFocusChange:
-                        (hasFocus) {}, // Dummy onFocusChange callback
-                    child: const FileUploaderField(),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Add Vaccination",
+                    style: AppFonts.title3(color: AppColors.grayscale90),
                   ),
-                ),
-              ],
+                  SizedBox(
+                    height: 32 * globals.heightMediaQuery,
+                  ),
+                  PrimaryTextField(
+                    hintText: 'Vaccine Name',
+                    controller: vaccineNameController,
+                    labelText: 'Vaccine Name',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 24 * globals.heightMediaQuery),
+                  PrimaryDateField(
+                    hintText: 'Date Of Vaccination',
+                    labelText: 'Date Of Vaccination',
+                    onChanged: (value) => setState(() => firstDoseDate = value),
+                  ),
+                  SizedBox(height: 24 * globals.heightMediaQuery),
+                  PrimaryDateField(
+                    hintText: 'Date Of Next Vaccination',
+                    labelText: 'Date Of Next Vaccination',
+                    onChanged: (value) => setState(() => secondDoseDate = value),
+                  ),
+                  SizedBox(height: 24 * globals.heightMediaQuery),
+                  SizedBox(
+                    //height: 220,
+                    width: double.infinity,
+                    child: Focus(
+                      onFocusChange:
+                          (hasFocus) {}, // Dummy onFocusChange callback
+                      child: const FileUploaderField(),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -114,7 +124,9 @@ class _AddVaccinationState extends State<AddVaccination> {
           width: 343 * globals.widthMediaQuery,
           child: PrimaryButton(
             onPressed: () {
-              _saveDataAndNavigateBack();
+              if(_formKey.currentState!.validate()) {
+                _saveDataAndNavigateBack();
+              }
               // Navigator.pop(context);
             },
             text: 'Save',

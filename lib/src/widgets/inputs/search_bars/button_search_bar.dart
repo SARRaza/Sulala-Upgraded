@@ -24,7 +24,7 @@ class ButtonSearchBar extends StatefulWidget {
 }
 
 class _ButtonSearchBarState extends State<ButtonSearchBar> {
-  final TextEditingController _textEditingController = TextEditingController();
+  late final TextEditingController _textEditingController;
   late FocusNode _focusNode;
   bool isFocused = false;
 
@@ -33,6 +33,7 @@ class _ButtonSearchBarState extends State<ButtonSearchBar> {
     super.initState();
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
+    _textEditingController = widget.controller?? TextEditingController();
   }
 
   @override

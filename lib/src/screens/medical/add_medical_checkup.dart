@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -20,6 +21,7 @@ class _AddMedicalCheckUpState extends State<AddMedicalCheckUp> {
   TextEditingController checkupNameController = TextEditingController();
   DateTime? firstDoseDate;
   DateTime? secondDoseDate;
+  final _formKey = GlobalKey<FormState>();
   @override
   void dispose() {
     checkupNameController.dispose();
@@ -67,40 +69,49 @@ class _AddMedicalCheckUpState extends State<AddMedicalCheckUp> {
                 right: 16 * globals.widthMediaQuery,
                 bottom: 52 * globals.heightMediaQuery + 10
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Add Medical Checkup",
-                  style: AppFonts.title3(color: AppColors.grayscale90),
-                ),
-                SizedBox(
-                  height: 32 * globals.heightMediaQuery,
-                ),
-                PrimaryTextField(
-                  hintText: 'Checkup Name',
-                  controller: checkupNameController,
-                  labelText: 'Checkup Name',
-                ),
-                SizedBox(height: 24 * globals.heightMediaQuery),
-                PrimaryDateField(
-                  hintText: 'Date Of Checkup',
-                  labelText: 'Date Of Checkup',
-                  onChanged: (value) => setState(() => firstDoseDate = value),
-                ),
-                SizedBox(height: 24 * globals.heightMediaQuery),
-                PrimaryDateField(
-                  hintText: 'Date Of Next Checkup',
-                  labelText: 'Date Of Next Checkup',
-                  onChanged: (value) => setState(() => secondDoseDate = value),
-                ),
-                SizedBox(height: 24 * globals.heightMediaQuery),
-                Focus(
-                  onFocusChange:
-                      (hasFocus) {}, // Dummy onFocusChange callback
-                  child: const FileUploaderField(),
-                ),
-              ],
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Add Medical Checkup",
+                    style: AppFonts.title3(color: AppColors.grayscale90),
+                  ),
+                  SizedBox(
+                    height: 32 * globals.heightMediaQuery,
+                  ),
+                  PrimaryTextField(
+                    hintText: 'Checkup Name',
+                    controller: checkupNameController,
+                    labelText: 'Checkup Name',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text'.tr;
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 24 * globals.heightMediaQuery),
+                  PrimaryDateField(
+                    hintText: 'Date Of Checkup',
+                    labelText: 'Date Of Checkup',
+                    onChanged: (value) => setState(() => firstDoseDate = value),
+                  ),
+                  SizedBox(height: 24 * globals.heightMediaQuery),
+                  PrimaryDateField(
+                    hintText: 'Date Of Next Checkup',
+                    labelText: 'Date Of Next Checkup',
+                    onChanged: (value) => setState(() => secondDoseDate = value),
+                  ),
+                  SizedBox(height: 24 * globals.heightMediaQuery),
+                  Focus(
+                    onFocusChange:
+                        (hasFocus) {}, // Dummy onFocusChange callback
+                    child: const FileUploaderField(),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -109,7 +120,9 @@ class _AddMedicalCheckUpState extends State<AddMedicalCheckUp> {
           width: 343 * globals.widthMediaQuery,
           child: PrimaryButton(
             onPressed: () {
-              _saveDataAndNavigateBack();
+              if(_formKey.currentState!.validate()) {
+                _saveDataAndNavigateBack();
+              }
             },
             text: 'Save',
           ),

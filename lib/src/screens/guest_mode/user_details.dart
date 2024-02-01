@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/screens/sign_up/join_now.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/icon_secondary_button.dart';
@@ -115,7 +116,6 @@ class _SearchDetails extends State<UserDetails> {
                     ),
                     Flexible(
                       child: SizedBox(
-                        width: globals.widthMediaQuery * 165,
                         height: globals.heightMediaQuery * 40,
                         child: IconSecondaryButton(
                           iconPath:
@@ -163,7 +163,7 @@ class _SearchDetails extends State<UserDetails> {
                       child: TableClickableText(
                         text1: 'Phone number',
                         urlText: widget.phoneNumber,
-                        url: '',
+                        url: 'tel:${widget.phoneNumber}',
                         iconPath: 'assets/icons/frame/24px/Outlined_Phone.png',
                       ),
                     ),
@@ -172,7 +172,7 @@ class _SearchDetails extends State<UserDetails> {
                       child: TableClickableText(
                         text1: 'Email address',
                         urlText: widget.email,
-                        url: '',
+                        url: 'mailto:${widget.email}',
                         iconPath: 'assets/icons/frame/24px/16_Mail.png',
                       ),
                     ),
@@ -189,7 +189,8 @@ class _SearchDetails extends State<UserDetails> {
           child: PrimaryButton(
             text: "Start your farm",
             onPressed: () {
-              Navigator.of(context).pushNamed('/join_now');
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+              const JoinNow()));
             },
             status: PrimaryButtonStatus.idle,
             position: PrimaryButtonPosition.primary,
@@ -211,10 +212,9 @@ class _SearchDetails extends State<UserDetails> {
         return Container(
           color: Colors.transparent,
           child: DrowupWidget(
-            heightFactor: 0.46,
-            // heading: 'Filter',
             content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 const Center(
                   child: Image(
@@ -224,6 +224,7 @@ class _SearchDetails extends State<UserDetails> {
                 Text(
                   'Join this farm?',
                   style: AppFonts.title3(color: AppColors.grayscale90),
+                  textAlign: TextAlign.center,
                 ),
                 SizedBox(height: globals.heightMediaQuery * 15),
                 Text(

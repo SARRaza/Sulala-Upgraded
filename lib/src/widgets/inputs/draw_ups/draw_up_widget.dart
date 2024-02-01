@@ -29,7 +29,7 @@ class _DrowupWidgetState extends State<DrowupWidget> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      heightFactor: widget.heightFactor ?? 0.6, // Take 70% of the screen height
+      heightFactor: widget.heightFactor,
       child: Container(
         width: double.infinity,
         decoration: const BoxDecoration(

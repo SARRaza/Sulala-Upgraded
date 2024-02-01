@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
@@ -20,6 +21,7 @@ class _AddSurgeriesRecordsState extends State<AddSurgeriesRecords> {
   TextEditingController surgeryNameController = TextEditingController();
   DateTime? firstDoseDate;
   DateTime? secondDoseDate;
+  final _formKey = GlobalKey<FormState>();
   @override
   void dispose() {
     surgeryNameController.dispose();
@@ -67,40 +69,49 @@ class _AddSurgeriesRecordsState extends State<AddSurgeriesRecords> {
                 right: 16 * globals.widthMediaQuery,
                 bottom: 52 * globals.heightMediaQuery + 10
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Add Surgeries Records",
-                  style: AppFonts.title3(color: AppColors.grayscale90),
-                ),
-                SizedBox(
-                  height: 32 * globals.heightMediaQuery,
-                ),
-                PrimaryTextField(
-                  hintText: 'Surgery Name',
-                  controller: surgeryNameController,
-                  labelText: 'Surgery Name',
-                ),
-                SizedBox(height: 24 * globals.heightMediaQuery),
-                PrimaryDateField(
-                  hintText: 'Date Of Surgery',
-                  labelText: 'Date Of Surgery',
-                  onChanged: (value) => setState(() => firstDoseDate = value),
-                ),
-                SizedBox(height: 24 * globals.heightMediaQuery),
-                PrimaryDateField(
-                  hintText: 'Date Of Next Surgery',
-                  labelText: 'Date Of Next Surgery',
-                  onChanged: (value) => setState(() => secondDoseDate = value),
-                ),
-                SizedBox(height: 24 * globals.heightMediaQuery),
-                Focus(
-                  onFocusChange:
-                      (hasFocus) {}, // Dummy onFocusChange callback
-                  child: const FileUploaderField(),
-                ),
-              ],
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Add Surgeries Records",
+                    style: AppFonts.title3(color: AppColors.grayscale90),
+                  ),
+                  SizedBox(
+                    height: 32 * globals.heightMediaQuery,
+                  ),
+                  PrimaryTextField(
+                    hintText: 'Surgery Name',
+                    controller: surgeryNameController,
+                    labelText: 'Surgery Name',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text'.tr;
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 24 * globals.heightMediaQuery),
+                  PrimaryDateField(
+                    hintText: 'Date Of Surgery',
+                    labelText: 'Date Of Surgery',
+                    onChanged: (value) => setState(() => firstDoseDate = value),
+                  ),
+                  SizedBox(height: 24 * globals.heightMediaQuery),
+                  PrimaryDateField(
+                    hintText: 'Date Of Next Surgery',
+                    labelText: 'Date Of Next Surgery',
+                    onChanged: (value) => setState(() => secondDoseDate = value),
+                  ),
+                  SizedBox(height: 24 * globals.heightMediaQuery),
+                  Focus(
+                    onFocusChange:
+                        (hasFocus) {}, // Dummy onFocusChange callback
+                    child: const FileUploaderField(),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -109,7 +120,9 @@ class _AddSurgeriesRecordsState extends State<AddSurgeriesRecords> {
           width: 343 * globals.widthMediaQuery,
           child: PrimaryButton(
             onPressed: () {
-              _saveDataAndNavigateBack();
+              if(_formKey.currentState!.validate()) {
+                _saveDataAndNavigateBack();
+              }
             },
             text: 'Save',
           ),

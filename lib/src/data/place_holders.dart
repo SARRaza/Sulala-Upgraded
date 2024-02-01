@@ -26,5 +26,7 @@ Map<String, File> speciesImages = {
   'Elephant': File('assets/avatars/120px/Elephant.png'),
   'Lion': File('assets/avatars/120px/Lion.png'),
   'Turtle': File('assets/avatars/120px/Turtle.png'),
-  'Snake': File('assets/avatars/120px/Snake.png')
+  'Snake': File('assets/avatars/120px/Snake.png'),
+  'Ox': File('assets/avatars/120px/Ox.png'),
+  'Bull': File('assets/avatars/120px/Bull.png')
 };

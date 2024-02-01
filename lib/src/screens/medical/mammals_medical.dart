@@ -91,6 +91,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
   bool initialized = false;
 
   late List<BreedingEventVariables> breedingEvents;
+  final _pregnanciesCountFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -105,9 +106,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
         .read(ovianimalsProvider)[animalIndex]
         .vaccineDetails[widget.OviDetails.animalName] ??
         [];
-    medicalCheckUpList = ref
-        .read(ovianimalsProvider)[animalIndex]
-        .checkUpDetails[widget.OviDetails.animalName] ??
+    medicalCheckUpList = animalDetails.checkUpDetails[widget.OviDetails
+        .animalName] ??
         [];
     surgeryDetailsList = ref
         .read(ovianimalsProvider)[animalIndex]
@@ -330,7 +330,6 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
               ? Column(
             children: [
               SizedBox(
-                height: globals.heightMediaQuery * 144,
                 child: MedicalNeedsParagraphTextField(
                   maxLines: 6,
                   hintText:
@@ -341,20 +340,18 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
               SizedBox(
                 height: globals.heightMediaQuery * 8,
               ),
-              SizedBox(
-                height: globals.heightMediaQuery * 210,
-                child: FileUploaderField(
-                  onFileUploaded: (file) {
-                    ref.read(ovianimalsProvider.notifier).update((state) {
-                      final files = state[animalIndex].files ?? [];
-                      files.add(file);
-                      state[animalIndex] =
-                          state[animalIndex].copyWith(files: files);
+              FileUploaderField(
+                onFileUploaded: (file) {
+                  ref.read(ovianimalsProvider.notifier).update((state) {
+                    final files = state[animalIndex].files ?? [];
+                    files.add(file);
+                    final newState = List<OviVariables>.from(state);
+                    newState[animalIndex] =
+                        state[animalIndex].copyWith(files: files);
 
-                      return state;
-                    });
-                  },
-                ),
+                    return newState;
+                  });
+                },
               ),
             ],
           )
@@ -383,7 +380,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                 Column(
                   children: files!
                       .map((file) => GestureDetector(
-                    onTap: () => showFile(file),
+                    onTap: () => _showFile(file),
                     child: Row(
                       children: [
                         const Icon(
@@ -685,11 +682,11 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                 'Vaccination',
                 style: AppFonts.title5(color: AppColors.grayscale90),
               ),
-              PrimaryTextButton(
-                onPressed: () {},
-                status: TextStatus.idle,
-                text: 'View More',
-              ),
+              // PrimaryTextButton(
+              //   onPressed: () {},
+              //   status: TextStatus.idle,
+              //   text: 'View More',
+              // ),
             ],
           ),
           SizedBox(
@@ -865,11 +862,11 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                 'Medical Checkup',
                 style: AppFonts.title5(color: AppColors.grayscale90),
               ),
-              PrimaryTextButton(
-                onPressed: () {},
-                status: TextStatus.idle,
-                text: 'View More',
-              ),
+              // PrimaryTextButton(
+              //   onPressed: () {},
+              //   status: TextStatus.idle,
+              //   text: 'View More',
+              // ),
             ],
           ),
           SizedBox(
@@ -909,7 +906,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                             medicalCheckUpList[index].files!.isNotEmpty)
                           IconButton(
                             onPressed: () =>
-                                showFiles(medicalCheckUpList[index].files!),
+                                _showFiles(medicalCheckUpList[index].files!),
                             icon: const Icon(
                               Icons.file_copy_outlined,
                               color: AppColors.primary40,
@@ -1044,11 +1041,11 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                 'Surgeries Records',
                 style: AppFonts.title5(color: AppColors.grayscale90),
               ),
-              PrimaryTextButton(
-                onPressed: () {},
-                status: TextStatus.idle,
-                text: 'View More',
-              ),
+              // PrimaryTextButton(
+              //   onPressed: () {},
+              //   status: TextStatus.idle,
+              //   text: 'View More',
+              // ),
             ],
           ),
           SizedBox(
@@ -1089,7 +1086,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                             surgeryDetailsList[index].files!.isNotEmpty)
                           IconButton(
                             onPressed: () =>
-                                showFiles(surgeryDetailsList[index].files!),
+                                _showFiles(surgeryDetailsList[index].files!),
                             icon: const Icon(
                               Icons.file_copy_outlined,
                               color: AppColors.primary40,
@@ -1580,7 +1577,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
 
 
 
-  Future<void> showFile(File file) async {
+  Future<void> _showFile(File file) async {
     final fileName = file.path.split('/').last;
     if (mounted) {
       if (fileName.endsWith('.pdf')) {
@@ -1601,12 +1598,12 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
     }
   }
 
-  DateTime calculateExpectedDeliveryDate(
+  DateTime _calculateExpectedDeliveryDate(
       DateTime matingDate, int gestationPeriod) {
     return matingDate.add(Duration(days: gestationPeriod));
   }
 
-  showFiles(List<File> files) {
+  _showFiles(List<File> files) {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => FileViewPage(files: files)));
   }
@@ -1624,32 +1621,35 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
             child: DrowupWidget(
               heightFactor: 0.45,
               heading: 'Pregnancies count',
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Column(
-                    children: [
-                      PrimaryTextField(
-                          keyboardType: TextInputType.number,
-                          hintText: 'Enter pregnancies count',
-                          controller: pregnanciesCountController),
-                      SizedBox(
-                        height: 55 * globals.heightMediaQuery,
-                      ),
-                      SizedBox(
-                        width: 343 * globals.widthMediaQuery,
-                        height: 52 * globals.heightMediaQuery,
-                        child: PrimaryButton(
-                            text: 'Confirm',
-                            onPressed: () {
-                              Navigator.pop(context,
-                                  int.parse(pregnanciesCountController.text));
-                            }),
-                      )
-                    ],
-                  ),
-                ],
+              content: Form(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Column(
+                      children: [
+                        PrimaryTextField(
+                            keyboardType: TextInputType.number,
+                            hintText: 'Enter pregnancies count',
+                            controller: pregnanciesCountController
+                        ),
+                        SizedBox(
+                          height: 55 * globals.heightMediaQuery,
+                        ),
+                        SizedBox(
+                          width: 343 * globals.widthMediaQuery,
+                          height: 52 * globals.heightMediaQuery,
+                          child: PrimaryButton(
+                              text: 'Confirm',
+                              onPressed: () {
+                                Navigator.pop(context,
+                                    int.parse(pregnanciesCountController.text));
+                              }),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           );
@@ -1668,6 +1668,6 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
   Future<bool?> _confirmDeletion(DismissDirection direction) {
     return showDialog(context: context, builder: (context) =>
         ConfirmDeleteDialog(
-            content: 'Are you sure to delete the details, files etc.?'.tr));
+            content: 'Are you sure to you want to delete the details, files etc.?'.tr));
   }
 }

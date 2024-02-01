@@ -4,7 +4,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:intl/intl.dart';
+import 'package:sulala_upgrade/src/widgets/dialogs/confirm_delete_dialog.dart';
 import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
@@ -35,6 +38,8 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
   DateTime? firstCheckUp;
   DateTime? secondCheckUp;
   List<MedicalCheckupDetails> checkupDetailsList = [];
+  final _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
@@ -48,8 +53,8 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
   }
 
   void updateCheckUpDetailsList(MedicalCheckupDetails updatedCheckup) {
-    int index = checkupDetailsList.indexWhere(
-        (checkup) => checkup.checkupName == updatedCheckup.checkupName);
+    int index = checkupDetailsList.indexWhere((checkup) =>
+        checkup.checkupName == widget.selectedCheckup?.checkupName);
 
     // Replace the old vaccine with the updated one
     if (index != -1) {
@@ -88,121 +93,169 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
             padding: EdgeInsets.only(
                 left: 16 * globals.widthMediaQuery,
                 right: 16 * globals.widthMediaQuery),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Edit Medical Checkup",
-                  style: AppFonts.title3(color: AppColors.grayscale90),
-                ),
-                SizedBox(
-                  height: 32 * globals.heightMediaQuery,
-                ),
-                PrimaryTextField(
-                  hintText: 'Checkup Name',
-                  controller: checkUpNameController,
-                  labelText: 'Checkup Name',
-                ),
-                SizedBox(height: 24 * globals.heightMediaQuery),
-                PrimaryDateField(
-                  hintText: DateFormat('yyyy-MM-dd').format(firstCheckUp!),
-                  labelText: 'Date Of Checkup',
-                  onChanged: (value) => setState(() => firstCheckUp = value),
-                ),
-                SizedBox(height: 24 * globals.heightMediaQuery),
-                PrimaryDateField(
-                  hintText: DateFormat('yyyy-MM-dd').format(secondCheckUp!),
-                  labelText: 'Date Of Next Checkup',
-                  onChanged: (value) => setState(() => secondCheckUp = value),
-                ),
-                SizedBox(height: 24 * globals.heightMediaQuery),
-                Focus(
-                  onFocusChange:
-                      (hasFocus) {}, // Dummy onFocusChange callback
-                  child: FileUploaderField(uploadedFiles: widget
-                      .selectedCheckup!.files!.map((file) => file.path)
-                      .toList(),),
-                ),
-                SizedBox(
-                  height: 16 * globals.heightMediaQuery,
-                ),
-                SizedBox(
-                  height: 52 * globals.heightMediaQuery,
-                  width: 343 * globals.widthMediaQuery,
-                  child: PrimaryButton(
-                    onPressed: () {
-                      // Update details using copyWith method
-                      MedicalCheckupDetails updatedCheckUp =
-                          widget.selectedCheckup!.copyWith(
-                        checkupName: checkUpNameController.text,
-                        firstCheckUp: firstCheckUp,
-                        secondCheckUp: secondCheckUp,
-                            files: ref.read(uploadedFilesProvider).map((path) =>
-                                File(path)).toList()
-                      );
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Edit Medical Checkup",
+                    style: AppFonts.title3(color: AppColors.grayscale90),
+                  ),
+                  SizedBox(
+                    height: 32 * globals.heightMediaQuery,
+                  ),
+                  PrimaryTextField(
+                    hintText: 'Checkup Name',
+                    controller: checkUpNameController,
+                    labelText: 'Checkup Name',
+                    validator: (value) => value == null || value.isEmpty
+                        ? 'Please enter some text'.tr
+                        : null,
+                  ),
+                  SizedBox(height: 24 * globals.heightMediaQuery),
+                  PrimaryDateField(
+                    hintText: firstCheckUp != null
+                        ? DateFormat('yyyy-MM-dd').format(firstCheckUp!)
+                        : 'dd/MM/yyyy',
+                    labelText: 'Date Of Checkup',
+                    onChanged: (value) => setState(() => firstCheckUp = value),
+                  ),
+                  SizedBox(height: 24 * globals.heightMediaQuery),
+                  PrimaryDateField(
+                    hintText: secondCheckUp != null
+                        ? DateFormat('yyyy-MM-dd').format(secondCheckUp!)
+                        : 'dd/MM/yyyy',
+                    labelText: 'Date Of Next Checkup',
+                    onChanged: (value) => setState(() => secondCheckUp = value),
+                  ),
+                  SizedBox(height: 24 * globals.heightMediaQuery),
+                  Focus(
+                    onFocusChange:
+                        (hasFocus) {}, // Dummy onFocusChange callback
+                    child: FileUploaderField(
+                      uploadedFiles: widget.selectedCheckup!.files!
+                          .map((file) => file.path)
+                          .toList(),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 16 * globals.heightMediaQuery,
+                  ),
+                  SizedBox(
+                    height: 52 * globals.heightMediaQuery,
+                    width: 343 * globals.widthMediaQuery,
+                    child: PrimaryButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          MedicalCheckupDetails updatedCheckUp =
+                              widget.selectedCheckup!.copyWith(
+                                  checkupName: checkUpNameController.text,
+                                  firstCheckUp: firstCheckUp,
+                                  secondCheckUp: secondCheckUp,
+                                  files: ref
+                                      .read(uploadedFilesProvider)
+                                      .map((path) => File(path))
+                                      .toList());
 
-                      // Update the vaccineDetailsList for the selected animal
-                      final animalIndex =
-                          ref.read(ovianimalsProvider).indexWhere(
-                                (animal) =>
-                                    animal.animalName ==
-                                    widget.OviDetails.animalName,
-                              );
+                          // Update the vaccineDetailsList for the selected animal
+                          final animalIndex =
+                              ref.read(ovianimalsProvider).indexWhere(
+                                    (animal) =>
+                                        animal.animalName ==
+                                        widget.OviDetails.animalName,
+                                  );
 
-                      if (animalIndex != -1) {
-                        // Replace the existing vaccine with the updated one
-                        final List<MedicalCheckupDetails> currentList = ref
-                                .read(ovianimalsProvider)[animalIndex]
-                                .checkUpDetails[widget.OviDetails.animalName] ??
-                            [];
+                          if (animalIndex != -1) {
+                            // Replace the existing vaccine with the updated one
+                            final List<MedicalCheckupDetails> currentList = ref
+                                        .read(ovianimalsProvider)[animalIndex]
+                                        .checkUpDetails[
+                                    widget.OviDetails.animalName] ??
+                                [];
 
-                        final List<MedicalCheckupDetails> updatedList =
-                            List<MedicalCheckupDetails>.from(currentList);
-                        final int indexToUpdate = updatedList.indexWhere(
-                            (checkup) => checkup == widget.selectedCheckup);
+                            final List<MedicalCheckupDetails> updatedList =
+                                List<MedicalCheckupDetails>.from(currentList);
+                            final int indexToUpdate = updatedList.indexWhere(
+                                (checkup) => checkup == widget.selectedCheckup);
 
-                        if (indexToUpdate != -1) {
-                          ref.read(ovianimalsProvider.notifier).update((state) {
-                            final checkupDetails = state[animalIndex]
-                                .checkUpDetails;
-                            checkupDetails[state[animalIndex].animalName]![indexToUpdate] = updatedCheckUp;
-                            state[animalIndex] = state[animalIndex].copyWith(
-                              checkUpDetails: checkupDetails
-                            );
-                            return state;
-                          });
-                          // updatedList[indexToUpdate] = updatedCheckUp;
-                          // ref
-                          //         .read(ovianimalsProvider)[animalIndex]
-                          //         .checkUpDetails[
-                          //     widget.OviDetails.animalName] = updatedList;
+                            if (indexToUpdate != -1) {
+                              ref
+                                  .read(ovianimalsProvider.notifier)
+                                  .update((state) {
+                                    final newState = List<OviVariables>.from(
+                                        state);
+                                final checkupDetails =
+                                    state[animalIndex].checkUpDetails;
+                                checkupDetails[state[animalIndex].animalName]![
+                                    indexToUpdate] = updatedCheckUp;
+                                newState[animalIndex] = state[animalIndex]
+                                    .copyWith(checkUpDetails: checkupDetails);
+                                return newState;
+                              });
+                              // updatedList[indexToUpdate] = updatedCheckUp;
+                              // ref
+                              //         .read(ovianimalsProvider)[animalIndex]
+                              //         .checkUpDetails[
+                              //     widget.OviDetails.animalName] = updatedList;
+                            }
+                          }
+
+                          // Close the EditVaccination page
+                          Navigator.pop(context);
                         }
-                      }
-
-                      // Close the EditVaccination page
-                      Navigator.pop(context);
-                    },
-                    text: 'Save',
+                        // Update details using copyWith method
+                      },
+                      text: 'Save',
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 8 * globals.heightMediaQuery,
-                ),
-                SizedBox(
-                  height: 52 * globals.heightMediaQuery,
-                  width: 343 * globals.widthMediaQuery,
-                  child: NavigateButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    text: 'Delete',
+                  SizedBox(
+                    height: 8 * globals.heightMediaQuery,
                   ),
-                ),
-              ],
+                  SizedBox(
+                    height: 52 * globals.heightMediaQuery,
+                    width: 343 * globals.widthMediaQuery,
+                    child: NavigateButton(
+                      onPressed: deleteCheckup,
+                      text: 'Delete',
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  void deleteCheckup() {
+    showDialog(context: context, builder: (
+        context) => ConfirmDeleteDialog(
+        content: "Are you sure you want to delete the checkup".tr)).then(
+            (confirm) {
+              if(confirm) {
+                final animalIndex =
+                ref.read(ovianimalsProvider).indexWhere(
+                      (animal) =>
+                  animal.animalName ==
+                      widget.OviDetails.animalName,
+                );
+
+                ref.read(ovianimalsProvider.notifier).update((state) {
+                  final newState = List<OviVariables>.from(state);
+                  newState[animalIndex].checkUpDetails[widget.OviDetails
+                      .animalName]!.removeWhere((checkup) => checkup
+                      .checkupName == widget.selectedCheckup!
+                      .checkupName);
+
+                  return newState;
+                });
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text("The checkup has been deleted".tr)));
+                Navigator.pop(context);
+              }
+            });
+
   }
 }

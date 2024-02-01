@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/place_holders.dart';
+import 'package:sulala_upgrade/src/screens/guest_mode/animal_details.dart';
 import '../../data/animal_filters.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
@@ -20,7 +22,7 @@ class SearchPageOwnerAnimals extends ConsumerStatefulWidget {
 class _SearchPageOwnerAnimalsState extends ConsumerState<SearchPageOwnerAnimals> {
   List<Map<String, dynamic>> animals = [
     {
-      'imagePath': 'assets/avatars/120px/Staff3.png',
+      'imagePath': speciesImages['Horse']!.path,
       'title': 'Horse',
       'type': 'mammal',
       'species': 'horse',
@@ -31,7 +33,7 @@ class _SearchPageOwnerAnimalsState extends ConsumerState<SearchPageOwnerAnimals>
       'The horse is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
-      'imagePath': 'assets/avatars/120px/Staff3.png',
+      'imagePath': speciesImages['Cow']!.path,
       'title': 'Cow',
       'type': 'mammal',
       'species': 'cow',
@@ -42,7 +44,7 @@ class _SearchPageOwnerAnimalsState extends ConsumerState<SearchPageOwnerAnimals>
       'The cow is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
-      'imagePath': 'assets/avatars/120px/Staff3.png',
+      'imagePath': speciesImages['Ox']!.path,
       'title': 'Ox',
       'type': 'mammal',
       'species': 'cow',
@@ -53,7 +55,7 @@ class _SearchPageOwnerAnimalsState extends ConsumerState<SearchPageOwnerAnimals>
       'The ox is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
-      'imagePath': 'assets/avatars/120px/Staff3.png',
+      'imagePath': speciesImages['Sheep']!.path,
       'title': 'Sheep',
       'type': 'mammal',
       'species': 'sheep',
@@ -64,7 +66,7 @@ class _SearchPageOwnerAnimalsState extends ConsumerState<SearchPageOwnerAnimals>
       'The sheep is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
-      'imagePath': 'assets/avatars/120px/Staff3.png',
+      'imagePath': speciesImages['Bull']!.path,
       'title': 'Bull',
       'type': 'mammal',
       'species': 'cow',
@@ -75,7 +77,7 @@ class _SearchPageOwnerAnimalsState extends ConsumerState<SearchPageOwnerAnimals>
       'The bull is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
-      'imagePath': 'assets/avatars/120px/Staff3.png',
+      'imagePath': speciesImages['Bull']!.path,
       'title': 'Bull',
       'type': 'mammal',
       'species': 'cow',
@@ -86,7 +88,7 @@ class _SearchPageOwnerAnimalsState extends ConsumerState<SearchPageOwnerAnimals>
       'The bull is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
-      'imagePath': 'assets/avatars/120px/Staff3.png',
+      'imagePath': speciesImages['Bull']!.path,
       'title': 'Bull',
       'type': 'mammal',
       'species': 'cow',
@@ -97,7 +99,7 @@ class _SearchPageOwnerAnimalsState extends ConsumerState<SearchPageOwnerAnimals>
       'The bull is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
-      'imagePath': 'assets/avatars/120px/Staff3.png',
+      'imagePath': speciesImages['Bull']!.path,
       'title': 'Bull',
       'type': 'mammal',
       'species': 'cow',
@@ -108,7 +110,7 @@ class _SearchPageOwnerAnimalsState extends ConsumerState<SearchPageOwnerAnimals>
       'The bull is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
-      'imagePath': 'assets/avatars/120px/Staff3.png',
+      'imagePath': speciesImages['Bull']!.path,
       'title': 'Bull',
       'type': 'mammal',
       'species': 'cow',
@@ -145,16 +147,16 @@ class _SearchPageOwnerAnimalsState extends ConsumerState<SearchPageOwnerAnimals>
   }
 
   void navigateToAnimalDetailsPage(Map<String, dynamic> option) {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => OwnedAnimalDetails(
-    //       imagePath: option['imagePath'],
-    //       title: option['title'],
-    //       geninfo: option['geninfo'],
-    //     ),
-    //   ),
-    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AnimalDetails(
+          imagePath: option['imagePath'],
+          title: option['title'],
+          geninfo: option['geninfo'],
+        ),
+      ),
+    );
   }
 
   @override
@@ -319,15 +321,7 @@ class _SearchPageOwnerAnimalsState extends ConsumerState<SearchPageOwnerAnimals>
     final breedingStage = filterItems['Breeding Stage']!.firstWhereOrNull(test);
     final tags = filterItems['Tags']!.firstWhereOrNull(test);
     filteredAnimals = animals;
-    if(_searchController.text.isNotEmpty) {
-      filteredAnimals = animals
-          .where(
-            (option) => option['title']
-            .toLowerCase()
-            .contains(_searchController.text.toLowerCase()),
-      )
-          .toList();
-    }
+
 
     setState(() {
       filteredAnimals = filteredAnimals.where((animal) => (type == null ||
@@ -339,6 +333,16 @@ class _SearchPageOwnerAnimalsState extends ConsumerState<SearchPageOwnerAnimals>
           animal['breeding_stage'] == breedingStage.toLowerCase()) && (tags ==
           null ||
           animal['tags'] == tags.toLowerCase())).toList();
+
+      if(_searchController.text.isNotEmpty) {
+        filteredAnimals = filteredAnimals
+            .where(
+              (option) => option['title']
+              .toLowerCase()
+              .contains(_searchController.text.toLowerCase()),
+        )
+            .toList();
+      }
     });
   }
 

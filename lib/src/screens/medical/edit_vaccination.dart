@@ -4,7 +4,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:sulala_upgrade/src/widgets/dialogs/confirm_delete_dialog.dart';
 import '../../data/classes.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
@@ -37,6 +39,7 @@ class _EditVaccinationState extends ConsumerState<EditVaccination> {
   DateTime? firstDoseDate;
   DateTime? secondDoseDate;
   List<VaccineDetails> vaccineDetailsList = [];
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -50,7 +53,7 @@ class _EditVaccinationState extends ConsumerState<EditVaccination> {
     }
   }
 
-  void updateVaccineDetailsList(VaccineDetails updatedVaccine) {
+  void _updateVaccineDetailsList(VaccineDetails updatedVaccine) {
     int index = vaccineDetailsList.indexWhere(
         (vaccine) => vaccine.vaccineName == updatedVaccine.vaccineName);
 
@@ -91,123 +94,152 @@ class _EditVaccinationState extends ConsumerState<EditVaccination> {
             padding: EdgeInsets.only(
                 left: 16 * globals.widthMediaQuery,
                 right: 16 * globals.widthMediaQuery),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Edit Vaccination",
-                  style: AppFonts.title3(color: AppColors.grayscale90),
-                ),
-                SizedBox(
-                  height: 32 * globals.heightMediaQuery,
-                ),
-                PrimaryTextField(
-                  hintText: 'Vaccine Name',
-                  controller: vaccineNameController,
-                  labelText: 'Vaccine Name',
-                ),
-                SizedBox(height: 24 * globals.heightMediaQuery),
-                PrimaryDateField(
-                  hintText: DateFormat('yyyy-MM-dd').format(firstDoseDate!),
-                  labelText: 'Date Of Vaccination',
-                  onChanged: (value) => setState(() => firstDoseDate = value),
-                ),
-                SizedBox(height: 24 * globals.heightMediaQuery),
-                PrimaryDateField(
-                  hintText: DateFormat('yyyy-MM-dd').format(secondDoseDate!),
-                  labelText: 'Date Of Next Vaccination',
-                  onChanged: (value) => setState(() => secondDoseDate = value),
-                ),
-                SizedBox(height: 24 * globals.heightMediaQuery),
-                Focus(
-                  onFocusChange:
-                      (hasFocus) {}, // Dummy onFocusChange callback
-                  child: FileUploaderField(uploadedFiles: widget
-                      .selectedVaccine!.files != null ? widget
-                      .selectedVaccine!.files!.map((file) => file.path)
-                      .toList() : []),
-                ),
-                SizedBox(
-                  height: 16 * globals.heightMediaQuery,
-                ),
-                SizedBox(
-                  height: 52 * globals.heightMediaQuery,
-                  width: 343 * globals.widthMediaQuery,
-                  child: PrimaryButton(
-                    onPressed: () {
-                      // Update details using copyWith method
-                      VaccineDetails updatedVaccine =
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Edit Vaccination",
+                    style: AppFonts.title3(color: AppColors.grayscale90),
+                  ),
+                  SizedBox(
+                    height: 32 * globals.heightMediaQuery,
+                  ),
+                  PrimaryTextField(
+                    hintText: 'Vaccine Name',
+                    controller: vaccineNameController,
+                    labelText: 'Vaccine Name',
+                    validator: (value) => value == null || value.isEmpty ?
+                    'Please enter some text'.tr : null,
+                  ),
+                  SizedBox(height: 24 * globals.heightMediaQuery),
+                  PrimaryDateField(
+                    hintText: firstDoseDate != null ? DateFormat('yyyy-MM-dd')
+                        .format(firstDoseDate!) : 'yyyy-MM-dd',
+                    labelText: 'Date Of Vaccination',
+                    onChanged: (value) => setState(() => firstDoseDate = value),
+                  ),
+                  SizedBox(height: 24 * globals.heightMediaQuery),
+                  PrimaryDateField(
+                    hintText: secondDoseDate != null ? DateFormat('yyyy-MM-dd')
+                        .format(secondDoseDate!) : 'yyyy-MM-dd',
+                    labelText: 'Date Of Next Vaccination',
+                    onChanged: (value) => setState(() => secondDoseDate = value),
+                  ),
+                  SizedBox(height: 24 * globals.heightMediaQuery),
+                  Focus(
+                    onFocusChange:
+                        (hasFocus) {}, // Dummy onFocusChange callback
+                    child: FileUploaderField(uploadedFiles: widget
+                        .selectedVaccine!.files != null ? widget
+                        .selectedVaccine!.files!.map((file) => file.path)
+                        .toList() : []),
+                  ),
+                  SizedBox(
+                    height: 16 * globals.heightMediaQuery,
+                  ),
+                  SizedBox(
+                    height: 52 * globals.heightMediaQuery,
+                    width: 343 * globals.widthMediaQuery,
+                    child: PrimaryButton(
+                      onPressed: () {
+                        if(_formKey.currentState!.validate()) {
+                          // Update details using copyWith method
+                          VaccineDetails updatedVaccine =
                           widget.selectedVaccine!.copyWith(
-                        vaccineName: vaccineNameController.text,
-                        firstDoseDate: firstDoseDate,
-                        secondDoseDate: secondDoseDate,
-                            files: ref.read(uploadedFilesProvider).map((path) =>
-                                File(path)).toList()
-                      );
+                              vaccineName: vaccineNameController.text,
+                              firstDoseDate: firstDoseDate,
+                              secondDoseDate: secondDoseDate,
+                              files: ref.read(uploadedFilesProvider).map((path) =>
+                                  File(path)).toList()
+                          );
 
-                      // Update the vaccineDetailsList for the selected animal
-                      final animalIndex =
+                          // Update the vaccineDetailsList for the selected animal
+                          final animalIndex =
                           ref.read(ovianimalsProvider).indexWhere(
                                 (animal) =>
-                                    animal.animalName ==
-                                    widget.OviDetails.animalName,
-                              );
+                            animal.animalName ==
+                                widget.OviDetails.animalName,
+                          );
 
-                      if (animalIndex != -1) {
-                        // Replace the existing vaccine with the updated one
-                        final List<VaccineDetails> currentList = ref
+                          if (animalIndex != -1) {
+                            // Replace the existing vaccine with the updated one
+                            final List<VaccineDetails> currentList = ref
                                 .read(ovianimalsProvider)[animalIndex]
                                 .vaccineDetails[widget.OviDetails.animalName] ??
-                            [];
+                                [];
 
-                        final List<VaccineDetails> updatedList =
+                            final List<VaccineDetails> updatedList =
                             List<VaccineDetails>.from(currentList);
-                        final int indexToUpdate = updatedList.indexWhere(
-                            (vaccine) => vaccine.vaccineName == widget
-                                .selectedVaccine!.vaccineName);
+                            final int indexToUpdate = updatedList.indexWhere(
+                                    (vaccine) => vaccine.vaccineName == widget
+                                    .selectedVaccine!.vaccineName);
 
-                        if (indexToUpdate != -1) {
-                          updatedList[indexToUpdate] = updatedVaccine;
-                          ref.read(ovianimalsProvider.notifier).update((state) {
-                            final vaccineDetails = state[animalIndex]
-                                .vaccineDetails;
-                            vaccineDetails[state[animalIndex].animalName] =
-                                updatedList;
-                            state[animalIndex] = state[animalIndex].copyWith(
-                                vaccineDetails: vaccineDetails);
-                            return state;
-                          });
-                          // ref
-                          //         .read(ovianimalsProvider)[animalIndex]
-                          //         .vaccineDetails[
-                          //     widget.OviDetails.animalName] = updatedList;
+                            if (indexToUpdate != -1) {
+                              updatedList[indexToUpdate] = updatedVaccine;
+                              ref.read(ovianimalsProvider.notifier).update((state) {
+                                final newState = List<OviVariables>.from(state);
+                                final vaccineDetails = state[animalIndex]
+                                    .vaccineDetails;
+                                vaccineDetails[state[animalIndex].animalName] =
+                                    updatedList;
+                                newState[animalIndex] = state[animalIndex].copyWith(
+                                    vaccineDetails: vaccineDetails);
+                                return state;
+                              });
+                              // ref
+                              //         .read(ovianimalsProvider)[animalIndex]
+                              //         .vaccineDetails[
+                              //     widget.OviDetails.animalName] = updatedList;
+                            }
+                          }
+
+                          // Close the EditVaccination page
+                          Navigator.pop(context);
                         }
-                      }
-
-                      // Close the EditVaccination page
-                      Navigator.pop(context);
-                    },
-                    text: 'Save',
+                      },
+                      text: 'Save',
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 8 * globals.heightMediaQuery,
-                ),
-                SizedBox(
-                  height: 52 * globals.heightMediaQuery,
-                  width: 343 * globals.widthMediaQuery,
-                  child: NavigateButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    text: 'Delete',
+                  SizedBox(
+                    height: 8 * globals.heightMediaQuery,
                   ),
-                ),
-              ],
+                  SizedBox(
+                    height: 52 * globals.heightMediaQuery,
+                    width: 343 * globals.widthMediaQuery,
+                    child: NavigateButton(
+                      onPressed: deleteVaccination,
+                      text: 'Delete',
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  void deleteVaccination() {
+    showDialog(context: context, builder: (context) => ConfirmDeleteDialog(
+        content: "Are you sure you want to delete the vaccination?".tr)).then((
+        confirm) {
+          if(confirm) {
+            ref.read(ovianimalsProvider.notifier).update((state) {
+              final newState = List<OviVariables>.from(state);
+              final animalIndex = newState.indexWhere((animal) => animal.id ==
+                  widget.OviDetails.id);
+              newState[animalIndex].vaccineDetails[widget.OviDetails.animalName
+              ]!.removeWhere((vaccination) => vaccination.vaccineName == widget
+                  .selectedVaccine!.vaccineName);
+              return newState;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(
+                'The vaccination has been deleted'.tr)));
+            Navigator.pop(context);
+          }
+    });
   }
 }
