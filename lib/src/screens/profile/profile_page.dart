@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
+import 'package:sulala_upgrade/src/screens/guest_mode/homescreen_guest_mode.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/navigate_button.dart';
@@ -50,6 +51,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     final firstName = ref.watch(firstNameProvider);
     final lastName = ref.watch(lastNameProvider);
     final profilePicture = ref.watch(proflePictureProvider);
+    final phoneNumber = ref.read(phoneNumberProvider);
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
@@ -135,7 +137,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           ],
                         ),
                         Text(
-                          '123-456-7890',
+                          phoneNumber.isNotEmpty ? phoneNumber : '123-456-7890',
                           style: AppFonts.body2(color: AppColors.grayscale70),
                         ),
                         SizedBox(height: 16 * globals.heightMediaQuery),
@@ -163,7 +165,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         ProfileThreeInformationBlock(
                           head1: ref.refresh(totalAnimalsCountProvider).toString(),
                           head2: '1',
-                          head3: '5',
+                          head3: ref.watch(totalStaffProvider).toString(),
                         ),
                         SizedBox(height: 24 * globals.heightMediaQuery),
                       ],
@@ -452,14 +454,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   height: 52 * globals.heightMediaQuery,
                                   width: double.infinity,
                                   child: NavigateButton(
-                                      onPressed: () {}, text: 'Yes'.tr),
+                                      onPressed: signOut, text: 'Yes'.tr),
                                 ),
                                 SizedBox(height: 8 * globals.heightMediaQuery),
                                 SizedBox(
                                   height: 52 * globals.heightMediaQuery,
                                   width: double.infinity,
                                   child: SecondaryButton(
-                                      onPressed: () {}, text: 'Cancel'.tr),
+                                      onPressed: () => Navigator.pop(context),
+                                      text: 'Cancel'.tr),
                                 ),
                               ],
                             ),
@@ -480,5 +483,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         ),
       ),
     );
+  }
+
+  void signOut() {
+    Navigator.push(context, MaterialPageRoute(builder: (context
+        ) => const HomeScreenGuestMode()));
   }
 }

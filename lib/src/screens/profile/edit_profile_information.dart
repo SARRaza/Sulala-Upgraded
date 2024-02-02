@@ -33,6 +33,7 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
 
   TextEditingController farmNameController = TextEditingController();
   TextEditingController ownerNameController = TextEditingController();
+  File? photo;
 
   @override
   void initState() {
@@ -44,11 +45,12 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
 
     _emailController.text = ref.read(emailAdressProvider);
 
-    _addressController.text = ref.read(countryProvider);
+    _addressController.text = ref.read(farmAddressProvider);
 
     _countryController.text = ref.read(countryProvider);
     farmNameController.text = ref.read(whatIsTheNameOfYourFarmProvider);
     ownerNameController.text = ref.read(whoOwnTheFarmProvider);
+    photo = ref.read(proflePictureProvider);
   }
 
   @override
@@ -64,15 +66,15 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
   }
 
   final ImagePicker _picker = ImagePicker();
+
   void _deleteAvatar() {
-    // Implement the logic to delete/reset the avatar
-    ref.read(proflePictureProvider.notifier).update((state) => null);
-    setState(() {});
+    setState(() {
+      photo = null;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final profilePicture = ref.watch(proflePictureProvider);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -116,10 +118,10 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                     child: CircleAvatar(
                       radius: 70,
                       backgroundColor: Colors.grey[100],
-                      backgroundImage: profilePicture != null
-                          ? FileImage(profilePicture)
+                      backgroundImage: photo != null
+                          ? FileImage(photo!)
                           : null,
-                      child: profilePicture == null
+                      child: photo == null
                           ? const Icon(
                               Icons.camera_alt,
                               size: 50,
@@ -146,21 +148,11 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                 ),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 PrimaryTextField(
-                    onChanged: (value) {
-                      ref
-                          .read(firstNameProvider.notifier)
-                          .update((state) => value);
-                    },
                     hintText: 'Enter Your First Name'.tr,
                     controller: _firstnameController,
                     labelText: 'First Name'.tr),
                 SizedBox(height: 16 * globals.heightMediaQuery),
                 PrimaryTextField(
-                    onChanged: (value) {
-                      ref
-                          .read(lastNameProvider.notifier)
-                          .update((state) => value);
-                    },
                     hintText: 'Enter Your Last Name'.tr,
                     controller: _lastnameController,
                     labelText: 'Last Name'.tr),
@@ -171,11 +163,6 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                 ),
                 SizedBox(height: 16 * globals.heightMediaQuery),
                 PrimaryTextField(
-                  onChanged: (value) {
-                    ref
-                        .read(whatIsTheNameOfYourFarmProvider.notifier)
-                        .update((state) => value);
-                  },
                   hintText: 'Enter Your Farm Name'.tr,
                   controller: farmNameController,
                 ),
@@ -186,11 +173,6 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                 ),
                 SizedBox(height: 16 * globals.heightMediaQuery),
                 PrimaryTextField(
-                  onChanged: (value) {
-                    ref
-                        .read(whoOwnTheFarmProvider.notifier)
-                        .update((state) => value);
-                  },
                   hintText: 'Enter Farm Owner Name'.tr,
                   controller: ownerNameController,
                 ),
@@ -201,11 +183,6 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                 const PhoneNumberField(),
                 SizedBox(height: 16 * globals.heightMediaQuery),
                 PrimaryTextField(
-                  onChanged: (value) {
-                    ref
-                        .read(emailAdressProvider.notifier)
-                        .update((state) => value);
-                  },
                   hintText: 'Enter Your Email Address'.tr,
                   controller: _emailController,
                   labelText: 'Email Address'.tr,
@@ -215,25 +192,16 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                     style: AppFonts.headline3(color: AppColors.grayscale90)),
                 SizedBox(height: 24 * globals.heightMediaQuery),
                 PrimaryTextField(
-                  onChanged: (value) {
-                    ref.read(cityProvider.notifier).update((state) => value);
-                  },
                   hintText: 'Enter Address'.tr,
                   controller: _addressController,
                 ),
                 SizedBox(height: 16 * globals.heightMediaQuery),
                 PrimaryTextField(
-                  onChanged: (value) {
-                    ref.read(cityProvider.notifier).update((state) => value);
-                  },
                   hintText: 'Enter Your City'.tr,
                   controller: _cityController,
                 ),
                 SizedBox(height: 16 * globals.heightMediaQuery),
                 PrimaryTextField(
-                  onChanged: (value) {
-                    ref.read(countryProvider.notifier).update((state) => value);
-                  },
                   hintText: 'Enter Your Country'.tr,
                   controller: _countryController,
                 ),
@@ -248,6 +216,25 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
           child: PrimaryButton(
             onPressed: () {
               //Save informations
+              ref.read(proflePictureProvider.notifier).update((state) => photo);
+              ref.read(firstNameProvider.notifier).update((state
+                  ) => _firstnameController.text);
+              ref.read(lastNameProvider.notifier).update((state
+                  ) => _lastnameController.text);
+              ref.read(whatIsTheNameOfYourFarmProvider.notifier).update((state
+                  ) => farmNameController.text);
+              ref.read(whoOwnTheFarmProvider.notifier).update((state
+                  ) => ownerNameController.text);
+              ref.read(phoneNumberProvider.notifier).update((state
+                  ) => _phonenumController.text);
+              ref.read(emailAdressProvider.notifier).update((state
+                  ) => _emailController.text);
+              ref.read(farmAddressProvider.notifier).update((state
+                  ) => _addressController.text);
+              ref.read(cityProvider.notifier).update((state
+                  ) => _cityController.text);
+              ref.read(countryProvider.notifier).update((state
+                  ) => _countryController.text);
               Navigator.pop(context);
 
               CustomSnackBar.show(
@@ -274,8 +261,8 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
       isDismissible: true,
       builder: (BuildContext context) {
         return DrowupWidget(
-          heightFactor: 0.288,
           content: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
                 contentPadding: EdgeInsets.zero,
@@ -298,10 +285,9 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                   final pickedImage =
                       await _picker.pickImage(source: ImageSource.camera);
                   if (pickedImage != null) {
-                    ref
-                        .read(proflePictureProvider.notifier)
-                        .update((state) => File(pickedImage.path));
-                    setState(() {});
+                    setState(() {
+                      photo = File(pickedImage.path);
+                    });
                   }
                 },
               ),
@@ -327,10 +313,9 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                   final pickedImage =
                       await _picker.pickImage(source: ImageSource.gallery);
                   if (pickedImage != null) {
-                    ref
-                        .read(proflePictureProvider.notifier)
-                        .update((state) => File(pickedImage.path));
-                    setState(() {});
+                    setState(() {
+                      photo = File(pickedImage.path);
+                    });
                   }
                 },
               ),

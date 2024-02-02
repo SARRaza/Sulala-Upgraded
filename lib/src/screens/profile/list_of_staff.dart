@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:sulala_upgrade/src/data/classes.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
+import '../../widgets/other/custom_snack_bar.dart';
 import 'shimmer_list_of_staff.dart';
 import 'staff_details_page.dart';
 
-class ListOfStaff extends StatefulWidget {
+class ListOfStaff extends ConsumerStatefulWidget {
   const ListOfStaff({super.key});
 
   @override
-  State<ListOfStaff> createState() => _ListOfStaffState();
+  ConsumerState<ListOfStaff> createState() => _ListOfStaffState();
 }
 
-class _ListOfStaffState extends State<ListOfStaff> {
-  List<Map<String, dynamic>> options = [];
+class _ListOfStaffState extends ConsumerState<ListOfStaff> {
   bool isLoading = true;
 
   @override
@@ -38,54 +41,16 @@ class _ListOfStaffState extends State<ListOfStaff> {
     // Simulate fetching data from the backend
     await Future.delayed(const Duration(seconds: 2));
 
-    // Update the options list with the fetched data
-    List<Map<String, dynamic>> newData = [
-      {
-        'imagePath': 'assets/avatars/120px/Staff1.png',
-        'title': 'Paul Rivera',
-        'subtitle': 'Viewer',
-        'email': 'paul@example.com',
-        'phoneNumber': '+1 234 567 890',
-      },
-      {
-        'imagePath': 'assets/avatars/120px/Staff2.png',
-        'title': 'Rebecca Wilson',
-        'subtitle': 'Helper',
-        'email': 'paul@example.com',
-        'phoneNumber': '+1 234 567 890',
-      },
-      {
-        'imagePath': 'assets/avatars/120px/Staff3.png',
-        'title': 'Patricia Williams',
-        'subtitle': 'Helper',
-        'email': 'paul@example.com',
-        'phoneNumber': '+1 234 567 890',
-      },
-      {
-        'imagePath': 'assets/avatars/120px/Staff1.png',
-        'title': 'Scott Simmons',
-        'subtitle': 'Worker',
-        'email': 'paul@example.com',
-        'phoneNumber': '+1 234 567 890',
-      },
-      {
-        'imagePath': 'assets/avatars/120px/Staff2.png',
-        'title': 'Lee Hall',
-        'subtitle': 'Worker',
-        'email': 'paul@example.com',
-        'phoneNumber': '+1 234 567 890',
-      },
-      // Add more data as needed
-    ];
-
     setState(() {
-      options = newData;
       isLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final staff = ref.watch(staffProvider);
+    final requests = ref.watch(collaborationRequestsProvider);
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -147,7 +112,7 @@ class _ListOfStaffState extends State<ListOfStaff> {
                 ),
                 isLoading
                     ? const Center(child: ShimmerListOfStaff())
-                    : options.isEmpty
+                    : staff.isEmpty
                         ? Center(
                             child: Column(
                             children: [
@@ -177,24 +142,24 @@ class _ListOfStaffState extends State<ListOfStaff> {
                             ],
                           ))
                         : ListView.builder(
+                            primary: false,
                             shrinkWrap: true,
-                            // physics: const NeverScrollableScrollPhysics(),
-                            itemCount: options.length,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: staff.length,
                             itemBuilder: (context, index) {
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 leading: CircleAvatar(
                                   backgroundColor: Colors.transparent,
                                   radius: 24 * globals.widthMediaQuery,
-                                  backgroundImage:
-                                      AssetImage(options[index]['imagePath']),
+                                  backgroundImage: staff[index].image,
                                 ),
                                 title: Text(
-                                  options[index]['title'],
+                                  staff[index].name,
                                   style: AppFonts.headline3(
                                       color: AppColors.grayscale90),
                                 ),
-                                subtitle: Text(options[index]['subtitle'],
+                                subtitle: Text(staff[index].role,
                                     style: AppFonts.body2(
                                         color: AppColors.grayscale70)),
                                 trailing: const Icon(
@@ -207,12 +172,12 @@ class _ListOfStaffState extends State<ListOfStaff> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => StaffDetailsPage(
-                                        imagePath: options[index]['imagePath'],
-                                        title: options[index]['title'],
-                                        subtitle: options[index]['subtitle'],
-                                        email: options[index]['email'],
-                                        phoneNumber: options[index]
-                                            ['phoneNumber'],
+                                        staffMemberId: staff[index].id,
+                                        image: staff[index].image,
+                                        title: staff[index].name,
+                                        subtitle: staff[index].role,
+                                        email: staff[index].email,
+                                        phoneNumber: staff[index].phoneNumber,
                                       ),
                                     ),
                                   );
@@ -220,7 +185,7 @@ class _ListOfStaffState extends State<ListOfStaff> {
                               );
                             },
                           ),
-                options.isEmpty
+                requests.isEmpty || isLoading
                     ? const SizedBox.shrink()
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,9 +198,10 @@ class _ListOfStaffState extends State<ListOfStaff> {
                           ),
                           SizedBox(height: 8 * globals.heightMediaQuery),
                           ListView.builder(
+                            primary: false,
                             shrinkWrap: true,
-                            // physics: const NeverScrollableScrollPhysics(),
-                            itemCount: options.length,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: requests.length,
                             itemBuilder: (context, index) {
                               return ListTile(
                                 minVerticalPadding:
@@ -244,11 +210,10 @@ class _ListOfStaffState extends State<ListOfStaff> {
                                 leading: CircleAvatar(
                                   backgroundColor: Colors.transparent,
                                   radius: 24 * globals.widthMediaQuery,
-                                  backgroundImage:
-                                      AssetImage(options[index]['imagePath']),
+                                  backgroundImage: requests[index].image,
                                 ),
                                 title: Text(
-                                  options[index]['title'],
+                                  requests[index].name,
                                   style: AppFonts.headline3(
                                       color: AppColors.grayscale90),
                                 ),
@@ -258,6 +223,15 @@ class _ListOfStaffState extends State<ListOfStaff> {
                                     ElevatedButton(
                                       onPressed: () {
                                         // Handle 'Yes' button click
+                                        ref.read(staffProvider.notifier).update(
+                                                (state) => List<StaffMember>
+                                                    .from(state)..add(
+                                                    requests[index]));
+                                        ref.read(collaborationRequestsProvider
+                                            .notifier).update((state) => state
+                                            .where((request) => request.name
+                                            != requests[index].name)
+                                            .toList());
                                       },
                                       style: ElevatedButton.styleFrom(
                                         elevation: 0,
@@ -275,6 +249,11 @@ class _ListOfStaffState extends State<ListOfStaff> {
                                     ElevatedButton(
                                       onPressed: () {
                                         // Handle 'No' button click
+                                        ref.read(collaborationRequestsProvider
+                                            .notifier).update((state) => state
+                                            .where((request) => request.name
+                                            != requests[index].name)
+                                            .toList());
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: AppColors.grayscale10,
@@ -313,7 +292,6 @@ class _ListOfStaffState extends State<ListOfStaff> {
       isDismissible: true,
       builder: (BuildContext context) {
         return DrowupWidget(
-          heightFactor: 0.41,
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -357,8 +335,8 @@ class _ListOfStaffState extends State<ListOfStaff> {
                       const link =
                           'https://example.com'; // Replace with your link value from the backend
                       Clipboard.setData(const ClipboardData(text: link));
-                      // CustomSnackBar.show(
-                      //     context, 'Link Copied To Clipboard');
+                      CustomSnackBar.show(
+                          context, 'Link Copied To Clipboard', Icons.copy, 20);
 
                       Navigator.pop(
                           context); // Navigate back to the previous screen

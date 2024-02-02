@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:sulala_upgrade/src/screens/profile/privacy_security.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
@@ -58,22 +60,31 @@ class _AboutApp extends State<AboutApp> {
                     width: 120 * globals.widthMediaQuery,
                     height: 120 * globals.widthMediaQuery,
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 227, 227, 227),
+                      color: AppColors.secondary10,
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: const Center(
-                      child: Text(
-                        'LOGO',
-                        style: TextStyle(color: Colors.green),
-                      ),
-                    ),
+                        child: Image(
+                      image: AssetImage('assets/graphic/Logotype.png'),
+                    )),
                   ),
                 ),
                 SizedBox(height: 16 * globals.heightMediaQuery),
-                Center(
-                  child: Text('Version Of The App: 0.1.12'.tr,
-                      style: AppFonts.body2(color: AppColors.grayscale70)),
-                ),
+                FutureBuilder(
+                    future: PackageInfo.fromPlatform(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Center(
+                          child: Text(
+                              'appVersion'.trParams({'version': snapshot.data!
+                                  .version}),
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale70)),
+                        );
+                      } else {
+                        return const CircularProgressIndicator();
+                      }
+                    }),
                 SizedBox(
                   height: 32 * globals.heightMediaQuery,
                 ),

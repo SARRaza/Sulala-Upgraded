@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sulala_upgrade/src/data/classes.dart';
+import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
@@ -15,26 +18,46 @@ typedef PermissionsCallback = void Function({
   bool isMedicalInfoSelected,
 });
 
-class ManagePermissions extends StatefulWidget {
+class ManagePermissions extends ConsumerStatefulWidget {
+  final int staffMemberId;
   final PermissionsCallback onPermissionsChanged;
   const ManagePermissions({
     super.key,
+    required this.staffMemberId,
     required this.onPermissionsChanged,
   });
 
   @override
-  State<ManagePermissions> createState() => _ManagePermissionsState();
+  ConsumerState<ManagePermissions> createState() => _ManagePermissionsState();
 }
 
-class _ManagePermissionsState extends State<ManagePermissions> {
+class _ManagePermissionsState extends ConsumerState<ManagePermissions> {
   bool isHelperSelected = false;
   bool isWorkerSelected = false;
-  bool isViewOnlySelected = true;
+  bool isViewOnlySelected = false;
   bool isCanEditSelected = false;
   bool showList = false;
   bool isGeneralInfoSelected = false;
   bool isBreedingInfoSelected = false;
   bool isMedicalInfoSelected = false;
+
+  @override
+  void initState() {
+    final staff = ref.read(staffProvider).firstWhere((member) => member.id ==
+        widget.staffMemberId);
+    switch(staff.role) {
+      case 'Viewer':
+        isViewOnlySelected = true;
+        break;
+      case 'Helper':
+        isCanEditSelected = true;
+        break;
+      case 'Worker':
+        isWorkerSelected = true;
+        break;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -227,15 +250,15 @@ class _ManagePermissionsState extends State<ManagePermissions> {
             height: 52 * globals.heightMediaQuery,
             child: PrimaryButton(
               onPressed: () {
-                widget.onPermissionsChanged(
-                  isViewOnlySelected: isViewOnlySelected,
-                  isCanEditSelected: isCanEditSelected,
-                  isWorkerSelected: isWorkerSelected,
-                  isGeneralInfoSelected: isGeneralInfoSelected,
-                  isBreedingInfoSelected: isBreedingInfoSelected,
-                  isMedicalInfoSelected: isMedicalInfoSelected,
-                );
-
+                ref.read(staffProvider.notifier).update((state) {
+                  final newState = List<StaffMember>.from(state);
+                  final staffIndex = state.indexWhere((member) => member.id ==
+                      widget.staffMemberId);
+                  newState[staffIndex] = state[staffIndex].copyWith(
+                      role: isViewOnlySelected ? 'Viewer' : isCanEditSelected ?
+                      'Helper' : 'Worker');
+                  return newState;
+                });
                 Navigator.pop(context);
               },
               text: 'Save Changes',

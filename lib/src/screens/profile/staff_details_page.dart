@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/navigate_button.dart';
@@ -11,8 +13,9 @@ import 'list_of_staff.dart';
 import 'manage_permissions.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
-class StaffDetailsPage extends StatefulWidget {
-  final String imagePath;
+class StaffDetailsPage extends ConsumerStatefulWidget {
+  final int staffMemberId;
+  final ImageProvider image;
   final String title;
   final String subtitle;
   final String email;
@@ -20,7 +23,8 @@ class StaffDetailsPage extends StatefulWidget {
 
   const StaffDetailsPage({
     super.key,
-    required this.imagePath,
+    required this.staffMemberId,
+    required this.image,
     required this.title,
     required this.subtitle,
     required this.email,
@@ -28,10 +32,10 @@ class StaffDetailsPage extends StatefulWidget {
   });
 
   @override
-  State<StaffDetailsPage> createState() => _StaffDetailsPageState();
+  ConsumerState<StaffDetailsPage> createState() => _StaffDetailsPageState();
 }
 
-class _StaffDetailsPageState extends State<StaffDetailsPage> {
+class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
   bool isViewOnlySelected = true;
   bool isCanEditSelected = false;
   bool isWorkerSelected = false;
@@ -145,6 +149,9 @@ class _StaffDetailsPageState extends State<StaffDetailsPage> {
                               height: 52 * globals.heightMediaQuery,
                               child: NavigateButton(
                                 onPressed: () {
+                                  ref.read(staffProvider.notifier).update((state
+                                      ) => state.where((member) => member.id !=
+                                      widget.staffMemberId).toList());
                                   Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                       builder: (context) =>
@@ -169,7 +176,7 @@ class _StaffDetailsPageState extends State<StaffDetailsPage> {
                               width: double.infinity,
                               height: 52 * globals.heightMediaQuery,
                               child: SecondaryButton(
-                                onPressed: () {},
+                                onPressed: () => Navigator.pop(context),
                                 text: 'Cancel',
                               ),
                             ),
@@ -195,7 +202,7 @@ class _StaffDetailsPageState extends State<StaffDetailsPage> {
                 Center(
                   child: CircleAvatar(
                     radius: 60 * globals.widthMediaQuery,
-                    backgroundImage: AssetImage(widget.imagePath),
+                    backgroundImage: widget.image,
                   ),
                 ),
                 SizedBox(height: 16 * globals.heightMediaQuery),
@@ -250,7 +257,7 @@ class _StaffDetailsPageState extends State<StaffDetailsPage> {
                 TableClickableText(
                   iconPath: 'assets/icons/frame/24px/Outlined_Phone.png',
                   text1: 'Phone Number',
-                  url: widget.phoneNumber,
+                  url: "tel:${widget.phoneNumber}",
                   urlText: widget.phoneNumber,
                 ),
                 SizedBox(
@@ -259,7 +266,7 @@ class _StaffDetailsPageState extends State<StaffDetailsPage> {
                 TableClickableText(
                   iconPath: 'assets/icons/frame/24px/16_Mail.png',
                   text1: 'Email Address',
-                  url: widget.email,
+                  url: "mailto:${widget.email}",
                   urlText: widget.email,
                 ),
                 SizedBox(
@@ -296,6 +303,7 @@ class _StaffDetailsPageState extends State<StaffDetailsPage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ManagePermissions(
+                      staffMemberId: widget.staffMemberId,
                       onPermissionsChanged: updatePermissions,
                     ),
                   ),

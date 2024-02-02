@@ -6,6 +6,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 
 // class AppSettings extends StatefulWidget {
@@ -177,138 +178,23 @@ class AppSettings extends ConsumerStatefulWidget {
 }
 
 class _AppSettings extends ConsumerState<AppSettings> {
-  final List<Map<String, dynamic>> locales = [
-    {'name': 'English', 'locale': const Locale('en', 'US')},
-    {'name': 'Hindi', 'locale': const Locale('hi', 'IN')},
-    {'name': 'Arabic', 'locale': const Locale('ar', 'SA')},
-    {'name': 'French', 'locale': const Locale('fr', 'FR')}
-  ];
+  final Map<String, Locale> _supportedLocales = {
+    'English': const Locale('en', 'US'),
+    'Hindi': const Locale('hi', 'IN'),
+    'Arabic': const Locale('ar', 'SA'),
+    'French': const Locale('fr', 'FR')
+  };
+  
+  late Locale? selectedLocale;
 
-  String selectedLanguage = ''; // Default language
-  String selectedLanguageTemp = '';
-
-  void _showLanguageSelection() {
-    double sheetHeight = MediaQuery.of(context).size.height * 0.60;
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.white,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return Container(
-              constraints: BoxConstraints(maxHeight: sheetHeight),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      'Language Of The App'.tr,
-                      style: AppFonts.title3(color: AppColors.grayscale90),
-                    ),
-                  ),
-                  Flexible(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: locales.map((locale) {
-                          return ListTile(
-                            title: Text(locale['name']),
-                            trailing: selectedLanguageTemp == locale['name']
-                                ? Container(
-                                    width: 25,
-                                    height: 25,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: AppColors.primary20,
-                                        width: 6.0,
-                                      ),
-                                    ),
-                                  )
-                                : Container(
-                                    width: 25,
-                                    height: 25,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: AppColors.grayscale30,
-                                        width: 1.0,
-                                      ),
-                                    ),
-                                  ),
-                            onTap: () {
-                              setState(() {
-                                selectedLanguageTemp = locale['name'];
-                              });
-                            },
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 32 * globals.heightMediaQuery),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 52 * globals.heightMediaQuery,
-                    child: PrimaryButton(
-                      onPressed: () {
-                        ref
-                            .read(languageProvider.notifier)
-                            .update((state) => selectedLanguageTemp);
-                        Get.updateLocale(Locale.fromSubtags(
-                          languageCode: locales
-                              .firstWhere((locale) =>
-                                  locale['name'] ==
-                                  selectedLanguageTemp)['locale']
-                              .languageCode,
-                          countryCode: locales
-                              .firstWhere((locale) =>
-                                  locale['name'] ==
-                                  selectedLanguageTemp)['locale']
-                              .countryCode,
-                        ));
-                        Navigator.pop(context);
-                      },
-                      text: 'Save',
-                    ),
-                  ),
-
-                  // Padding(
-                  //   padding: const EdgeInsets.all(12.0),
-                  //   child: ButtonWidget(
-                  //     onPressed: () {
-                  //       setState(() {
-                  //         selectedLanguage = selectedLanguageTemp;
-                  //       });
-                  //       Get.updateLocale(Locale.fromSubtags(
-                  //           languageCode: locales
-                  //               .firstWhere((locale) =>
-                  //                   locale['name'] ==
-                  //                   selectedLanguage)['locale']
-                  //               .languageCode,
-                  //           countryCode: locales
-                  //               .firstWhere((locale) =>
-                  //                   locale['name'] ==
-                  //                   selectedLanguage)['locale']
-                  //               .countryCode));
-                  //       Navigator.pop(context);
-                  //     },
-                  //     buttonText: 'Save'.tr,
-                  //   ),
-                  // ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
+  @override
+  void initState() {
+    selectedLocale = Get.locale;
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final language = ref.watch(languageProvider);
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
@@ -355,7 +241,8 @@ class _AppSettings extends ConsumerState<AppSettings> {
                   style: AppFonts.body1(color: AppColors.grayscale90),
                 ),
                 subtitle: Text(
-                  language,
+                  _supportedLocales.keys.firstWhere((language
+                      ) => _supportedLocales[language] == Get.locale),
                   style: AppFonts.body2(color: AppColors.grayscale60),
                 ),
                 onTap: _showLanguageSelection,
@@ -372,4 +259,116 @@ class _AppSettings extends ConsumerState<AppSettings> {
       ),
     );
   }
+
+  void _showLanguageSelection() {
+    double sheetHeight = MediaQuery.of(context).size.height * 0.60;
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              constraints: BoxConstraints(maxHeight: sheetHeight),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      'Language Of The App'.tr,
+                      style: AppFonts.title3(color: AppColors.grayscale90),
+                    ),
+                  ),
+                  Flexible(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: _supportedLocales.keys.map((name) {
+                          final locale = _supportedLocales[name];
+
+                          return ListTile(
+                            title: Text(name),
+                            trailing: locale == selectedLocale
+                                ? Container(
+                                    width: 25,
+                                    height: 25,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: AppColors.primary20,
+                                        width: 6.0,
+                                      ),
+                                    ),
+                                  )
+                                : Container(
+                                    width: 25,
+                                    height: 25,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: AppColors.grayscale30,
+                                        width: 1.0,
+                                      ),
+                                    ),
+                                  ),
+                            onTap: () {
+                              setState(() {
+                                selectedLocale = locale;
+                              });
+                            },
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 32 * globals.heightMediaQuery),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52 * globals.heightMediaQuery,
+                    child: PrimaryButton(
+                      onPressed: () {
+                        if(selectedLocale != null) {
+                          Get.updateLocale(selectedLocale!);
+                        }
+
+                        Navigator.pop(context);
+                      },
+                      text: 'Save',
+                    ),
+                  ),
+
+                  // Padding(
+                  //   padding: const EdgeInsets.all(12.0),
+                  //   child: ButtonWidget(
+                  //     onPressed: () {
+                  //       setState(() {
+                  //         selectedLanguage = selectedLanguageTemp;
+                  //       });
+                  //       Get.updateLocale(Locale.fromSubtags(
+                  //           languageCode: locales
+                  //               .firstWhere((locale) =>
+                  //                   locale['name'] ==
+                  //                   selectedLanguage)['locale']
+                  //               .languageCode,
+                  //           countryCode: locales
+                  //               .firstWhere((locale) =>
+                  //                   locale['name'] ==
+                  //                   selectedLanguage)['locale']
+                  //               .countryCode));
+                  //       Navigator.pop(context);
+                  //     },
+                  //     buttonText: 'Save'.tr,
+                  //   ),
+                  // ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+
 }

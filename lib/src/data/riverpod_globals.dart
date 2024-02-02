@@ -26,12 +26,10 @@ final firstNameProvider = StateProvider<String>((ref) => '');
 final lastNameProvider = StateProvider<String>((ref) => '');
 
 // Add Some Details Global Variables
+final farmAddressProvider = StateProvider<String>((ref) => '');
 final cityProvider = StateProvider<String>((ref) => '');
 final countryProvider = StateProvider<String>((ref) => '');
 final proflePictureProvider = StateProvider<File?>((ref) => null);
-
-// Selected Language
-final languageProvider = StateProvider<String>((ref) => '');
 
 // Privacy & Security Global Variables
 final emailAddressVisibilityProvider = StateProvider<bool>((ref) => false);
@@ -43,7 +41,8 @@ final selectedAnimalSpeciesProvider = StateProvider<String>((ref) => '');
 final selectedAnimalBreedsProvider = StateProvider<String>((ref) => '');
 
 // Enter Complete Info Global Varibales
-final selectedAnimalImageProvider = StateProvider<ImageProvider?>((ref) => null);
+final selectedAnimalImageProvider =
+    StateProvider<ImageProvider?>((ref) => null);
 final animalNameProvider = StateProvider<String>((ref) => '');
 final shoudlAddAnimalProvider = StateProvider<bool>((ref) => false);
 final layingFrequencyProvider = StateProvider<String>((ref) => '');
@@ -61,7 +60,8 @@ final selectedOviDatesProvider =
     StateProvider<Map<String, DateTime?>>((ref) => {});
 final keptInOvalProvider = StateProvider<String>((ref) => '');
 final selectedOviChipsProvider = StateProvider<List<String>>((ref) => []);
-final customOviTextFieldsProvider = StateProvider<Map<String, String>>((ref) => {});
+final customOviTextFieldsProvider =
+    StateProvider<Map<String, String>>((ref) => {});
 final selectedFiltersProvider = StateProvider<List<String>>((ref) => []);
 final dateOfBirthProvider = StateProvider<String>((ref) => '');
 final dateOfLayingEggsProvider = StateProvider<String>((ref) => '');
@@ -87,10 +87,8 @@ final surgeryDetailsProvider = StateProvider<List<SurgeryDetails>>((ref) => []);
 // final grandfatherNamesProvider = StateProvider<String>((ref) => 'Add');
 // final grandmotherNamesProvider = StateProvider<String>((ref) => 'Add');
 
-final animalSireDetailsProvider =
-    StateProvider<MainAnimalSire?>((ref) => null);
-final animalDamDetailsProvider =
-    StateProvider<MainAnimalDam?>((ref) => null);
+final animalSireDetailsProvider = StateProvider<MainAnimalSire?>((ref) => null);
+final animalDamDetailsProvider = StateProvider<MainAnimalDam?>((ref) => null);
 
 // Reg Home Page Pie Chart Global Variables
 final mammalCountProvider = Provider<int>((ref) {
@@ -107,9 +105,7 @@ final oviparousCountProvider = Provider<int>((ref) {
 });
 
 final totalAnimalsCountProvider = Provider<int>((ref) {
-  return ref
-      .watch(ovianimalsProvider)
-      .length;
+  return ref.watch(ovianimalsProvider).length;
 });
 
 List<String> mammalSpeciesList = [
@@ -142,7 +138,8 @@ List<String> oviparousSpeciesList = [
   'Gecko',
 ];
 
-List<String> totalBreedsList = ['Adelie Penguin',
+List<String> totalBreedsList = [
+  'Adelie Penguin',
   'African Elephant',
   'African Lion',
   'American Alligator',
@@ -207,7 +204,8 @@ List<String> totalBreedsList = ['Adelie Penguin',
   'Thoroughbred',
   'Tokay Gecko',
   'Tree Frog',
-  'suhail'];
+  'suhail'
+];
 
 Map<String, List<String>> speciesToBreedsMap = {
   'Dog': ['Labrador', 'German Shepherd', 'Golden Retriever'],
@@ -280,18 +278,19 @@ Map<String, int> gestationPeriods = {
 };
 
 Map<String, int> breedingToLayingPeriods = {
-  'Duck': 7,         // Ducks may lay eggs about a week after mating
-  'Chicken': 1,      // Chickens can lay an egg a day or two after mating
-  'Turtle': 30,      // Turtles might lay eggs about a month after mating
-  'Snake': 30,       // Snakes often lay eggs around a month after mating
-  'Crocodile': 30,   // Crocodiles usually lay eggs about a month after mating
-  'Eagle': 40,       // Eagles lay eggs several weeks after mating
-  'Frog': 7,         // Frogs lay eggs shortly after mating
-  'Fish': 2,         // Many fish species lay eggs within a few days after mating/spawning
-  'Penguin': 15,     // Penguins may lay eggs a couple of weeks after mating
-  'Alligator': 35,   // Alligators typically lay eggs about a month after mating
-  'Salmon': 3,       // Salmon lay eggs shortly after spawning
-  'Gecko': 20,       // Geckos might lay eggs a few weeks after mating
+  'Duck': 7, // Ducks may lay eggs about a week after mating
+  'Chicken': 1, // Chickens can lay an egg a day or two after mating
+  'Turtle': 30, // Turtles might lay eggs about a month after mating
+  'Snake': 30, // Snakes often lay eggs around a month after mating
+  'Crocodile': 30, // Crocodiles usually lay eggs about a month after mating
+  'Eagle': 40, // Eagles lay eggs several weeks after mating
+  'Frog': 7, // Frogs lay eggs shortly after mating
+  'Fish':
+      2, // Many fish species lay eggs within a few days after mating/spawning
+  'Penguin': 15, // Penguins may lay eggs a couple of weeks after mating
+  'Alligator': 35, // Alligators typically lay eggs about a month after mating
+  'Salmon': 3, // Salmon lay eggs shortly after spawning
+  'Gecko': 20, // Geckos might lay eggs a few weeks after mating
 };
 
 Map<String, int> incubationPeriods = {
@@ -362,5 +361,48 @@ final breedingChildrenDetailsProvider =
 
 final remindersProvider = StateProvider<List<ReminderItem>>((ref) => []);
 
-final breedingPartnerProvider =
-    StateProvider<BreedingPartner?>((ref) => null);
+final breedingPartnerProvider = StateProvider<BreedingPartner?>((ref) => null);
+
+final staffProvider = StateProvider<List<StaffMember>>((ref) => [
+      StaffMember(
+          id: 1,
+          image: const AssetImage('assets/avatars/120px/Staff1.png'),
+          name: 'Paul Rivera',
+          role: 'Viewer',
+          email: 'paul@example.com',
+          phoneNumber: '+1 234 567 890'),
+      StaffMember(
+          id: 2,
+          image: const AssetImage('assets/avatars/120px/Staff2.png'),
+          name: 'Rebecca Wilson',
+          role: 'Helper',
+          email: 'paul@example.com',
+          phoneNumber: '+1 234 567 890'),
+    ]);
+final totalStaffProvider = Provider<int>((ref) {
+  return ref.watch(staffProvider).length;
+});
+final collaborationRequestsProvider =
+    StateProvider<List<StaffMember>>((ref) => [
+          StaffMember(
+              id: 3,
+              image: const AssetImage('assets/avatars/120px/Staff3.png'),
+              name: 'Patricia Williams',
+              role: 'Viewer',
+              email: 'paul@example.com',
+              phoneNumber: '+1 234 567 890'),
+          StaffMember(
+              id: 4,
+              image: const AssetImage('assets/avatars/120px/Staff1.png'),
+              name: 'Scott Simmons',
+              role: 'Viewer',
+              email: 'paul@example.com',
+              phoneNumber: '+1 234 567 890'),
+          StaffMember(
+              id: 5,
+              image: const AssetImage('assets/avatars/120px/Staff2.png'),
+              name: 'Lee Hall',
+              role: 'Viewer',
+              email: 'paul@example.com',
+              phoneNumber: '+1 234 567 890'),
+        ]);

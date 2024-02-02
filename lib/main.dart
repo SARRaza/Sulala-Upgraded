@@ -10,6 +10,7 @@ import 'src/screens/sign_up/create_password.dart';
 import 'src/theme/colors/colors.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const ProviderScope(
     child: MyApp(),
   ));

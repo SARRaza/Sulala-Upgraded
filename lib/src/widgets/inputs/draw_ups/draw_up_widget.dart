@@ -68,7 +68,8 @@ class _DrowupWidgetState extends State<DrowupWidget> {
                   : const SizedBox.shrink(),
               const SizedBox(height: 16),
               widget.content,
-              SizedBox(
+              if(widget.primaryButton != null)
+                SizedBox(
                   height: globals.heightMediaQuery * 52,
                   width: globals.widthMediaQuery * 343,
                   child: widget.primaryButton),

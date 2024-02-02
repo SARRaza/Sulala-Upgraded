@@ -17,7 +17,8 @@ class LocalStrings extends Translations {
           'SignIn': 'Sign In',
           'Welcome': 'Welcome',
           '1 year': '1 year',
-          'numYears': '%s years'
+          'numYears': '%s years',
+          'appVersion': 'Version Of The App: @version'
         },
         // Hindi Language
         'hi_IN': {
@@ -31,7 +32,8 @@ class LocalStrings extends Translations {
           'Wannajoin': 'अभी अपना फार्म शुरू करना चाहते हैं और जुड़ना चाहते हैं',
           'Joinnow': 'अब शामिल हों',
           'SignIn': 'दाखिल करना',
-          'Welcome': 'स्वागत'
+          'Welcome': 'स्वागत',
+          'appVersion': 'ऐप का संस्करण: @version'
         },
         // Arabic Language
         'ar_SA': {
@@ -140,7 +142,7 @@ class LocalStrings extends Translations {
           'Delete Photo': 'احذف الصورة الرمزية',
           // Edit Profile Page Ends
 // About App Starts
-          'Version Of The App: 0.1.12': 'إصدار التطبيق: 0.1.12',
+          'appVersion': 'نسخة التطبيق: @version',
           'Terms Of Use': 'شروط الاستخدام',
           'Privacy Policy': 'سياسة الخصوصية',
           // Join Now

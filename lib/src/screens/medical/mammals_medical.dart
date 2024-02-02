@@ -1619,9 +1619,10 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
           return Container(
             color: Colors.transparent,
             child: DrowupWidget(
-              heightFactor: 0.45,
+              heightFactor: 0.5,
               heading: 'Pregnancies count',
               content: Form(
+                key: _pregnanciesCountFormKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -1631,7 +1632,10 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                         PrimaryTextField(
                             keyboardType: TextInputType.number,
                             hintText: 'Enter pregnancies count',
-                            controller: pregnanciesCountController
+                            controller: pregnanciesCountController,
+                            validator: (value) => value == null || int.tryParse(
+                                value) == null ? 'Please enter integer number'
+                                .tr : null,
                         ),
                         SizedBox(
                           height: 55 * globals.heightMediaQuery,
@@ -1642,8 +1646,11 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                           child: PrimaryButton(
                               text: 'Confirm',
                               onPressed: () {
-                                Navigator.pop(context,
-                                    int.parse(pregnanciesCountController.text));
+                                if(_pregnanciesCountFormKey.currentState!
+                                    .validate()) {
+                                  Navigator.pop(context, int.parse(
+                                      pregnanciesCountController.text));
+                                }
                               }),
                         )
                       ],
@@ -1668,6 +1675,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
   Future<bool?> _confirmDeletion(DismissDirection direction) {
     return showDialog(context: context, builder: (context) =>
         ConfirmDeleteDialog(
-            content: 'Are you sure to you want to delete the details, files etc.?'.tr));
+            content: 'Are you sure you want to delete the details, files etc.?'
+                .tr));
   }
 }

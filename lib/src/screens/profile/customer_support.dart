@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
@@ -41,6 +44,13 @@ class _CustomerSupportState extends State<CustomerSupport> {
     },
   ];
 
+  final _whatsAppNumber = '+96596721717';
+  final _phoneNumber = '+965 96721717';
+
+  Uri get _whatsAppUrl => Uri.parse(Platform.isAndroid
+      ? 'https://wa.me/$_whatsAppNumber/' :
+  'https://api.whatsapp.com/send?phone=$_whatsAppNumber');
+
   void _toggleExpansion(int index) {
     setState(() {
       _isExpanded[index] = !_isExpanded[index];
@@ -79,17 +89,14 @@ class _CustomerSupportState extends State<CustomerSupport> {
                   color: AppColors.grayscale50,
                   size: 30,
                 ),
-                onTap: () {
-                  // Handle option 1 tap
-                  Navigator.pop(context);
-                },
+                onTap: _chat,
               ),
               ListTile(
                 leading: Image.asset(
                   'assets/icons/frame/24px/32_Phone.png',
                 ),
                 title: Text(
-                  '+965 96721717',
+                  _phoneNumber,
                   style: AppFonts.body1(color: AppColors.grayscale90),
                 ),
                 subtitle: Text(
@@ -101,10 +108,7 @@ class _CustomerSupportState extends State<CustomerSupport> {
                   color: AppColors.grayscale50,
                   size: 30,
                 ),
-                onTap: () {
-                  // Handle option 1 tap
-                  Navigator.pop(context);
-                },
+                onTap: _callUs,
               ),
               SizedBox(
                 height: 32 * globals.heightMediaQuery,
@@ -219,5 +223,17 @@ class _CustomerSupportState extends State<CustomerSupport> {
             ),
           )),
     );
+  }
+
+  Future<void> _chat() async {
+    if(!await launchUrl(_whatsAppUrl)) {
+      throw Exception('Could not launch $_whatsAppUrl');
+    }
+  }
+  
+  Future<void> _callUs() async {
+    if(!await launchUrl(Uri.parse('tel:$_phoneNumber'))) {
+      throw Exception('Could not launch $_phoneNumber');
+    }
   }
 }
