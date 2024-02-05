@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
-import '../../../data/classes.dart';
+import 'package:sulala_upgrade/src/data/globals.dart';
+import '../../../data/classes/ovi_variables.dart';
 import '../../../data/riverpod_globals.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
@@ -36,7 +36,7 @@ class _AnimalTypeSelectorState extends ConsumerState<AnimalTypeSelector> {
           title: Text('Mammal',
               style: AppFonts.body2(color: AppColors.grayscale90)),
           trailing: Container(
-            width: globals.widthMediaQuery * 24,
+            width: SizeConfig.widthMultiplier(context) * 24,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
@@ -62,7 +62,7 @@ class _AnimalTypeSelectorState extends ConsumerState<AnimalTypeSelector> {
           title: Text('Oviparous',
               style: AppFonts.body2(color: AppColors.grayscale90)),
           trailing: Container(
-            width: globals.widthMediaQuery * 24,
+            width: SizeConfig.widthMultiplier(context) * 24,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(

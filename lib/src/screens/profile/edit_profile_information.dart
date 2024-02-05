@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
+import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
@@ -85,7 +86,7 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
           leading: IconButton(
             padding: EdgeInsets.zero,
             icon: Container(
-              padding: EdgeInsets.all(6 * globals.widthMediaQuery),
+              padding: EdgeInsets.all(6 * SizeConfig.widthMultiplier(context)),
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 color: AppColors.grayscale10,
@@ -105,22 +106,20 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(
-                left: (16 * globals.widthMediaQuery),
-                right: (16 * globals.widthMediaQuery)),
+                left: (16 * SizeConfig.widthMultiplier(context)),
+                right: (16 * SizeConfig.widthMultiplier(context))),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: 40 * globals.heightMediaQuery,
+                  height: 40 * SizeConfig.heightMultiplier(context),
                 ),
                 Center(
                   child: GestureDetector(
                     child: CircleAvatar(
                       radius: 70,
                       backgroundColor: Colors.grey[100],
-                      backgroundImage: photo != null
-                          ? FileImage(photo!)
-                          : null,
+                      backgroundImage: photo != null ? FileImage(photo!) : null,
                       child: photo == null
                           ? const Icon(
                               Icons.camera_alt,
@@ -131,7 +130,7 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                     ),
                   ),
                 ),
-                SizedBox(height: 16 * globals.heightMediaQuery),
+                SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
                 Center(
                   child: PrimaryTextButton(
                     onPressed: () {
@@ -141,107 +140,116 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                     status: TextStatus.idle,
                   ),
                 ),
-                SizedBox(height: 32 * globals.heightMediaQuery),
+                SizedBox(height: 32 * SizeConfig.heightMultiplier(context)),
                 Text(
                   "General Info".tr,
                   style: AppFonts.headline3(color: AppColors.grayscale90),
                 ),
-                SizedBox(height: 24 * globals.heightMediaQuery),
+                SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                 PrimaryTextField(
                     hintText: 'Enter Your First Name'.tr,
                     controller: _firstnameController,
                     labelText: 'First Name'.tr),
-                SizedBox(height: 16 * globals.heightMediaQuery),
+                SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
                 PrimaryTextField(
                     hintText: 'Enter Your Last Name'.tr,
                     controller: _lastnameController,
                     labelText: 'Last Name'.tr),
-                SizedBox(height: 24 * globals.heightMediaQuery),
+                SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                 Text(
                   "Farm Name".tr,
                   style: AppFonts.headline3(color: AppColors.grayscale90),
                 ),
-                SizedBox(height: 16 * globals.heightMediaQuery),
+                SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
                 PrimaryTextField(
                   hintText: 'Enter Your Farm Name'.tr,
                   controller: farmNameController,
                 ),
-                SizedBox(height: 24 * globals.heightMediaQuery),
+                SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                 Text(
                   "Farm Owner".tr,
                   style: AppFonts.headline3(color: AppColors.grayscale90),
                 ),
-                SizedBox(height: 16 * globals.heightMediaQuery),
+                SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
                 PrimaryTextField(
                   hintText: 'Enter Farm Owner Name'.tr,
                   controller: ownerNameController,
                 ),
-                SizedBox(height: 32 * globals.heightMediaQuery),
+                SizedBox(height: 32 * SizeConfig.heightMultiplier(context)),
                 Text("Contact Details".tr,
                     style: AppFonts.headline3(color: AppColors.grayscale90)),
-                SizedBox(height: 24 * globals.heightMediaQuery),
+                SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                 const PhoneNumberField(),
-                SizedBox(height: 16 * globals.heightMediaQuery),
+                SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
                 PrimaryTextField(
                   hintText: 'Enter Your Email Address'.tr,
                   controller: _emailController,
                   labelText: 'Email Address'.tr,
                 ),
-                SizedBox(height: 32 * globals.heightMediaQuery),
+                SizedBox(height: 32 * SizeConfig.heightMultiplier(context)),
                 Text("Farm Address".tr,
                     style: AppFonts.headline3(color: AppColors.grayscale90)),
-                SizedBox(height: 24 * globals.heightMediaQuery),
+                SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                 PrimaryTextField(
                   hintText: 'Enter Address'.tr,
                   controller: _addressController,
                 ),
-                SizedBox(height: 16 * globals.heightMediaQuery),
+                SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
                 PrimaryTextField(
                   hintText: 'Enter Your City'.tr,
                   controller: _cityController,
                 ),
-                SizedBox(height: 16 * globals.heightMediaQuery),
+                SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
                 PrimaryTextField(
                   hintText: 'Enter Your Country'.tr,
                   controller: _countryController,
                 ),
-                SizedBox(height: 100 * globals.heightMediaQuery),
+                SizedBox(height: 100 * SizeConfig.heightMultiplier(context)),
               ],
             ),
           ),
         ),
         floatingActionButton: SizedBox(
-          height: 52 * globals.heightMediaQuery,
-          width: 343 * globals.widthMediaQuery,
+          height: 52 * SizeConfig.heightMultiplier(context),
+          width: 343 * SizeConfig.widthMultiplier(context),
           child: PrimaryButton(
             onPressed: () {
               //Save informations
               ref.read(proflePictureProvider.notifier).update((state) => photo);
-              ref.read(firstNameProvider.notifier).update((state
-                  ) => _firstnameController.text);
-              ref.read(lastNameProvider.notifier).update((state
-                  ) => _lastnameController.text);
-              ref.read(whatIsTheNameOfYourFarmProvider.notifier).update((state
-                  ) => farmNameController.text);
-              ref.read(whoOwnTheFarmProvider.notifier).update((state
-                  ) => ownerNameController.text);
-              ref.read(phoneNumberProvider.notifier).update((state
-                  ) => _phonenumController.text);
-              ref.read(emailAdressProvider.notifier).update((state
-                  ) => _emailController.text);
-              ref.read(farmAddressProvider.notifier).update((state
-                  ) => _addressController.text);
-              ref.read(cityProvider.notifier).update((state
-                  ) => _cityController.text);
-              ref.read(countryProvider.notifier).update((state
-                  ) => _countryController.text);
+              ref
+                  .read(firstNameProvider.notifier)
+                  .update((state) => _firstnameController.text);
+              ref
+                  .read(lastNameProvider.notifier)
+                  .update((state) => _lastnameController.text);
+              ref
+                  .read(whatIsTheNameOfYourFarmProvider.notifier)
+                  .update((state) => farmNameController.text);
+              ref
+                  .read(whoOwnTheFarmProvider.notifier)
+                  .update((state) => ownerNameController.text);
+              ref
+                  .read(phoneNumberProvider.notifier)
+                  .update((state) => _phonenumController.text);
+              ref
+                  .read(emailAdressProvider.notifier)
+                  .update((state) => _emailController.text);
+              ref
+                  .read(farmAddressProvider.notifier)
+                  .update((state) => _addressController.text);
+              ref
+                  .read(cityProvider.notifier)
+                  .update((state) => _cityController.text);
+              ref
+                  .read(countryProvider.notifier)
+                  .update((state) => _countryController.text);
               Navigator.pop(context);
 
               CustomSnackBar.show(
                 context,
                 'Information Updated'.tr,
                 Icons.check_circle_rounded,
-                80 * globals.heightMediaQuery,
+                80 * SizeConfig.heightMultiplier(context),
                 color: AppColors.primary10,
               );
             },

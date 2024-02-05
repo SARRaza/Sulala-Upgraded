@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 
 import '../../../theme/colors/colors.dart';
@@ -15,15 +15,15 @@ class PrimaryDateField extends ConsumerStatefulWidget {
   final ValueChanged<bool>? onErrorChanged;
   final TextEditingController? controller;
 
-  const PrimaryDateField({
-    Key? key,
-    required this.hintText,
-    this.labelText,
-    this.errorMessage,
-    this.onChanged,
-    this.onErrorChanged,
-    this.controller
-  }) : super(key: key);
+  const PrimaryDateField(
+      {Key? key,
+      required this.hintText,
+      this.labelText,
+      this.errorMessage,
+      this.onChanged,
+      this.onErrorChanged,
+      this.controller})
+      : super(key: key);
 
   @override
   ConsumerState<PrimaryDateField> createState() => _PrimaryDateFieldState();
@@ -41,14 +41,16 @@ class _PrimaryDateFieldState extends ConsumerState<PrimaryDateField> {
     super.initState();
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
-    _textEditingController = widget.controller?? TextEditingController();
+    _textEditingController = widget.controller ?? TextEditingController();
     _textEditingController.addListener(() {
-      if(!_textEditingController.text.startsWith('D')) {
+      if (!_textEditingController.text.startsWith('D')) {
         setState(() {
-          final dateSegments = _textEditingController.text.split('/').map((segment
-              ) => int.parse(segment)).toList();
-          _selectedDate = DateTime(dateSegments[2], dateSegments[1],
-              dateSegments[0]);
+          final dateSegments = _textEditingController.text
+              .split('/')
+              .map((segment) => int.parse(segment))
+              .toList();
+          _selectedDate =
+              DateTime(dateSegments[2], dateSegments[1], dateSegments[0]);
         });
       }
     });
@@ -107,9 +109,7 @@ class _PrimaryDateFieldState extends ConsumerState<PrimaryDateField> {
         _selectedDate = pickedDate;
         _textEditingController.text = _formatDate(pickedDate);
       });
-      ref
-          .read(dateOfBirthProvider.notifier)
-          .update((state) => _formatDate(pickedDate));
+      ref.read(dateOfBirthProvider.notifier).update((state) => pickedDate);
       if (widget.onChanged != null) {
         widget.onChanged!(pickedDate);
       }
@@ -212,7 +212,8 @@ class _PrimaryDateFieldState extends ConsumerState<PrimaryDateField> {
                   ),
                 ),
                 IconButton(
-                  padding: EdgeInsets.only(right: globals.widthMediaQuery * 10),
+                  padding: EdgeInsets.only(
+                      right: SizeConfig.widthMultiplier(context) * 10),
                   onPressed: () {
                     if (_selectedDate != null) {
                       clearDate();
@@ -250,37 +251,35 @@ class _PrimaryDateFieldState extends ConsumerState<PrimaryDateField> {
   }
 }
 
-
-
 // Example of use:
 
 // SizedBox(
-            //   width: 300,
-            //   child: PrimaryDateField(
-            //     hintText: 'Select a date',
-            //     errorMessage: _hasError
-            //         ? 'Selected date should not be in the future'
-            //         : null,
-            //     onChanged: (selectedDate) {
-            //       final hasError = selectedDate.isAfter(DateTime.now());
-            //       setState(() {
-            //         _hasError = hasError;
-            //         _selectedDate = hasError ? null : selectedDate;
-            //       });
-            //     },
-            //     onErrorChanged: (hasError) {
-            //       setState(() {
-            //         _hasError = hasError;
-            //       });
-            //     },
-            //   ),
-            // ),
+//   width: 300,
+//   child: PrimaryDateField(
+//     hintText: 'Select a date',
+//     errorMessage: _hasError
+//         ? 'Selected date should not be in the future'
+//         : null,
+//     onChanged: (selectedDate) {
+//       final hasError = selectedDate.isAfter(DateTime.now());
+//       setState(() {
+//         _hasError = hasError;
+//         _selectedDate = hasError ? null : selectedDate;
+//       });
+//     },
+//     onErrorChanged: (hasError) {
+//       setState(() {
+//         _hasError = hasError;
+//       });
+//     },
+//   ),
+// ),
 
-            // Text(
-            //   'Entered Text: ${_selectedDate != null ? _formatDate(_selectedDate!) : ""}',
-            //   style: const TextStyle(fontSize: 16),
-            // ),
+// Text(
+//   'Entered Text: ${_selectedDate != null ? _formatDate(_selectedDate!) : ""}',
+//   style: const TextStyle(fontSize: 16),
+// ),
 
-            //           String _formatDate(DateTime date) {
-            //   return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year.toString()}";
-            // }
+//           String _formatDate(DateTime date) {
+//   return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year.toString()}";
+// }

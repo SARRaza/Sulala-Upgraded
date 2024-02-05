@@ -8,7 +8,10 @@ import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:sulala_upgrade/src/widgets/dialogs/confirm_delete_dialog.dart';
-import '../../data/classes.dart';
+import '../../data/classes/breeding_event_variables.dart';
+import '../../data/classes/medical_checkup_details.dart';
+import '../../data/classes/ovi_variables.dart';
+import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -17,7 +20,7 @@ import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/inputs/date_fields/primary_date_field.dart';
 import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 class EditMedicalCheckUp extends ConsumerStatefulWidget {
   final OviVariables OviDetails;
@@ -74,7 +77,8 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
             IconButton(
               padding: EdgeInsets.zero,
               icon: Container(
-                padding: EdgeInsets.all(8 * globals.widthMediaQuery),
+                padding:
+                    EdgeInsets.all(8 * SizeConfig.widthMultiplier(context)),
                 decoration: const BoxDecoration(
                     color: AppColors.grayscale10, shape: BoxShape.circle),
                 child: const Icon(
@@ -91,8 +95,8 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(
-                left: 16 * globals.widthMediaQuery,
-                right: 16 * globals.widthMediaQuery),
+                left: 16 * SizeConfig.widthMultiplier(context),
+                right: 16 * SizeConfig.widthMultiplier(context)),
             child: Form(
               key: _formKey,
               child: Column(
@@ -103,7 +107,7 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                     style: AppFonts.title3(color: AppColors.grayscale90),
                   ),
                   SizedBox(
-                    height: 32 * globals.heightMediaQuery,
+                    height: 32 * SizeConfig.heightMultiplier(context),
                   ),
                   PrimaryTextField(
                     hintText: 'Checkup Name',
@@ -113,7 +117,7 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                         ? 'Please enter some text'.tr
                         : null,
                   ),
-                  SizedBox(height: 24 * globals.heightMediaQuery),
+                  SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                   PrimaryDateField(
                     hintText: firstCheckUp != null
                         ? DateFormat('yyyy-MM-dd').format(firstCheckUp!)
@@ -121,7 +125,7 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                     labelText: 'Date Of Checkup',
                     onChanged: (value) => setState(() => firstCheckUp = value),
                   ),
-                  SizedBox(height: 24 * globals.heightMediaQuery),
+                  SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                   PrimaryDateField(
                     hintText: secondCheckUp != null
                         ? DateFormat('yyyy-MM-dd').format(secondCheckUp!)
@@ -129,7 +133,7 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                     labelText: 'Date Of Next Checkup',
                     onChanged: (value) => setState(() => secondCheckUp = value),
                   ),
-                  SizedBox(height: 24 * globals.heightMediaQuery),
+                  SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                   Focus(
                     onFocusChange:
                         (hasFocus) {}, // Dummy onFocusChange callback
@@ -140,11 +144,11 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                     ),
                   ),
                   SizedBox(
-                    height: 16 * globals.heightMediaQuery,
+                    height: 16 * SizeConfig.heightMultiplier(context),
                   ),
                   SizedBox(
-                    height: 52 * globals.heightMediaQuery,
-                    width: 343 * globals.widthMediaQuery,
+                    height: 52 * SizeConfig.heightMultiplier(context),
+                    width: 343 * SizeConfig.widthMultiplier(context),
                     child: PrimaryButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
@@ -183,8 +187,7 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                               ref
                                   .read(ovianimalsProvider.notifier)
                                   .update((state) {
-                                    final newState = List<OviVariables>.from(
-                                        state);
+                                final newState = List<OviVariables>.from(state);
                                 final checkupDetails =
                                     state[animalIndex].checkUpDetails;
                                 checkupDetails[state[animalIndex].animalName]![
@@ -210,11 +213,11 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                     ),
                   ),
                   SizedBox(
-                    height: 8 * globals.heightMediaQuery,
+                    height: 8 * SizeConfig.heightMultiplier(context),
                   ),
                   SizedBox(
-                    height: 52 * globals.heightMediaQuery,
-                    width: 343 * globals.widthMediaQuery,
+                    height: 52 * SizeConfig.heightMultiplier(context),
+                    width: 343 * SizeConfig.widthMultiplier(context),
                     child: NavigateButton(
                       onPressed: deleteCheckup,
                       text: 'Delete',
@@ -230,32 +233,29 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
   }
 
   void deleteCheckup() {
-    showDialog(context: context, builder: (
-        context) => ConfirmDeleteDialog(
-        content: "Are you sure you want to delete the checkup".tr)).then(
-            (confirm) {
-              if(confirm) {
-                final animalIndex =
-                ref.read(ovianimalsProvider).indexWhere(
-                      (animal) =>
-                  animal.animalName ==
-                      widget.OviDetails.animalName,
-                );
+    showDialog(
+            context: context,
+            builder: (context) => ConfirmDeleteDialog(
+                content: "Are you sure you want to delete the checkup".tr))
+        .then((confirm) {
+      if (confirm) {
+        final animalIndex = ref.read(ovianimalsProvider).indexWhere(
+              (animal) => animal.animalName == widget.OviDetails.animalName,
+            );
 
-                ref.read(ovianimalsProvider.notifier).update((state) {
-                  final newState = List<OviVariables>.from(state);
-                  newState[animalIndex].checkUpDetails[widget.OviDetails
-                      .animalName]!.removeWhere((checkup) => checkup
-                      .checkupName == widget.selectedCheckup!
-                      .checkupName);
+        ref.read(ovianimalsProvider.notifier).update((state) {
+          final newState = List<OviVariables>.from(state);
+          newState[animalIndex]
+              .checkUpDetails[widget.OviDetails.animalName]!
+              .removeWhere((checkup) =>
+                  checkup.checkupName == widget.selectedCheckup!.checkupName);
 
-                  return newState;
-                });
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text("The checkup has been deleted".tr)));
-                Navigator.pop(context);
-              }
-            });
-
+          return newState;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("The checkup has been deleted".tr)));
+        Navigator.pop(context);
+      }
+    });
   }
 }

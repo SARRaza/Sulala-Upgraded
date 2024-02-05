@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
@@ -42,7 +42,7 @@ class AnimalListWidget extends StatelessWidget {
             backgroundImage: AssetImage(imagePath),
           ),
           SizedBox(
-            width: globals.widthMediaQuery * 9,
+            width: SizeConfig.widthMultiplier(context) * 9,
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,

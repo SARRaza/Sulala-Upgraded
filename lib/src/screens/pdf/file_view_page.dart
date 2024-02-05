@@ -27,26 +27,31 @@ class _FileViewPageState extends State<FileViewPage> {
     final file = widget.files[index];
     final extension = file.path.split('.').last;
     final actions = widget.files.length > 1 ? <Widget>[] : null;
-    if(actions != null) {
-      if(index > 0) {
-        actions.add(TextButton(onPressed: showPrevFile, child: Text(
-            '< Prev'.tr)));
+    if (actions != null) {
+      if (index > 0) {
+        actions
+            .add(TextButton(onPressed: showPrevFile, child: Text('< Prev'.tr)));
       }
-      if(index < (widget.files.length - 1)) {
-        actions.add(TextButton(onPressed: showNextFile, child: Text(
-            'Next >'.tr)));
+      if (index < (widget.files.length - 1)) {
+        actions
+            .add(TextButton(onPressed: showNextFile, child: Text('Next >'.tr)));
       }
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('File Viewer'.tr),
-        actions: actions,
-      ),
-      body: extension == 'pdf' ? PDFView(key: Key(file.path), filePath: file.path,)
-          : Image(
-        image: FileImage(file), width: MediaQuery.of(context).size.width,)
-    );
+        appBar: AppBar(
+          title: Text('File Viewer'.tr),
+          actions: actions,
+        ),
+        body: extension == 'pdf'
+            ? PDFView(
+                key: Key(file.path),
+                filePath: file.path,
+              )
+            : Image(
+                image: FileImage(file),
+                width: MediaQuery.of(context).size.width,
+              ));
   }
 
   void showPrevFile() {

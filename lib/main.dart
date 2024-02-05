@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sulala_upgrade/src/screens/splash_screen.dart/splash_screen.dart';
 import 'src/data/locale_strings.dart';
@@ -21,7 +21,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    globals.updateMediaQueryValues(context);
     return GetMaterialApp(
       theme: ThemeData(
         scaffoldBackgroundColor: AppColors.grayscale00,

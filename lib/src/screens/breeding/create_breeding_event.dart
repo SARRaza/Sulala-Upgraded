@@ -7,7 +7,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:sulala_upgrade/src/widgets/animal_info_modal_sheets.dart/animal_children_modal.dart';
-import '../../data/classes.dart';
+import '../../data/classes/breed_child_item.dart';
+import '../../data/classes/breeding_event_variables.dart';
+import '../../data/classes/breeding_partner.dart';
+import '../../data/classes/main_animal_dam.dart';
+import '../../data/classes/main_animal_sire.dart';
+import '../../data/classes/ovi_variables.dart';
+import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -17,7 +23,7 @@ import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart'
 import '../../widgets/inputs/date_fields/primary_date_field.dart';
 import '../../widgets/inputs/paragraph_text_fields/paragraph_text_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import 'list_of_breeding_events.dart';
 
 // ignore: depend_on_referenced_packages
@@ -47,9 +53,11 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
 
   final TextEditingController _eggsNumberController = TextEditingController();
 
-  final TextEditingController _layingEggsDateController = TextEditingController();
+  final TextEditingController _layingEggsDateController =
+      TextEditingController();
 
-  final TextEditingController _incubationDateController = TextEditingController();
+  final TextEditingController _incubationDateController =
+      TextEditingController();
 
   final TextEditingController _hatchingDateController = TextEditingController();
 
@@ -100,8 +108,8 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(
-                left: 16.0 * globals.widthMediaQuery,
-                right: 16.0 * globals.widthMediaQuery),
+                left: 16.0 * SizeConfig.widthMultiplier(context),
+                right: 16.0 * SizeConfig.widthMultiplier(context)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -109,7 +117,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                   'Create Event',
                   style: AppFonts.title3(color: AppColors.grayscale90),
                 ),
-                SizedBox(height: 24 * globals.heightMediaQuery),
+                SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                 PrimaryTextField(
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
@@ -121,7 +129,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                   hintText: 'Enter Breeding Number',
                   labelText: 'Breeding Number',
                 ),
-                SizedBox(height: 16 * globals.heightMediaQuery),
+                SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -136,7 +144,7 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                   ],
                 ),
                 SizedBox(
-                  height: 10 * globals.heightMediaQuery,
+                  height: 10 * SizeConfig.heightMultiplier(context),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -162,23 +170,23 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                     ),
                   ],
                 ),
-                SizedBox(height: 10 * globals.heightMediaQuery),
+                SizedBox(height: 10 * SizeConfig.heightMultiplier(context)),
                 PrimaryDateField(
                   labelText: 'Breeding Date',
                   hintText: 'DD/MM/YYYY',
                   controller: _breedingDateController,
                   onChanged: (breedingDate) {
-                    if(widget.OviDetails.selectedAnimalType == 'Mammal') {
-                      _fillDeliveryDate(breedingDate, widget.OviDetails
-                          .selectedAnimalSpecies);
-                    } else if(widget.OviDetails.selectedAnimalType ==
+                    if (widget.OviDetails.selectedAnimalType == 'Mammal') {
+                      _fillDeliveryDate(breedingDate,
+                          widget.OviDetails.selectedAnimalSpecies);
+                    } else if (widget.OviDetails.selectedAnimalType ==
                         'Oviparous') {
-                      _fillDates(breedingDate, widget.OviDetails
-                          .selectedAnimalSpecies);
+                      _fillDates(breedingDate,
+                          widget.OviDetails.selectedAnimalSpecies);
                     }
                   },
                 ),
-                SizedBox(height: 20 * globals.heightMediaQuery),
+                SizedBox(height: 20 * SizeConfig.heightMultiplier(context)),
                 if (widget.OviDetails.selectedAnimalType == 'Mammal')
                   PrimaryDateField(
                     labelText: 'Delivery Date',
@@ -211,12 +219,12 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                       ),
                     ],
                   ),
-                SizedBox(height: 34 * globals.heightMediaQuery),
+                SizedBox(height: 34 * SizeConfig.heightMultiplier(context)),
                 Text(
                   "Children",
                   style: AppFonts.title5(color: AppColors.grayscale90),
                 ),
-                SizedBox(height: 16 * globals.heightMediaQuery),
+                SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
                 ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -226,15 +234,15 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                     return ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: CircleAvatar(
-                        radius: globals.widthMediaQuery * 24,
+                        radius: SizeConfig.widthMultiplier(context) * 24,
                         backgroundColor: Colors.transparent,
                         backgroundImage: child.selectedOviImage,
                         child: child.selectedOviImage == null
                             ? const Icon(
-                          Icons.camera_alt_outlined,
-                          size: 50,
-                          color: Colors.grey,
-                        )
+                                Icons.camera_alt_outlined,
+                                size: 50,
+                                color: Colors.grey,
+                              )
                             : null,
                       ),
                       title: Text(
@@ -266,12 +274,12 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                     ],
                   ),
                 ),
-                SizedBox(height: 24 * globals.heightMediaQuery),
+                SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                 Text(
                   "Notes",
                   style: AppFonts.title5(color: AppColors.grayscale90),
                 ),
-                SizedBox(height: 20 * globals.heightMediaQuery),
+                SizedBox(height: 20 * SizeConfig.heightMultiplier(context)),
                 ParagraphTextField(
                   hintText: 'Add Notes',
                   maxLines: 6,
@@ -281,14 +289,14 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
                         .update((state) => value);
                   },
                 ),
-                SizedBox(height: 85 * globals.heightMediaQuery),
+                SizedBox(height: 85 * SizeConfig.heightMultiplier(context)),
               ],
             ),
           ),
         ),
         floatingActionButton: SizedBox(
-          height: 52 * globals.heightMediaQuery,
-          width: 343 * globals.widthMediaQuery,
+          height: 52 * SizeConfig.heightMultiplier(context),
+          width: 343 * SizeConfig.widthMultiplier(context),
           child: PrimaryButton(
             onPressed: () {
               _createBreedingEvent();
@@ -301,7 +309,6 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
     );
   }
 
-
   void _showBreedChildrenSelectionSheet(BuildContext context) async {
     // Initialize an empty list
     final ovianimals = ref.read(ovianimalsProvider);
@@ -312,19 +319,20 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
-        return AnimalChildrenModal(selectedAnimal: widget.OviDetails,
+        return AnimalChildrenModal(
+          selectedAnimal: widget.OviDetails,
           selectedFather: widget.OviDetails.selectedOviSire,
           selectedMother: widget.OviDetails.selectedOviDam,
           selectedChildren: selectedChildren,
-          selectedPartner: selectedBreedPartner,);
+          selectedPartner: selectedBreedPartner,
+        );
       },
     );
-    if(newSelectedChildren != null) {
+    if (newSelectedChildren != null) {
       setState(() {
         selectedChildren = newSelectedChildren;
       });
     }
-
   }
 
   void _showBreedPartnerSelectionSheet(BuildContext context) async {
@@ -336,10 +344,13 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
       showDragHandle: true,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return AnimalPartnerModal(selectedPartner: selectedBreedPartner,
-          selectedAnimal: widget.OviDetails, selectedFather: widget.OviDetails
-              .selectedOviSire, selectedMother: widget.OviDetails
-              .selectedOviDam, selectedChildren: selectedChildren,);
+        return AnimalPartnerModal(
+          selectedPartner: selectedBreedPartner,
+          selectedAnimal: widget.OviDetails,
+          selectedFather: widget.OviDetails.selectedOviSire,
+          selectedMother: widget.OviDetails.selectedOviDam,
+          selectedChildren: selectedChildren,
+        );
       },
     );
     if (selectedPartner != null) {
@@ -424,7 +435,6 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
   //   // Add more country codes and names as needed
   // ];
 
-
   void _createBreedingEvent() {
     final numOffEggs = _eggsNumberController.text;
     final partner = selectedBreedPartner;
@@ -455,48 +465,53 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
 
     for (var child in children) {
       final childIndex =
-      ovianimals.indexWhere((animal) => animal.id == child.id);
+          ovianimals.indexWhere((animal) => animal.id == child.id);
       ref.read(ovianimalsProvider)[childIndex] = ref
           .read(ovianimalsProvider)[childIndex]
           .copyWith(selectedOviSire: sire, selectedOviDam: dam);
     }
 
     final breedingEvent = BreedingEventVariables(
-      id: eventId,
-      eventNumber: _breedingEventNumberController.text,
-      breeddam: dam?.selectedOviImage,
-      sire: sire,
-      dam: dam,
-      partner: partner,
-      children: children,
-      breedingDate: _breedingDateController.text,
-      deliveryDate: _deliveryDateController.text,
-      layingEggsDate: _layingEggsDateController.text,
-      eggsNumber: numOffEggs.isNotEmpty ? int.parse(numOffEggs) : 0,
-      incubationDate: _incubationDateController.text,
-      hatchingDate: _hatchingDateController.text,
-      notes: _notesController.text,
-      shouldAddEvent: true
-    );
+        id: eventId,
+        eventNumber: _breedingEventNumberController.text,
+        breedDam: dam?.selectedOviImage,
+        sire: sire,
+        dam: dam,
+        partner: partner,
+        children: children,
+        breedingDate:
+            DateFormat('dd/MM/yyyy').parse(_breedingDateController.text),
+        deliveryDate:
+            DateFormat('dd/MM/yyyy').parse(_deliveryDateController.text),
+        layingEggsDate:
+            DateFormat('dd/MM/yyyy').parse(_layingEggsDateController.text),
+        eggsNumber: numOffEggs.isNotEmpty ? int.parse(numOffEggs) : 0,
+        incubationDate:
+            DateFormat('dd/MM/yyyy').parse(_incubationDateController.text),
+        hatchingDate:
+            DateFormat('dd/MM/yyyy').parse(_hatchingDateController.text),
+        notes: _notesController.text,
+        shouldAddEvent: true);
 
     ref.read(breedingEventsProvider).add(breedingEvent);
   }
 
   void _fillDeliveryDate(DateTime breedingDate, String animalSpecies) {
-    final deliveryDate = breedingDate.add(Duration(days: gestationPeriods[
-      animalSpecies]!));
-    _deliveryDateController.text = DateFormat('dd/MM/yyyy').format(deliveryDate);
+    final deliveryDate =
+        breedingDate.add(Duration(days: gestationPeriods[animalSpecies]!));
+    _deliveryDateController.text =
+        DateFormat('dd/MM/yyyy').format(deliveryDate);
   }
 
   void _fillDates(DateTime breedingDate, String animalSpecies) {
-    final layingDate = breedingDate.add(Duration(days: breedingToLayingPeriods[
-      animalSpecies]!));
+    final layingDate = breedingDate
+        .add(Duration(days: breedingToLayingPeriods[animalSpecies]!));
     final formattedLayingDate = DateFormat('dd/MM/yyyy').format(layingDate);
     _layingEggsDateController.text = formattedLayingDate;
     _incubationDateController.text = formattedLayingDate;
-    final hatchingDate = layingDate.add(Duration(days: incubationPeriods[
-      animalSpecies]!));
-    _hatchingDateController.text = DateFormat('dd/MM/yyyy').format(
-        hatchingDate);
+    final hatchingDate =
+        layingDate.add(Duration(days: incubationPeriods[animalSpecies]!));
+    _hatchingDateController.text =
+        DateFormat('dd/MM/yyyy').format(hatchingDate);
   }
 }

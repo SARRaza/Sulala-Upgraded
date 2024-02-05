@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
@@ -55,9 +55,9 @@ class _EnterPasswordState extends State<EnterPassword> {
         ),
         body: Padding(
           padding: EdgeInsets.only(
-            left: globals.widthMediaQuery * 19,
-            right: globals.widthMediaQuery * 19,
-            top: globals.heightMediaQuery * 40,
+            left: SizeConfig.widthMultiplier(context) * 19,
+            right: SizeConfig.widthMultiplier(context) * 19,
+            top: SizeConfig.heightMultiplier(context) * 40,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +67,7 @@ class _EnterPasswordState extends State<EnterPassword> {
                 style: AppFonts.title2(color: AppColors.grayscale90),
               ),
               SizedBox(
-                height: globals.heightMediaQuery * 40,
+                height: SizeConfig.heightMultiplier(context) * 40,
               ),
               PasswordField(
                 hintText: 'Password',
@@ -108,12 +108,12 @@ class _EnterPasswordState extends State<EnterPassword> {
           ),
         ),
         floatingActionButton: SizedBox(
-          height: globals.heightMediaQuery * 52,
+          height: SizeConfig.heightMultiplier(context) * 52,
           child: Column(
             children: [
               SizedBox(
-                height: globals.heightMediaQuery * 52,
-                width: globals.widthMediaQuery * 343,
+                height: SizeConfig.heightMultiplier(context) * 52,
+                width: SizeConfig.widthMultiplier(context) * 343,
                 child: PrimaryButton(
                     text: "Confirm",
                     status: buttonStatus,

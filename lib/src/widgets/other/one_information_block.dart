@@ -40,7 +40,6 @@ class OneInformationBlock extends StatelessWidget {
   }
 }
 
-
 // Example of use:
 
 // InformationBlock(

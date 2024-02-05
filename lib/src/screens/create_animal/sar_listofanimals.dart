@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/animal_filters.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/screens/create_animal/sar_animalfilters.dart';
 import 'package:sulala_upgrade/src/widgets/pages/main_widgets/navigation_bar_reg_mode.dart';
 import 'package:sulala_upgrade/src/widgets/styled_dismissible.dart';
-import '../../data/classes.dart';
+import '../../data/classes/breeding_event_variables.dart';
+import '../../data/classes/main_animal_dam.dart';
+import '../../data/classes/main_animal_sire.dart';
+import '../../data/classes/ovi_variables.dart';
+import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -60,45 +64,45 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
   void addOviAnimal(String animalName, String breedingeventNumber) {
     // ignore: non_constant_identifier_names
     final OviDetails = OviVariables(
-      animalName: animalName,
-      breedingeventNumber: breedingeventNumber,
-      medicalNeeds: ref.read(medicalNeedsProvider),
-      shouldAddAnimal: ref.read(shoudlAddAnimalProvider),
-      selectedBreedingStage: ref.read(selectedBreedingStageProvider),
-      layingFrequency: ref.read(layingFrequencyProvider),
-      eggsPerMonth: ref.read(eggsPerMonthProvider),
-      selectedOviSire: ref.read(animalSireDetailsProvider),
-      selectedOviDam: ref.read(animalDamDetailsProvider),
-      dateOfBirth: ref.read(dateOfBirthProvider),
-      keptInOval: ref.read(keptInOvalProvider),
-      dateOfLayingEggs: ref.read(dateOfLayingEggsProvider),
-      numOfEggs: ref.read(numOfEggsProvider),
-      dateOfSonar: ref.read(dateOfSonarProvider),
-      expDlvDate: ref.read(expDeliveryDateProvider),
-      incubationDate: ref.read(incubationDateProvider),
-      customFields: ref.read(customOviTextFieldsProvider),
-      notes: ref.read(additionalnotesProvider),
-      selectedOviGender: ref.read(selectedOviGenderProvider),
-      selectedOviDates: ref.read(selectedOviDatesProvider),
-      selectedAnimalBreed: ref.read(selectedAnimalBreedsProvider),
-      selectedAnimalSpecies: ref.read(selectedAnimalSpeciesProvider),
-      selectedAnimalType: ref.read(selectedAnimalTypeProvider),
-      selectedOviChips: ref.read(selectedOviChipsProvider),
-      selectedOviImage: ref.read(selectedAnimalImageProvider),
-      selectedFilters: ref.read(selectedFiltersProvider),
-      breedsire: ref.read(breedingSireDetailsProvider)?? '',
-      breeddam: ref.read(breedingDamDetailsProvider)?? '',
-      breedpartner: ref.read(breedingPartnerProvider),
-      breedchildren: ref.read(breedingChildrenDetailsProvider),
-      breedingDate: ref.read(breedingDateProvider),
-      breeddeliveryDate: ref.read(deliveryDateProvider),
-      breedingnotes: ref.read(breedingnotesProvider),
-      shouldAddEvent: ref.read(shoudlAddEventProvider),
-      vaccineDetails: {animalName: []},
-      checkUpDetails: {animalName: []},
-      surgeryDetails: {animalName: []},
-      files: ref.read(uploadedFilesProvider).map((path) => File(path)).toList()
-    );
+        animalName: animalName,
+        breedingEventNumber: breedingeventNumber,
+        medicalNeeds: ref.read(medicalNeedsProvider),
+        shouldAddAnimal: ref.read(shoudlAddAnimalProvider),
+        selectedBreedingStage: ref.read(selectedBreedingStageProvider),
+        layingFrequency: ref.read(layingFrequencyProvider),
+        eggsPerMonth: ref.read(eggsPerMonthProvider),
+        selectedOviSire: ref.read(animalSireDetailsProvider),
+        selectedOviDam: ref.read(animalDamDetailsProvider),
+        dateOfBirth: ref.read(dateOfBirthProvider),
+        keptInOval: ref.read(keptInOvalProvider),
+        dateOfLayingEggs: ref.read(dateOfLayingEggsProvider),
+        numOfEggs: ref.read(numOfEggsProvider),
+        dateOfSonar: ref.read(dateOfSonarProvider),
+        expDlvDate: ref.read(expDeliveryDateProvider),
+        incubationDate: ref.read(incubationDateProvider),
+        customFields: ref.read(customOviTextFieldsProvider),
+        notes: ref.read(additionalnotesProvider),
+        selectedOviGender: ref.read(selectedOviGenderProvider),
+        selectedOviDates: ref.read(selectedOviDatesProvider),
+        selectedAnimalBreed: ref.read(selectedAnimalBreedsProvider),
+        selectedAnimalSpecies: ref.read(selectedAnimalSpeciesProvider),
+        selectedAnimalType: ref.read(selectedAnimalTypeProvider),
+        selectedOviChips: ref.read(selectedOviChipsProvider),
+        selectedOviImage: ref.read(selectedAnimalImageProvider),
+        selectedFilters: ref.read(selectedFiltersProvider),
+        breedSire: ref.read(breedingSireDetailsProvider) ?? '',
+        breedDam: ref.read(breedingDamDetailsProvider) ?? '',
+        breedPartner: ref.read(breedingPartnerProvider),
+        breedChildren: ref.read(breedingChildrenDetailsProvider),
+        breedingDate: ref.read(breedingDateProvider),
+        breedDeliveryDate: ref.read(deliveryDateProvider),
+        breedingNotes: ref.read(breedingnotesProvider),
+        shouldAddEvent: ref.read(shoudlAddEventProvider),
+        vaccineDetails: {animalName: []},
+        checkUpDetails: {animalName: []},
+        surgeryDetails: {animalName: []},
+        files:
+            ref.read(uploadedFilesProvider).map((path) => File(path)).toList());
 
     final ovianimals = ref.read(ovianimalsProvider);
     final breedingChildrenDetails = ref.read(breedingChildrenDetailsProvider);
@@ -107,14 +111,14 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
           ovianimals.indexWhere((animal) => animal.id == child.id);
 
       ref.read(ovianimalsProvider.notifier).update((state) {
-        if(OviDetails.selectedOviGender == 'Male') {
-          state[childIndex].selectedOviSire = MainAnimalSire(OviDetails
-              .animalName, OviDetails.selectedOviImage,
-                OviDetails.selectedOviGender);
+        if (OviDetails.selectedOviGender == 'Male') {
+          state[childIndex].copyWith(
+              selectedOviSire: MainAnimalSire(OviDetails.animalName,
+                  OviDetails.selectedOviImage, OviDetails.selectedOviGender));
         } else {
-          state[childIndex].selectedOviDam = MainAnimalDam(OviDetails
-              .animalName, OviDetails.selectedOviImage,
-                OviDetails.selectedOviGender);
+          state[childIndex].copyWith(
+              selectedOviDam: MainAnimalDam(OviDetails.animalName,
+                  OviDetails.selectedOviImage, OviDetails.selectedOviGender));
         }
         return state;
       });
@@ -156,18 +160,18 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
     // Filter the OviAnimals list based on the filterQuery
     final filteredOviAnimals = ref.read(ovianimalsProvider).where((animal) {
       final filters = ref.read(selectedFiltersProvider);
-      final animalType = filters.firstWhereOrNull(
-          (filter) => filterItems['Animal Type']!.contains(filter));
-      final animalSpecies = filters.firstWhereOrNull(
-          (filter) => filterItems['Animal Species']!.contains(filter));
-      final animalBreed = filters.firstWhereOrNull(
-          (filter) => filterItems['Animal Breed']!.contains(filter));
-      final animalSex = filters.firstWhereOrNull(
-          (filter) => filterItems['Animal Sex']!.contains(filter));
-      final breedingStage = filters.firstWhereOrNull(
-          (filter) => filterItems['Breeding Stage']!.contains(filter));
-      final tags = filters
-          .firstWhereOrNull((filter) => filterItems['Tags']!.contains(filter));
+      final animalType = filters.firstWhereOrNull((filter) =>
+          AnimalFilters.filterItems['Animal Type']!.contains(filter));
+      final animalSpecies = filters.firstWhereOrNull((filter) =>
+          AnimalFilters.filterItems['Animal Species']!.contains(filter));
+      final animalBreed = filters.firstWhereOrNull((filter) =>
+          AnimalFilters.filterItems['Animal Breed']!.contains(filter));
+      final animalSex = filters.firstWhereOrNull((filter) =>
+          AnimalFilters.filterItems['Animal Sex']!.contains(filter));
+      final breedingStage = filters.firstWhereOrNull((filter) =>
+          AnimalFilters.filterItems['Breeding Stage']!.contains(filter));
+      final tags = filters.firstWhereOrNull(
+          (filter) => AnimalFilters.filterItems['Tags']!.contains(filter));
 
       return (animalType == null || animal.selectedAnimalType == animalType) &&
           (animalSpecies == null ||
@@ -176,9 +180,11 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
           (animalSex == null || animal.selectedOviGender == animalSex) &&
           (breedingStage == null ||
               animal.selectedBreedingStage == breedingStage) &&
-          (tags == null || animal.selectedOviChips.contains(tags)) && (
-          filterQuery.isEmpty || animal.animalName.toLowerCase().contains(
-              filterQuery.toLowerCase()));
+          (tags == null || animal.selectedOviChips.contains(tags)) &&
+          (filterQuery.isEmpty ||
+              animal.animalName
+                  .toLowerCase()
+                  .contains(filterQuery.toLowerCase()));
     }).toList();
 
     return SafeArea(
@@ -189,15 +195,17 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
           backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false,
           title: Padding(
-            padding: EdgeInsets.only(left: globals.widthMediaQuery * 16),
+            padding:
+                EdgeInsets.only(left: SizeConfig.widthMultiplier(context) * 16),
             child: Text(
               'Animals'.tr,
               style: AppFonts.title3(color: AppColors.grayscale90),
             ),
           ),
-          leadingWidth: globals.widthMediaQuery * 56,
+          leadingWidth: SizeConfig.widthMultiplier(context) * 56,
           leading: Padding(
-              padding: EdgeInsets.only(left: globals.widthMediaQuery * 16),
+              padding: EdgeInsets.only(
+                  left: SizeConfig.widthMultiplier(context) * 16),
               child: Container(
                 decoration: const BoxDecoration(
                     color: AppColors.grayscale10, shape: BoxShape.circle),
@@ -206,7 +214,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                   icon: Icon(
                     Icons.arrow_back_rounded,
                     color: Colors.black,
-                    size: globals.widthMediaQuery * 24,
+                    size: SizeConfig.widthMultiplier(context) * 24,
                   ),
                   onPressed: () {
                     Navigator.push(
@@ -220,7 +228,8 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
               )),
           actions: [
             IconButton(
-              padding: EdgeInsets.only(right: globals.widthMediaQuery * 16),
+              padding: EdgeInsets.only(
+                  right: SizeConfig.widthMultiplier(context) * 16),
               icon: Container(
                   width: MediaQuery.of(context).size.width * 0.1,
                   height: MediaQuery.of(context).size.width * 0.1,
@@ -272,8 +281,8 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
             physics: const AlwaysScrollableScrollPhysics(),
             child: Padding(
               padding: EdgeInsets.only(
-                  left: globals.widthMediaQuery * 16,
-                  right: globals.widthMediaQuery * 16),
+                  left: SizeConfig.widthMultiplier(context) * 16,
+                  right: SizeConfig.widthMultiplier(context) * 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -297,7 +306,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                     },
                   ),
                   SizedBox(
-                    height: globals.heightMediaQuery * 20,
+                    height: SizeConfig.heightMultiplier(context) * 20,
                   ),
                   Visibility(
                     visible: ref.read(selectedFiltersProvider).isNotEmpty,
@@ -358,10 +367,12 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                                       // );
                                     },
                                     child: CircleAvatar(
-                                      radius: globals.widthMediaQuery * 24,
+                                      radius:
+                                          SizeConfig.widthMultiplier(context) *
+                                              24,
                                       backgroundColor: Colors.transparent,
-                                      backgroundImage: OviDetails
-                                          .selectedOviImage,
+                                      backgroundImage:
+                                          OviDetails.selectedOviImage,
                                       child: OviDetails.selectedOviImage == null
                                           ? const Icon(
                                               Icons.camera_alt_outlined,
@@ -386,9 +397,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                                         ),
                                       ),
                                     );
-                                    setState(() {
-
-                                    });
+                                    setState(() {});
                                   },
                                 ));
                           },
@@ -421,7 +430,8 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                                       MediaQuery.of(context).size.height * 0.03,
                                 ),
                                 SizedBox(
-                                  height: 52 * globals.heightMediaQuery,
+                                  height:
+                                      52 * SizeConfig.heightMultiplier(context),
                                   child: PrimaryButton(
                                     onPressed: () {
                                       ref

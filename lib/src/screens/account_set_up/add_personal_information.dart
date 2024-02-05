@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
+import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
@@ -82,7 +83,7 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
           leading: IconButton(
             padding: EdgeInsets.zero,
             icon: Container(
-              padding: EdgeInsets.all(globals.widthMediaQuery * 6),
+              padding: EdgeInsets.all(SizeConfig.widthMultiplier(context) * 6),
               decoration: BoxDecoration(
                 color: AppColors.grayscale10,
                 borderRadius: BorderRadius.circular(50),
@@ -116,8 +117,8 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(
-              left: globals.widthMediaQuery * 16,
-              right: globals.widthMediaQuery * 16,
+              left: SizeConfig.widthMultiplier(context) * 16,
+              right: SizeConfig.widthMultiplier(context) * 16,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,10 +127,10 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                   'Add Personal Information'.tr,
                   style: AppFonts.title3(color: AppColors.grayscale90),
                 ),
-                SizedBox(height: globals.heightMediaQuery * 40),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 40),
                 Text("What's your name?".tr,
                     style: AppFonts.headline3(color: AppColors.grayscale90)),
-                SizedBox(height: globals.heightMediaQuery * 24),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
                 PrimaryTextField(
                   controller: nameController,
                   hintText: "Enter First Name".tr,
@@ -139,7 +140,7 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                         .update((state) => value);
                   },
                 ),
-                SizedBox(height: globals.heightMediaQuery * 16),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
                 PrimaryTextField(
                   controller: lastNameController,
                   hintText: "Enter Last Name".tr,
@@ -149,10 +150,10 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                         .update((state) => value);
                   },
                 ),
-                SizedBox(height: globals.heightMediaQuery * 40),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 40),
                 Text('What Is The Name Of Your Farm?'.tr,
                     style: AppFonts.headline3(color: AppColors.grayscale90)),
-                SizedBox(height: globals.heightMediaQuery * 24),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
                 PrimaryTextField(
                   controller: farmNameController,
                   hintText: 'Farm Name'.tr,
@@ -162,10 +163,10 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                         .update((state) => value);
                   },
                 ),
-                SizedBox(height: globals.heightMediaQuery * 40),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 40),
                 Text("Who owns the farm?".tr,
                     style: AppFonts.headline3(color: AppColors.grayscale90)),
-                SizedBox(height: globals.heightMediaQuery * 24),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
                 PrimaryTextField(
                   controller: ownerNameController,
                   hintText: "Owner name".tr,
@@ -175,29 +176,30 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                         .update((state) => value);
                   },
                 ),
-                SizedBox(height: globals.heightMediaQuery * 40),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 40),
                 Text('Contacts'.tr,
                     style: AppFonts.headline3(color: AppColors.grayscale90)),
-                SizedBox(height: globals.heightMediaQuery * 8),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 8),
                 Text(
                     'Add contact details to help other people contact you for collaboration'
                         .tr,
                     style: AppFonts.body2(color: AppColors.grayscale70)),
-                SizedBox(height: globals.heightMediaQuery * 24),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
                 PhoneNumberField(
                   controller: phoneController,
                 ),
-                SizedBox(height: globals.heightMediaQuery * 20),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 20),
                 const SizedBox(height: 8),
                 PrimaryTextField(
+                  keyboardType: TextInputType.emailAddress,
                   hintText: 'Enter Email'.tr,
                   controller: emailController,
                   errorMessage:
                       emailHasError == true ? 'Invalid email address'.tr : null,
                   onChanged: (value) {
-                      ref
-                          .read(emailAdressProvider.notifier)
-                          .update((state) => value);
+                    ref
+                        .read(emailAdressProvider.notifier)
+                        .update((state) => value);
                   },
                   onErrorChanged: (hasError) {
                     setState(() {
@@ -205,23 +207,24 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                     });
                   },
                 ),
-                SizedBox(height: globals.heightMediaQuery * 40),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 40),
                 SizedBox(
                   width: double.infinity,
-                  height: globals.heightMediaQuery * 52,
+                  height: SizeConfig.heightMultiplier(context) * 52,
                   child: PrimaryButton(
                     status: buttonStatus,
                     text: 'Continue'.tr,
                     onPressed: () {
-                      if(emailController.text.isNotEmpty && !_isValidEmail(
-                          emailController.text)) {
+                      if (emailController.text.isNotEmpty &&
+                          !_isValidEmail(emailController.text)) {
                         setState(() {
                           emailHasError = true;
                         });
                       } else {
                         emailHasError = false;
                       }
-                      if(phoneController.text.isNotEmpty && !_isValidPhoneNumber(phoneController.text)) {
+                      if (phoneController.text.isNotEmpty &&
+                          !_isValidPhoneNumber(phoneController.text)) {
                         setState(() {
                           phoneHasError = true;
                         });
@@ -229,7 +232,7 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                         phoneHasError = false;
                       }
 
-                      if(!emailHasError && !phoneHasError) {
+                      if (!emailHasError && !phoneHasError) {
                         buttonStatus = PrimaryButtonStatus.loading;
                         Navigator.push(
                           context,
@@ -244,7 +247,7 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                     },
                   ),
                 ),
-                SizedBox(height: globals.heightMediaQuery * 20),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 20),
               ],
             ),
           ),

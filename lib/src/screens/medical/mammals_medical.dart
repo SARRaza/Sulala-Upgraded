@@ -11,7 +11,12 @@ import 'package:sulala_upgrade/src/widgets/dialogs/confirm_delete_dialog.dart';
 import 'package:sulala_upgrade/src/widgets/inputs/draw_ups/draw_up_widget.dart';
 import 'package:sulala_upgrade/src/widgets/inputs/text_fields/primary_text_field.dart';
 import 'package:sulala_upgrade/src/widgets/styled_dismissible.dart';
-import '../../data/classes.dart';
+import '../../data/classes/breeding_event_variables.dart';
+import '../../data/classes/medical_checkup_details.dart';
+import '../../data/classes/ovi_variables.dart';
+import '../../data/classes/surgery_details.dart';
+import '../../data/classes/vaccine_details.dart';
+import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -22,7 +27,7 @@ import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/paragraph_text_fields/medical_needs_paragraph.dart';
 import '../../widgets/other/one_information_block.dart';
 import '../../widgets/other/two_information_block.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import '../pdf/pdf_view_page.dart';
 import 'add_medical_checkup.dart';
 import 'add_surgeries.dart';
@@ -96,30 +101,28 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
   @override
   Widget build(BuildContext context) {
     animalIndex = ref.read(ovianimalsProvider).indexWhere(
-            (animal) => animal.animalName == widget.OviDetails.animalName);
+        (animal) => animal.animalName == widget.OviDetails.animalName);
 
     animalDetails = ref.watch(ovianimalsProvider)[animalIndex];
 
-
     files = animalDetails.files;
     vaccineDetailsList = ref
-        .read(ovianimalsProvider)[animalIndex]
-        .vaccineDetails[widget.OviDetails.animalName] ??
+            .read(ovianimalsProvider)[animalIndex]
+            .vaccineDetails[widget.OviDetails.animalName] ??
         [];
-    medicalCheckUpList = animalDetails.checkUpDetails[widget.OviDetails
-        .animalName] ??
-        [];
+    medicalCheckUpList =
+        animalDetails.checkUpDetails[widget.OviDetails.animalName] ?? [];
     surgeryDetailsList = ref
-        .read(ovianimalsProvider)[animalIndex]
-        .surgeryDetails[widget.OviDetails.animalName] ??
+            .read(ovianimalsProvider)[animalIndex]
+            .surgeryDetails[widget.OviDetails.animalName] ??
         [];
     final now = DateTime.now();
     final futureVaccinations = vaccineDetailsList
         .where((details) =>
-    (details.firstDoseDate != null &&
-        details.firstDoseDate!.isAfter(now)) ||
-        (details.secondDoseDate != null &&
-            details.secondDoseDate!.isAfter(now)))
+            (details.firstDoseDate != null &&
+                details.firstDoseDate!.isAfter(now)) ||
+            (details.secondDoseDate != null &&
+                details.secondDoseDate!.isAfter(now)))
         .toList();
 
     for (var vaccination in futureVaccinations) {
@@ -139,10 +142,10 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
 
     final pastMedicalCheckups = medicalCheckUpList
         .where((checkup) =>
-    (checkup.firstCheckUp != null &&
-        checkup.firstCheckUp!.isBefore(now)) ||
-        (checkup.secondCheckUp != null &&
-            checkup.secondCheckUp!.isBefore(now)))
+            (checkup.firstCheckUp != null &&
+                checkup.firstCheckUp!.isBefore(now)) ||
+            (checkup.secondCheckUp != null &&
+                checkup.secondCheckUp!.isBefore(now)))
         .toList();
 
     for (var checkup in pastMedicalCheckups) {
@@ -161,10 +164,10 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
     }
     final futureMedicalCheckups = medicalCheckUpList
         .where((checkup) =>
-    (checkup.firstCheckUp != null &&
-        checkup.firstCheckUp!.isAfter(now)) ||
-        (checkup.secondCheckUp != null &&
-            checkup.secondCheckUp!.isAfter(now)))
+            (checkup.firstCheckUp != null &&
+                checkup.firstCheckUp!.isAfter(now)) ||
+            (checkup.secondCheckUp != null &&
+                checkup.secondCheckUp!.isAfter(now)))
         .toList();
 
     for (var checkup in futureMedicalCheckups) {
@@ -182,32 +185,31 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
       }
     }
 
-    breedingEvents = ref.read(breedingEventsProvider).where((event
-        ) => event.sire?.id == animalDetails.id || event.dam?.id ==
-        animalDetails.id).toList();
+    breedingEvents = ref
+        .read(breedingEventsProvider)
+        .where((event) =>
+            event.sire?.id == animalDetails.id ||
+            event.dam?.id == animalDetails.id)
+        .toList();
 
     lastBreedingEvent = breedingEvents.isNotEmpty ? breedingEvents.last : null;
-    if(lastBreedingEvent != null) {
-      final breedingDateSegments = lastBreedingEvent!.breedingDate.split('/');
-      final breedingDate = breedingDateSegments.length == 3
-          ? DateTime(
-          int.parse(breedingDateSegments[2]),
-          int.parse(breedingDateSegments[1]),
-          int.parse(breedingDateSegments[0]))
-          : null;
+    if (lastBreedingEvent != null) {
+      final breedingDate = lastBreedingEvent!.breedingDate;
       if (breedingDate != null &&
           (matingDate == null || breedingDate.isAfter(matingDate!))) {
         matingDate = breedingDate;
       }
     }
 
-
     if (!initialized) {
       keptInOval = widget.OviDetails.keptInOval;
       medicalNeedsController =
           TextEditingController(text: widget.OviDetails.medicalNeeds);
-      dateOfSonarController =
-          TextEditingController(text: widget.OviDetails.dateOfSonar);
+      dateOfSonarController = TextEditingController();
+      if (widget.OviDetails.dateOfSonar != null) {
+        dateOfSonarController.text =
+            DateFormat('dd/MM/yyyy').format(widget.OviDetails.dateOfSonar!);
+      }
 
       DateTime? expectedDeliveryDate;
       final isPregnant = animalDetails.pregnant ?? false;
@@ -219,20 +221,29 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
         // expectedDeliveryDate =
         //     calculateExpectedDeliveryDate(matingDate!, gestationPeriod!);
 
-        expDlvDateController =
-            TextEditingController(text: lastBreedingEvent!.deliveryDate);
+        expDlvDateController = TextEditingController();
+        if (lastBreedingEvent!.deliveryDate != null) {
+          expDlvDateController.text =
+              DateFormat('dd/MM/yyyy').format(lastBreedingEvent!.deliveryDate!);
+        }
       } else {
         expDlvDateController = TextEditingController();
       }
       if (animalDetails.selectedOviGender == 'Female' &&
           animalDetails.selectedAnimalType == 'Oviparous' &&
           lastBreedingEvent != null) {
-        dateOfLayingEggsController = TextEditingController(
-            text: lastBreedingEvent!.layingEggsDate ?? '');
+        dateOfLayingEggsController = TextEditingController();
+        if (lastBreedingEvent!.layingEggsDate != null) {
+          dateOfLayingEggsController.text = DateFormat('dd/MM/yyyy')
+              .format(lastBreedingEvent!.layingEggsDate!);
+        }
         numOfEggsController = TextEditingController(
             text: (lastBreedingEvent!.eggsNumber ?? 0).toString());
-        incubationDateController = TextEditingController(
-            text: lastBreedingEvent!.incubationDate ?? '');
+        incubationDateController = TextEditingController();
+        if (lastBreedingEvent!.incubationDate != null) {
+          incubationDateController.text = DateFormat('dd/MM/yyyy')
+              .format(lastBreedingEvent!.incubationDate!);
+        }
       } else {
         dateOfLayingEggsController = TextEditingController();
         numOfEggsController = TextEditingController();
@@ -256,7 +267,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: globals.widthMediaQuery * 343,
+            width: SizeConfig.widthMultiplier(context) * 343,
             child: OneInformationBlock(
                 head1: nextVaccinationDate != null
                     ? DateFormat('dd.MM.yyyy').format(nextVaccinationDate!)
@@ -264,10 +275,10 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                 subtitle1: 'Next Vaccination'),
           ),
           SizedBox(
-            height: globals.heightMediaQuery * 8,
+            height: SizeConfig.heightMultiplier(context) * 8,
           ),
           SizedBox(
-            width: 343 * globals.widthMediaQuery,
+            width: 343 * SizeConfig.widthMultiplier(context),
             child: TwoInformationBlock(
               head1: lastCheckupDate != null
                   ? DateFormat('dd.MM.yyyy').format(lastCheckupDate!)
@@ -280,7 +291,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
             ),
           ),
           SizedBox(
-            height: globals.heightMediaQuery * 24,
+            height: SizeConfig.heightMultiplier(context) * 24,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -291,122 +302,123 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
               ),
               _isMammalEditMode
                   ? PrimaryTextButton(
-                  status: TextStatus.idle,
-                  text: 'Save',
-                  onPressed: () {
-                    setState(() {
-                      final updatedOviDetails = widget.OviDetails.copyWith(
-                        medicalNeeds: medicalNeedsController.text,
-                      );
+                      status: TextStatus.idle,
+                      text: 'Save',
+                      onPressed: () {
+                        setState(() {
+                          final updatedOviDetails = widget.OviDetails.copyWith(
+                            medicalNeeds: medicalNeedsController.text,
+                          );
 
-                      final oviAnimals = ref.read(ovianimalsProvider);
-                      final index = oviAnimals.indexOf(widget.OviDetails);
-                      if (index >= 0) {
-                        ref
-                            .read(ovianimalsProvider.notifier)
-                            .update((state) {
-                          state[index] = updatedOviDetails;
-                          return state;
+                          final oviAnimals = ref.read(ovianimalsProvider);
+                          final index = oviAnimals.indexOf(widget.OviDetails);
+                          if (index >= 0) {
+                            ref
+                                .read(ovianimalsProvider.notifier)
+                                .update((state) {
+                              state[index] = updatedOviDetails;
+                              return state;
+                            });
+                          }
+
+                          _isMammalEditMode = false;
                         });
-                      }
-
-                      _isMammalEditMode = false;
-                    });
-                  })
+                      })
                   : IconButton(
-                icon: Image.asset(
-                  'assets/icons/frame/24px/24_Edit.png',
-                ),
-                onPressed: () {
-                  // Enter edit mode
-                  setState(() {
-                    _isMammalEditMode = true;
-                  });
-                },
-              ),
+                      icon: Image.asset(
+                        'assets/icons/frame/24px/24_Edit.png',
+                      ),
+                      onPressed: () {
+                        // Enter edit mode
+                        setState(() {
+                          _isMammalEditMode = true;
+                        });
+                      },
+                    ),
             ],
           ),
           _isMammalEditMode
               ? Column(
-            children: [
-              SizedBox(
-                child: MedicalNeedsParagraphTextField(
-                  maxLines: 6,
-                  hintText:
-                  'Be sure to include joint support medicine, antibiotics, anti-inflammatory medication, and topical antiseptics when packing your first-aid kit for your horses. If you have the essentials, you can keep your four-legged friends in the best condition possible.',
-                  controller: medicalNeedsController,
-                ),
-              ),
-              SizedBox(
-                height: globals.heightMediaQuery * 8,
-              ),
-              FileUploaderField(
-                onFileUploaded: (file) {
-                  ref.read(ovianimalsProvider.notifier).update((state) {
-                    final files = state[animalIndex].files ?? [];
-                    files.add(file);
-                    final newState = List<OviVariables>.from(state);
-                    newState[animalIndex] =
-                        state[animalIndex].copyWith(files: files);
-
-                    return newState;
-                  });
-                },
-              ),
-            ],
-          )
-              : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ref
-                  .read(ovianimalsProvider)[animalIndex]
-                  .medicalNeeds
-                  .isNotEmpty
-                  ? Text(
-                ref
-                    .read(ovianimalsProvider)[animalIndex]
-                    .medicalNeeds,
-                // 'Be sure to include joint support medicine, antibiotics, anti-inflammatory medication, and topical antiseptics when packing your first-aid kit for your horses. If you have the essentials, you can keep your four-legged friends in the best condition possible.',
-                style: AppFonts.body2(color: AppColors.grayscale70),
-              )
-                  : Text(
-                'Be sure to include joint support medicine, antibiotics, anti-inflammatory medication, and topical antiseptics when packing your first-aid kit for your horses. If you have the essentials, you can keep your four-legged friends in the best condition possible.',
-                style: AppFonts.body2(color: AppColors.grayscale70),
-              ),
-              SizedBox(
-                height: globals.heightMediaQuery * 22,
-              ),
-              if (files != null)
-                Column(
-                  children: files!
-                      .map((file) => GestureDetector(
-                    onTap: () => _showFile(file),
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.file_copy_outlined,
-                          color: AppColors.primary30,
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            file.path.split('/').last,
-                            style: AppFonts.body1(
-                                color: AppColors.grayscale90),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                      ],
+                  children: [
+                    SizedBox(
+                      child: MedicalNeedsParagraphTextField(
+                        maxLines: 6,
+                        hintText:
+                            'Be sure to include joint support medicine, antibiotics, anti-inflammatory medication, and topical antiseptics when packing your first-aid kit for your horses. If you have the essentials, you can keep your four-legged friends in the best condition possible.',
+                        controller: medicalNeedsController,
+                      ),
                     ),
-                  ))
-                      .toList(),
+                    SizedBox(
+                      height: SizeConfig.heightMultiplier(context) * 8,
+                    ),
+                    FileUploaderField(
+                      onFileUploaded: (file) {
+                        ref.read(ovianimalsProvider.notifier).update((state) {
+                          final files = state[animalIndex].files ?? [];
+                          files.add(file);
+                          final newState = List<OviVariables>.from(state);
+                          newState[animalIndex] =
+                              state[animalIndex].copyWith(files: files);
+
+                          return newState;
+                        });
+                      },
+                    ),
+                  ],
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ref
+                                .read(ovianimalsProvider)[animalIndex]
+                                .medicalNeeds
+                                ?.isNotEmpty !=
+                            null
+                        ? Text(
+                            ref
+                                .read(ovianimalsProvider)[animalIndex]
+                                .medicalNeeds!,
+                            // 'Be sure to include joint support medicine, antibiotics, anti-inflammatory medication, and topical antiseptics when packing your first-aid kit for your horses. If you have the essentials, you can keep your four-legged friends in the best condition possible.',
+                            style: AppFonts.body2(color: AppColors.grayscale70),
+                          )
+                        : Text(
+                            'Be sure to include joint support medicine, antibiotics, anti-inflammatory medication, and topical antiseptics when packing your first-aid kit for your horses. If you have the essentials, you can keep your four-legged friends in the best condition possible.',
+                            style: AppFonts.body2(color: AppColors.grayscale70),
+                          ),
+                    SizedBox(
+                      height: SizeConfig.heightMultiplier(context) * 22,
+                    ),
+                    if (files != null)
+                      Column(
+                        children: files!
+                            .map((file) => GestureDetector(
+                                  onTap: () => _showFile(file),
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.file_copy_outlined,
+                                        color: AppColors.primary30,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          file.path.split('/').last,
+                                          style: AppFonts.body1(
+                                              color: AppColors.grayscale90),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                    ],
+                                  ),
+                                ))
+                            .toList(),
+                      ),
+                  ],
                 ),
-            ],
-          ),
           SizedBox(
-            height: 16 * globals.heightMediaQuery,
+            height: 16 * SizeConfig.heightMultiplier(context),
           ),
           Visibility(
             visible: widget.OviDetails.selectedOviGender == 'Female' &&
@@ -500,15 +512,15 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                     children: [
                       dateOfSonarController.text.isNotEmpty
                           ? Text(
-                        dateOfSonarController.text,
-                        style:
-                        AppFonts.body2(color: AppColors.grayscale90),
-                      )
+                              dateOfSonarController.text,
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            )
                           : Text(
-                        'ADD',
-                        style:
-                        AppFonts.body2(color: AppColors.grayscale90),
-                      ),
+                              'ADD',
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            ),
                       const Icon(Icons.chevron_right_rounded,
                           color: AppColors.primary40),
                     ],
@@ -528,21 +540,21 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                     children: [
                       expDlvDateController.text.isNotEmpty
                           ? Text(
-                        expDlvDateController.text,
-                        style:
-                        AppFonts.body2(color: AppColors.grayscale90),
-                      )
+                              expDlvDateController.text,
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            )
                           : Text(
-                        'ADD',
-                        style:
-                        AppFonts.body2(color: AppColors.grayscale90),
-                      ),
+                              'ADD',
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            ),
                       const Icon(Icons.chevron_right_rounded,
                           color: AppColors.primary40),
                     ],
                   ),
                 ),
-                SizedBox(height: 16 * globals.heightMediaQuery),
+                SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
               ],
             ),
           ),
@@ -570,15 +582,15 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                     children: [
                       dateOfLayingEggsController.text.isNotEmpty
                           ? Text(
-                        dateOfLayingEggsController.text,
-                        style:
-                        AppFonts.body2(color: AppColors.grayscale90),
-                      )
+                              dateOfLayingEggsController.text,
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            )
                           : Text(
-                        'ADD',
-                        style:
-                        AppFonts.body2(color: AppColors.grayscale90),
-                      ),
+                              'ADD',
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            ),
                       const Icon(Icons.chevron_right_rounded,
                           color: AppColors.primary40),
                     ],
@@ -598,15 +610,15 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                     children: [
                       numOfEggsController.text.isNotEmpty
                           ? Text(
-                        numOfEggsController.text,
-                        style:
-                        AppFonts.body2(color: AppColors.grayscale90),
-                      )
+                              numOfEggsController.text,
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            )
                           : Text(
-                        'ADD',
-                        style:
-                        AppFonts.body2(color: AppColors.grayscale90),
-                      ),
+                              'ADD',
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            ),
                       const Icon(Icons.chevron_right_rounded,
                           color: AppColors.primary40),
                     ],
@@ -626,15 +638,15 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                     children: [
                       keptInOval.isNotEmpty
                           ? Text(
-                        keptInOval == 'No' ? 'No'.tr : 'Yes'.tr,
-                        style:
-                        AppFonts.body2(color: AppColors.grayscale90),
-                      )
+                              keptInOval == 'No' ? 'No'.tr : 'Yes'.tr,
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            )
                           : Text(
-                        'ADD',
-                        style:
-                        AppFonts.body2(color: AppColors.grayscale90),
-                      ),
+                              'ADD',
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
+                            ),
                       const Icon(Icons.chevron_right_rounded,
                           color: AppColors.primary40),
                     ],
@@ -656,22 +668,22 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                       children: [
                         incubationDateController.text.isNotEmpty
                             ? Text(
-                          incubationDateController.text,
-                          style:
-                          AppFonts.body2(color: AppColors.grayscale90),
-                        )
+                                incubationDateController.text,
+                                style: AppFonts.body2(
+                                    color: AppColors.grayscale90),
+                              )
                             : Text(
-                          'ADD',
-                          style:
-                          AppFonts.body2(color: AppColors.grayscale90),
-                        ),
+                                'ADD',
+                                style: AppFonts.body2(
+                                    color: AppColors.grayscale90),
+                              ),
                         const Icon(Icons.chevron_right_rounded,
                             color: AppColors.primary40),
                       ],
                     ),
                   ),
                 ),
-                SizedBox(height: 16 * globals.heightMediaQuery),
+                SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
               ],
             ),
           ),
@@ -690,14 +702,14 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
             ],
           ),
           SizedBox(
-            height: 14 * globals.heightMediaQuery,
+            height: 14 * SizeConfig.heightMultiplier(context),
           ),
           if (vaccineDetailsList.isNotEmpty)
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               itemCount: vaccineDetailsList.length,
               shrinkWrap:
-              true, // This allows the ListView to take only necessary space
+                  true, // This allows the ListView to take only necessary space
               itemBuilder: (BuildContext context, int index) {
                 return StyledDismissible(
                   confirmDismiss: _confirmDeletion,
@@ -706,9 +718,9 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                       vaccineDetailsList.removeAt(index);
                       ref.read(ovianimalsProvider.notifier).update((state) {
                         state[animalIndex] = state[animalIndex].copyWith(
-                          vaccineDetails: {
-                            state[animalIndex].animalName: vaccineDetailsList}
-                        );
+                            vaccineDetails: {
+                              state[animalIndex].animalName: vaccineDetailsList
+                            });
                         return state;
                       });
                     });
@@ -730,8 +742,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => FileViewPage(
-                                          files:
-                                          vaccineDetailsList[index].files!)));
+                                          files: vaccineDetailsList[index]
+                                              .files!)));
                             },
                             icon: const Icon(
                               Icons.file_copy_outlined,
@@ -760,25 +772,31 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                       );
                     },
                     subtitle: vaccineDetailsList[index].firstDoseDate != null ||
-                        vaccineDetailsList[index].secondDoseDate != null ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          vaccineDetailsList[index].firstDoseDate != null
-                              ? DateFormat('yyyy-MM-dd').format(
-                              vaccineDetailsList[index].firstDoseDate!)
-                              : '',
-                          style: AppFonts.body2(color: AppColors.grayscale70),
-                        ),
-                        Text(
-                          vaccineDetailsList[index].secondDoseDate != null
-                              ? DateFormat('yyyy-MM-dd').format(
-                              vaccineDetailsList[index].secondDoseDate!)
-                              : '',
-                          style: AppFonts.body2(color: AppColors.grayscale70),
-                        ),
-                      ],
-                    ) : null,
+                            vaccineDetailsList[index].secondDoseDate != null
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                vaccineDetailsList[index].firstDoseDate != null
+                                    ? DateFormat('yyyy-MM-dd').format(
+                                        vaccineDetailsList[index]
+                                            .firstDoseDate!)
+                                    : '',
+                                style: AppFonts.body2(
+                                    color: AppColors.grayscale70),
+                              ),
+                              Text(
+                                vaccineDetailsList[index].secondDoseDate != null
+                                    ? DateFormat('yyyy-MM-dd').format(
+                                        vaccineDetailsList[index]
+                                            .secondDoseDate!)
+                                    : '',
+                                style: AppFonts.body2(
+                                    color: AppColors.grayscale70),
+                              ),
+                            ],
+                          )
+                        : null,
                   ),
                 );
               },
@@ -797,8 +815,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                             final animalIndex = ref
                                 .read(ovianimalsProvider)
                                 .indexWhere((animal) =>
-                            animal.animalName ==
-                                widget.OviDetails.animalName);
+                                    animal.animalName ==
+                                    widget.OviDetails.animalName);
                             // Get the current vaccineDetails map for the specific animal
                             final animalVaccineDetails =
                                 oviVariables[animalIndex].vaccineDetails;
@@ -806,32 +824,32 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                             // Update the vaccineDetails map for that animal with the new vaccine details
                             ref.read(ovianimalsProvider)[animalIndex] =
                                 oviVariables[animalIndex].copyWith(
-                                  vaccineDetails: {
-                                    ...animalVaccineDetails,
-                                    widget.OviDetails.animalName: [
-                                      ...animalVaccineDetails[
-                                      widget.OviDetails.animalName] ??
-                                          [],
-                                      VaccineDetails(
-                                          vaccineName: vaccineName,
-                                          firstDoseDate: firstDoseDate,
-                                          secondDoseDate: secondDoseDate,
-                                          files: ref
-                                              .read(uploadedFilesProvider)
-                                              .map((path) => File(path))
-                                              .toList()),
-                                    ],
-                                  },
-                                );
+                              vaccineDetails: {
+                                ...animalVaccineDetails,
+                                widget.OviDetails.animalName: [
+                                  ...animalVaccineDetails[
+                                          widget.OviDetails.animalName] ??
+                                      [],
+                                  VaccineDetails(
+                                      vaccineName: vaccineName,
+                                      firstDoseDate: firstDoseDate,
+                                      secondDoseDate: secondDoseDate,
+                                      files: ref
+                                          .read(uploadedFilesProvider)
+                                          .map((path) => File(path))
+                                          .toList()),
+                                ],
+                              },
+                            );
 
                             // Add the vaccine details to the vaccineDetailsListProvider if needed
                             ref.read(vaccineDetailsListProvider).add(
-                              VaccineDetails(
-                                vaccineName: vaccineName,
-                                firstDoseDate: firstDoseDate,
-                                secondDoseDate: secondDoseDate,
-                              ),
-                            );
+                                  VaccineDetails(
+                                    vaccineName: vaccineName,
+                                    firstDoseDate: firstDoseDate,
+                                    secondDoseDate: secondDoseDate,
+                                  ),
+                                );
                           });
                         },
                       ),
@@ -843,17 +861,17 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                 status: TextStatus.idle,
               ),
               SizedBox(
-                width: 8 * globals.widthMediaQuery,
+                width: 8 * SizeConfig.widthMultiplier(context),
               ),
               Icon(
                 Icons.add,
                 color: AppColors.primary40,
-                size: 16 * globals.widthMediaQuery,
+                size: 16 * SizeConfig.widthMultiplier(context),
               ),
             ],
           ),
           SizedBox(
-            height: 16 * globals.heightMediaQuery,
+            height: 16 * SizeConfig.heightMultiplier(context),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -870,14 +888,14 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
             ],
           ),
           SizedBox(
-            height: 14 * globals.heightMediaQuery,
+            height: 14 * SizeConfig.heightMultiplier(context),
           ),
           if (medicalCheckUpList.isNotEmpty)
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               itemCount: medicalCheckUpList.length,
               shrinkWrap:
-              true, // This allows the ListView to take only necessary space
+                  true, // This allows the ListView to take only necessary space
               itemBuilder: (BuildContext context, int index) {
                 return StyledDismissible(
                   confirmDismiss: _confirmDeletion,
@@ -886,9 +904,9 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                       medicalCheckUpList.removeAt(index);
                       ref.read(ovianimalsProvider.notifier).update((state) {
                         state[animalIndex] = state[animalIndex].copyWith(
-                          checkUpDetails: {
-                            state[animalIndex].animalName: medicalCheckUpList}
-                        );
+                            checkUpDetails: {
+                              state[animalIndex].animalName: medicalCheckUpList
+                            });
                         return state;
                       });
                     });
@@ -934,25 +952,30 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                       ],
                     ),
                     subtitle: medicalCheckUpList[index].firstCheckUp != null ||
-                        medicalCheckUpList[index].secondCheckUp != null ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          medicalCheckUpList[index].firstCheckUp != null
-                              ? DateFormat('yyyy-MM-dd')
-                              .format(medicalCheckUpList[index].firstCheckUp!)
-                              : '',
-                          style: AppFonts.body2(color: AppColors.grayscale70),
-                        ),
-                        Text(
-                          medicalCheckUpList[index].secondCheckUp != null
-                              ? DateFormat('yyyy-MM-dd').format(
-                              medicalCheckUpList[index].secondCheckUp!)
-                              : '',
-                          style: AppFonts.body2(color: AppColors.grayscale70),
-                        ),
-                      ],
-                    ) : null,
+                            medicalCheckUpList[index].secondCheckUp != null
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                medicalCheckUpList[index].firstCheckUp != null
+                                    ? DateFormat('yyyy-MM-dd').format(
+                                        medicalCheckUpList[index].firstCheckUp!)
+                                    : '',
+                                style: AppFonts.body2(
+                                    color: AppColors.grayscale70),
+                              ),
+                              Text(
+                                medicalCheckUpList[index].secondCheckUp != null
+                                    ? DateFormat('yyyy-MM-dd').format(
+                                        medicalCheckUpList[index]
+                                            .secondCheckUp!)
+                                    : '',
+                                style: AppFonts.body2(
+                                    color: AppColors.grayscale70),
+                              ),
+                            ],
+                          )
+                        : null,
                   ),
                 );
               },
@@ -971,8 +994,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                             final animalIndex = ref
                                 .read(ovianimalsProvider)
                                 .indexWhere((animal) =>
-                            animal.animalName ==
-                                widget.OviDetails.animalName);
+                                    animal.animalName ==
+                                    widget.OviDetails.animalName);
                             // Get the current vaccineDetails map for the specific animal
                             final animalCheckUpDetails =
                                 oviVariables[animalIndex].checkUpDetails;
@@ -983,35 +1006,35 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                                 .update((state) {
                               state[animalIndex] =
                                   oviVariables[animalIndex].copyWith(
-                                    checkUpDetails: {
-                                      ...animalCheckUpDetails,
-                                      widget.OviDetails.animalName: [
-                                        ...animalCheckUpDetails[
-                                        widget.OviDetails.animalName] ??
-                                            [],
-                                        MedicalCheckupDetails(
-                                            checkupName: checkUpName,
-                                            firstCheckUp: firstCheckUp,
-                                            secondCheckUp: secondCheckUp,
-                                            files: ref
-                                                .read(uploadedFilesProvider)
-                                                .map((path) => File(path))
-                                                .toList()),
-                                      ],
-                                    },
-                                  );
+                                checkUpDetails: {
+                                  ...animalCheckUpDetails,
+                                  widget.OviDetails.animalName: [
+                                    ...animalCheckUpDetails[
+                                            widget.OviDetails.animalName] ??
+                                        [],
+                                    MedicalCheckupDetails(
+                                        checkupName: checkUpName,
+                                        firstCheckUp: firstCheckUp,
+                                        secondCheckUp: secondCheckUp,
+                                        files: ref
+                                            .read(uploadedFilesProvider)
+                                            .map((path) => File(path))
+                                            .toList()),
+                                  ],
+                                },
+                              );
 
                               return state;
                             });
 
                             // Add the vaccine details to the vaccineDetailsListProvider if needed
                             ref.read(medicalCheckupDetailsProvider).add(
-                              MedicalCheckupDetails(
-                                checkupName: checkUpName,
-                                firstCheckUp: firstCheckUp,
-                                secondCheckUp: secondCheckUp,
-                              ),
-                            );
+                                  MedicalCheckupDetails(
+                                    checkupName: checkUpName,
+                                    firstCheckUp: firstCheckUp,
+                                    secondCheckUp: secondCheckUp,
+                                  ),
+                                );
                           });
                         },
                       ),
@@ -1022,17 +1045,17 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                 status: TextStatus.idle,
               ),
               SizedBox(
-                width: 8 * globals.widthMediaQuery,
+                width: 8 * SizeConfig.widthMultiplier(context),
               ),
               Icon(
                 Icons.add,
                 color: AppColors.primary40,
-                size: 16 * globals.widthMediaQuery,
+                size: 16 * SizeConfig.widthMultiplier(context),
               ),
             ],
           ),
           SizedBox(
-            height: 16 * globals.heightMediaQuery,
+            height: 16 * SizeConfig.heightMultiplier(context),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1049,14 +1072,14 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
             ],
           ),
           SizedBox(
-            height: 14 * globals.heightMediaQuery,
+            height: 14 * SizeConfig.heightMultiplier(context),
           ),
           if (surgeryDetailsList.isNotEmpty)
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               itemCount: surgeryDetailsList.length,
               shrinkWrap:
-              true, // This allows the ListView to take only necessary space
+                  true, // This allows the ListView to take only necessary space
               itemBuilder: (BuildContext context, int index) {
                 return StyledDismissible(
                   confirmDismiss: _confirmDeletion,
@@ -1065,10 +1088,9 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                       surgeryDetailsList.removeAt(index);
                       ref.read(ovianimalsProvider.notifier).update((state) {
                         state[animalIndex] = state[animalIndex].copyWith(
-                          surgeryDetails: {
-                            state[animalIndex].animalName: surgeryDetailsList
-                          }
-                        );
+                            surgeryDetails: {
+                              state[animalIndex].animalName: surgeryDetailsList
+                            });
                         return state;
                       });
                     });
@@ -1117,23 +1139,27 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                       ],
                     ),
                     subtitle: surgeryDetailsList[index].firstSurgery != null ||
-                        surgeryDetailsList[index].secondSurgery != null ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          DateFormat('yyyy-MM-dd').format(
-                              surgeryDetailsList[index].firstSurgery ??
-                                  DateTime.now()),
-                          style: AppFonts.body2(color: AppColors.grayscale70),
-                        ),
-                        Text(
-                          DateFormat('yyyy-MM-dd').format(
-                              surgeryDetailsList[index].secondSurgery ??
-                                  DateTime.now()),
-                          style: AppFonts.body2(color: AppColors.grayscale70),
-                        ),
-                      ],
-                    ) : null,
+                            surgeryDetailsList[index].secondSurgery != null
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                DateFormat('yyyy-MM-dd').format(
+                                    surgeryDetailsList[index].firstSurgery ??
+                                        DateTime.now()),
+                                style: AppFonts.body2(
+                                    color: AppColors.grayscale70),
+                              ),
+                              Text(
+                                DateFormat('yyyy-MM-dd').format(
+                                    surgeryDetailsList[index].secondSurgery ??
+                                        DateTime.now()),
+                                style: AppFonts.body2(
+                                    color: AppColors.grayscale70),
+                              ),
+                            ],
+                          )
+                        : null,
                   ),
                 );
               },
@@ -1152,8 +1178,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                             final animalIndex = ref
                                 .read(ovianimalsProvider)
                                 .indexWhere((animal) =>
-                            animal.animalName ==
-                                widget.OviDetails.animalName);
+                                    animal.animalName ==
+                                    widget.OviDetails.animalName);
                             // Get the current vaccineDetails map for the specific animal
                             final animalSurgeryDetails =
                                 oviVariables[animalIndex].surgeryDetails;
@@ -1161,32 +1187,32 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                             // Update the vaccineDetails map for that animal with the new vaccine details
                             ref.read(ovianimalsProvider)[animalIndex] =
                                 oviVariables[animalIndex].copyWith(
-                                  surgeryDetails: {
-                                    ...animalSurgeryDetails,
-                                    widget.OviDetails.animalName: [
-                                      ...animalSurgeryDetails[
-                                      widget.OviDetails.animalName] ??
-                                          [],
-                                      SurgeryDetails(
-                                          surgeryName: surgeryName,
-                                          firstSurgery: firstSurgery,
-                                          secondSurgery: secondSurgery,
-                                          files: ref
-                                              .read(uploadedFilesProvider)
-                                              .map((path) => File(path))
-                                              .toList()),
-                                    ],
-                                  },
-                                );
+                              surgeryDetails: {
+                                ...animalSurgeryDetails,
+                                widget.OviDetails.animalName: [
+                                  ...animalSurgeryDetails[
+                                          widget.OviDetails.animalName] ??
+                                      [],
+                                  SurgeryDetails(
+                                      surgeryName: surgeryName,
+                                      firstSurgery: firstSurgery,
+                                      secondSurgery: secondSurgery,
+                                      files: ref
+                                          .read(uploadedFilesProvider)
+                                          .map((path) => File(path))
+                                          .toList()),
+                                ],
+                              },
+                            );
 
                             // Add the vaccine details to the vaccineDetailsListProvider if needed
                             ref.read(surgeryDetailsProvider).add(
-                              SurgeryDetails(
-                                surgeryName: surgeryName,
-                                firstSurgery: firstSurgery,
-                                secondSurgery: secondSurgery,
-                              ),
-                            );
+                                  SurgeryDetails(
+                                    surgeryName: surgeryName,
+                                    firstSurgery: firstSurgery,
+                                    secondSurgery: secondSurgery,
+                                  ),
+                                );
                           });
                         },
                       ),
@@ -1197,17 +1223,17 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                 status: TextStatus.idle,
               ),
               SizedBox(
-                width: 8 * globals.widthMediaQuery,
+                width: 8 * SizeConfig.widthMultiplier(context),
               ),
               Icon(
                 Icons.add,
                 color: AppColors.primary40,
-                size: 16 * globals.widthMediaQuery,
+                size: 16 * SizeConfig.widthMultiplier(context),
               ),
             ],
           ),
           SizedBox(
-            height: 24 * globals.heightMediaQuery,
+            height: 24 * SizeConfig.heightMultiplier(context),
           ),
         ],
       ),
@@ -1242,7 +1268,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
         selectedmammalexpdeliveryDate = expdeliveryDate;
         expDlvDateController.text = DateFormat.yMMMd().format(expdeliveryDate);
         final updatedOviDetails = widget.OviDetails.copyWith(
-          expDlvDate: expDlvDateController.text,
+          expDlvDate: expdeliveryDate,
         );
 
         final oviAnimals = ref.read(ovianimalsProvider);
@@ -1281,7 +1307,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
         selectedmammalexpdeliveryDate = dateOfSonar;
         dateOfSonarController.text = DateFormat.yMMMd().format(dateOfSonar);
         final updatedOviDetails = widget.OviDetails.copyWith(
-          dateOfSonar: dateOfSonarController.text,
+          dateOfSonar: dateOfSonar,
         );
 
         final oviAnimals = ref.read(ovianimalsProvider);
@@ -1331,7 +1357,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
         dateOfLayingEggsController.text =
             DateFormat.yMMMd().format(dateOfLayingEggs);
         final updatedOviDetails = widget.OviDetails.copyWith(
-          dateOfLayingEggs: dateOfLayingEggsController.text,
+          dateOfLayingEggs: dateOfLayingEggs,
         );
 
         final oviAnimals = ref.read(ovianimalsProvider);
@@ -1345,10 +1371,11 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
     if (dateOfLayingEggs != null && lastBreedingEvent != null) {
       final eventIndex = breedingEvents.indexWhere(
           (event) => event.eventNumber == lastBreedingEvent!.eventNumber);
-      breedingEvents[eventIndex] = breedingEvents[eventIndex].copyWith(
-          layingEggsDate: DateFormat('dd/MM/yyyy').format(dateOfLayingEggs));
-      ref.read(breedingEventsProvider.notifier).update((state
-          ) => breedingEvents);
+      breedingEvents[eventIndex] =
+          breedingEvents[eventIndex].copyWith(layingEggsDate: dateOfLayingEggs);
+      ref
+          .read(breedingEventsProvider.notifier)
+          .update((state) => breedingEvents);
     }
   }
 
@@ -1381,7 +1408,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
         incubationDateController.text =
             DateFormat.yMMMd().format(incubationDate);
         final updatedOviDetails = widget.OviDetails.copyWith(
-          incubationDate: incubationDateController.text,
+          incubationDate: incubationDate,
         );
 
         final oviAnimals = ref.read(ovianimalsProvider);
@@ -1411,10 +1438,11 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
       final eggsNumber = numOfEggsController.text.isNum
           ? int.parse(numOfEggsController.text)
           : 0;
-      breedingEvents[eventIndex] = breedingEvents[eventIndex].copyWith(
-          eggsNumber: eggsNumber);
-      ref.read(breedingEventsProvider.notifier).update((state
-          ) => breedingEvents);
+      breedingEvents[eventIndex] =
+          breedingEvents[eventIndex].copyWith(eggsNumber: eggsNumber);
+      ref
+          .read(breedingEventsProvider.notifier)
+          .update((state) => breedingEvents);
     }
   }
 
@@ -1441,8 +1469,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
               ),
               Padding(
                 padding: EdgeInsets.only(
-                    top: globals.heightMediaQuery * 12,
-                    bottom: globals.heightMediaQuery * 12),
+                    top: SizeConfig.heightMultiplier(context) * 12,
+                    bottom: SizeConfig.heightMultiplier(context) * 12),
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
@@ -1469,8 +1497,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                         ),
                       ),
                       Container(
-                        width: globals.widthMediaQuery * 24,
-                        height: globals.widthMediaQuery * 24,
+                        width: SizeConfig.widthMultiplier(context) * 24,
+                        height: SizeConfig.widthMultiplier(context) * 24,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
@@ -1488,8 +1516,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
               ),
               Padding(
                 padding: EdgeInsets.only(
-                    top: globals.heightMediaQuery * 12,
-                    bottom: globals.heightMediaQuery * 12),
+                    top: SizeConfig.heightMultiplier(context) * 12,
+                    bottom: SizeConfig.heightMultiplier(context) * 12),
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
@@ -1516,8 +1544,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                         ),
                       ),
                       Container(
-                        width: globals.widthMediaQuery * 24,
-                        height: globals.widthMediaQuery * 24,
+                        width: SizeConfig.widthMultiplier(context) * 24,
+                        height: SizeConfig.widthMultiplier(context) * 24,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
@@ -1533,7 +1561,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                 ),
               ),
               SizedBox(
-                height: 55 * globals.heightMediaQuery,
+                height: 55 * SizeConfig.heightMultiplier(context),
               ),
             ],
           ),
@@ -1574,8 +1602,6 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
       widget.pregnancyStatusUpdated(newStatus);
     });
   }
-
-
 
   Future<void> _showFile(File file) async {
     final fileName = file.path.split('/').last;
@@ -1630,26 +1656,29 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                     Column(
                       children: [
                         PrimaryTextField(
-                            keyboardType: TextInputType.number,
-                            hintText: 'Enter pregnancies count',
-                            controller: pregnanciesCountController,
-                            validator: (value) => value == null || int.tryParse(
-                                value) == null ? 'Please enter integer number'
-                                .tr : null,
+                          keyboardType: TextInputType.number,
+                          hintText: 'Enter pregnancies count',
+                          controller: pregnanciesCountController,
+                          validator: (value) =>
+                              value == null || int.tryParse(value) == null
+                                  ? 'Please enter integer number'.tr
+                                  : null,
                         ),
                         SizedBox(
-                          height: 55 * globals.heightMediaQuery,
+                          height: 55 * SizeConfig.heightMultiplier(context),
                         ),
                         SizedBox(
-                          width: 343 * globals.widthMediaQuery,
-                          height: 52 * globals.heightMediaQuery,
+                          width: 343 * SizeConfig.widthMultiplier(context),
+                          height: 52 * SizeConfig.heightMultiplier(context),
                           child: PrimaryButton(
                               text: 'Confirm',
                               onPressed: () {
-                                if(_pregnanciesCountFormKey.currentState!
+                                if (_pregnanciesCountFormKey.currentState!
                                     .validate()) {
-                                  Navigator.pop(context, int.parse(
-                                      pregnanciesCountController.text));
+                                  Navigator.pop(
+                                      context,
+                                      int.parse(
+                                          pregnanciesCountController.text));
                                 }
                               }),
                         )
@@ -1673,9 +1702,10 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
   }
 
   Future<bool?> _confirmDeletion(DismissDirection direction) {
-    return showDialog(context: context, builder: (context) =>
-        ConfirmDeleteDialog(
-            content: 'Are you sure you want to delete the details, files etc.?'
-                .tr));
+    return showDialog(
+        context: context,
+        builder: (context) => ConfirmDeleteDialog(
+            content:
+                'Are you sure you want to delete the details, files etc.?'.tr));
   }
 }

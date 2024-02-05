@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
-import '../../data/classes.dart';
+import 'package:sulala_upgrade/src/data/globals.dart';
+import '../../data/classes/breeding_event_variables.dart';
+import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -46,8 +47,6 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
     'Turtle',
     'Snake',
   ];
-
-
 
   List<String> modalMammalSpeciesList = [
     'Monkey',
@@ -99,8 +98,8 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
             child: IconButton(
               padding: EdgeInsets.zero,
               icon: Container(
-                  width: globals.widthMediaQuery * 37.5,
-                  height: globals.widthMediaQuery * 37.5,
+                  width: SizeConfig.widthMultiplier(context) * 37.5,
+                  height: SizeConfig.widthMultiplier(context) * 37.5,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.grayscale10,
@@ -119,8 +118,8 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.only(
-              left: globals.widthMediaQuery * 16,
-              right: globals.widthMediaQuery * 16),
+              left: SizeConfig.widthMultiplier(context) * 16,
+              right: SizeConfig.widthMultiplier(context) * 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -129,7 +128,7 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
                 style: AppFonts.headline2(color: AppColors.grayscale90),
               ),
               SizedBox(
-                height: globals.heightMediaQuery * 24,
+                height: SizeConfig.heightMultiplier(context) * 24,
               ),
               Column(
                 children: [
@@ -138,7 +137,7 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
                 ],
               ),
               SizedBox(
-                height: globals.heightMediaQuery * 16,
+                height: SizeConfig.heightMultiplier(context) * 16,
               ),
               if (showAnimalSpeciesSection)
                 Column(
@@ -147,12 +146,12 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
                     Center(
                       child: Container(
                         height: 1,
-                        width: globals.widthMediaQuery * 343,
+                        width: SizeConfig.widthMultiplier(context) * 343,
                         color: AppColors.grayscale20,
                       ),
                     ),
                     SizedBox(
-                      height: globals.heightMediaQuery * 16,
+                      height: SizeConfig.heightMultiplier(context) * 16,
                     ),
                     Text(
                       'Animal Species'.tr,
@@ -182,17 +181,17 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
               if (showAnimalBreedsSection)
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   SizedBox(
-                    height: globals.heightMediaQuery * 6,
+                    height: SizeConfig.heightMultiplier(context) * 6,
                   ),
                   Center(
                     child: Container(
                       height: 1,
-                      width: globals.widthMediaQuery * 343,
+                      width: SizeConfig.widthMultiplier(context) * 343,
                       color: AppColors.grayscale20,
                     ),
                   ),
                   SizedBox(
-                    height: globals.heightMediaQuery * 16,
+                    height: SizeConfig.heightMultiplier(context) * 16,
                   ),
                   Text(
                     'Animal Breeds'.tr,
@@ -270,7 +269,7 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
       title:
           Text(animalType, style: AppFonts.body2(color: AppColors.grayscale90)),
       trailing: Container(
-        width: globals.widthMediaQuery * 24,
+        width: SizeConfig.widthMultiplier(context) * 24,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(
@@ -297,7 +296,7 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
       title:
           Text(optionText, style: AppFonts.body2(color: AppColors.grayscale90)),
       trailing: Container(
-        width: globals.widthMediaQuery * 24,
+        width: SizeConfig.widthMultiplier(context) * 24,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(
@@ -330,7 +329,7 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
         style: AppFonts.body2(color: AppColors.grayscale90),
       ),
       trailing: Container(
-        width: globals.widthMediaQuery * 24,
+        width: SizeConfig.widthMultiplier(context) * 24,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(

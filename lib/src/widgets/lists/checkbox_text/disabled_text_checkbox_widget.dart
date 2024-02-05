@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 
@@ -39,7 +39,7 @@ class _DisabledTextCheckboxWidgetState
     return Row(
       children: [
         SizedBox(
-          width: globals.widthMediaQuery * 15,
+          width: SizeConfig.widthMultiplier(context) * 15,
         ),
         Text(
           widget.truncateTextWithEllipsis(widget.text, 25),
@@ -72,17 +72,16 @@ class _DisabledTextCheckboxWidgetState
           ),
         ),
         SizedBox(
-          width: globals.widthMediaQuery * 15,
+          width: SizeConfig.widthMultiplier(context) * 15,
         ),
       ],
     );
   }
 }
 
-
 // Example of use:
 
-  // const DisabledTextCheckboxWidget(
-  //                   text: 'Text Checkbox Widget',
-  //                   checked: false,
-  //                 ),
+// const DisabledTextCheckboxWidget(
+//                   text: 'Text Checkbox Widget',
+//                   checked: false,
+//                 ),

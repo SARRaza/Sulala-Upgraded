@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 class FamilyTreeItem extends StatelessWidget {
   final String? imageUrl;
@@ -47,15 +47,15 @@ class FamilyTreeItem extends StatelessWidget {
                 child: CircleAvatar(
                   backgroundColor: Colors.transparent,
                   backgroundImage: getImage(),
-                  radius: globals.widthMediaQuery * 32,
+                  radius: SizeConfig.widthMultiplier(context) * 32,
                 ),
               )
             : CircleAvatar(
                 backgroundColor: Colors.transparent,
                 backgroundImage: getImage(),
-                radius: globals.widthMediaQuery * 32,
+                radius: SizeConfig.widthMultiplier(context) * 32,
               ),
-        SizedBox(height: globals.heightMediaQuery * 8),
+        SizedBox(height: SizeConfig.heightMultiplier(context) * 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -65,20 +65,20 @@ class FamilyTreeItem extends StatelessWidget {
                 color: AppColors.grayscale90,
               ),
             ),
-            SizedBox(width: globals.widthMediaQuery * 4),
+            SizedBox(width: SizeConfig.widthMultiplier(context) * 4),
             sex.toLowerCase() != "male"
                 ? Image.asset("assets/icons/frame/24px/16_Gender_female.png")
                 : Image.asset("assets/icons/frame/24px/16_Gender_male.png"),
           ],
         ),
-        SizedBox(height: globals.heightMediaQuery * 3),
+        SizedBox(height: SizeConfig.heightMultiplier(context) * 3),
         Text(
           'ID #$id',
           style: AppFonts.caption2(
             color: AppColors.grayscale80,
           ),
         ),
-        SizedBox(height: globals.heightMediaQuery * 3),
+        SizedBox(height: SizeConfig.heightMultiplier(context) * 3),
         Text(
           tag,
           style: AppFonts.caption3(
@@ -89,7 +89,6 @@ class FamilyTreeItem extends StatelessWidget {
     );
   }
 }
-
 
 // Example of use:
 

@@ -63,7 +63,6 @@ class _CheckBoxActiveState extends State<CheckBoxActive> {
   }
 }
 
-
 // Example of use:
 
 // CheckBoxActive(

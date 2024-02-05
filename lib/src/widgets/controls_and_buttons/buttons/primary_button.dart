@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nuts_activity_indicator/nuts_activity_indicator.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 
@@ -17,27 +17,27 @@ class PrimaryButton extends StatelessWidget {
   final PrimaryButtonPosition position;
   final Size? minimumSize;
 
-  const PrimaryButton({
-    Key? key,
-    required this.text,
-    required this.onPressed,
-    this.status = PrimaryButtonStatus.idle,
-    this.position = PrimaryButtonPosition.primary,
-    this.minimumSize
-  }) : super(key: key);
+  const PrimaryButton(
+      {Key? key,
+      required this.text,
+      required this.onPressed,
+      this.status = PrimaryButtonStatus.idle,
+      this.position = PrimaryButtonPosition.primary,
+      this.minimumSize})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: _getButtonColor(status),
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(globals.widthMediaQuery * 30),
-        ),
-        minimumSize: minimumSize
-      ),
+          backgroundColor: _getButtonColor(status),
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.circular(SizeConfig.widthMultiplier(context) * 30),
+          ),
+          minimumSize: minimumSize),
       child: _buildButtonContent(),
     );
   }
@@ -137,7 +137,6 @@ enum PrimaryButtonStatus {
   loading,
   disabled,
 }
-
 
 // Example of use:
 

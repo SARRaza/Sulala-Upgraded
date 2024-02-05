@@ -6,7 +6,7 @@ import '../../../screens/profile/profile_page.dart';
 import '../../../screens/reg_mode/reg_home_page.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 class NavigationBarRegMode extends StatefulWidget {
   const NavigationBarRegMode({Key? key}) : super(key: key);
@@ -46,9 +46,9 @@ class _NavigationBarRegModeState extends State<NavigationBarRegMode> {
                 highlightColor: Colors.transparent,
               ),
               child: SizedBox(
-                height: globals.heightMediaQuery * 60,
+                height: SizeConfig.heightMultiplier(context) * 60,
                 child: BottomNavigationBar(
-                  iconSize: globals.widthMediaQuery * 24,
+                  iconSize: SizeConfig.widthMultiplier(context) * 24,
                   currentIndex: _currentIndex,
                   onTap: (index) {
                     setState(() {
@@ -64,11 +64,11 @@ class _NavigationBarRegModeState extends State<NavigationBarRegMode> {
                     BottomNavigationBarItem(
                       icon: Image.asset(
                         "assets/icons/frame/24px/Outlined_Cow_Icon.png",
-                        scale: 24 / (globals.widthMediaQuery * 24),
+                        scale: 24 / (SizeConfig.widthMultiplier(context) * 24),
                       ),
                       activeIcon: Image.asset(
                         "assets/icons/frame/24px/Filled_Cow_Icon.png",
-                        scale: 24 / (globals.widthMediaQuery * 24),
+                        scale: 24 / (SizeConfig.widthMultiplier(context) * 24),
                       ),
                       label: 'Animals'.tr,
                     ),

@@ -5,7 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../../../data/classes.dart';
+import '../../../data/classes/breeding_event_variables.dart';
+import '../../../data/classes/ovi_variables.dart';
 import '../../../data/riverpod_globals.dart';
 import '../../../screens/breeding/family_tree/family_tree_page.dart';
 import '../../../screens/breeding/list_of_breeding_events.dart';
@@ -17,7 +18,7 @@ import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 import '../../other/one_information_block.dart';
 import '../../other/two_information_block.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 class BreedingInfo extends ConsumerStatefulWidget {
   final OviVariables OviDetails;
@@ -52,35 +53,31 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
       // Animal not found, you can show an error message or handle it accordingly
       return const SizedBox(); // Placeholder Widget, adjust as needed
     }
-    final breedingEvents = ref.read(breedingEventsProvider).where((event
-        ) => event.sire?.id == widget.OviDetails.id || event.dam?.id == widget
-        .OviDetails.id).toList();
+    final breedingEvents = ref
+        .read(breedingEventsProvider)
+        .where((event) =>
+            event.sire?.id == widget.OviDetails.id ||
+            event.dam?.id == widget.OviDetails.id)
+        .toList();
 
     DateTime? lastBreedingDate;
     DateTime? nextBreedingDate;
     final now = DateTime.now();
     // Add persons based on the breeding events and children
     for (final breedingEvent in breedingEvents) {
-      if (breedingEvent.breedingDate.isNotEmpty) {
-        final dateSegments = breedingEvent.breedingDate.split('/');
-
-        if(dateSegments.every((segment) => segment.isNum)) {
-          final breedingDate = DateTime(int.parse(dateSegments[2]),
-              int.parse(dateSegments[1]), int.parse(dateSegments[0]));
-          if (breedingDate.isBefore(now) &&
-              (lastBreedingDate == null ||
-                  breedingDate.isAfter(lastBreedingDate))) {
-            lastBreedingDate = breedingDate;
-          }
+      if (breedingEvent.breedingDate != null) {
+        if (breedingEvent.breedingDate!.isBefore(now) &&
+            (lastBreedingDate == null ||
+                breedingEvent.breedingDate!.isAfter(lastBreedingDate))) {
+          lastBreedingDate = breedingEvent.breedingDate;
         }
-
       }
     }
     if (lastBreedingDate != null) {
       nextBreedingDate = lastBreedingDate.add(Duration(
-          days: widget.OviDetails.selectedAnimalType == 'Mammal' ?
-          gestationPeriods[widget.OviDetails.selectedAnimalSpecies]! :
-          incubationPeriods[widget.OviDetails.selectedAnimalSpecies]!));
+          days: widget.OviDetails.selectedAnimalType == 'Mammal'
+              ? gestationPeriods[widget.OviDetails.selectedAnimalSpecies]!
+              : incubationPeriods[widget.OviDetails.selectedAnimalSpecies]!));
       if (nextBreedingDate.isBefore(now)) {
         nextBreedingDate = now;
       }
@@ -93,7 +90,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
         children: [
           if (widget.OviDetails.selectedOviGender == 'Female')
             SizedBox(
-              width: globals.widthMediaQuery * 343,
+              width: SizeConfig.widthMultiplier(context) * 343,
               child: OneInformationBlock(
                   head1: 'Pregnancy status',
                   subtitle1: widget.OviDetails.pregnant == true
@@ -102,13 +99,13 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
             ),
           if (animalGender)
             SizedBox(
-              height: globals.heightMediaQuery * 8,
+              height: SizeConfig.heightMultiplier(context) * 8,
             ),
           if (widget.OviDetails.selectedOviGender == 'Female' &&
               widget.OviDetails.selectedAnimalType == 'Oviparous' &&
               (lastBreedingDate != null || nextBreedingDate != null))
             SizedBox(
-              width: 343 * globals.widthMediaQuery,
+              width: 343 * SizeConfig.widthMultiplier(context),
               child: TwoInformationBlock(
                 head1: lastBreedingDate != null
                     ? DateFormat('dd.MM.yyyy').format(lastBreedingDate)
@@ -122,7 +119,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
             ),
           if (widget.OviDetails.selectedOviGender == 'Male')
             SizedBox(
-              width: 343 * globals.widthMediaQuery,
+              width: 343 * SizeConfig.widthMultiplier(context),
               child: TwoInformationBlock(
                 head1: widget.OviDetails.selectedOviDates
                         .containsKey('Date Of Mating')
@@ -141,7 +138,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
             ),
           if (animalGender)
             SizedBox(
-              height: globals.heightMediaQuery * 24,
+              height: SizeConfig.heightMultiplier(context) * 24,
             ),
           Column(
             children: [
@@ -154,7 +151,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                   style: AppFonts.headline3(color: AppColors.grayscale90),
                 ),
                 trailing: Icon(Icons.chevron_right_rounded,
-                    size: 24 * globals.widthMediaQuery),
+                    size: 24 * SizeConfig.widthMultiplier(context)),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -180,7 +177,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                   style: AppFonts.headline3(color: AppColors.grayscale90),
                 ),
                 trailing: Icon(Icons.chevron_right_rounded,
-                    size: 24 * globals.widthMediaQuery),
+                    size: 24 * SizeConfig.widthMultiplier(context)),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -206,7 +203,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                   style: AppFonts.headline3(color: AppColors.grayscale90),
                 ),
                 trailing: Icon(Icons.chevron_right_rounded,
-                    size: 24 * globals.widthMediaQuery),
+                    size: 24 * SizeConfig.widthMultiplier(context)),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -235,7 +232,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                         style: AppFonts.headline3(color: AppColors.grayscale90),
                       ),
                 trailing: Icon(Icons.chevron_right_rounded,
-                    size: 24 * globals.widthMediaQuery),
+                    size: 24 * SizeConfig.widthMultiplier(context)),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -251,14 +248,16 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
               ),
               ListTile(
                 contentPadding: EdgeInsets.only(
-                    right: 0, left: 0, bottom: 32 * globals.heightMediaQuery),
+                    right: 0,
+                    left: 0,
+                    bottom: 32 * SizeConfig.heightMultiplier(context)),
                 leading: Image.asset('assets/icons/frame/24px/children.png'),
                 title: Text(
                   'Children',
                   style: AppFonts.headline3(color: AppColors.grayscale90),
                 ),
                 trailing: Icon(Icons.chevron_right_rounded,
-                    size: 24 * globals.widthMediaQuery),
+                    size: 24 * SizeConfig.widthMultiplier(context)),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -305,9 +304,8 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
     });
 
     ref.read(ovianimalsProvider.notifier).update((state) {
-      final index = state
-          .indexWhere((animal) => animal.animalName == widget.OviDetails
-          .animalName);
+      final index = state.indexWhere(
+          (animal) => animal.animalName == widget.OviDetails.animalName);
       state[index] = widget.OviDetails;
       return state;
     });

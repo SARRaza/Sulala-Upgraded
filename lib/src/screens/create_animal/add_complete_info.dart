@@ -4,14 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import 'package:sulala_upgrade/src/widgets/animal_info_modal_sheets.dart/animal_image_picker.dart';
 
-import '../../data/classes.dart';
+import '../../data/classes/breed_child_item.dart';
+import '../../data/classes/breeding_event_variables.dart';
+import '../../data/classes/main_animal_dam.dart';
+import '../../data/classes/main_animal_sire.dart';
+import '../../data/classes/ovi_variables.dart';
+import '../../data/classes/reminder_item.dart';
+import '../../data/globals.dart';
 import '../../data/place_holders.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
@@ -33,17 +39,17 @@ import '../../widgets/inputs/text_fields/primary_text_field.dart';
 import '../../widgets/other/custom_field.dart';
 import 'sar_listofanimals.dart';
 
-class CreateOviCumMammal extends ConsumerStatefulWidget {
+class AddCompleteInfo extends ConsumerStatefulWidget {
   final List<BreedingEventVariables> breedingEvents;
 
-  const CreateOviCumMammal({super.key, required this.breedingEvents});
+  const AddCompleteInfo({super.key, required this.breedingEvents});
 
   @override
   // ignore: library_private_types_in_public_api
   _CreateOviCumMammal createState() => _CreateOviCumMammal();
 }
 
-class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
+class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _frequencyEggsController =
       TextEditingController();
@@ -94,7 +100,10 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    _nameController.dispose();
+    _frequencyEggsController.dispose();
+    _numberofEggsController.dispose();
+
     super.dispose();
   }
 
@@ -114,9 +123,11 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
 
   void _showmainAnimalSireSelectionSheet(BuildContext context) async {
     // Initialize an empty list
-    final ovianimals = ref.watch(ovianimalsProvider).where((animal) => animal
-        .selectedAnimalSpecies == selectedAnimalSpecies).toList();
-
+    final ovianimals = ref
+        .watch(ovianimalsProvider)
+        .where(
+            (animal) => animal.selectedAnimalSpecies == selectedAnimalSpecies)
+        .toList();
 
     final animalSire = await showModalBottomSheet(
       context: context,
@@ -124,10 +135,12 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
       showDragHandle: false,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return AnimalSireModal(selectedAnimal: _getSelectedAnimal(),
+        return AnimalSireModal(
+          selectedAnimal: _getSelectedAnimal(),
           selectedFather: ref.read(animalSireDetailsProvider),
           selectedMother: ref.read(animalDamDetailsProvider),
-          selectedChildren: ref.read(breedingChildrenDetailsProvider),);
+          selectedChildren: ref.read(breedingChildrenDetailsProvider),
+        );
       },
     );
     ref.read(animalSireDetailsProvider.notifier).update((state) => animalSire);
@@ -135,8 +148,11 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
 
   void _showmainAnimalDamSelectionSheet(BuildContext context) async {
     // Initialize an empty list
-    final ovianimals = ref.watch(ovianimalsProvider).where((animal) => animal
-        .selectedAnimalSpecies == selectedAnimalSpecies).toList();
+    final ovianimals = ref
+        .watch(ovianimalsProvider)
+        .where(
+            (animal) => animal.selectedAnimalSpecies == selectedAnimalSpecies)
+        .toList();
 
     final selectedFather = <MainAnimalSire>[];
     final selectedMother = <MainAnimalDam>[];
@@ -146,10 +162,11 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return AnimalDamModal(selectedAnimal: _getSelectedAnimal(),
-          selectedFather: ref.read(animalSireDetailsProvider),
-          selectedMother: ref.read(animalDamDetailsProvider),
-          selectedChildren: ref.read(breedingChildrenDetailsProvider));
+        return AnimalDamModal(
+            selectedAnimal: _getSelectedAnimal(),
+            selectedFather: ref.read(animalSireDetailsProvider),
+            selectedMother: ref.read(animalDamDetailsProvider),
+            selectedChildren: ref.read(breedingChildrenDetailsProvider));
       },
     );
     ref.read(animalDamDetailsProvider.notifier).update((state) => animalDam);
@@ -157,8 +174,11 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
 
   void _showmainAnimalChilrenSelectionSheet(BuildContext context) async {
     // Initialize an empty list
-    final ovianimals = ref.watch(ovianimalsProvider).where((animal) => animal
-        .selectedAnimalSpecies == selectedAnimalSpecies).toList();
+    final ovianimals = ref
+        .watch(ovianimalsProvider)
+        .where(
+            (animal) => animal.selectedAnimalSpecies == selectedAnimalSpecies)
+        .toList();
 
     final selectedChildren = <BreedChildItem>[];
 
@@ -168,11 +188,12 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
       showDragHandle: false,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return AnimalChildrenModal(selectedAnimal: _getSelectedAnimal(),
+        return AnimalChildrenModal(
+          selectedAnimal: _getSelectedAnimal(),
           selectedFather: ref.read(animalSireDetailsProvider),
           selectedMother: ref.read(animalDamDetailsProvider),
-          selectedChildren: ref.read(breedingChildrenDetailsProvider),);
-
+          selectedChildren: ref.read(breedingChildrenDetailsProvider),
+        );
       },
     );
   }
@@ -329,8 +350,8 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
       isScrollControlled: true,
       showDragHandle: true,
       builder: (BuildContext context) {
-        return AnimalTagsModal(selectedTags: ref.read(
-            selectedOviChipsProvider));
+        return AnimalTagsModal(
+            selectedTags: ref.read(selectedOviChipsProvider));
       },
     );
 
@@ -373,7 +394,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                 ),
                 PrimaryTextField(
                     validator: (value) {
-                      if(value == null || value.isEmpty) {
+                      if (value == null || value.isEmpty) {
                         return 'Please enter some text';
                       }
                       return null;
@@ -389,7 +410,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                 const SizedBox(height: 32),
                 ButtonWidget(
                   onPressed: () {
-                    if(_customFieldNameFormKey.currentState!.validate()) {
+                    if (_customFieldNameFormKey.currentState!.validate()) {
                       Navigator.pop(context);
                       _showOviFieldContentModal(context);
                     }
@@ -523,8 +544,9 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
     final fieldName = _customFieldNameController.text;
     final fieldContent = _customFieldContentController.text;
 
-    ref.read(customOviTextFieldsProvider.notifier).update((state) => {...state,
-      fieldName: fieldContent});
+    ref
+        .read(customOviTextFieldsProvider.notifier)
+        .update((state) => {...state, fieldName: fieldContent});
   }
 
   @override
@@ -538,12 +560,14 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
     final customFields = ref.watch(customOviTextFieldsProvider);
     final ovianimals = ref.watch(ovianimalsProvider);
     selectedAnimalSpecies = ref.read(selectedAnimalSpeciesProvider);
-    if(selectedAnimalImage == null && speciesImages[selectedAnimalSpecies] !=
-        null) {
-      selectedAnimalImage = AssetImage(speciesImages[selectedAnimalSpecies]!
-          .path);
-      Future.delayed(Duration.zero, () => ref.read(selectedAnimalImageProvider
-          .notifier).update((state) => selectedAnimalImage));
+    if (selectedAnimalImage == null &&
+        speciesImages[selectedAnimalSpecies] != null) {
+      selectedAnimalImage = AssetImage(speciesImages[selectedAnimalSpecies]!);
+      Future.delayed(
+          Duration.zero,
+          () => ref
+              .read(selectedAnimalImageProvider.notifier)
+              .update((state) => selectedAnimalImage));
     }
 
     return SafeArea(
@@ -568,9 +592,10 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
           ),
           automaticallyImplyLeading: false,
           leading: Padding(
-            padding: EdgeInsets.only(left: globals.widthMediaQuery * 16),
+            padding:
+                EdgeInsets.only(left: SizeConfig.widthMultiplier(context) * 16),
             child: Container(
-              width: globals.widthMediaQuery * 40,
+              width: SizeConfig.widthMultiplier(context) * 40,
               decoration: const BoxDecoration(
                   color: AppColors.grayscale10, shape: BoxShape.circle),
               child: IconButton(
@@ -578,7 +603,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                 icon: Icon(
                   Icons.arrow_back_rounded,
                   color: Colors.black,
-                  size: globals.widthMediaQuery * 24,
+                  size: SizeConfig.widthMultiplier(context) * 24,
                 ),
                 onPressed: () {
                   // Handle close button press
@@ -589,9 +614,10 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
           ),
           actions: [
             Padding(
-              padding: EdgeInsets.only(right: globals.widthMediaQuery * 16),
+              padding: EdgeInsets.only(
+                  right: SizeConfig.widthMultiplier(context) * 16),
               child: Container(
-                width: globals.widthMediaQuery * 40,
+                width: SizeConfig.widthMultiplier(context) * 40,
                 decoration: const BoxDecoration(
                     color: AppColors.grayscale10, shape: BoxShape.circle),
                 child: IconButton(
@@ -599,7 +625,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                   icon: Icon(
                     Icons.close_rounded,
                     color: Colors.black,
-                    size: globals.widthMediaQuery * 24,
+                    size: SizeConfig.widthMultiplier(context) * 24,
                   ),
                   onPressed: () {
                     // Handle close button press
@@ -614,22 +640,21 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
           controller: _scrollController,
           child: Padding(
             padding: EdgeInsets.only(
-                left: globals.widthMediaQuery * 16,
-                right: globals.widthMediaQuery * 16),
+                left: SizeConfig.widthMultiplier(context) * 16,
+                right: SizeConfig.widthMultiplier(context) * 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: globals.heightMediaQuery * 40),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 40),
                 Center(
                   child: GestureDetector(
                     child: CircleAvatar(
-                        radius: globals.widthMediaQuery * 60,
+                        radius: SizeConfig.widthMultiplier(context) * 60,
                         backgroundColor: AppColors.grayscale10,
-                        backgroundImage: selectedAnimalImage
-                    ),
+                        backgroundImage: selectedAnimalImage),
                   ),
                 ),
-                SizedBox(height: globals.heightMediaQuery * 16),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
                 Center(
                   child: TextButton(
                     onPressed: () {
@@ -645,7 +670,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                     ),
                   ),
                 ),
-                SizedBox(height: globals.heightMediaQuery * 24),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
                 PrimaryTextField(
                     onChanged: (value) {
                       ref
@@ -655,21 +680,21 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                     labelText: 'Name',
                     hintText: 'Enter Name',
                     controller: _nameController),
-                SizedBox(height: globals.heightMediaQuery * 32),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 32),
                 Text(
                   "Family Tree",
                   style: AppFonts.headline2(color: AppColors.grayscale90),
                 ),
-                SizedBox(height: globals.heightMediaQuery * 8),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 8),
                 Text(
                   "Add Parents If They're In The System",
                   style: AppFonts.body2(color: AppColors.grayscale60),
                 ),
-                SizedBox(height: globals.heightMediaQuery * 16),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
                 Padding(
                   padding: EdgeInsets.only(
-                      top: globals.heightMediaQuery * 8,
-                      bottom: globals.heightMediaQuery * 8),
+                      top: SizeConfig.heightMultiplier(context) * 8,
+                      bottom: SizeConfig.heightMultiplier(context) * 8),
                   child: Row(
                     children: [
                       Expanded(
@@ -692,8 +717,8 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                 Visibility(
                   visible: _addAnimalParents,
                   child: Padding(
-                    padding:
-                        EdgeInsets.only(top: globals.heightMediaQuery * 16),
+                    padding: EdgeInsets.only(
+                        top: SizeConfig.heightMultiplier(context) * 16),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -705,20 +730,23 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                                   AppFonts.body2(color: AppColors.grayscale70),
                             ),
                             const Spacer(),
-                            ovianimals.isNotEmpty ?
-                            PrimaryTextButton(
+                            ovianimals.isNotEmpty
+                                ? PrimaryTextButton(
                                     onPressed: () {
                                       _showmainAnimalSireSelectionSheet(
                                           context);
                                     },
                                     status: TextStatus.idle,
-                                    text: animalSire != null ? animalSire
-                                        .animalName : 'Add'.tr,
+                                    text: animalSire != null
+                                        ? animalSire.animalName
+                                        : 'Add'.tr,
                                     position: TextButtonPosition.right,
-                                  ) : Text('No Animals'.tr),
+                                  )
+                                : Text('No Animals'.tr),
                           ],
                         ),
-                        SizedBox(height: globals.heightMediaQuery * 16),
+                        SizedBox(
+                            height: SizeConfig.heightMultiplier(context) * 16),
                         Row(
                           children: [
                             Text(
@@ -733,8 +761,9 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                                       _showmainAnimalDamSelectionSheet(context);
                                     },
                                     status: TextStatus.idle,
-                                    text: animalDam != null ? animalDam
-                                        .animalName : 'Add'.tr,
+                                    text: animalDam != null
+                                        ? animalDam.animalName
+                                        : 'Add'.tr,
                                     position: TextButtonPosition.right,
                                   )
                                 : Text('No Animals'.tr),
@@ -744,11 +773,11 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                     ),
                   ),
                 ),
-                SizedBox(height: globals.heightMediaQuery * 8),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 8),
                 Padding(
                   padding: EdgeInsets.only(
-                      top: globals.heightMediaQuery * 8,
-                      bottom: globals.heightMediaQuery * 8),
+                      top: SizeConfig.heightMultiplier(context) * 8,
+                      bottom: SizeConfig.heightMultiplier(context) * 8),
                   child: Row(
                     children: [
                       Text(
@@ -771,7 +800,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                   visible: _addOviChildren,
                   child: Padding(
                     padding: EdgeInsets.only(
-                      top: globals.heightMediaQuery * 16,
+                      top: SizeConfig.heightMultiplier(context) * 16,
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -785,28 +814,32 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                             return ListTile(
                               contentPadding: EdgeInsets.zero,
                               leading: CircleAvatar(
-                                radius: globals.widthMediaQuery * 24,
+                                radius:
+                                    SizeConfig.widthMultiplier(context) * 24,
                                 backgroundColor: Colors.transparent,
                                 backgroundImage: child.selectedOviImage,
                                 child: child.selectedOviImage == null
                                     ? const Icon(
-                                  Icons.camera_alt_outlined,
-                                  size: 50,
-                                  color: Colors.grey,
-                                )
+                                        Icons.camera_alt_outlined,
+                                        size: 50,
+                                        color: Colors.grey,
+                                      )
                                     : null,
                               ),
                               title: Text(
                                 child.animalName,
-                                style: AppFonts.headline4(color: AppColors.grayscale90),
+                                style: AppFonts.headline4(
+                                    color: AppColors.grayscale90),
                               ),
                               subtitle: Text(
                                 child.selectedOviGender,
-                                style: AppFonts.body2(color: AppColors.grayscale70),
+                                style: AppFonts.body2(
+                                    color: AppColors.grayscale70),
                               ),
                               trailing: Text(
                                 'ID#${child.id}',
-                                style: AppFonts.body2(color: AppColors.grayscale70),
+                                style: AppFonts.body2(
+                                    color: AppColors.grayscale70),
                               ),
                             );
                           },
@@ -819,7 +852,8 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                               },
                               child: Text(
                                 "Add Children",
-                                style: AppFonts.body1(color: AppColors.primary40),
+                                style:
+                                    AppFonts.body1(color: AppColors.primary40),
                               ),
                             ),
                             const Icon(Icons.add, color: AppColors.primary40),
@@ -830,25 +864,25 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                   ),
                 ),
                 SizedBox(
-                  height: globals.heightMediaQuery * 16,
+                  height: SizeConfig.heightMultiplier(context) * 16,
                 ),
                 const Divider(
                   color: AppColors.grayscale20,
                 ),
                 SizedBox(
-                  height: globals.heightMediaQuery * 16,
+                  height: SizeConfig.heightMultiplier(context) * 16,
                 ),
                 Text(
                   "Animal Sex",
                   style: AppFonts.headline2(color: AppColors.grayscale90),
                 ),
                 SizedBox(
-                  height: globals.heightMediaQuery * 16,
+                  height: SizeConfig.heightMultiplier(context) * 16,
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                    top: globals.heightMediaQuery * 12,
-                    bottom: globals.heightMediaQuery * 12,
+                    top: SizeConfig.heightMultiplier(context) * 12,
+                    bottom: SizeConfig.heightMultiplier(context) * 12,
                   ),
                   child: GestureDetector(
                     onTap: () {
@@ -869,8 +903,8 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                           ),
                         ),
                         Container(
-                          width: globals.widthMediaQuery * 24,
-                          height: globals.widthMediaQuery * 24,
+                          width: SizeConfig.widthMultiplier(context) * 24,
+                          height: SizeConfig.widthMultiplier(context) * 24,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
@@ -891,8 +925,8 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                      top: globals.heightMediaQuery * 12,
-                      bottom: globals.heightMediaQuery * 12),
+                      top: SizeConfig.heightMultiplier(context) * 12,
+                      bottom: SizeConfig.heightMultiplier(context) * 12),
                   child: GestureDetector(
                     onTap: () {
                       setState(() {
@@ -911,8 +945,8 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                           ),
                         ),
                         Container(
-                          width: globals.widthMediaQuery * 24,
-                          height: globals.widthMediaQuery * 24,
+                          width: SizeConfig.widthMultiplier(context) * 24,
+                          height: SizeConfig.widthMultiplier(context) * 24,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
@@ -933,8 +967,8 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                      top: globals.heightMediaQuery * 12,
-                      bottom: globals.heightMediaQuery * 12),
+                      top: SizeConfig.heightMultiplier(context) * 12,
+                      bottom: SizeConfig.heightMultiplier(context) * 12),
                   child: GestureDetector(
                     onTap: () {
                       setState(() {
@@ -954,8 +988,8 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                           ),
                         ),
                         Container(
-                          width: globals.widthMediaQuery * 24,
-                          height: globals.widthMediaQuery * 24,
+                          width: SizeConfig.widthMultiplier(context) * 24,
+                          height: SizeConfig.widthMultiplier(context) * 24,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
@@ -974,11 +1008,11 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                     ),
                   ),
                 ),
-                SizedBox(height: globals.heightMediaQuery * 16),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
                 const Divider(
                   color: AppColors.grayscale20,
                 ),
-                SizedBox(height: globals.heightMediaQuery * 16),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
                 if (showAdditionalFields) // Show additional fields when Female is selected
                   Visibility(
                     visible: selectedAnimalType == 'Oviparous',
@@ -1052,7 +1086,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          height: globals.heightMediaQuery * 16,
+                          height: SizeConfig.heightMultiplier(context) * 16,
                         ),
                         Text(
                           "Breeding Stage",
@@ -1060,12 +1094,12 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                               AppFonts.headline2(color: AppColors.grayscale90),
                         ),
                         SizedBox(
-                          height: globals.heightMediaQuery * 16,
+                          height: SizeConfig.heightMultiplier(context) * 16,
                         ),
                         Padding(
                           padding: EdgeInsets.only(
-                            top: globals.heightMediaQuery * 12,
-                            bottom: globals.heightMediaQuery * 12,
+                            top: SizeConfig.heightMultiplier(context) * 12,
+                            bottom: SizeConfig.heightMultiplier(context) * 12,
                           ),
                           child: GestureDetector(
                             onTap: () {
@@ -1086,8 +1120,10 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                                   ),
                                 ),
                                 Container(
-                                  width: globals.widthMediaQuery * 24,
-                                  height: globals.widthMediaQuery * 24,
+                                  width:
+                                      SizeConfig.widthMultiplier(context) * 24,
+                                  height:
+                                      SizeConfig.widthMultiplier(context) * 24,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     border: Border.all(
@@ -1110,8 +1146,8 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                         ),
                         Padding(
                           padding: EdgeInsets.only(
-                            top: globals.heightMediaQuery * 12,
-                            bottom: globals.heightMediaQuery * 12,
+                            top: SizeConfig.heightMultiplier(context) * 12,
+                            bottom: SizeConfig.heightMultiplier(context) * 12,
                           ),
                           child: GestureDetector(
                             onTap: () {
@@ -1132,8 +1168,10 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                                   ),
                                 ),
                                 Container(
-                                  width: globals.widthMediaQuery * 24,
-                                  height: globals.widthMediaQuery * 24,
+                                  width:
+                                      SizeConfig.widthMultiplier(context) * 24,
+                                  height:
+                                      SizeConfig.widthMultiplier(context) * 24,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     border: Border.all(
@@ -1156,8 +1194,8 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                         ),
                         Padding(
                           padding: EdgeInsets.only(
-                            top: globals.heightMediaQuery * 12,
-                            bottom: globals.heightMediaQuery * 12,
+                            top: SizeConfig.heightMultiplier(context) * 12,
+                            bottom: SizeConfig.heightMultiplier(context) * 12,
                           ),
                           child: GestureDetector(
                             onTap: () {
@@ -1178,8 +1216,10 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                                   ),
                                 ),
                                 Container(
-                                  width: globals.widthMediaQuery * 24,
-                                  height: globals.widthMediaQuery * 24,
+                                  width:
+                                      SizeConfig.widthMultiplier(context) * 24,
+                                  height:
+                                      SizeConfig.widthMultiplier(context) * 24,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     border: Border.all(
@@ -1206,12 +1246,12 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                       ],
                     ),
                   ),
-                SizedBox(height: globals.heightMediaQuery * 16),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
                 Text(
                   "Dates",
                   style: AppFonts.headline2(color: AppColors.grayscale90),
                 ),
-                SizedBox(height: globals.heightMediaQuery * 24),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
                 const PrimaryDateField(
                   hintText: 'DD.MM.YYYY',
                   labelText: 'Date of Birth',
@@ -1234,12 +1274,12 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                 const Divider(
                   color: AppColors.grayscale20,
                 ),
-                SizedBox(height: globals.heightMediaQuery * 16),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
                 Text(
                   "Add Tag",
                   style: AppFonts.headline2(color: AppColors.grayscale90),
                 ),
-                SizedBox(height: globals.heightMediaQuery * 16),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
                 Wrap(
                   spacing: 8.0,
                   runSpacing: 8.0,
@@ -1271,7 +1311,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                 const Divider(
                   color: AppColors.grayscale20,
                 ),
-                SizedBox(height: globals.heightMediaQuery * 16),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
                 Text(
                   "Custom Fields",
                   style: AppFonts.headline2(color: AppColors.grayscale90),
@@ -1280,16 +1320,20 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                   "Add Custom Fields If Needed",
                   style: AppFonts.body2(color: AppColors.grayscale60),
                 ),
-                SizedBox(height: globals.heightMediaQuery * 16),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
                 Column(
-                  children: customFields.keys.map((fieldName) => CustomField(
-                    fieldName: fieldName,
-                    fieldContent: customFields[fieldName]!,
-                    onDelete: () {
-                      ref.read(customOviTextFieldsProvider.notifier).update((
-                          state) => Map.from(state)..remove(fieldName));
-                    },
-                  )).toList(),
+                  children: customFields.keys
+                      .map((fieldName) => CustomField(
+                            fieldName: fieldName,
+                            fieldContent: customFields[fieldName]!,
+                            onDelete: () {
+                              ref
+                                  .read(customOviTextFieldsProvider.notifier)
+                                  .update((state) =>
+                                      Map.from(state)..remove(fieldName));
+                            },
+                          ))
+                      .toList(),
                 ),
                 Row(
                   children: [
@@ -1300,7 +1344,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                       status: TextStatus.idle,
                       text: 'Add Custom Fields',
                     ),
-                    SizedBox(width: globals.widthMediaQuery * 8),
+                    SizedBox(width: SizeConfig.widthMultiplier(context) * 8),
                     const Icon(Icons.add_rounded,
                         color: AppColors.primary40, size: 20),
                   ],
@@ -1308,7 +1352,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                 const Divider(
                   color: AppColors.grayscale20,
                 ),
-                SizedBox(height: globals.heightMediaQuery * 16),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
                 Text(
                   'Additional Notes',
                   style: AppFonts.headline2(color: AppColors.grayscale90),
@@ -1323,10 +1367,9 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
                         .update((state) => value);
                   },
                 ),
-                SizedBox(height: globals.heightMediaQuery * 16),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
                 Focus(
-                  onFocusChange:
-                      (hasFocus) {}, // Dummy onFocusChange callback
+                  onFocusChange: (hasFocus) {}, // Dummy onFocusChange callback
                   child: const FileUploaderField(),
                 ),
               ],
@@ -1461,7 +1504,7 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
     final animalName = _nameController.text;
     return OviVariables(
       animalName: animalName,
-      breedingeventNumber: '',
+      breedingEventNumber: '',
       medicalNeeds: ref.read(medicalNeedsProvider),
       shouldAddAnimal: ref.read(shoudlAddAnimalProvider),
       selectedBreedingStage: ref.read(selectedBreedingStageProvider),
@@ -1486,13 +1529,13 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
       selectedOviChips: ref.read(selectedOviChipsProvider),
       selectedOviImage: ref.read(selectedAnimalImageProvider),
       selectedFilters: ref.read(selectedFiltersProvider),
-      breedsire: ref.read(breedingSireDetailsProvider)?? '',
-      breeddam: ref.read(breedingDamDetailsProvider)?? '',
-      breedpartner: ref.read(breedingPartnerProvider),
-      breedchildren: ref.read(breedingChildrenDetailsProvider),
+      breedSire: ref.read(breedingSireDetailsProvider) ?? '',
+      breedDam: ref.read(breedingDamDetailsProvider) ?? '',
+      breedPartner: ref.read(breedingPartnerProvider),
+      breedChildren: ref.read(breedingChildrenDetailsProvider),
       breedingDate: ref.read(breedingDateProvider),
-      breeddeliveryDate: ref.read(deliveryDateProvider),
-      breedingnotes: ref.read(breedingnotesProvider),
+      breedDeliveryDate: ref.read(deliveryDateProvider),
+      breedingNotes: ref.read(breedingnotesProvider),
       shouldAddEvent: ref.read(shoudlAddEventProvider),
       vaccineDetails: {animalName: []},
       checkUpDetails: {animalName: []},
@@ -1500,8 +1543,3 @@ class _CreateOviCumMammal extends ConsumerState<CreateOviCumMammal> {
     );
   }
 }
-
-
-
-
-

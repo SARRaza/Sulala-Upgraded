@@ -4,10 +4,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:sulala_upgrade/src/screens/create_animal/owned_animal_detail_reg_mode.dart';
-import '../../data/classes.dart';
+import '../../data/classes/ovi_variables.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 class ParentsItem extends StatelessWidget {
   final ImageProvider? imageFile;
@@ -18,16 +18,16 @@ class ParentsItem extends StatelessWidget {
   final OviVariables OviDetails;
   final void Function()? onTap;
 
-  const ParentsItem({
-    Key? key, // Add 'Key?' type to the key parameter
-    this.imageFile,
-    required this.name,
-    required this.OviDetails,
-    required this.sex,
-    required this.age,
-    required this.id,
-    this.onTap
-  }) : super(key: key); // Call the super constructor with the provided key
+  const ParentsItem(
+      {Key? key, // Add 'Key?' type to the key parameter
+      this.imageFile,
+      required this.name,
+      required this.OviDetails,
+      required this.sex,
+      required this.age,
+      required this.id,
+      this.onTap})
+      : super(key: key); // Call the super constructor with the provided key
 
   @override
   Widget build(BuildContext context) {
@@ -46,17 +46,18 @@ class ParentsItem extends StatelessWidget {
           CircleAvatar(
             backgroundColor: Colors.transparent,
             backgroundImage: getImage(),
-            radius: 60 * globals.widthMediaQuery,
+            radius: 60 * SizeConfig.widthMultiplier(context),
           ),
-          SizedBox(height: 16 * globals.heightMediaQuery),
+          SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               sex.toLowerCase() != "male"
                   ? Image.asset(
                       "assets/icons/frame/24px/16_Gender_female_1_5.png")
-                  : Image.asset("assets/icons/frame/24px/16_Gender_male_1_5.png"),
-              SizedBox(width: globals.widthMediaQuery * 3.75),
+                  : Image.asset(
+                      "assets/icons/frame/24px/16_Gender_male_1_5.png"),
+              SizedBox(width: SizeConfig.widthMultiplier(context) * 3.75),
               Text(
                 name,
                 style: AppFonts.title5(

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:sulala_upgrade/src/data/classes.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
+import '../../data/classes/staff_member.dart';
+import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
@@ -89,7 +90,9 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
               ),
               onPressed: () {
                 inviteMembarDrowup(
-                    context, globals.heightMediaQuery, globals.widthMediaQuery);
+                    context,
+                    SizeConfig.heightMultiplier(context),
+                    SizeConfig.widthMultiplier(context));
               },
             ),
           ],
@@ -97,8 +100,8 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(
-              left: 16 * globals.heightMediaQuery,
-              right: 16 * globals.heightMediaQuery,
+              left: 16 * SizeConfig.heightMultiplier(context),
+              right: 16 * SizeConfig.heightMultiplier(context),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,7 +111,7 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
                   style: AppFonts.title3(color: AppColors.grayscale90),
                 ),
                 SizedBox(
-                  height: 24 * globals.heightMediaQuery,
+                  height: 24 * SizeConfig.heightMultiplier(context),
                 ),
                 isLoading
                     ? const Center(child: ShimmerListOfStaff())
@@ -116,28 +119,38 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
                         ? Center(
                             child: Column(
                             children: [
-                              SizedBox(height: 120 * globals.heightMediaQuery),
+                              SizedBox(
+                                  height: 120 *
+                                      SizeConfig.heightMultiplier(context)),
                               Image.asset(
                                 'assets/illustrations/farmer.png',
                                 fit: BoxFit.cover,
                               ),
-                              SizedBox(height: 44 * globals.heightMediaQuery),
+                              SizedBox(
+                                  height: 44 *
+                                      SizeConfig.heightMultiplier(context)),
                               Text(
                                 'You have no staff',
                                 style: AppFonts.headline3(
                                     color: AppColors.grayscale90),
                               ),
-                              SizedBox(height: 90 * globals.heightMediaQuery),
                               SizedBox(
-                                  width: 154 * globals.widthMediaQuery,
-                                  height: 52 * globals.heightMediaQuery,
+                                  height: 90 *
+                                      SizeConfig.heightMultiplier(context)),
+                              SizedBox(
+                                  width:
+                                      154 * SizeConfig.widthMultiplier(context),
+                                  height:
+                                      52 * SizeConfig.heightMultiplier(context),
                                   child: PrimaryButton(
                                       text: 'Invite a Member',
                                       onPressed: () {
                                         inviteMembarDrowup(
                                             context,
-                                            globals.heightMediaQuery,
-                                            globals.widthMediaQuery);
+                                            SizeConfig.heightMultiplier(
+                                                context),
+                                            SizeConfig.widthMultiplier(
+                                                context));
                                       }))
                             ],
                           ))
@@ -151,7 +164,8 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
                                 contentPadding: EdgeInsets.zero,
                                 leading: CircleAvatar(
                                   backgroundColor: Colors.transparent,
-                                  radius: 24 * globals.widthMediaQuery,
+                                  radius:
+                                      24 * SizeConfig.widthMultiplier(context),
                                   backgroundImage: staff[index].image,
                                 ),
                                 title: Text(
@@ -190,13 +204,16 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 24 * globals.heightMediaQuery),
+                          SizedBox(
+                              height:
+                                  24 * SizeConfig.heightMultiplier(context)),
                           Text(
                             'Requests',
                             style: AppFonts.headline3(
                                 color: AppColors.grayscale80),
                           ),
-                          SizedBox(height: 8 * globals.heightMediaQuery),
+                          SizedBox(
+                              height: 8 * SizeConfig.heightMultiplier(context)),
                           ListView.builder(
                             primary: false,
                             shrinkWrap: true,
@@ -205,11 +222,12 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
                             itemBuilder: (context, index) {
                               return ListTile(
                                 minVerticalPadding:
-                                    8 * globals.heightMediaQuery,
+                                    8 * SizeConfig.heightMultiplier(context),
                                 contentPadding: EdgeInsets.zero,
                                 leading: CircleAvatar(
                                   backgroundColor: Colors.transparent,
-                                  radius: 24 * globals.widthMediaQuery,
+                                  radius:
+                                      24 * SizeConfig.widthMultiplier(context),
                                   backgroundImage: requests[index].image,
                                 ),
                                 title: Text(
@@ -224,21 +242,25 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
                                       onPressed: () {
                                         // Handle 'Yes' button click
                                         ref.read(staffProvider.notifier).update(
-                                                (state) => List<StaffMember>
-                                                    .from(state)..add(
-                                                    requests[index]));
-                                        ref.read(collaborationRequestsProvider
-                                            .notifier).update((state) => state
-                                            .where((request) => request.name
-                                            != requests[index].name)
-                                            .toList());
+                                            (state) =>
+                                                List<StaffMember>.from(state)
+                                                  ..add(requests[index]));
+                                        ref
+                                            .read(collaborationRequestsProvider
+                                                .notifier)
+                                            .update((state) => state
+                                                .where((request) =>
+                                                    request.name !=
+                                                    requests[index].name)
+                                                .toList());
                                       },
                                       style: ElevatedButton.styleFrom(
                                         elevation: 0,
                                         backgroundColor: AppColors.primary50,
                                         shape: const CircleBorder(),
-                                        padding: EdgeInsets.all(
-                                            12 * globals.widthMediaQuery),
+                                        padding: EdgeInsets.all(12 *
+                                            SizeConfig.widthMultiplier(
+                                                context)),
                                       ),
                                       child: const Icon(
                                         Icons.check,
@@ -249,18 +271,23 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
                                     ElevatedButton(
                                       onPressed: () {
                                         // Handle 'No' button click
-                                        ref.read(collaborationRequestsProvider
-                                            .notifier).update((state) => state
-                                            .where((request) => request.name
-                                            != requests[index].name)
-                                            .toList());
+                                        ref
+                                            .read(collaborationRequestsProvider
+                                                .notifier)
+                                            .update((state) => state
+                                                .where((request) =>
+                                                    request.name !=
+                                                    requests[index].name)
+                                                .toList());
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: AppColors.grayscale10,
                                         elevation: 0,
                                         shape: const CircleBorder(),
                                         padding: EdgeInsets.all(
-                                            globals.widthMediaQuery * 12),
+                                            SizeConfig.widthMultiplier(
+                                                    context) *
+                                                12),
                                       ),
                                       child: const Icon(Icons.close_rounded,
                                           color: AppColors.grayscale90),

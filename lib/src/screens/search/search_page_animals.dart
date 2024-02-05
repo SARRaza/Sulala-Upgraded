@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
+import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/inputs/search_bars/button_search_bar.dart';
@@ -131,20 +132,20 @@ class _SearchPageAnimalsState extends State<SearchPageAnimals> {
           children: [
             Padding(
               padding: EdgeInsets.fromLTRB(
-                globals.widthMediaQuery * 16,
-                globals.widthMediaQuery * 4,
-                globals.widthMediaQuery * 16,
-                globals.widthMediaQuery * 4,
+                SizeConfig.widthMultiplier(context) * 16,
+                SizeConfig.widthMultiplier(context) * 4,
+                SizeConfig.widthMultiplier(context) * 16,
+                SizeConfig.widthMultiplier(context) * 4,
               ),
               child: Text("Animals",
                   style: AppFonts.title3(color: AppColors.grayscale90)),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(
-                globals.widthMediaQuery * 16,
-                globals.widthMediaQuery * 4,
-                globals.widthMediaQuery * 16,
-                globals.widthMediaQuery * 4,
+                SizeConfig.widthMultiplier(context) * 16,
+                SizeConfig.widthMultiplier(context) * 4,
+                SizeConfig.widthMultiplier(context) * 16,
+                SizeConfig.widthMultiplier(context) * 4,
               ),
               child: ButtonSearchBar(
                 onChange: filterOptions,
@@ -157,7 +158,7 @@ class _SearchPageAnimalsState extends State<SearchPageAnimals> {
               ),
             ),
             SizedBox(
-              height: globals.heightMediaQuery * 24,
+              height: SizeConfig.heightMultiplier(context) * 24,
             ),
             if (filteredAnimals.isNotEmpty)
               Expanded(
@@ -176,13 +177,17 @@ class _SearchPageAnimalsState extends State<SearchPageAnimals> {
                               const Image(
                                   image: AssetImage(
                                       'assets/illustrations/cow_search.png')),
-                              SizedBox(height: globals.heightMediaQuery * 33),
+                              SizedBox(
+                                  height: SizeConfig.heightMultiplier(context) *
+                                      33),
                               Text(
                                 "No animals found",
                                 style: AppFonts.headline3(
                                     color: AppColors.grayscale90),
                               ),
-                              SizedBox(height: globals.heightMediaQuery * 4),
+                              SizedBox(
+                                  height:
+                                      SizeConfig.heightMultiplier(context) * 4),
                               Text(
                                 "Try adjusting the filters",
                                 style: AppFonts.body2(
@@ -194,9 +199,11 @@ class _SearchPageAnimalsState extends State<SearchPageAnimals> {
                       );
                     } else {
                       return Padding(
-                        padding: EdgeInsets.all(globals.widthMediaQuery * 10),
+                        padding: EdgeInsets.all(
+                            SizeConfig.widthMultiplier(context) * 10),
                         child: AnimalListWidget(
-                          avatarRadius: globals.widthMediaQuery * 24,
+                          avatarRadius:
+                              SizeConfig.widthMultiplier(context) * 24,
                           imagePath: option['imagePath'],
                           textHead: option['title'],
                           textBody: option['geninfo'],
@@ -220,12 +227,14 @@ class _SearchPageAnimalsState extends State<SearchPageAnimals> {
                       const Image(
                           image: AssetImage(
                               'assets/illustrations/cow_search.png')),
-                      SizedBox(height: globals.heightMediaQuery * 32),
+                      SizedBox(
+                          height: SizeConfig.heightMultiplier(context) * 32),
                       Text(
                         "No animals found",
                         style: AppFonts.headline3(color: AppColors.grayscale90),
                       ),
-                      SizedBox(height: globals.heightMediaQuery * 4),
+                      SizedBox(
+                          height: SizeConfig.heightMultiplier(context) * 4),
                       Text(
                         "Try adjusting the filters",
                         style: AppFonts.body2(color: AppColors.grayscale70),

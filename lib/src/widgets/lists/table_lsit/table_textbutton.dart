@@ -56,7 +56,6 @@ class _TableTextButtonState extends State<TableTextButton> {
   }
 }
 
-
 // Exapmle of use:
 
 // TextButtonTextWidget(

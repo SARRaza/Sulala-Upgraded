@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
@@ -39,7 +39,7 @@ class NotificationListWidget extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(
-            width: globals.widthMediaQuery * 15,
+            width: SizeConfig.widthMultiplier(context) * 15,
           ),
           CircleAvatar(
             backgroundColor: Colors.transparent,
@@ -47,7 +47,7 @@ class NotificationListWidget extends StatelessWidget {
             backgroundImage: AssetImage(imagePath),
           ),
           SizedBox(
-            width: globals.widthMediaQuery * 9,
+            width: SizeConfig.widthMultiplier(context) * 9,
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -76,14 +76,13 @@ class NotificationListWidget extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: globals.widthMediaQuery * 15,
+            width: SizeConfig.widthMultiplier(context) * 15,
           ),
         ],
       ),
     );
   }
 }
-
 
 //Example of use:
 

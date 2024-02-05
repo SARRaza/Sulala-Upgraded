@@ -3,7 +3,6 @@ import 'package:nuts_activity_indicator/nuts_activity_indicator.dart';
 
 import '../../../theme/colors/colors.dart';
 
-
 enum TextButtonPosition {
   primary,
   left,
@@ -88,8 +87,7 @@ class PrimaryTextButton extends StatelessWidget {
       return Row(
         children: [
           const Icon(Icons.arrow_back_ios_rounded,
-                    color: AppColors.primary40,
-                    size: 14),
+              color: AppColors.primary40, size: 14),
           const SizedBox(width: 8),
           Text(
             text,
@@ -106,8 +104,7 @@ class PrimaryTextButton extends StatelessWidget {
           ),
           const SizedBox(width: 8), //Don't use MediaQuery Here
           const Icon(Icons.arrow_forward_ios_rounded,
-                    color: AppColors.primary40,
-                    size: 14),
+              color: AppColors.primary40, size: 14),
         ],
       );
     }
@@ -141,8 +138,6 @@ enum TextStatus {
   loading,
   disabled,
 }
-
-
 
 // Example of use:
 

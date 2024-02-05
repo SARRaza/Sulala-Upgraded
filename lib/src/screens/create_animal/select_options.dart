@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import '../../data/classes.dart';
+import '../../data/classes/breeding_event_variables.dart';
+import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import 'add_complete_info.dart';
 
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 class SelectedOptionsPage extends ConsumerStatefulWidget {
   final List<BreedingEventVariables> breedingEvents;
@@ -36,9 +37,10 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
           'Create Animal'.tr,
           style: AppFonts.headline3(color: AppColors.grayscale90),
         ),
-        leadingWidth: globals.widthMediaQuery * 56,
+        leadingWidth: SizeConfig.widthMultiplier(context) * 56,
         leading: Padding(
-          padding: EdgeInsets.only(left: globals.widthMediaQuery * 16),
+          padding:
+              EdgeInsets.only(left: SizeConfig.widthMultiplier(context) * 16),
           child: Container(
             decoration: const BoxDecoration(
                 color: AppColors.grayscale10, shape: BoxShape.circle),
@@ -47,7 +49,7 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
               icon: Icon(
                 Icons.arrow_back_rounded,
                 color: Colors.black,
-                size: globals.widthMediaQuery * 24,
+                size: SizeConfig.widthMultiplier(context) * 24,
               ),
               onPressed: () {
                 // Handle close button press
@@ -58,9 +60,10 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
         ),
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: globals.widthMediaQuery * 16),
+            padding: EdgeInsets.only(
+                right: SizeConfig.widthMultiplier(context) * 16),
             child: Container(
-              width: globals.widthMediaQuery * 40,
+              width: SizeConfig.widthMultiplier(context) * 40,
               decoration: const BoxDecoration(
                   color: AppColors.grayscale10, shape: BoxShape.circle),
               child: IconButton(
@@ -68,7 +71,7 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
                 icon: Icon(
                   Icons.close_rounded,
                   color: Colors.black,
-                  size: globals.widthMediaQuery * 24,
+                  size: SizeConfig.widthMultiplier(context) * 24,
                 ),
                 onPressed: () {
                   // Handle close button press
@@ -81,25 +84,25 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
       ),
       body: Padding(
         padding: EdgeInsets.only(
-            left: globals.widthMediaQuery * 16,
-            right: globals.widthMediaQuery * 16),
+            left: SizeConfig.widthMultiplier(context) * 16,
+            right: SizeConfig.widthMultiplier(context) * 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: globals.heightMediaQuery * 24,
+              height: SizeConfig.heightMultiplier(context) * 24,
             ),
             Text('Chosen Options'.tr,
                 style: AppFonts.headline2(color: AppColors.grayscale90)),
             SizedBox(
-              height: globals.heightMediaQuery * 8,
+              height: SizeConfig.heightMultiplier(context) * 8,
             ),
             Text(
               'You can apply any changes'.tr,
               style: AppFonts.body2(color: AppColors.grayscale60),
             ),
             SizedBox(
-              height: globals.heightMediaQuery * 24,
+              height: SizeConfig.heightMultiplier(context) * 24,
             ),
             Row(
               children: [
@@ -113,18 +116,18 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
                 SizedBox(
-                  width: globals.widthMediaQuery * 8,
+                  width: SizeConfig.widthMultiplier(context) * 8,
                 ),
                 Icon(Icons.arrow_forward_ios_rounded,
                     color: AppColors.primary40,
-                    size: globals.widthMediaQuery * 12.75),
+                    size: SizeConfig.widthMultiplier(context) * 12.75),
               ],
             ),
-            SizedBox(height: globals.heightMediaQuery * 8),
+            SizedBox(height: SizeConfig.heightMultiplier(context) * 8),
             const Divider(
               color: AppColors.grayscale50,
             ),
-            SizedBox(height: globals.heightMediaQuery * 8),
+            SizedBox(height: SizeConfig.heightMultiplier(context) * 8),
             Row(
               children: [
                 Text(
@@ -137,18 +140,18 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
                 SizedBox(
-                  width: globals.widthMediaQuery * 8,
+                  width: SizeConfig.widthMultiplier(context) * 8,
                 ),
                 Icon(Icons.arrow_forward_ios_rounded,
                     color: AppColors.primary40,
-                    size: globals.widthMediaQuery * 12.75),
+                    size: SizeConfig.widthMultiplier(context) * 12.75),
               ],
             ),
-            SizedBox(height: globals.heightMediaQuery * 8),
+            SizedBox(height: SizeConfig.heightMultiplier(context) * 8),
             const Divider(
               color: AppColors.grayscale50,
             ),
-            SizedBox(height: globals.heightMediaQuery * 8),
+            SizedBox(height: SizeConfig.heightMultiplier(context) * 8),
             Row(
               children: [
                 Text(
@@ -161,19 +164,19 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
                 SizedBox(
-                  width: globals.widthMediaQuery * 8,
+                  width: SizeConfig.widthMultiplier(context) * 8,
                 ),
                 Icon(Icons.arrow_forward_ios_rounded,
                     color: AppColors.primary40,
-                    size: globals.widthMediaQuery * 12.75),
+                    size: SizeConfig.widthMultiplier(context) * 12.75),
               ],
             ),
           ],
         ),
       ),
       floatingActionButton: SizedBox(
-        width: globals.widthMediaQuery * 343,
-        height: globals.heightMediaQuery * 52,
+        width: SizeConfig.widthMultiplier(context) * 343,
+        height: SizeConfig.heightMultiplier(context) * 52,
         child: PrimaryButton(
             onPressed: () {
               ref
@@ -188,7 +191,7 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
               ref
                   .read(selectedBreedingStageProvider.notifier)
                   .update((state) => '');
-              ref.read(dateOfBirthProvider.notifier).update((state) => '');
+              ref.read(dateOfBirthProvider.notifier).update((state) => null);
               ref.read(selectedOviDatesProvider.notifier).update((state) => {});
               ref.read(selectedOviChipsProvider.notifier).update((state) => []);
               ref.read(fieldNameProvider.notifier).update((state) => '');
@@ -197,7 +200,7 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CreateOviCumMammal(
+                  builder: (context) => AddCompleteInfo(
                     breedingEvents: widget.breedingEvents,
                   ),
                 ),

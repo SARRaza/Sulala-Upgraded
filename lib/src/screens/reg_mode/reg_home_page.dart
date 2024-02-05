@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:get/get.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/screens/create_animal/owned_animal_detail_reg_mode.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import '../../data/classes.dart';
+import '../../data/classes/reminder_item.dart';
+import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/colors/piechart_colors.dart';
@@ -53,36 +54,41 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
   List<AnimalData> _getSpeciesChartData(List<String> speciesList) {
     List<AnimalData> chartData = [];
 
-    final currentStateFilterActive = currentStateTags.any((tag) => tag.status ==
-        TagStatus.active);
-    final medicalStateFilterActive = medicalStateTags.any((tag) => tag.status ==
-        TagStatus.active);
-    final otherFilterActive = otherStateTags.any((tag) => tag.status ==
-        TagStatus.active);
-    final filtersActive = currentStateFilterActive || medicalStateFilterActive
-        || otherFilterActive;
+    final currentStateFilterActive =
+        currentStateTags.any((tag) => tag.status == TagStatus.active);
+    final medicalStateFilterActive =
+        medicalStateTags.any((tag) => tag.status == TagStatus.active);
+    final otherFilterActive =
+        otherStateTags.any((tag) => tag.status == TagStatus.active);
+    final filtersActive = currentStateFilterActive ||
+        medicalStateFilterActive ||
+        otherFilterActive;
 
-    if(filtersActive) {
+    if (filtersActive) {
       final animalType = _selectedIndex == 0 ? 'mammal' : 'oviparous';
       final tags = currentStateTags + medicalStateTags + otherStateTags;
       for (var tag in tags) {
-        if(tag.status == TagStatus.active) {
-          final count = ref.read(ovianimalsProvider).where((animal) =>
-          animal.selectedAnimalType.toLowerCase() == animalType &&
-              animal.selectedOviChips.contains(tag.name)).toList().length;
+        if (tag.status == TagStatus.active) {
+          final count = ref
+              .read(ovianimalsProvider)
+              .where((animal) =>
+                  animal.selectedAnimalType.toLowerCase() == animalType &&
+                  animal.selectedOviChips.contains(tag.name))
+              .toList()
+              .length;
           final color = tagColors[tag.name];
           chartData.add(AnimalData(tag.name, count, color!));
         }
       }
     } else {
       final speciesCount = ref.refresh(_selectedIndex == 0
-          ? mammalSpeciesCountProvider : oviparousSpeciesCountProvider);
+          ? mammalSpeciesCountProvider
+          : oviparousSpeciesCountProvider);
       chartData = speciesList
           .map((species) => AnimalData(species, speciesCount[species] ?? 0,
-          Colors.blue)) // Replace Colors.blue with the desired color
+              Colors.blue)) // Replace Colors.blue with the desired color
           .toList();
     }
-
 
     return chartData;
   }
@@ -109,19 +115,32 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
   ];
 
   Map<String, Color> tagColors = {
-    'Borrowed': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
-    'Adopted': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
-    'Donated': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
-    'Escaped': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
-    'Stolen': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
-    'Transferred': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
-    'Injured': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
-    'Sick': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
-    'Quarantined': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
-    'Medication': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
-    'Testing': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
-    'Sold': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
-    'Dead': Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Borrowed':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Adopted':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Donated':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Escaped':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Stolen':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Transferred':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Injured':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Sick':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Quarantined':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Medication':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Testing':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Sold':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Dead':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
   };
 
   late List<AnimalData> _chartData;
@@ -203,8 +222,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
         );
       },
     );
-    setState(() {
-    });
+    setState(() {});
   }
 
   void _removeEvent(int index) {
@@ -242,7 +260,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                           AssetImage('assets/icons/frame/24px/Icon-button.png'),
                     ),
                   ),
-                  SizedBox(width: globals.widthMediaQuery * 3.75),
+                  SizedBox(width: SizeConfig.widthMultiplier(context) * 3.75),
                   GestureDetector(
                     onTap: () {
                       _removeEvent(1);
@@ -251,8 +269,8 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                     child: events.isNotEmpty
                         ? badges.Badge(
                             badgeStyle: badges.BadgeStyle(
-                              padding:
-                                  EdgeInsets.all(8 * globals.widthMediaQuery),
+                              padding: EdgeInsets.all(
+                                  8 * SizeConfig.widthMultiplier(context)),
                             ),
                             badgeContent: Text(
                               events.length.toString(),
@@ -287,9 +305,9 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
           child: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.only(
-                  left: globals.widthMediaQuery * 16,
-                  right: globals.widthMediaQuery * 16,
-                  top: globals.heightMediaQuery * 16),
+                  left: SizeConfig.widthMultiplier(context) * 16,
+                  right: SizeConfig.widthMultiplier(context) * 16,
+                  top: SizeConfig.heightMultiplier(context) * 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -307,20 +325,20 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                               AssetImage('assets/icons/frame/24px/filter1.png'),
                         ),
                       ),
-                      SizedBox(width: globals.widthMediaQuery * 22),
+                      SizedBox(width: SizeConfig.widthMultiplier(context) * 22),
                     ],
                   ),
-                  SizedBox(height: globals.heightMediaQuery * 12),
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
-                        height: globals.heightMediaQuery * 148,
-                        width: globals.widthMediaQuery * 106,
+                        height: SizeConfig.heightMultiplier(context) * 148,
+                        width: SizeConfig.widthMultiplier(context) * 106,
                         child: SmallCardWidget(
                           icon: Image.asset(
                             "assets/icons/frame/24px/cow_chicken.png",
-                            width: globals.widthMediaQuery * 48,
+                            width: SizeConfig.widthMultiplier(context) * 48,
                           ),
                           animalData: AnimalData(
                               'ALL'.tr, sumOfNextTwoCards, _chartData[0].color),
@@ -332,12 +350,12 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                         ),
                       ),
                       SizedBox(
-                        height: globals.heightMediaQuery * 148,
-                        width: globals.widthMediaQuery * 106,
+                        height: SizeConfig.heightMultiplier(context) * 148,
+                        width: SizeConfig.widthMultiplier(context) * 106,
                         child: SmallCardWidget(
                           icon: Image.asset(
                             "assets/icons/frame/24px/cow_framed.png",
-                            width: globals.widthMediaQuery * 48,
+                            width: SizeConfig.widthMultiplier(context) * 48,
                           ),
                           quan: _chartData[0].quan.toString(),
                           animalData: _chartData[0],
@@ -348,12 +366,12 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                         ),
                       ),
                       SizedBox(
-                        height: globals.heightMediaQuery * 148,
-                        width: globals.widthMediaQuery * 106,
+                        height: SizeConfig.heightMultiplier(context) * 148,
+                        width: SizeConfig.widthMultiplier(context) * 106,
                         child: SmallCardWidget(
                           icon: Image.asset(
                             "assets/icons/frame/24px/chicken_framed.png",
-                            width: globals.widthMediaQuery * 48,
+                            width: SizeConfig.widthMultiplier(context) * 48,
                           ),
                           animalData: _chartData[1],
                           quan: _chartData[1].quan.toString(),
@@ -366,12 +384,12 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                       ),
                     ],
                   ),
-                  SizedBox(height: globals.heightMediaQuery * 16),
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
                   sumOfNextTwoCards == 0
                       ? Row(
                           children: [
                             SizedBox(
-                              width: globals.widthMediaQuery * 20,
+                              width: SizeConfig.widthMultiplier(context) * 20,
                             ),
                             Center(
                               child: Image.asset(
@@ -379,7 +397,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                               ),
                             ),
                             SizedBox(
-                              width: globals.widthMediaQuery * 50,
+                              width: SizeConfig.widthMultiplier(context) * 50,
                             ),
                             Center(
                               child: Image.asset(
@@ -392,8 +410,9 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
-                              width: globals.widthMediaQuery * 216,
-                              height: globals.heightMediaQuery * 220,
+                              width: SizeConfig.widthMultiplier(context) * 216,
+                              height:
+                                  SizeConfig.heightMultiplier(context) * 220,
                               child: SfCircularChart(
                                 margin: const EdgeInsets.all(0),
                                 series: <CircularSeries>[
@@ -427,9 +446,11 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                           children: [
                             Image.asset(
                               'assets/icons/frame/24px/24_Warning-circled.png',
-                              width: globals.widthMediaQuery * 22,
+                              width: SizeConfig.widthMultiplier(context) * 22,
                             ),
-                            SizedBox(width: globals.widthMediaQuery * 12),
+                            SizedBox(
+                                width:
+                                    SizeConfig.widthMultiplier(context) * 12),
                           ],
                         ),
                       Text(
@@ -438,7 +459,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                       ),
                     ],
                   ),
-                  SizedBox(height: globals.heightMediaQuery * 12),
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 12),
                   if (reminders.isEmpty)
                     Center(
                       child: Column(
@@ -446,7 +467,9 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                           Image.asset(
                             'assets/illustrations/calendar_x.png',
                           ),
-                          SizedBox(height: globals.heightMediaQuery * 12),
+                          SizedBox(
+                              height:
+                                  SizeConfig.heightMultiplier(context) * 12),
                           Text(
                             'You have no upcoming events so far'.tr,
                             style: AppFonts.body2(color: AppColors.grayscale70),
@@ -456,7 +479,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                     ),
                   if (reminders.isNotEmpty)
                     SizedBox(
-                      height: globals.heightMediaQuery * 130,
+                      height: SizeConfig.heightMultiplier(context) * 130,
                       child: ListView.builder(
                         shrinkWrap: true,
                         itemCount: reminders.length,
@@ -474,7 +497,10 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                                     style: AppFonts.body1(
                                         color: AppColors.grayscale90),
                                   ),
-                                  SizedBox(width: globals.widthMediaQuery * 4),
+                                  SizedBox(
+                                      width:
+                                          SizeConfig.widthMultiplier(context) *
+                                              4),
                                   Text(
                                     dateItem.dateType,
                                     style: AppFonts.body1(
@@ -484,19 +510,20 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                               ),
                               subtitle: Text(
                                 dateItem.dateInfo,
-                                style:
-                                    AppFonts.body2(color: AppColors.grayscale60),
+                                style: AppFonts.body2(
+                                    color: AppColors.grayscale60),
                               ),
                               trailing: Icon(Icons.arrow_forward_ios_rounded,
                                   color: AppColors.primary40,
-                                  size: globals.widthMediaQuery * 12.75),
+                                  size: SizeConfig.widthMultiplier(context) *
+                                      12.75),
                               // You can customize the ListTile as per your requirements
                             ),
                           );
                         },
                       ),
                     ),
-                  SizedBox(height: globals.heightMediaQuery * 32),
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 32),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -513,7 +540,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                           ),
                         ),
                       ),
-                      SizedBox(width: globals.widthMediaQuery * 6),
+                      SizedBox(width: SizeConfig.widthMultiplier(context) * 6),
                       Expanded(
                         child: CardWidget(
                           color: const Color.fromRGBO(246, 239, 205, 1),
@@ -529,7 +556,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                       ),
                     ],
                   ),
-                  SizedBox(height: globals.heightMediaQuery * 24),
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
                 ],
               ),
             ),
@@ -541,19 +568,26 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
 
   List<AnimalData> getChartData() {
     List<AnimalData> chartData = [];
-    final currentStateFilterActive = currentStateTags.any((tag) => tag.status == TagStatus.active);
-    final medicalStateFilterActive = medicalStateTags.any((tag) => tag.status == TagStatus.active);
-    final otherFilterActive = otherStateTags.any((tag) => tag.status == TagStatus.active);
+    final currentStateFilterActive =
+        currentStateTags.any((tag) => tag.status == TagStatus.active);
+    final medicalStateFilterActive =
+        medicalStateTags.any((tag) => tag.status == TagStatus.active);
+    final otherFilterActive =
+        otherStateTags.any((tag) => tag.status == TagStatus.active);
 
-    bool filtersActive =  currentStateFilterActive || medicalStateFilterActive
-        || otherFilterActive;
+    bool filtersActive = currentStateFilterActive ||
+        medicalStateFilterActive ||
+        otherFilterActive;
 
-    if(filtersActive) {
+    if (filtersActive) {
       final tags = currentStateTags + medicalStateTags + otherStateTags;
       for (var tag in tags) {
-        if(tag.status == TagStatus.active) {
-          final count = ref.read(ovianimalsProvider).where((animal) =>
-              animal.selectedOviChips.contains(tag.name)).toList().length;
+        if (tag.status == TagStatus.active) {
+          final count = ref
+              .read(ovianimalsProvider)
+              .where((animal) => animal.selectedOviChips.contains(tag.name))
+              .toList()
+              .length;
           final color = tagColors[tag.name];
           chartData.add(AnimalData(tag.name, count, color!));
         }
@@ -575,8 +609,6 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
       ];
     }
 
-
-
     return chartData;
   }
 
@@ -596,29 +628,31 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
       }).toList();
     } else {
       List<Widget> legendItems = [];
-      final speciesList = _selectedIndex == 0 ? mammalSpeciesList
-          : oviparousSpeciesList;
+      final speciesList =
+          _selectedIndex == 0 ? mammalSpeciesList : oviparousSpeciesList;
 
-      final currentStateFilterActive = currentStateTags.any((tag) => tag.status ==
-          TagStatus.active);
-      final medicalStateFilterActive = medicalStateTags.any((tag) => tag.status ==
-          TagStatus.active);
-      final otherFilterActive = otherStateTags.any((tag) => tag.status ==
-          TagStatus.active);
-      final filtersActive = currentStateFilterActive || medicalStateFilterActive
-          || otherFilterActive;
+      final currentStateFilterActive =
+          currentStateTags.any((tag) => tag.status == TagStatus.active);
+      final medicalStateFilterActive =
+          medicalStateTags.any((tag) => tag.status == TagStatus.active);
+      final otherFilterActive =
+          otherStateTags.any((tag) => tag.status == TagStatus.active);
+      final filtersActive = currentStateFilterActive ||
+          medicalStateFilterActive ||
+          otherFilterActive;
 
-
-      if(filtersActive) {
+      if (filtersActive) {
         final tags = currentStateTags + medicalStateTags + otherStateTags;
         final animalType = _selectedIndex == 0 ? 'mammal' : 'oviparous';
 
-        for(var tag in tags) {
-          if(tag.status == TagStatus.active) {
-            final count = ref.read(ovianimalsProvider).where(
-                    (animal) => animal.selectedAnimalType.toLowerCase() ==
-                        animalType &&
-                    animal.selectedOviChips.contains(tag.name)).toList()
+        for (var tag in tags) {
+          if (tag.status == TagStatus.active) {
+            final count = ref
+                .read(ovianimalsProvider)
+                .where((animal) =>
+                    animal.selectedAnimalType.toLowerCase() == animalType &&
+                    animal.selectedOviChips.contains(tag.name))
+                .toList()
                 .length;
 
             legendItems.add(Row(
@@ -661,13 +695,19 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
   }
 
   void navigateToAnimal(String animalName) {
-    final animal = ref.read(ovianimalsProvider).firstWhere(
-            (animal) => animal.animalName == animalName);
+    final animal = ref
+        .read(ovianimalsProvider)
+        .firstWhere((animal) => animal.animalName == animalName);
 
-    Navigator.push(context, MaterialPageRoute(builder: (context) =>
-        OwnedAnimalDetailsRegMode(imagePath: '', title: '',
-            geninfo: '', OviDetails: animal,
-            breedingEvents: [])));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => OwnedAnimalDetailsRegMode(
+                imagePath: '',
+                title: '',
+                geninfo: '',
+                OviDetails: animal,
+                breedingEvents: [])));
   }
 }
 

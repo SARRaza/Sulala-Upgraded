@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -72,7 +72,7 @@ class _JoinNowState extends ConsumerState<JoinNow>
             Align(
               alignment: Alignment.topCenter,
               child: SizedBox(
-                width: globals.widthMediaQuery * 375,
+                width: SizeConfig.widthMultiplier(context) * 375,
                 child: Image.asset(
                   "assets/graphic/Animal_p.png",
                   fit: BoxFit.fitWidth,
@@ -83,25 +83,25 @@ class _JoinNowState extends ConsumerState<JoinNow>
               child: Column(
                 children: [
                   SizedBox(
-                    height: globals.heightMediaQuery * 185,
+                    height: SizeConfig.heightMultiplier(context) * 185,
                   ),
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(
-                          globals.widthMediaQuery * 32,
+                          SizeConfig.widthMultiplier(context) * 32,
                         ),
                         topRight: Radius.circular(
-                          globals.widthMediaQuery * 32,
+                          SizeConfig.widthMultiplier(context) * 32,
                         ),
                       ),
                     ),
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(
-                        globals.widthMediaQuery * 16,
+                        SizeConfig.widthMultiplier(context) * 16,
                         0,
-                        globals.widthMediaQuery * 16,
+                        SizeConfig.widthMultiplier(context) * 16,
                         MediaQuery.of(context)
                             .viewInsets
                             .bottom, // Adjusts for keyboard
@@ -109,7 +109,7 @@ class _JoinNowState extends ConsumerState<JoinNow>
                       child: Column(
                         children: [
                           SizedBox(
-                            height: globals.heightMediaQuery * 41,
+                            height: SizeConfig.heightMultiplier(context) * 41,
                           ),
                           _contentState == 0
                               ? Column(
@@ -121,7 +121,9 @@ class _JoinNowState extends ConsumerState<JoinNow>
                                       ),
                                     ),
                                     SizedBox(
-                                      height: globals.heightMediaQuery * 41,
+                                      height:
+                                          SizeConfig.heightMultiplier(context) *
+                                              41,
                                     ),
                                     PrimaryTextField(
                                       controller:
@@ -142,10 +144,14 @@ class _JoinNowState extends ConsumerState<JoinNow>
                                       },
                                     ),
                                     SizedBox(
-                                      height: globals.heightMediaQuery * 24,
+                                      height:
+                                          SizeConfig.heightMultiplier(context) *
+                                              24,
                                     ),
                                     SizedBox(
-                                      height: globals.heightMediaQuery * 52,
+                                      height:
+                                          SizeConfig.heightMultiplier(context) *
+                                              52,
                                       width: double.infinity,
                                       child: PrimaryButton(
                                         text: "Continue".tr,
@@ -179,7 +185,9 @@ class _JoinNowState extends ConsumerState<JoinNow>
                                       ),
                                     ),
                                     SizedBox(
-                                      height: globals.heightMediaQuery * 41,
+                                      height:
+                                          SizeConfig.heightMultiplier(context) *
+                                              41,
                                     ),
                                     PrimaryTextField(
                                       controller: whoOwnTheFarmController,
@@ -195,10 +203,14 @@ class _JoinNowState extends ConsumerState<JoinNow>
                                       },
                                     ),
                                     SizedBox(
-                                      height: globals.heightMediaQuery * 24,
+                                      height:
+                                          SizeConfig.heightMultiplier(context) *
+                                              24,
                                     ),
                                     SizedBox(
-                                      height: globals.heightMediaQuery * 52,
+                                      height:
+                                          SizeConfig.heightMultiplier(context) *
+                                              52,
                                       width: double.infinity,
                                       child: PrimaryButton(
                                         text: "Continue".tr,

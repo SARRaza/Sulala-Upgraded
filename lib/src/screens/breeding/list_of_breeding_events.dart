@@ -5,9 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/widgets/styled_dismissible.dart';
-import '../../data/classes.dart';
+import '../../data/classes/breeding_event_variables.dart';
+import '../../data/classes/ovi_variables.dart';
+import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -62,9 +64,12 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
         child: Text('Animal not found.'),
       );
     }
-    final breedingEvents = ref.read(breedingEventsProvider).where((event
-        ) => event.sire?.id == widget.OviDetails.id || event.dam?.id == widget
-        .OviDetails.id).toList();
+    final breedingEvents = ref
+        .read(breedingEventsProvider)
+        .where((event) =>
+            event.sire?.id == widget.OviDetails.id ||
+            event.dam?.id == widget.OviDetails.id)
+        .toList();
 
     // Filter the breeding events based on the query
     return Scaffold(
@@ -112,8 +117,12 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                   color: Colors.black,
                 ),
                 onPressed: () async {
-                  ref.read(breedingDateProvider.notifier).update((state) => '');
-                  ref.read(deliveryDateProvider.notifier).update((state) => '');
+                  ref
+                      .read(breedingDateProvider.notifier)
+                      .update((state) => null);
+                  ref
+                      .read(deliveryDateProvider.notifier)
+                      .update((state) => null);
                   await Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -123,9 +132,7 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                       ),
                     ),
                   );
-                  setState(() {
-
-                  });
+                  setState(() {});
                 },
               ),
             ),
@@ -134,8 +141,8 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
       ),
       body: Padding(
         padding: EdgeInsets.only(
-          right: 16 * globals.widthMediaQuery,
-          left: 16 * globals.widthMediaQuery,
+          right: 16 * SizeConfig.widthMultiplier(context),
+          left: 16 * SizeConfig.widthMultiplier(context),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,7 +150,7 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
             Text('Breeding History',
                 style: AppFonts.title3(color: AppColors.grayscale90)),
             SizedBox(
-              height: 16 * globals.heightMediaQuery,
+              height: 16 * SizeConfig.heightMultiplier(context),
             ),
             breedingEvents.isEmpty
                 ? Expanded(
@@ -153,7 +160,7 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                         children: [
                           Image.asset('assets/illustrations/child_x.png'),
                           SizedBox(
-                            height: 32 * globals.heightMediaQuery,
+                            height: 32 * SizeConfig.heightMultiplier(context),
                           ),
                           Text(
                             'No Breeding Events Yet',
@@ -161,25 +168,25 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                                 color: AppColors.grayscale90),
                           ),
                           SizedBox(
-                            height: 8 * globals.heightMediaQuery,
+                            height: 8 * SizeConfig.heightMultiplier(context),
                           ),
                           Text(
                             'Add a breeding event to get started',
                             style: AppFonts.body2(color: AppColors.grayscale70),
                           ),
                           SizedBox(
-                            height: 140 * globals.heightMediaQuery,
+                            height: 140 * SizeConfig.heightMultiplier(context),
                           ),
                           SizedBox(
-                            height: 52 * globals.heightMediaQuery,
+                            height: 52 * SizeConfig.heightMultiplier(context),
                             child: PrimaryButton(
                               onPressed: () {
                                 ref
                                     .read(breedingDateProvider.notifier)
-                                    .update((state) => '');
+                                    .update((state) => null);
                                 ref
                                     .read(deliveryDateProvider.notifier)
-                                    .update((state) => '');
+                                    .update((state) => null);
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -189,9 +196,7 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                                     ),
                                   ),
                                 ).then((shouldAddBreedingEvent) {
-                                  setState(() {
-
-                                  });
+                                  setState(() {});
                                 });
                               },
                               text: 'Add Breeding Event',
@@ -214,8 +219,9 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                             // Handle item dismissal here
                             setState(() {
                               breedingEvents.removeAt(index);
-                              ref.read(breedingEventsProvider.notifier).update((
-                                  state) => breedingEvents);
+                              ref
+                                  .read(breedingEventsProvider.notifier)
+                                  .update((state) => breedingEvents);
                             });
                           },
                           child: Column(
@@ -224,7 +230,8 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                                 onTap: () async {
                                   await Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (context) => BreedingEventDetails(
+                                      builder: (context) =>
+                                          BreedingEventDetails(
                                         breedingEvents: breedingEvents,
                                         OviDetails: widget.OviDetails,
                                         breedingEvent: breedingEvent,
@@ -273,11 +280,9 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
       context: context,
       builder: (BuildContext context) {
         return ConfirmDeleteDialog(
-          content: 'Are you sure you want to delete this breeding event?'.tr,);
+          content: 'Are you sure you want to delete this breeding event?'.tr,
+        );
       },
     );
   }
-
 }
-
-

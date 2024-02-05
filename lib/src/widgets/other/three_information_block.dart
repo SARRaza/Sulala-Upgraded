@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 class ThreeInformationBlock extends StatelessWidget {
   final String head1;
@@ -66,7 +66,7 @@ class ThreeInformationBlock extends StatelessWidget {
             ),
           ),
           Container(
-            height: globals.heightMediaQuery * 22,
+            height: SizeConfig.heightMultiplier(context) * 22,
             width: 1,
             color: AppColors.grayscale30,
           ),
@@ -87,7 +87,7 @@ class ThreeInformationBlock extends StatelessWidget {
             ),
           ),
           Container(
-            height: globals.heightMediaQuery * 22,
+            height: SizeConfig.heightMultiplier(context) * 22,
             width: 1,
             color: AppColors.grayscale30,
           ),
@@ -112,7 +112,6 @@ class ThreeInformationBlock extends StatelessWidget {
     );
   }
 }
-
 
 // Example of use:
 

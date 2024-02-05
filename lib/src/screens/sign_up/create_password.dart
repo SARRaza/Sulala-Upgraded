@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import 'package:sulala_upgrade/src/screens/account_set_up/add_personal_information.dart';
 
@@ -48,9 +48,9 @@ class _CreatePasswordState extends ConsumerState<CreatePassword> {
         ),
         body: Padding(
           padding: EdgeInsets.only(
-              left: globals.widthMediaQuery * 19,
-              right: globals.widthMediaQuery * 19,
-              top: globals.heightMediaQuery * 40),
+              left: SizeConfig.widthMultiplier(context) * 19,
+              right: SizeConfig.widthMultiplier(context) * 19,
+              top: SizeConfig.heightMultiplier(context) * 40),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -59,7 +59,7 @@ class _CreatePasswordState extends ConsumerState<CreatePassword> {
                 style: AppFonts.title2(color: AppColors.grayscale90),
               ),
               SizedBox(
-                height: globals.heightMediaQuery * 40,
+                height: SizeConfig.heightMultiplier(context) * 40,
               ),
               PasswordField(
                 hintText: 'Password'.tr,
@@ -105,12 +105,12 @@ class _CreatePasswordState extends ConsumerState<CreatePassword> {
           ),
         ),
         floatingActionButton: SizedBox(
-          height: globals.heightMediaQuery * 52,
+          height: SizeConfig.heightMultiplier(context) * 52,
           child: Column(
             children: [
               SizedBox(
-                height: globals.heightMediaQuery * 52,
-                width: globals.widthMediaQuery * 343,
+                height: SizeConfig.heightMultiplier(context) * 52,
+                width: SizeConfig.widthMultiplier(context) * 343,
                 child: PrimaryButton(
                     text: "Confirm".tr,
                     status: buttonStatus,
@@ -132,9 +132,9 @@ class _CreatePasswordState extends ConsumerState<CreatePassword> {
                                   builder: (context) =>
                                       const AddPersonalInfoPage(),
                                 )).then((value) {
-                                  setState(() {
-                                    buttonStatus = PrimaryButtonStatus.idle;
-                                  });
+                              setState(() {
+                                buttonStatus = PrimaryButtonStatus.idle;
+                              });
                             });
                           } else {
                             setState(() {

@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../controls_and_buttons/buttons/sar_buttonwidget.dart';
 import '../inputs/text_fields/primary_text_field.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 class EggsNumberModal extends StatelessWidget {
-  const EggsNumberModal({
-    super.key,
-    required this.controller
-  });
+  const EggsNumberModal({super.key, required this.controller});
 
   final TextEditingController controller;
 
@@ -32,11 +29,11 @@ class EggsNumberModal extends StatelessWidget {
               height: 35,
             ),
             PrimaryTextField(
-                hintText: 'Enter Number Of Eggs',
-                labelText: 'Enter Number Of Eggs',
-                controller: controller,
+              hintText: 'Enter Number Of Eggs',
+              labelText: 'Enter Number Of Eggs',
+              controller: controller,
             ),
-            SizedBox(height: globals.heightMediaQuery * 130),
+            SizedBox(height: SizeConfig.heightMultiplier(context) * 130),
             ButtonWidget(
               onPressed: () {
                 Navigator.pop(context, controller.text);
@@ -54,8 +51,7 @@ class EggsNumberModal extends StatelessWidget {
                       Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                      const Color.fromARGB(255, 238, 238, 238),
+                      backgroundColor: const Color.fromARGB(255, 238, 238, 238),
                       foregroundColor: Colors.black,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(

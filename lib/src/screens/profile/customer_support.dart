@@ -3,12 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/buttons/secondary_button.dart';
 import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 class CustomerSupport extends StatefulWidget {
   const CustomerSupport({super.key});
@@ -48,8 +49,8 @@ class _CustomerSupportState extends State<CustomerSupport> {
   final _phoneNumber = '+965 96721717';
 
   Uri get _whatsAppUrl => Uri.parse(Platform.isAndroid
-      ? 'https://wa.me/$_whatsAppNumber/' :
-  'https://api.whatsapp.com/send?phone=$_whatsAppNumber');
+      ? 'https://wa.me/$_whatsAppNumber/'
+      : 'https://api.whatsapp.com/send?phone=$_whatsAppNumber');
 
   void _toggleExpansion(int index) {
     setState(() {
@@ -111,11 +112,11 @@ class _CustomerSupportState extends State<CustomerSupport> {
                 onTap: _callUs,
               ),
               SizedBox(
-                height: 32 * globals.heightMediaQuery,
+                height: 32 * SizeConfig.heightMultiplier(context),
               ),
               SizedBox(
-                width: 343 * globals.widthMediaQuery,
-                height: 52 * globals.heightMediaQuery,
+                width: 343 * SizeConfig.widthMultiplier(context),
+                height: 52 * SizeConfig.heightMultiplier(context),
                 child: SecondaryButton(
                   text: 'Cancel'.tr,
                   onPressed: () {
@@ -167,13 +168,13 @@ class _CustomerSupportState extends State<CustomerSupport> {
             children: [
               Padding(
                 padding: EdgeInsets.only(
-                    left: 16 * globals.widthMediaQuery,
-                    right: 16 * globals.widthMediaQuery,
-                    top: 8 * globals.heightMediaQuery),
+                    left: 16 * SizeConfig.widthMultiplier(context),
+                    right: 16 * SizeConfig.widthMultiplier(context),
+                    top: 8 * SizeConfig.heightMultiplier(context)),
                 child: Text('FAQs'.tr,
                     style: AppFonts.title3(color: AppColors.grayscale90)),
               ),
-              SizedBox(height: 32 * globals.heightMediaQuery),
+              SizedBox(height: 32 * SizeConfig.heightMultiplier(context)),
               for (int i = 0; i < quastions.length; i++)
                 Container(
                   decoration: const BoxDecoration(
@@ -215,8 +216,8 @@ class _CustomerSupportState extends State<CustomerSupport> {
             ],
           ),
           floatingActionButton: SizedBox(
-            width: 343 * globals.widthMediaQuery,
-            height: 52 * globals.heightMediaQuery,
+            width: 343 * SizeConfig.widthMultiplier(context),
+            height: 52 * SizeConfig.heightMultiplier(context),
             child: PrimaryButton(
               onPressed: _showModalSheet,
               text: 'Need Help'.tr,
@@ -226,13 +227,13 @@ class _CustomerSupportState extends State<CustomerSupport> {
   }
 
   Future<void> _chat() async {
-    if(!await launchUrl(_whatsAppUrl)) {
+    if (!await launchUrl(_whatsAppUrl)) {
       throw Exception('Could not launch $_whatsAppUrl');
     }
   }
-  
+
   Future<void> _callUs() async {
-    if(!await launchUrl(Uri.parse('tel:$_phoneNumber'))) {
+    if (!await launchUrl(Uri.parse('tel:$_phoneNumber'))) {
       throw Exception('Could not launch $_phoneNumber');
     }
   }

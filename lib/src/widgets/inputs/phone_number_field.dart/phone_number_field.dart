@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../../data/countries_data.dart';
 import '../../../theme/colors/colors.dart';
@@ -14,12 +14,8 @@ class PhoneNumberField extends ConsumerStatefulWidget {
   final Function(String)? onSave;
   final TextEditingController? controller;
 
-  const PhoneNumberField({
-    Key? key,
-    this.label,
-    this.onSave,
-    this.controller
-  }) : super(key: key);
+  const PhoneNumberField({Key? key, this.label, this.onSave, this.controller})
+      : super(key: key);
 
   @override
   ConsumerState<PhoneNumberField> createState() => _PhoneNumberFieldState();
@@ -50,16 +46,16 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
     setState(() {
       _hasError = !isValidPhoneNumber;
       _borderColor =
-      isValidPhoneNumber ? AppColors.primary30 : AppColors.error100;
+          isValidPhoneNumber ? AppColors.primary30 : AppColors.error100;
       _backgroundColor =
-      isValidPhoneNumber ? AppColors.grayscale0 : AppColors.error10;
+          isValidPhoneNumber ? AppColors.grayscale0 : AppColors.error10;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    _textEditingController = widget.controller?? TextEditingController();
+    _textEditingController = widget.controller ?? TextEditingController();
     _textEditingController.text = ref.read(phoneNumberProvider);
     _focusNode.addListener(_onFocusChange);
   }
@@ -146,7 +142,7 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(width: globals.widthMediaQuery * 9),
+                    SizedBox(width: SizeConfig.widthMultiplier(context) * 9),
                     Image.asset(
                       countryFlag,
                       width: 24,
@@ -157,14 +153,14 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
                     ),
                     Icon(Icons.arrow_drop_down_rounded,
                         color: AppColors.primary40,
-                        size: globals.widthMediaQuery * 13),
-                    SizedBox(width: globals.widthMediaQuery * 2),
+                        size: SizeConfig.widthMultiplier(context) * 13),
+                    SizedBox(width: SizeConfig.widthMultiplier(context) * 2),
                   ],
                 ),
               ),
             ),
             Container(
-              height: globals.heightMediaQuery * 41,
+              height: SizeConfig.heightMultiplier(context) * 41,
               width: 1,
               color: _borderColor,
             ),
@@ -196,16 +192,16 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
                       hintStyle: AppFonts.body1(color: AppColors.grayscale50),
                       suffixIcon: phoneNumber.isNotEmpty
                           ? InkWell(
-                        onTap: () {
-                          setState(() {
-                            _clearText();
-                            phoneNumber = "";
-                          });
-                        },
-                        child: Image.asset(
-                          'assets/icons/frame/24px/20_Clear_form.png',
-                        ),
-                      )
+                              onTap: () {
+                                setState(() {
+                                  _clearText();
+                                  phoneNumber = "";
+                                });
+                              },
+                              child: Image.asset(
+                                'assets/icons/frame/24px/20_Clear_form.png',
+                              ),
+                            )
                           : null,
                     ),
                   ),
@@ -233,7 +229,7 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
             content: Column(
               children: [
                 SizedBox(
-                  height: globals.heightMediaQuery * 772,
+                  height: SizeConfig.heightMultiplier(context) * 772,
                   child: const CountriesWidget(),
                 ),
               ],
@@ -245,10 +241,7 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
   }
 }
 
-
 //Example of use:
-
-
 
 // Functions to be used in the example page:
 // String? savedPhoneNumber;

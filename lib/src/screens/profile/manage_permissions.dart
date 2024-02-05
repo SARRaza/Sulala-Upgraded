@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sulala_upgrade/src/data/classes.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
+import '../../data/classes/staff_member.dart';
+import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/tags/tags.dart';
 import '../../widgets/controls_and_buttons/toggles/toggle_active.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 typedef PermissionsCallback = void Function({
   bool isViewOnlySelected,
@@ -43,9 +44,10 @@ class _ManagePermissionsState extends ConsumerState<ManagePermissions> {
 
   @override
   void initState() {
-    final staff = ref.read(staffProvider).firstWhere((member) => member.id ==
-        widget.staffMemberId);
-    switch(staff.role) {
+    final staff = ref
+        .read(staffProvider)
+        .firstWhere((member) => member.id == widget.staffMemberId);
+    switch (staff.role) {
       case 'Viewer':
         isViewOnlySelected = true;
         break;
@@ -90,8 +92,8 @@ class _ManagePermissionsState extends ConsumerState<ManagePermissions> {
           ),
           body: Padding(
             padding: EdgeInsets.only(
-                left: 16 * globals.widthMediaQuery,
-                right: 16 * globals.widthMediaQuery),
+                left: 16 * SizeConfig.widthMultiplier(context),
+                right: 16 * SizeConfig.widthMultiplier(context)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -100,20 +102,20 @@ class _ManagePermissionsState extends ConsumerState<ManagePermissions> {
                   style: AppFonts.title3(color: AppColors.grayscale90),
                 ),
                 SizedBox(
-                  height: 32 * globals.heightMediaQuery,
+                  height: 32 * SizeConfig.heightMultiplier(context),
                 ),
                 Text(
                   'Role',
                   style: AppFonts.headline3(color: AppColors.grayscale90),
                 ),
                 SizedBox(
-                  height: 8 * globals.heightMediaQuery,
+                  height: 8 * SizeConfig.heightMultiplier(context),
                 ),
                 Text(
                   'When the staff member is given permission to edit, they can add/edit data',
                   style: AppFonts.body2(color: AppColors.grayscale70),
                 ),
-                SizedBox(height: 16 * globals.heightMediaQuery),
+                SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -173,13 +175,13 @@ class _ManagePermissionsState extends ConsumerState<ManagePermissions> {
                   ],
                 ),
                 if (showList) ...[
-                  SizedBox(height: 32 * globals.heightMediaQuery),
+                  SizedBox(height: 32 * SizeConfig.heightMultiplier(context)),
                   Text(
                     'What Info Can This Member Edit?',
                     style: AppFonts.headline3(color: AppColors.grayscale90),
                   ),
                   SizedBox(
-                    height: 16 * globals.heightMediaQuery,
+                    height: 16 * SizeConfig.heightMultiplier(context),
                   ),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
@@ -246,17 +248,20 @@ class _ManagePermissionsState extends ConsumerState<ManagePermissions> {
             ),
           ),
           floatingActionButton: SizedBox(
-            width: 343 * globals.widthMediaQuery,
-            height: 52 * globals.heightMediaQuery,
+            width: 343 * SizeConfig.widthMultiplier(context),
+            height: 52 * SizeConfig.heightMultiplier(context),
             child: PrimaryButton(
               onPressed: () {
                 ref.read(staffProvider.notifier).update((state) {
                   final newState = List<StaffMember>.from(state);
-                  final staffIndex = state.indexWhere((member) => member.id ==
-                      widget.staffMemberId);
+                  final staffIndex = state.indexWhere(
+                      (member) => member.id == widget.staffMemberId);
                   newState[staffIndex] = state[staffIndex].copyWith(
-                      role: isViewOnlySelected ? 'Viewer' : isCanEditSelected ?
-                      'Helper' : 'Worker');
+                      role: isViewOnlySelected
+                          ? 'Viewer'
+                          : isCanEditSelected
+                              ? 'Helper'
+                              : 'Worker');
                   return newState;
                 });
                 Navigator.pop(context);

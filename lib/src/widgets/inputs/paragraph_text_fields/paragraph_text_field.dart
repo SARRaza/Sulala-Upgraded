@@ -12,16 +12,16 @@ class ParagraphTextField extends StatefulWidget {
   final int maxLines; // Add maxLines property
   final TextEditingController? controller;
 
-  const ParagraphTextField({
-    Key? key,
-    required this.hintText,
-    this.labelText,
-    this.errorMessage,
-    this.onChanged,
-    this.onErrorChanged,
-    this.maxLines = 1, // Default to a single line
-    this.controller
-  }) : super(key: key);
+  const ParagraphTextField(
+      {Key? key,
+      required this.hintText,
+      this.labelText,
+      this.errorMessage,
+      this.onChanged,
+      this.onErrorChanged,
+      this.maxLines = 1, // Default to a single line
+      this.controller})
+      : super(key: key);
 
   @override
   State<ParagraphTextField> createState() => _ParagraphTextFieldState();
@@ -35,7 +35,7 @@ class _ParagraphTextFieldState extends State<ParagraphTextField> {
   @override
   void initState() {
     super.initState();
-    _textEditingController = widget.controller?? TextEditingController();
+    _textEditingController = widget.controller ?? TextEditingController();
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
   }

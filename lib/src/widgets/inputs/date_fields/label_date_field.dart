@@ -225,37 +225,36 @@ class _LabelDateFieldState extends State<LabelDateField> {
   }
 }
 
-
 // Example of use:
 
 // SizedBox(
-            //   width: 300,
-            //   child: LabelDateField(
-            //     hintText: 'Select a date',
-            //     labelText: 'Date of Birth',
-            //     errorMessage: _hasError
-            //         ? 'Selected date should not be in the future'
-            //         : null,
-            //     onChanged: (selectedDate) {
-            //       final hasError = selectedDate.isAfter(DateTime.now());
-            //       setState(() {
-            //         _hasError = hasError;
-            //         _selectedDate = hasError ? null : selectedDate;
-            //       });
-            //     },
-            //     onErrorChanged: (hasError) {
-            //       setState(() {
-            //         _hasError = hasError;
-            //       });
-            //     },
-            //   ),
-            // ),
+//   width: 300,
+//   child: LabelDateField(
+//     hintText: 'Select a date',
+//     labelText: 'Date of Birth',
+//     errorMessage: _hasError
+//         ? 'Selected date should not be in the future'
+//         : null,
+//     onChanged: (selectedDate) {
+//       final hasError = selectedDate.isAfter(DateTime.now());
+//       setState(() {
+//         _hasError = hasError;
+//         _selectedDate = hasError ? null : selectedDate;
+//       });
+//     },
+//     onErrorChanged: (hasError) {
+//       setState(() {
+//         _hasError = hasError;
+//       });
+//     },
+//   ),
+// ),
 
-            // Text(
-            //   'Entered Text: ${_selectedDate != null ? _formatDate(_selectedDate!) : ""}',
-            //   style: const TextStyle(fontSize: 16),
-            // ),
+// Text(
+//   'Entered Text: ${_selectedDate != null ? _formatDate(_selectedDate!) : ""}',
+//   style: const TextStyle(fontSize: 16),
+// ),
 
-            //           String _formatDate(DateTime date) {
-            //   return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year.toString()}";
-            // }
+//           String _formatDate(DateTime date) {
+//   return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year.toString()}";
+// }

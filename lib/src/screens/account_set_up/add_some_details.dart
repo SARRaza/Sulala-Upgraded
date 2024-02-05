@@ -3,11 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 
 import 'dart:io';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
@@ -63,7 +64,7 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
                 ),
                 Container(
                   height: 1,
-                  width: globals.widthMediaQuery * 343,
+                  width: SizeConfig.widthMultiplier(context) * 343,
                   color: AppColors.grayscale20,
                 ),
                 ListTile(
@@ -103,7 +104,7 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
           elevation: 0,
           leading: IconButton(
             icon: Container(
-              padding: EdgeInsets.all(globals.widthMediaQuery * 6),
+              padding: EdgeInsets.all(SizeConfig.widthMultiplier(context) * 6),
               decoration: BoxDecoration(
                 color: AppColors.grayscale10,
                 borderRadius: BorderRadius.circular(50),
@@ -135,8 +136,8 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(
-                left: globals.widthMediaQuery * 16,
-                right: globals.widthMediaQuery * 16),
+                left: SizeConfig.widthMultiplier(context) * 16,
+                right: SizeConfig.widthMultiplier(context) * 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -144,10 +145,10 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
                   'Add Some Details'.tr,
                   style: AppFonts.title3(color: AppColors.grayscale90),
                 ),
-                SizedBox(height: globals.heightMediaQuery * 40),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 40),
                 Text('Add Profile Photo'.tr,
                     style: AppFonts.headline3(color: AppColors.grayscale90)),
-                SizedBox(height: globals.heightMediaQuery * 24),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
                 Center(
                   child: GestureDetector(
                     child: CircleAvatar(
@@ -166,7 +167,7 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: globals.heightMediaQuery * 16),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
                 Center(
                   child: PrimaryTextButton(
                     onPressed: () {
@@ -176,12 +177,12 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
                     text: 'Add Photo'.tr,
                   ),
                 ),
-                SizedBox(height: globals.heightMediaQuery * 40),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 40),
                 Text(
                   "What's your farm address?".tr,
                   style: AppFonts.headline3(color: AppColors.grayscale90),
                 ),
-                SizedBox(height: globals.heightMediaQuery * 24),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
                 PrimaryTextField(
                   controller: countrycontroller,
                   hintText: 'Country'.tr,
@@ -189,7 +190,7 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
                     ref.read(countryProvider.notifier).update((state) => value);
                   },
                 ),
-                SizedBox(height: globals.heightMediaQuery * 16),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
                 PrimaryTextField(
                   controller: citycontroller,
                   hintText: 'City'.tr,
@@ -197,10 +198,10 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
                     ref.read(cityProvider.notifier).update((state) => value);
                   },
                 ),
-                SizedBox(height: globals.heightMediaQuery * 122),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 122),
                 SizedBox(
-                  width: globals.widthMediaQuery * 343,
-                  height: globals.heightMediaQuery * 52,
+                  width: SizeConfig.widthMultiplier(context) * 343,
+                  height: SizeConfig.heightMultiplier(context) * 52,
                   child: PrimaryButton(
                     onPressed: () {
                       Navigator.push(

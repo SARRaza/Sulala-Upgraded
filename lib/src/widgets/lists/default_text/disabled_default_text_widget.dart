@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 
@@ -35,7 +35,7 @@ class _DisablesDefaultTextWidgetState extends State<DisablesDefaultTextWidget> {
         Row(
           children: [
             SizedBox(
-              width: globals.widthMediaQuery * 15,
+              width: SizeConfig.widthMultiplier(context) * 15,
             ),
             Text(
               truncateTextWithEllipsis(widget.textHead, 25),
@@ -49,7 +49,7 @@ class _DisablesDefaultTextWidgetState extends State<DisablesDefaultTextWidget> {
                 "assets/icons/frame/24px/24_Check.png",
               ),
             SizedBox(
-              width: globals.widthMediaQuery * 15,
+              width: SizeConfig.widthMultiplier(context) * 15,
             ),
           ],
         ),
@@ -57,7 +57,6 @@ class _DisablesDefaultTextWidgetState extends State<DisablesDefaultTextWidget> {
     );
   }
 }
-
 
 // Exapmle of use:
 

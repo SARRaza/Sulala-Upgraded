@@ -137,7 +137,6 @@ enum NavigateButtonStatus {
   disabled,
 }
 
-
 // Example od use:
 
 // SizedBox(

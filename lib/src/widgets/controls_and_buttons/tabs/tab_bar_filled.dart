@@ -66,8 +66,6 @@ class _TabBarFilledState extends State<TabBarFilled> {
   }
 }
 
-
-
 // Example of use:
 // TabBarFilled(
 //           tabTexts: const ['Hi man', 'OK', 'yeah'],

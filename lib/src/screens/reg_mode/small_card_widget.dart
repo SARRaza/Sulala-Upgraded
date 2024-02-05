@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import 'reg_home_page.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 class SmallCardWidget extends StatefulWidget {
   final Image icon;
@@ -38,31 +39,36 @@ class _SmallCardWidgetState extends State<SmallCardWidget> {
               type: MaterialType.card,
               color: const Color.fromRGBO(
                   225, 219, 190, 1), // Change the color for the back card
-              borderRadius: BorderRadius.circular(globals.widthMediaQuery * 14),
+              borderRadius: BorderRadius.circular(
+                  SizeConfig.widthMultiplier(context) * 14),
             ),
           ),
         Padding(
-          padding: EdgeInsets.only(bottom: globals.heightMediaQuery * 6),
+          padding:
+              EdgeInsets.only(bottom: SizeConfig.heightMultiplier(context) * 6),
           child: Material(
             type: MaterialType.card,
             color: const Color.fromRGBO(249, 245, 236, 1),
-            borderRadius: BorderRadius.circular(globals.widthMediaQuery *
-                14), // Change the color for the front card
+            borderRadius: BorderRadius.circular(
+                SizeConfig.widthMultiplier(context) *
+                    14), // Change the color for the front card
             child: InkWell(
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               onTap: widget.onPressed,
-              borderRadius: BorderRadius.circular(globals.widthMediaQuery * 14),
+              borderRadius: BorderRadius.circular(
+                  SizeConfig.widthMultiplier(context) * 14),
               child: Padding(
-                padding: EdgeInsets.all(globals.widthMediaQuery * 14),
+                padding:
+                    EdgeInsets.all(SizeConfig.widthMultiplier(context) * 14),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     widget.icon,
-                    SizedBox(height: globals.heightMediaQuery * 10),
+                    SizedBox(height: SizeConfig.heightMultiplier(context) * 10),
                     Text(widget.animalData.animal,
                         style: AppFonts.body2(color: AppColors.grayscale100)),
-                    SizedBox(height: globals.heightMediaQuery * 3),
+                    SizedBox(height: SizeConfig.heightMultiplier(context) * 3),
                     Text(widget.quan,
                         style:
                             AppFonts.headline4(color: AppColors.grayscale100)),

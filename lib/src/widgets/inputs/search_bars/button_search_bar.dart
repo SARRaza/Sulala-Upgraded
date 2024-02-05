@@ -33,7 +33,7 @@ class _ButtonSearchBarState extends State<ButtonSearchBar> {
     super.initState();
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
-    _textEditingController = widget.controller?? TextEditingController();
+    _textEditingController = widget.controller ?? TextEditingController();
   }
 
   @override
@@ -119,8 +119,6 @@ class _ButtonSearchBarState extends State<ButtonSearchBar> {
     );
   }
 }
-
-
 
 // Example of use:
 

@@ -136,7 +136,6 @@ enum SecondaryButtonStatus {
   disabled,
 }
 
-
 // Example of use:
 
 // SizedBox(

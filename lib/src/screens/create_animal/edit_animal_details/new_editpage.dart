@@ -1,13 +1,14 @@
-// ignore_for_file: non_constant_identifier_names, library_private_types_in_public_api, unused_local_variable
-
 import 'dart:io';
+import 'dart:math';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/widgets/animal_info_modal_sheets.dart/animal_tags_modal.dart';
-import '../../../data/classes.dart';
+import '../../../data/classes/breeding_event_variables.dart';
+import '../../../data/classes/ovi_variables.dart';
+import '../../../data/globals.dart';
 import '../../../data/riverpod_globals.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
@@ -80,7 +81,6 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
     'Gecko': ['Leopard Gecko', 'Crested Gecko', 'Tokay Gecko'],
   };
 
-  late OviVariables animalDetails;
   final Map<String, String> _animalImages = {
     'Mammal': 'assets/avatars/120px/Horse_avatar.png',
     'Oviparous': 'assets/avatars/120px/Duck.png',
@@ -93,27 +93,53 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
   late final TextEditingController _animalNameController;
   late final TextEditingController _notesController;
   late final TextEditingController _birthDayController;
-
   late List<File>? uploadedFiles;
-  
+  late ImageProvider? selectedOviImage;
+  late String selectedAnimalType;
+  late String selectedAnimalSpecies;
+  late String selectedAnimalBreed;
+  late String selectedOviGender;
+  late final TextEditingController _layingFrequencyController;
+  late final TextEditingController _eggsNumberController;
+  late String selectedBreedingStage;
+  late List<String> selectedOviChips;
+  late Map<String, String>? customFields;
+  late Map<String, DateTime?> selectedOviDates;
+
   @override
   void initState() {
-    animalDetails = ref.read(ovianimalsProvider).firstWhere((animal) => animal
-        .id == widget.animalId);
-    uploadedFiles = animalDetails.files;
-    _animalNameController = TextEditingController(
-        text: animalDetails.animalName);
-    _animalNameController.addListener(() {
-      animalDetails = animalDetails.copyWith(animalName: _animalNameController
-          .text);
-    });
-    _notesController = TextEditingController(text: animalDetails.notes);
-    _notesController.addListener(() {
-      animalDetails = animalDetails.copyWith(notes: _notesController.text);
-    });
-    _birthDayController = TextEditingController(text: animalDetails
-        .dateOfBirth);
     super.initState();
+
+    final animalProvider = ref.read(ovianimalsProvider);
+    final animalIndex =
+        animalProvider.indexWhere((animal) => animal.id == widget.animalId);
+    final animalDetails = animalProvider[animalIndex];
+
+    // Initialize controllers with appropriate values
+    _animalNameController =
+        TextEditingController(text: animalDetails.animalName);
+    _notesController = TextEditingController(text: animalDetails.notes);
+    _birthDayController = TextEditingController();
+    if (animalDetails.dateOfBirth != null) {
+      _birthDayController.text =
+          DateFormat('dd/MM/yyyy').format(animalDetails.dateOfBirth!);
+    }
+    _layingFrequencyController =
+        TextEditingController(text: animalDetails.layingFrequency);
+    _eggsNumberController =
+        TextEditingController(text: animalDetails.numOfEggs);
+
+    // Initialize other variables directly
+    uploadedFiles = animalDetails.files;
+    selectedOviImage = animalDetails.selectedOviImage;
+    selectedAnimalType = animalDetails.selectedAnimalType;
+    selectedAnimalSpecies = animalDetails.selectedAnimalSpecies;
+    selectedAnimalBreed = animalDetails.selectedAnimalBreed;
+    selectedOviGender = animalDetails.selectedOviGender;
+    selectedBreedingStage = animalDetails.selectedBreedingStage;
+    selectedOviChips = animalDetails.selectedOviChips;
+    customFields = animalDetails.customFields;
+    selectedOviDates = animalDetails.selectedOviDates;
   }
 
   @override
@@ -126,7 +152,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
             Container(
               constraints: const BoxConstraints(maxWidth: 130),
               child: Text(
-                'Edit ${animalDetails.animalName}',
+                'Edit ${_animalNameController.text}',
                 style: AppFonts.headline3(color: AppColors.grayscale90),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -170,8 +196,8 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.only(
-              left: globals.widthMediaQuery * 16,
-              right: globals.widthMediaQuery * 16),
+              left: SizeConfig.widthMultiplier(context) * 16,
+              right: SizeConfig.widthMultiplier(context) * 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -179,13 +205,13 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 child: CircleAvatar(
                   radius: 70,
                   backgroundColor: Colors.grey[100],
-                  backgroundImage: animalDetails.selectedOviImage,
-                  child: animalDetails.selectedOviImage == null
+                  backgroundImage: selectedOviImage,
+                  child: selectedOviImage == null
                       ? const Icon(
-                    Icons.camera_alt_outlined,
-                    size: 50,
-                    color: Colors.grey,
-                  )
+                          Icons.camera_alt_outlined,
+                          size: 50,
+                          color: Colors.grey,
+                        )
                       : null,
                 ),
               ),
@@ -221,22 +247,22 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                     ),
                     const Spacer(),
                     Text(
-                      animalDetails.selectedAnimalType,
+                      selectedAnimalType,
                       style: AppFonts.body2(color: AppColors.grayscale90),
                     ),
                     SizedBox(
-                      width: globals.widthMediaQuery * 8,
+                      width: SizeConfig.widthMultiplier(context) * 8,
                     ),
                     Icon(Icons.arrow_forward_ios_rounded,
                         color: AppColors.primary40,
-                        size: globals.widthMediaQuery * 12.75),
+                        size: SizeConfig.widthMultiplier(context) * 12.75),
                   ],
                 ),
               ),
-              SizedBox(height: globals.heightMediaQuery * 24),
+              SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
               GestureDetector(
                 onTap: () {
-                  if (animalDetails.selectedAnimalType == 'Mammal') {
+                  if (selectedAnimalType == 'Mammal') {
                     _editAnimalSpecies(
                         'species', context, modalMammalSpeciesList);
                   } else {
@@ -251,19 +277,19 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                     ),
                     const Spacer(),
                     Text(
-                      animalDetails.selectedAnimalSpecies,
+                      selectedAnimalSpecies,
                       style: AppFonts.body2(color: AppColors.grayscale90),
                     ),
                     SizedBox(
-                      width: globals.widthMediaQuery * 8,
+                      width: SizeConfig.widthMultiplier(context) * 8,
                     ),
                     Icon(Icons.arrow_forward_ios_rounded,
                         color: AppColors.primary40,
-                        size: globals.widthMediaQuery * 12.75),
+                        size: SizeConfig.widthMultiplier(context) * 12.75),
                   ],
                 ),
               ),
-              SizedBox(height: globals.heightMediaQuery * 24),
+              SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
               InkWell(
                 onTap: () {
                   _editAnimalBreed('breeds', context);
@@ -276,44 +302,43 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                     ),
                     const Spacer(),
                     Text(
-                      animalDetails.selectedAnimalBreed,
+                      selectedAnimalBreed,
                       style: AppFonts.body2(color: AppColors.grayscale90),
                     ),
                     SizedBox(
-                      width: globals.widthMediaQuery * 8,
+                      width: SizeConfig.widthMultiplier(context) * 8,
                     ),
                     Icon(Icons.arrow_forward_ios_rounded,
                         color: AppColors.primary40,
-                        size: globals.widthMediaQuery * 12.75),
+                        size: SizeConfig.widthMultiplier(context) * 12.75),
                   ],
                 ),
               ),
               SizedBox(
-                height: globals.heightMediaQuery * 16,
+                height: SizeConfig.heightMultiplier(context) * 16,
               ),
               const Divider(
                 color: AppColors.grayscale20,
               ),
               SizedBox(
-                height: globals.heightMediaQuery * 16,
+                height: SizeConfig.heightMultiplier(context) * 16,
               ),
               Text(
                 "Animal Sex",
                 style: AppFonts.headline2(color: AppColors.grayscale90),
               ),
               SizedBox(
-                height: globals.heightMediaQuery * 16,
+                height: SizeConfig.heightMultiplier(context) * 16,
               ),
               Padding(
                 padding: EdgeInsets.only(
-                  top: globals.heightMediaQuery * 12,
-                  bottom: globals.heightMediaQuery * 12,
+                  top: SizeConfig.heightMultiplier(context) * 12,
+                  bottom: SizeConfig.heightMultiplier(context) * 12,
                 ),
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
-                      animalDetails = animalDetails.copyWith(
-                          selectedOviGender: 'Unknown');
+                      selectedOviGender = 'Unknown';
 
                       showAdditionalFields = false;
                     });
@@ -327,16 +352,15 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                         ),
                       ),
                       Container(
-                        width: globals.widthMediaQuery * 24,
-                        height: globals.widthMediaQuery * 24,
+                        width: SizeConfig.widthMultiplier(context) * 24,
+                        height: SizeConfig.widthMultiplier(context) * 24,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: animalDetails.selectedOviGender == 'Unknown'
+                            color: selectedOviGender == 'Unknown'
                                 ? AppColors.primary20
                                 : AppColors.grayscale30,
-                            width: animalDetails.selectedOviGender == 'Unknown'
-                                ? 6.0 : 1.0,
+                            width: selectedOviGender == 'Unknown' ? 6.0 : 1.0,
                           ),
                         ),
                       ),
@@ -346,13 +370,12 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
               ),
               Padding(
                 padding: EdgeInsets.only(
-                    top: globals.heightMediaQuery * 12,
-                    bottom: globals.heightMediaQuery * 12),
+                    top: SizeConfig.heightMultiplier(context) * 12,
+                    bottom: SizeConfig.heightMultiplier(context) * 12),
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
-                      animalDetails = animalDetails.copyWith(
-                          selectedOviGender: 'Male');
+                      selectedOviGender = 'Male';
 
                       showAdditionalFields = false;
                     });
@@ -366,16 +389,15 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                         ),
                       ),
                       Container(
-                        width: globals.widthMediaQuery * 24,
-                        height: globals.widthMediaQuery * 24,
+                        width: SizeConfig.widthMultiplier(context) * 24,
+                        height: SizeConfig.widthMultiplier(context) * 24,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: animalDetails.selectedOviGender == 'Male'
+                            color: selectedOviGender == 'Male'
                                 ? AppColors.primary20
                                 : AppColors.grayscale30,
-                            width: animalDetails.selectedOviGender == 'Male'
-                                ? 6.0 : 1.0,
+                            width: selectedOviGender == 'Male' ? 6.0 : 1.0,
                           ),
                         ),
                       ),
@@ -385,13 +407,12 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
               ),
               Padding(
                 padding: EdgeInsets.only(
-                    top: globals.heightMediaQuery * 12,
-                    bottom: globals.heightMediaQuery * 12),
+                    top: SizeConfig.heightMultiplier(context) * 12,
+                    bottom: SizeConfig.heightMultiplier(context) * 12),
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
-                      animalDetails = animalDetails.copyWith(
-                          selectedOviGender: 'Female');
+                      selectedOviGender = 'Female';
                     });
                   },
                   child: Row(
@@ -403,16 +424,15 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                         ),
                       ),
                       Container(
-                        width: globals.widthMediaQuery * 24,
-                        height: globals.widthMediaQuery * 24,
+                        width: SizeConfig.widthMultiplier(context) * 24,
+                        height: SizeConfig.widthMultiplier(context) * 24,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: animalDetails.selectedOviGender == 'Female'
+                            color: selectedOviGender == 'Female'
                                 ? AppColors.primary20
                                 : AppColors.grayscale30,
-                            width: animalDetails.selectedOviGender == 'Female'
-                                ? 6.0 : 1.0,
+                            width: selectedOviGender == 'Female' ? 6.0 : 1.0,
                           ),
                         ),
                       ),
@@ -421,17 +441,17 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 ),
               ),
               SizedBox(
-                height: globals.heightMediaQuery * 16,
+                height: SizeConfig.heightMultiplier(context) * 16,
               ),
               const Divider(
                 color: AppColors.grayscale20,
               ),
               SizedBox(
-                height: globals.heightMediaQuery * 16,
+                height: SizeConfig.heightMultiplier(context) * 16,
               ),
               Visibility(
-                visible: animalDetails.selectedAnimalType == 'Oviparous' &&
-                    animalDetails.selectedOviGender == "Female",
+                visible: selectedAnimalType == 'Oviparous' &&
+                    selectedOviGender == "Female",
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -443,11 +463,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
-                      onChanged: (value) {
-                        animalDetails = animalDetails.copyWith(
-                            layingFrequency: value);
-                      },
-                      initialValue: animalDetails.layingFrequency,
+                      controller: _layingFrequencyController,
                       decoration: InputDecoration(
                         hintText: 'Enter Frequency', // Add your hint text here
                         border: OutlineInputBorder(
@@ -457,7 +473,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                             vertical: 12.0, horizontal: 16.0),
                       ),
                       textInputAction:
-                      TextInputAction.done, // Change the keyboard action
+                          TextInputAction.done, // Change the keyboard action
                     ),
                     // Your first additional text field widget here
                     const SizedBox(height: 10),
@@ -469,11 +485,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
-                      onChanged: (value) {
-                        animalDetails = animalDetails.copyWith(
-                            eggsPerMonth: value);
-                      },
-                      initialValue: animalDetails.eggsPerMonth,
+                      controller: _eggsNumberController,
                       decoration: InputDecoration(
                         hintText: 'Enter The Number', // Add your hint text here
                         border: OutlineInputBorder(
@@ -483,7 +495,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                             vertical: 12.0, horizontal: 16.0),
                       ),
                       textInputAction:
-                      TextInputAction.done, // Change the keyboard action
+                          TextInputAction.done, // Change the keyboard action
                     ),
                     const SizedBox(height: 15),
                     const Divider(),
@@ -491,33 +503,32 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                   ],
                 ),
               ),
-              if (animalDetails.selectedOviGender == "Female")
+              if (selectedOviGender == "Female")
                 Visibility(
-                  visible: animalDetails.selectedAnimalType == 'Mammal' &&
-                      animalDetails.selectedOviGender == "Female",
+                  visible: selectedAnimalType == 'Mammal' &&
+                      selectedOviGender == "Female",
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        height: globals.heightMediaQuery * 16,
+                        height: SizeConfig.heightMultiplier(context) * 16,
                       ),
                       Text(
                         "Breeding Stage",
                         style: AppFonts.headline2(color: AppColors.grayscale90),
                       ),
                       SizedBox(
-                        height: globals.heightMediaQuery * 16,
+                        height: SizeConfig.heightMultiplier(context) * 16,
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                          top: globals.heightMediaQuery * 12,
-                          bottom: globals.heightMediaQuery * 12,
+                          top: SizeConfig.heightMultiplier(context) * 12,
+                          bottom: SizeConfig.heightMultiplier(context) * 12,
                         ),
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              animalDetails = animalDetails.copyWith(
-                                  selectedBreedingStage: 'Ready For Breeding');
+                              selectedBreedingStage = 'Ready For Breeding';
                             });
                           },
                           child: Row(
@@ -530,17 +541,18 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                                 ),
                               ),
                               Container(
-                                width: globals.widthMediaQuery * 24,
-                                height: globals.widthMediaQuery * 24,
+                                width: SizeConfig.widthMultiplier(context) * 24,
+                                height:
+                                    SizeConfig.widthMultiplier(context) * 24,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                    color: animalDetails.selectedBreedingStage
-                                        == 'Ready For Breeding'
+                                    color: selectedBreedingStage ==
+                                            'Ready For Breeding'
                                         ? AppColors.primary20
                                         : AppColors.grayscale30,
-                                    width: animalDetails.selectedBreedingStage
-                                        == 'Ready For Breeding'
+                                    width: selectedBreedingStage ==
+                                            'Ready For Breeding'
                                         ? 6.0
                                         : 1.0,
                                   ),
@@ -552,14 +564,13 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                          top: globals.heightMediaQuery * 12,
-                          bottom: globals.heightMediaQuery * 12,
+                          top: SizeConfig.heightMultiplier(context) * 12,
+                          bottom: SizeConfig.heightMultiplier(context) * 12,
                         ),
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              animalDetails = animalDetails.copyWith(
-                                  selectedBreedingStage: 'Pregnant');
+                              selectedBreedingStage = 'Pregnant';
                             });
                           },
                           child: Row(
@@ -572,17 +583,16 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                                 ),
                               ),
                               Container(
-                                width: globals.widthMediaQuery * 24,
-                                height: globals.widthMediaQuery * 24,
+                                width: SizeConfig.widthMultiplier(context) * 24,
+                                height:
+                                    SizeConfig.widthMultiplier(context) * 24,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                    color: animalDetails.selectedBreedingStage
-                                        == 'Pregnant'
+                                    color: selectedBreedingStage == 'Pregnant'
                                         ? AppColors.primary20
                                         : AppColors.grayscale30,
-                                    width: animalDetails.selectedBreedingStage
-                                        == 'Pregnant'
+                                    width: selectedBreedingStage == 'Pregnant'
                                         ? 6.0
                                         : 1.0,
                                   ),
@@ -594,14 +604,13 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                          top: globals.heightMediaQuery * 12,
-                          bottom: globals.heightMediaQuery * 12,
+                          top: SizeConfig.heightMultiplier(context) * 12,
+                          bottom: SizeConfig.heightMultiplier(context) * 12,
                         ),
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              animalDetails = animalDetails.copyWith(
-                                  selectedBreedingStage: 'Lactating');
+                              selectedBreedingStage = 'Lactating';
                             });
                           },
                           child: Row(
@@ -614,17 +623,16 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                                 ),
                               ),
                               Container(
-                                width: globals.widthMediaQuery * 24,
-                                height: globals.widthMediaQuery * 24,
+                                width: SizeConfig.widthMultiplier(context) * 24,
+                                height:
+                                    SizeConfig.widthMultiplier(context) * 24,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                    color: animalDetails.selectedBreedingStage
-                                        == 'Lactating'
+                                    color: selectedBreedingStage == 'Lactating'
                                         ? AppColors.primary20
                                         : AppColors.grayscale30,
-                                    width: animalDetails.selectedBreedingStage
-                                        == 'Lactating'
+                                    width: selectedBreedingStage == 'Lactating'
                                         ? 6.0
                                         : 1.0,
                                   ),
@@ -644,7 +652,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 "Dates",
                 style: AppFonts.headline2(color: AppColors.grayscale90),
               ),
-              SizedBox(height: globals.heightMediaQuery * 24),
+              SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -673,8 +681,8 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                             },
                             child: TextFormField(
                               enabled: false,
-                              style: AppFonts.body2(
-                                  color: AppColors.grayscale90),
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale90),
                               decoration: InputDecoration(
                                 hintText: 'DD/MM/YYYY',
                                 border: OutlineInputBorder(
@@ -696,7 +704,8 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                                 ),
                               ),
                               readOnly: true,
-                              controller: _birthDayController,),
+                              controller: _birthDayController,
+                            ),
                             // child: Text(fieldName),
                           ),
                         ),
@@ -711,8 +720,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 children: [
                   PrimaryTextButton(
                     onPressed: () {
-                      _showDateSelectionSheet(context, animalDetails
-                          .selectedAnimalType);
+                      _showDateSelectionSheet(context, selectedAnimalType);
                     },
                     status: TextStatus.idle,
                     text: 'Add Date',
@@ -722,25 +730,25 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 ],
               ),
               SizedBox(
-                height: globals.heightMediaQuery * 16,
+                height: SizeConfig.heightMultiplier(context) * 16,
               ),
               const Divider(
                 color: AppColors.grayscale20,
               ),
               SizedBox(
-                height: globals.heightMediaQuery * 16,
+                height: SizeConfig.heightMultiplier(context) * 16,
               ),
               Text(
                 "Add Tag",
                 style: AppFonts.headline2(color: AppColors.grayscale90),
               ),
               SizedBox(
-                height: globals.heightMediaQuery * 16,
+                height: SizeConfig.heightMultiplier(context) * 16,
               ),
               Wrap(
                 spacing: 8.0,
                 runSpacing: 8.0,
-                children: animalDetails.selectedOviChips.map((chip) {
+                children: selectedOviChips.map((chip) {
                   return CustomTag(
                     label: chip,
                     selected: true, // Since these are selected chips
@@ -749,7 +757,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 }).toList(),
               ),
               SizedBox(
-                height: globals.heightMediaQuery * 16,
+                height: SizeConfig.heightMultiplier(context) * 16,
               ),
               InkWell(
                 onTap: () {
@@ -764,13 +772,13 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 ),
               ),
               SizedBox(
-                height: globals.heightMediaQuery * 16,
+                height: SizeConfig.heightMultiplier(context) * 16,
               ),
               const Divider(
                 color: AppColors.grayscale20,
               ),
               SizedBox(
-                height: globals.heightMediaQuery * 16,
+                height: SizeConfig.heightMultiplier(context) * 16,
               ),
               Text(
                 "Custom fields",
@@ -780,45 +788,53 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 "Add Custom Fields If Needed",
                 style: AppFonts.body2(color: AppColors.grayscale60),
               ),
-              SizedBox(height: globals.heightMediaQuery * 16),
+              SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
               Column(
-                children: animalDetails.customFields == null ? []
-                    : animalDetails.customFields!.keys.map((fieldName) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(fieldName,
-                            style: const TextStyle(fontWeight: FontWeight.bold)),
-                        IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => _removeCustomField(fieldName)
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(50.0),
-                          borderSide: const BorderSide(
-                            color: Colors.grey,
-                            width: 2.0,
+                children: customFields == null
+                    ? []
+                    : customFields!.keys
+                        .map(
+                          (fieldName) => Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(fieldName,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                  IconButton(
+                                      icon: const Icon(Icons.delete,
+                                          color: Colors.red),
+                                      onPressed: () =>
+                                          _removeCustomField(fieldName)),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              TextField(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(50.0),
+                                    borderSide: const BorderSide(
+                                      color: Colors.grey,
+                                      width: 2.0,
+                                    ),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 12.0,
+                                    horizontal: 16.0,
+                                  ),
+                                ),
+                                controller: TextEditingController(
+                                    text: customFields![fieldName]),
+                              ),
+                              const SizedBox(height: 15),
+                            ],
                           ),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 12.0,
-                          horizontal: 16.0,
-                        ),
-                      ),
-                      controller: TextEditingController(text: animalDetails
-                          .customFields![fieldName]),
-                    ),
-                    const SizedBox(height: 15),
-                  ],
-                ),).toList(),
+                        )
+                        .toList(),
               ),
               Row(
                 children: [
@@ -829,27 +845,26 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                     status: TextStatus.idle,
                     text: 'Add Custom Fields',
                   ),
-                  SizedBox(width: globals.widthMediaQuery * 8),
+                  SizedBox(width: SizeConfig.widthMultiplier(context) * 8),
                   const Icon(Icons.add_rounded,
                       color: AppColors.primary40, size: 20),
                 ],
               ),
-
               SizedBox(
-                height: globals.heightMediaQuery * 16,
+                height: SizeConfig.heightMultiplier(context) * 16,
               ),
               const Divider(
                 color: AppColors.grayscale20,
               ),
               SizedBox(
-                height: globals.heightMediaQuery * 16,
+                height: SizeConfig.heightMultiplier(context) * 16,
               ),
               Text(
                 "Additional Notes",
                 style: AppFonts.headline2(color: AppColors.grayscale90),
               ),
               SizedBox(
-                height: globals.heightMediaQuery * 16,
+                height: SizeConfig.heightMultiplier(context) * 16,
               ),
               EditParagraphTextField(
                 hintText: 'Add Any Additional Notes if Needed',
@@ -857,43 +872,23 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 notesController: _notesController,
               ),
               SizedBox(
-                height: globals.heightMediaQuery * 16,
+                height: SizeConfig.heightMultiplier(context) * 16,
               ),
               FileUploaderField(
-                uploadedFiles: uploadedFiles?.map((file) => file.path)
-                    .toList(),
+                uploadedFiles: uploadedFiles?.map((file) => file.path).toList(),
               )
             ],
           ),
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: EdgeInsets.only(left: 16, top: 16, right: 16, bottom: 16 +
-            MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(
+            left: 16,
+            top: 16,
+            right: 16,
+            bottom: 16 + MediaQuery.of(context).viewInsets.bottom),
         child: ElevatedButton(
-          onPressed: () {
-
-            final oviAnimals = ref.read(ovianimalsProvider);
-            final index = oviAnimals.indexWhere((animal) => animal.id == widget
-                .animalId);
-            animalDetails = animalDetails.copyWith(
-              files: ref.read(uploadedFilesProvider).map((path) => File(path))
-                  .toList(),
-            );
-            if (index >= 0) {
-              oviAnimals[index] = animalDetails;
-            }
-
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => UserListOfAnimals(
-                  shouldAddAnimal: false,
-                  breedingEvents: widget.breedingEvents,
-                ),
-              ),
-            );
-          },
+          onPressed: _saveChanges,
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color.fromARGB(255, 36, 86, 38),
             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -910,14 +905,13 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
     );
   }
 
-
   Future<void> _pickImage(ImageSource source) async {
     final pickedFile = await ImagePicker().pickImage(source: source);
 
     if (pickedFile != null) {
       final selectedImage = FileImage(File(pickedFile.path));
       setState(() {
-        animalDetails = animalDetails.copyWith(selectedOviImage: selectedImage);
+        selectedOviImage = selectedImage;
       });
     }
   }
@@ -925,14 +919,14 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
   void _showDatePicker(BuildContext context, String fieldName) async {
     final pickedDate = await showDatePicker(
       context: context,
-      initialDate: animalDetails.selectedOviDates[fieldName] ?? DateTime.now(),
+      initialDate: selectedOviDates[fieldName] ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
 
     if (pickedDate != null) {
       setState(() {
-        animalDetails.selectedOviDates[fieldName] = pickedDate;
+        selectedOviDates[fieldName] = pickedDate;
       });
     }
   }
@@ -941,8 +935,8 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
     final pickedDate = await showDatePicker(
       context: context,
       // ignore: unnecessary_null_comparison
-      initialDate: animalDetails.dateOfBirth.isNotEmpty
-          ? DateFormat('dd/MM/yyyy').parse(animalDetails.dateOfBirth)
+      initialDate: _birthDayController.text.isNotEmpty
+          ? DateFormat('dd/MM/yyyy').parse(_birthDayController.text)
           : DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
@@ -950,13 +944,11 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
 
     if (pickedDate != null) {
       _birthDayController.text = DateFormat('dd/MM/yyyy').format(pickedDate);
-      animalDetails.dateOfBirth = _birthDayController.text;
     }
   }
 
   Column _buildDateFields() {
     final dateFields = <Widget>[];
-    final selectedOviDates = animalDetails.selectedOviDates;
 
     final dateFormatter =
         DateFormat('dd/MM/yyyy'); // Define your desired date format
@@ -1027,7 +1019,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                   InkWell(
                     onTap: () {
                       setState(() {
-                        animalDetails.selectedOviDates[fieldName] = null;
+                        selectedOviDates[fieldName] = null;
                       });
                     },
                     child: const Icon(
@@ -1054,7 +1046,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
   void _deleteAvatar() {
     ref.read(selectedAnimalImageProvider.notifier).update((state) => null);
     setState(() {
-      animalDetails.selectedOviImage = null;
+      selectedOviImage = null;
     });
   }
 
@@ -1168,19 +1160,14 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
 
     if (selectedSpeciesValue != null) {
       setState(() {
-        ref
-            .read(selectedAnimalSpeciesProvider.notifier)
-            .update((state) => selectedSpeciesValue);
-        animalDetails = animalDetails.copyWith(
-            selectedAnimalSpecies: selectedSpeciesValue);
+        selectedAnimalSpecies = selectedSpeciesValue;
       });
     }
   }
 
   void _editAnimalBreed(String section, BuildContext context) async {
     List<String> filteredBreedList =
-        List.from(morespeciesToBreedsMap[animalDetails.selectedAnimalSpecies] ??
-            []);
+        List.from(morespeciesToBreedsMap[selectedAnimalSpecies] ?? []);
     TextEditingController searchValue = TextEditingController();
 
     DrowupAnimalBreed drowupAnimalBreed = DrowupAnimalBreed(
@@ -1188,7 +1175,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
       filteredBreedList: filteredBreedList,
       setState: setState,
       morespeciesToBreedsMap: morespeciesToBreedsMap,
-      selectedAnimalSpecies: animalDetails.selectedAnimalSpecies,
+      selectedAnimalSpecies: selectedAnimalSpecies,
     );
 
     drowupAnimalBreed.resetSelection();
@@ -1206,11 +1193,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
 
     if (selectedBreedValue != null) {
       setState(() {
-        ref
-            .read(selectedAnimalSpeciesProvider.notifier)
-            .update((state) => selectedBreedValue);
-        animalDetails = animalDetails.copyWith(
-            selectedAnimalBreed: selectedBreedValue);
+        selectedAnimalBreed = selectedBreedValue;
       });
     }
   }
@@ -1234,7 +1217,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 'Animal Type',
                 style: AppFonts.title3(color: AppColors.grayscale90),
               ),
-              SizedBox(height: globals.heightMediaQuery * 32),
+              SizedBox(height: SizeConfig.heightMultiplier(context) * 32),
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: CircleAvatar(
@@ -1243,25 +1226,20 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 title: Text('Mammal',
                     style: AppFonts.body2(color: AppColors.grayscale90)),
                 trailing: Container(
-                  width: globals.widthMediaQuery * 24,
+                  width: SizeConfig.widthMultiplier(context) * 24,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: animalDetails.selectedAnimalType == 'Mammal'
+                      color: selectedAnimalType == 'Mammal'
                           ? AppColors.primary20
                           : AppColors.grayscale30,
-                      width: animalDetails.selectedAnimalType == 'Mammal' ? 6.0
-                          : 1.0,
+                      width: selectedAnimalType == 'Mammal' ? 6.0 : 1.0,
                     ),
                   ),
                 ),
                 onTap: () {
                   setState(() {
-                    ref
-                        .read(selectedAnimalTypeProvider.notifier)
-                        .update((state) => 'Mammal');
-                    animalDetails = animalDetails.copyWith(
-                        selectedAnimalType: 'Mammal');
+                    selectedAnimalType = 'Mammal';
                   });
                   Navigator.pop(context);
                 },
@@ -1274,25 +1252,20 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 title: Text('Oviparous',
                     style: AppFonts.body2(color: AppColors.grayscale90)),
                 trailing: Container(
-                  width: globals.widthMediaQuery * 24,
+                  width: SizeConfig.widthMultiplier(context) * 24,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: animalDetails.selectedAnimalType == 'Oviparous'
+                      color: selectedAnimalType == 'Oviparous'
                           ? AppColors.primary20
                           : AppColors.grayscale30,
-                      width: animalDetails.selectedAnimalType == 'Oviparous'
-                          ? 6.0 : 1.0,
+                      width: selectedAnimalType == 'Oviparous' ? 6.0 : 1.0,
                     ),
                   ),
                 ),
                 onTap: () {
                   setState(() {
-                    ref
-                        .read(selectedAnimalTypeProvider.notifier)
-                        .update((state) => 'Oviparous');
-                    animalDetails = animalDetails.copyWith(
-                        selectedAnimalType: 'Oviparous');
+                    selectedAnimalType = 'Oviparous';
                   });
                   Navigator.pop(context);
                 },
@@ -1306,13 +1279,12 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
 
   void _animalTagsModalSheet() async {
     final result = await showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
-      builder: (context) => AnimalTagsModal(selectedTags: animalDetails.selectedOviChips)
-    );
+        context: context,
+        isScrollControlled: true,
+        showDragHandle: true,
+        builder: (context) => AnimalTagsModal(selectedTags: selectedOviChips));
     setState(() {
-      animalDetails = animalDetails.copyWith(selectedOviChips: result);
+      selectedOviChips = result;
     });
 
 // Inside _animalTagsModalSheet:
@@ -1328,7 +1300,10 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
       showDragHandle: true,
       builder: (BuildContext context) {
         return Padding(
-          padding: EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0,
+          padding: EdgeInsets.only(
+              top: 16.0,
+              left: 16.0,
+              right: 16.0,
               bottom: 16 + MediaQuery.of(context).viewInsets.bottom),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -1348,8 +1323,10 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                   hintText: 'Enter Custom Field Name',
                   labelText: 'Enter Field Name',
                   controller: _fieldNameController),
-              //SizedBox(height: globals.heightMediaQuery * 130),
-              const SizedBox(height: 32,),
+              //SizedBox(height: SizeConfig.heightMultiplier(context) * 130),
+              const SizedBox(
+                height: 32,
+              ),
               ButtonWidget(
                 onPressed: () {
                   Navigator.pop(context);
@@ -1395,7 +1372,10 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
       context: context,
       builder: (BuildContext context) {
         return Padding(
-          padding: EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0,
+          padding: EdgeInsets.only(
+              top: 16.0,
+              left: 16.0,
+              right: 16.0,
               bottom: 16.0 + MediaQuery.of(context).viewInsets.bottom),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1438,10 +1418,9 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
               ButtonWidget(
                 onPressed: () {
                   setState(() {
-                    if(animalDetails.customFields == null) {
-                      animalDetails = animalDetails.copyWith(customFields: {});
-                    }
-                    animalDetails.customFields![_fieldNameController.text] = _fieldContentController.text;
+                    customFields ??= {};
+                    customFields![_fieldNameController.text] =
+                        _fieldContentController.text;
                   });
                   Navigator.pop(context);
                 },
@@ -1477,8 +1456,6 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
       },
     );
   }
-
-
 
   void _showDateSelectionSheet(BuildContext context, selectedAnimalType) async {
     // ignore: non_constant_identifier_names
@@ -1551,8 +1528,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                         trailing: const Icon(Icons.arrow_right_alt_rounded),
                         onTap: () {
                           Navigator.pop(context);
-                          _showDatePicker(
-                              context, dateType);
+                          _showDatePicker(context, dateType);
                         },
                       ),
                       const Divider(),
@@ -1568,7 +1544,37 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
 
   _removeCustomField(String fieldName) {
     setState(() {
-      animalDetails.customFields?.remove(fieldName);
+      customFields?.remove(fieldName);
     });
+  }
+
+  void _saveChanges() {
+    final animalProvider = ref.read(ovianimalsProvider);
+    final animalIndex =
+        animalProvider.indexWhere((animal) => animal.id == widget.animalId);
+    ref.read(ovianimalsProvider.notifier).update((state) {
+      final newState = List<OviVariables>.from(state);
+      newState[animalIndex] = state[animalIndex].copyWith(
+          animalName: _animalNameController.text,
+          notes: _notesController.text,
+          dateOfBirth: _birthDayController.text.isNotEmpty
+              ? DateFormat('dd/MM/yyyy').parse(_birthDayController.text)
+              : null,
+          files: uploadedFiles,
+          selectedOviImage: selectedOviImage,
+          selectedAnimalType: selectedAnimalType,
+          selectedAnimalSpecies: selectedAnimalSpecies,
+          selectedAnimalBreed: selectedAnimalBreed,
+          selectedOviGender: selectedOviGender,
+          layingFrequency: _layingFrequencyController.text,
+          numOfEggs: _eggsNumberController.text,
+          selectedBreedingStage: selectedBreedingStage,
+          selectedOviChips: selectedOviChips,
+          customFields: customFields,
+          selectedOviDates: selectedOviDates);
+      return newState;
+    });
+
+    Navigator.pop(context);
   }
 }

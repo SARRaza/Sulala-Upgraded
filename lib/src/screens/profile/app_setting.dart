@@ -7,7 +7,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 // class AppSettings extends StatefulWidget {
 //   const AppSettings({super.key});
@@ -70,10 +70,10 @@ import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 //                         });
 //                       },
 //                     ),
-//                   SizedBox(height: 32 * globals.heightMediaQuery),
+//                   SizedBox(height: 32 * SizeConfig.heightMultiplier(context)),
 //                   SizedBox(
 //                     width: double.infinity,
-//                     height: 52 * globals.heightMediaQuery,
+//                     height: 52 * SizeConfig.heightMultiplier(context),
 //                     child: PrimaryButton(
 //                         onPressed: () {
 //                           setState(() {
@@ -130,9 +130,9 @@ import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 //       body: SingleChildScrollView(
 //         child: Padding(
 //           padding: EdgeInsets.only(
-//               left: 16 * globals.widthMediaQuery,
-//               right: 16 * globals.widthMediaQuery,
-//               top: 24 * globals.heightMediaQuery),
+//               left: 16 * SizeConfig.widthMultiplier(context),
+//               right: 16 * SizeConfig.widthMultiplier(context),
+//               top: 24 * SizeConfig.heightMultiplier(context)),
 //           child: Column(
 //             crossAxisAlignment: CrossAxisAlignment.start,
 //             children: [
@@ -165,6 +165,7 @@ import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -184,7 +185,7 @@ class _AppSettings extends ConsumerState<AppSettings> {
     'Arabic': const Locale('ar', 'SA'),
     'French': const Locale('fr', 'FR')
   };
-  
+
   late Locale? selectedLocale;
 
   @override
@@ -227,9 +228,9 @@ class _AppSettings extends ConsumerState<AppSettings> {
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.only(
-              left: 16 * globals.widthMediaQuery,
-              right: 16 * globals.widthMediaQuery,
-              top: 24 * globals.heightMediaQuery),
+              left: 16 * SizeConfig.widthMultiplier(context),
+              right: 16 * SizeConfig.widthMultiplier(context),
+              top: 24 * SizeConfig.heightMultiplier(context)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -241,8 +242,8 @@ class _AppSettings extends ConsumerState<AppSettings> {
                   style: AppFonts.body1(color: AppColors.grayscale90),
                 ),
                 subtitle: Text(
-                  _supportedLocales.keys.firstWhere((language
-                      ) => _supportedLocales[language] == Get.locale),
+                  _supportedLocales.keys.firstWhere(
+                      (language) => _supportedLocales[language] == Get.locale),
                   style: AppFonts.body2(color: AppColors.grayscale60),
                 ),
                 onTap: _showLanguageSelection,
@@ -322,13 +323,13 @@ class _AppSettings extends ConsumerState<AppSettings> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 32 * globals.heightMediaQuery),
+                  SizedBox(height: 32 * SizeConfig.heightMultiplier(context)),
                   SizedBox(
                     width: double.infinity,
-                    height: 52 * globals.heightMediaQuery,
+                    height: 52 * SizeConfig.heightMultiplier(context),
                     child: PrimaryButton(
                       onPressed: () {
-                        if(selectedLocale != null) {
+                        if (selectedLocale != null) {
                           Get.updateLocale(selectedLocale!);
                         }
 
@@ -369,6 +370,4 @@ class _AppSettings extends ConsumerState<AppSettings> {
       },
     );
   }
-
-
 }

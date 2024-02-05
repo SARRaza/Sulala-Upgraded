@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
@@ -45,7 +45,7 @@ class _AvatarTextCheckboxState extends State<AvatarTextCheckbox> {
           backgroundImage: AssetImage(widget.imagePath),
         ),
         SizedBox(
-            width: globals.widthMediaQuery *
+            width: SizeConfig.widthMultiplier(context) *
                 9), // You can adjust the spacing between avatar and text
         Text(
           widget.truncateTextWithEllipsis(widget.text, 15),
@@ -63,7 +63,6 @@ class _AvatarTextCheckboxState extends State<AvatarTextCheckbox> {
     );
   }
 }
-
 
 // Example of use:
 

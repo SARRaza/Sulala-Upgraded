@@ -67,7 +67,6 @@ class _TabBarStrokeState extends State<TabBarStroke> {
   }
 }
 
-
 // Example of use:
 // TabBarStroke(
 //           tabTexts: const ['Hi man', 'OK', 'yeah'],

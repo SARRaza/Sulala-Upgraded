@@ -1,11 +1,11 @@
-// globals.dart
+import 'package:flutter/material.dart';
 
-import 'package:flutter/widgets.dart';
+class SizeConfig {
+  static double heightMultiplier(BuildContext context) {
+    return MediaQuery.of(context).size.height / 812;
+  }
 
-double heightMediaQuery = 0.0;
-double widthMediaQuery = 0.0;
-
-void updateMediaQueryValues(BuildContext context) {
-  heightMediaQuery = MediaQuery.of(context).size.height / 812;
-  widthMediaQuery = MediaQuery.of(context).size.width / 375;
+  static double widthMultiplier(BuildContext context) {
+    return MediaQuery.of(context).size.width / 375;
+  }
 }

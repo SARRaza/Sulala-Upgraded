@@ -7,7 +7,7 @@
 // import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
 // import '../../widgets/pages/homepage_widgets/card.dart';
 // import '../../widgets/pages/homepage_widgets/title_text.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 // import '../../widgets/pages/main_widgets/navigation_bar_guest_mode.dart';
 
@@ -63,7 +63,7 @@ import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 //                         AssetImage('assets/icons/frame/24px/Icon-button.png'),
 //                   ),
 //                 ),
-//                 SizedBox(width: globals.widthMediaQuery * 4),
+//                 SizedBox(width: SizeConfig.widthMultiplier(context) * 4),
 //                 Showcase(
 //                   targetShapeBorder: const CircleBorder(),
 //                   tooltipBackgroundColor: Colors.transparent,
@@ -91,7 +91,7 @@ import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 //         elevation: 0,
 //       ),
 //       body: Padding(
-//         padding: EdgeInsets.all(16 * globals.heightMediaQuery),
+//         padding: EdgeInsets.all(16 * SizeConfig.heightMultiplier(context)),
 //         child: Column(
 //           children: [
 //             Row(
@@ -99,10 +99,10 @@ import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 //                 Expanded(
 //                   child: Showcase(
 //                     targetPadding: EdgeInsets.fromLTRB(
-//                       50 * globals.widthMediaQuery,
-//                       25 * globals.heightMediaQuery,
-//                       50 * globals.widthMediaQuery,
-//                       25 * globals.heightMediaQuery,
+//                       50 * SizeConfig.widthMultiplier(context),
+//                       25 * SizeConfig.heightMultiplier(context),
+//                       50 * SizeConfig.widthMultiplier(context),
+//                       25 * SizeConfig.heightMultiplier(context),
 //                     ),
 //                     targetShapeBorder: const CircleBorder(),
 //                     key: _findAnimals,
@@ -122,14 +122,14 @@ import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 //                     ),
 //                   ),
 //                 ),
-//                 SizedBox(width: 13 * globals.widthMediaQuery),
+//                 SizedBox(width: 13 * SizeConfig.widthMultiplier(context)),
 //                 Expanded(
 //                   child: Showcase(
 //                     targetPadding: EdgeInsets.fromLTRB(
-//                       50 * globals.widthMediaQuery,
-//                       25 * globals.heightMediaQuery,
-//                       50 * globals.widthMediaQuery,
-//                       25 * globals.heightMediaQuery,
+//                       50 * SizeConfig.widthMultiplier(context),
+//                       25 * SizeConfig.heightMultiplier(context),
+//                       50 * SizeConfig.widthMultiplier(context),
+//                       25 * SizeConfig.heightMultiplier(context),
 //                     ),
 //                     targetShapeBorder: const CircleBorder(),
 //                     key: _findFarms,
@@ -151,25 +151,25 @@ import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 //                 ),
 //               ],
 //             ),
-//             SizedBox(height: 107 * globals.heightMediaQuery),
+//             SizedBox(height: 107 * SizeConfig.heightMultiplier(context)),
 //             const TitleText(
 //                 text: 'Want to start your farm\nright now and join?'),
-//             SizedBox(height: 24 * globals.heightMediaQuery),
+//             SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
 //             Showcase(
 //               key: _joinNow,
 //               description: 'Join the App',
 //               targetPadding: EdgeInsets.fromLTRB(
-//                 50 * globals.widthMediaQuery,
-//                 25 * globals.heightMediaQuery,
-//                 50 * globals.widthMediaQuery,
-//                 25 * globals.heightMediaQuery,
+//                 50 * SizeConfig.widthMultiplier(context),
+//                 25 * SizeConfig.heightMultiplier(context),
+//                 50 * SizeConfig.widthMultiplier(context),
+//                 25 * SizeConfig.heightMultiplier(context),
 //               ),
 //               targetShapeBorder: const CircleBorder(),
 //               tooltipBackgroundColor: Colors.transparent,
 //               descTextStyle: AppFonts.headline1(color: AppColors.grayscale00),
 //               child: SizedBox(
-//                 height: 52 * globals.heightMediaQuery,
-//                 width: 108 * globals.widthMediaQuery,
+//                 height: 52 * SizeConfig.heightMultiplier(context),
+//                 width: 108 * SizeConfig.widthMultiplier(context),
 //                 child: PrimaryButton(
 //                   text: 'Join now',
 //                   onPressed: () {
@@ -179,13 +179,13 @@ import 'package:sulala_upgrade/src/data/globals.dart' as globals;
 //                 ),
 //               ),
 //             ),
-//             SizedBox(height: 8 * globals.heightMediaQuery),
+//             SizedBox(height: 8 * SizeConfig.heightMultiplier(context)),
 //             Showcase(
 //               targetPadding: EdgeInsets.fromLTRB(
-//                 50 * globals.widthMediaQuery,
-//                 25 * globals.heightMediaQuery,
-//                 50 * globals.widthMediaQuery,
-//                 25 * globals.heightMediaQuery,
+//                 50 * SizeConfig.widthMultiplier(context),
+//                 25 * SizeConfig.heightMultiplier(context),
+//                 50 * SizeConfig.widthMultiplier(context),
+//                 25 * SizeConfig.heightMultiplier(context),
 //               ),
 //               targetShapeBorder: const CircleBorder(),
 //               tooltipBackgroundColor: Colors.transparent,
@@ -277,10 +277,10 @@ class _GuestHomeScreenTutorial extends State<GuestHomeScreenTutorial> {
               Expanded(
                 child: Showcase(
                   targetPadding: EdgeInsets.fromLTRB(
-                    50 * globals.widthMediaQuery,
-                    25 * globals.heightMediaQuery,
-                    50 * globals.widthMediaQuery,
-                    25 * globals.heightMediaQuery,
+                    50 * SizeConfig.widthMultiplier(context),
+                    25 * SizeConfig.heightMultiplier(context),
+                    50 * SizeConfig.widthMultiplier(context),
+                    25 * SizeConfig.heightMultiplier(context),
                   ),
                   targetShapeBorder: const CircleBorder(),
                   key: _findAnimals,

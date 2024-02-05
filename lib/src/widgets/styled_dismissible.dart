@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class StyledDismissible extends StatelessWidget {
-  const StyledDismissible({super.key, this.confirmDismiss, this.onDismissed,
-    required this.child});
+  const StyledDismissible(
+      {super.key, this.confirmDismiss, this.onDismissed, required this.child});
   final Future<bool?> Function(DismissDirection)? confirmDismiss;
   final void Function(DismissDirection)? onDismissed;
   final Widget child;

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
 class CustomField extends StatelessWidget {
-  const CustomField({
-    super.key,
-    required this.onDelete,
-    required this.fieldName,
-    required this.fieldContent
-  });
+  const CustomField(
+      {super.key,
+      required this.onDelete,
+      required this.fieldName,
+      required this.fieldContent});
 
   final void Function() onDelete;
   final String fieldName;

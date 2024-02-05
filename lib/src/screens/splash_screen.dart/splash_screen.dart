@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:showcaseview/showcaseview.dart';
 
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -54,18 +54,18 @@ class _SplashScreenState extends State<SplashScreen> {
         children: [
           Expanded(
             child: SizedBox(
-              width: 375 * globals.widthMediaQuery,
+              width: 375 * SizeConfig.widthMultiplier(context),
               child: Padding(
                 padding: EdgeInsets.fromLTRB(
-                    24 * globals.widthMediaQuery,
-                    50 * globals.heightMediaQuery,
-                    24 * globals.widthMediaQuery,
+                    24 * SizeConfig.widthMultiplier(context),
+                    50 * SizeConfig.heightMultiplier(context),
+                    24 * SizeConfig.widthMultiplier(context),
                     0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: 50 * globals.heightMediaQuery,
+                      height: 50 * SizeConfig.heightMultiplier(context),
                     ),
                     Center(
                       child: Image.asset(
@@ -74,7 +74,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 125 * globals.heightMediaQuery,
+                      height: 125 * SizeConfig.heightMultiplier(context),
                     ),
                     Text(
                       'Stay Connected',

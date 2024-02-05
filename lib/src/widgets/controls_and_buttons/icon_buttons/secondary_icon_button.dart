@@ -3,7 +3,6 @@ import 'package:nuts_activity_indicator/nuts_activity_indicator.dart';
 
 import '../../../theme/colors/colors.dart';
 
-
 class SecondaryIconButton extends StatelessWidget {
   final SecondaryIconButtonStatus status;
   final IconData icon;
@@ -94,7 +93,6 @@ enum SecondaryIconButtonStatus {
   loading,
   disabled,
 }
-
 
 // Example of use:
 

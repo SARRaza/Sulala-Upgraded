@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 import '../../controls_and_buttons/buttons/primary_button.dart';
@@ -47,7 +47,7 @@ class _DrowupWidgetState extends State<DrowupWidget> {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (widget.heading != null)
-                SizedBox(height: globals.heightMediaQuery * 21),
+                SizedBox(height: SizeConfig.heightMultiplier(context) * 21),
               widget.heading != null
                   ? widget.primaryTextButton != null
                       ? Row(
@@ -68,11 +68,11 @@ class _DrowupWidgetState extends State<DrowupWidget> {
                   : const SizedBox.shrink(),
               const SizedBox(height: 16),
               widget.content,
-              if(widget.primaryButton != null)
+              if (widget.primaryButton != null)
                 SizedBox(
-                  height: globals.heightMediaQuery * 52,
-                  width: globals.widthMediaQuery * 343,
-                  child: widget.primaryButton),
+                    height: SizeConfig.heightMultiplier(context) * 52,
+                    width: SizeConfig.widthMultiplier(context) * 343,
+                    child: widget.primaryButton),
             ],
           ),
         ),

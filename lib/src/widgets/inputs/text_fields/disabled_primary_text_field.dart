@@ -60,7 +60,6 @@ class DisabledPrimaryTextField extends StatelessWidget {
   }
 }
 
-
 // Example of use:
 
 // DisabledPrimaryTextField(

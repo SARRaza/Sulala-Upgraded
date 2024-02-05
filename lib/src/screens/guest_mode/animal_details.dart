@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/screens/sign_in/sign_in.dart';
 
+import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
@@ -58,7 +59,7 @@ class _AnimalDetailsState extends State<AnimalDetails> {
           Align(
             alignment: Alignment.topCenter,
             child: SizedBox(
-              width: globals.widthMediaQuery * 375,
+              width: SizeConfig.widthMultiplier(context) * 375,
               child: Image.asset(
                 'assets/graphic/Animal_p.png',
                 fit: BoxFit.fitWidth,
@@ -66,7 +67,7 @@ class _AnimalDetailsState extends State<AnimalDetails> {
             ),
           ),
           Positioned(
-            top: globals.heightMediaQuery * 185,
+            top: SizeConfig.heightMultiplier(context) * 185,
             bottom: 0,
             left: 0,
             right: 0,
@@ -74,9 +75,10 @@ class _AnimalDetailsState extends State<AnimalDetails> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(globals.widthMediaQuery * 32),
+                  topLeft:
+                      Radius.circular(SizeConfig.widthMultiplier(context) * 32),
                   topRight: Radius.circular(
-                    (globals.widthMediaQuery * 32),
+                    (SizeConfig.widthMultiplier(context) * 32),
                   ),
                 ),
               ),
@@ -86,14 +88,14 @@ class _AnimalDetailsState extends State<AnimalDetails> {
           FractionalTranslation(
             translation: Offset(
               0,
-              globals.heightMediaQuery * 0.18,
+              SizeConfig.heightMultiplier(context) * 0.18,
             ),
             child: SizedBox(
-              height: globals.heightMediaQuery * 633,
+              height: SizeConfig.heightMultiplier(context) * 633,
               child: Column(
                 children: [
                   CircleAvatar(
-                    radius: globals.widthMediaQuery * 60,
+                    radius: SizeConfig.widthMultiplier(context) * 60,
                     backgroundImage: AssetImage(widget.imagePath),
                   ),
                   Text(
@@ -101,7 +103,7 @@ class _AnimalDetailsState extends State<AnimalDetails> {
                     style: AppFonts.title4(color: AppColors.grayscale90),
                   ),
                   SizedBox(
-                    height: globals.heightMediaQuery * 16,
+                    height: SizeConfig.heightMultiplier(context) * 16,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -115,7 +117,7 @@ class _AnimalDetailsState extends State<AnimalDetails> {
                         status: TagStatus.active,
                       ),
                       SizedBox(
-                        width: globals.widthMediaQuery * 8,
+                        width: SizeConfig.widthMultiplier(context) * 8,
                       ),
                       Tags(
                         text: 'Herbivore',
@@ -128,12 +130,12 @@ class _AnimalDetailsState extends State<AnimalDetails> {
                     ],
                   ),
                   SizedBox(
-                    height: globals.heightMediaQuery * 24,
+                    height: SizeConfig.heightMultiplier(context) * 24,
                   ),
                   Expanded(
                     child: SingleChildScrollView(
                       padding: EdgeInsets.symmetric(
-                        horizontal: globals.widthMediaQuery * 16,
+                        horizontal: SizeConfig.widthMultiplier(context) * 16,
                       ),
                       child: Column(
                         children: [
@@ -147,7 +149,8 @@ class _AnimalDetailsState extends State<AnimalDetails> {
                                 ),
                               ),
                               SizedBox(
-                                height: globals.heightMediaQuery * 14,
+                                height:
+                                    SizeConfig.heightMultiplier(context) * 14,
                               ),
                               Text(
                                 widget.geninfo * 5,
@@ -168,12 +171,12 @@ class _AnimalDetailsState extends State<AnimalDetails> {
         ],
       ),
       floatingActionButton: SizedBox(
-        height: globals.heightMediaQuery * 52,
-        width: globals.widthMediaQuery * 150,
+        height: SizeConfig.heightMultiplier(context) * 52,
+        width: SizeConfig.widthMultiplier(context) * 150,
         child: PrimaryButton(
           text: "Start your farm",
-          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (
-              context) => const JoinNow())),
+          onPressed: () => Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const JoinNow())),
           status: PrimaryButtonStatus.idle,
           position: PrimaryButtonPosition.primary,
         ),

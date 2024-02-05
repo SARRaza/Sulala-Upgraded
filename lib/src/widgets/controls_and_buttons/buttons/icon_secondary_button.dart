@@ -4,7 +4,6 @@ import 'package:nuts_activity_indicator/nuts_activity_indicator.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 
-
 class IconSecondaryButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
@@ -42,7 +41,6 @@ class IconSecondaryButton extends StatelessWidget {
         tickCount: 8,
         inactiveColor: Colors.transparent,
       );
-
     } else {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -93,7 +91,6 @@ enum SecondaryIconStatus {
   loading,
   disabled,
 }
-
 
 // Example of use:
 

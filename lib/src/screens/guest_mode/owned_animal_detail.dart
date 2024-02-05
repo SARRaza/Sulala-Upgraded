@@ -1,6 +1,6 @@
 // import 'package:flutter/material.dart';
 
-// import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+// import 'package:sulala_upgrade/src/data/globals.dart';
 // import 'package:sulala_upgrade/src/screens/create_animal/sar_listofanimals.dart';
 
 // import '../../theme/colors/colors.dart';
@@ -83,7 +83,7 @@
 //             Align(
 //               alignment: Alignment.topCenter,
 //               child: SizedBox(
-//                 width: globals.widthMediaQuery * 375,
+//                 width: SizeConfig.widthMultiplier(context) * 375,
 //                 child: Image.asset(
 //                   "assets/graphic/Animal_p.png",
 //                   fit: BoxFit.fitWidth,
@@ -91,7 +91,7 @@
 //               ),
 //             ),
 //             Positioned(
-//               top: globals.heightMediaQuery * 185,
+//               top: SizeConfig.heightMultiplier(context) * 185,
 //               bottom: 0,
 //               left: 0,
 //               right: 0,
@@ -100,9 +100,9 @@
 //                   color: Colors.white,
 //                   borderRadius: BorderRadius.only(
 //                     topLeft: Radius.circular(
-//                       globals.heightMediaQuery * 32,
+//                       SizeConfig.heightMultiplier(context) * 32,
 //                     ),
-//                     topRight: Radius.circular(globals.widthMediaQuery * 32),
+//                     topRight: Radius.circular(SizeConfig.widthMultiplier(context) * 32),
 //                   ),
 //                 ),
 //                 child: const SizedBox(), // Add your content here
@@ -110,17 +110,17 @@
 //             ),
 //             Center(
 //               child: FractionalTranslation(
-//                 translation: Offset(0, globals.heightMediaQuery * 0.15),
+//                 translation: Offset(0, SizeConfig.heightMultiplier(context) * 0.15),
 //                 child: Expanded(
 //                   child: Column(
 //                     children: [
 //                       CircleAvatar(
 //                         backgroundColor: Colors.transparent,
-//                         radius: globals.widthMediaQuery * 60,
+//                         radius: SizeConfig.widthMultiplier(context) * 60,
 //                         backgroundImage: AssetImage(widget.imagePath),
 //                       ),
 //                       SizedBox(
-//                         height: globals.heightMediaQuery * 16,
+//                         height: SizeConfig.heightMultiplier(context) * 16,
 //                       ),
 //                       Text(
 //                         widget.title,
@@ -131,12 +131,12 @@
 //                         style: AppFonts.body2(color: AppColors.grayscale70),
 //                       ),
 //                       SizedBox(
-//                         height: globals.heightMediaQuery * 16,
+//                         height: SizeConfig.heightMultiplier(context) * 16,
 //                       ),
 //                       Padding(
 //                         padding: EdgeInsets.only(
-//                             left: globals.widthMediaQuery * 16,
-//                             right: globals.widthMediaQuery * 16),
+//                             left: SizeConfig.widthMultiplier(context) * 16,
+//                             right: SizeConfig.widthMultiplier(context) * 16),
 //                         child: Column(
 //                           children: [
 //                             IntrinsicWidth(
@@ -152,7 +152,7 @@
 //                                     status: TagStatus.active,
 //                                   ),
 //                                   SizedBox(
-//                                     width: globals.widthMediaQuery * 8,
+//                                     width: SizeConfig.widthMultiplier(context) * 8,
 //                                   ),
 //                                   Tags(
 //                                     text: 'Herbivore',
@@ -166,10 +166,10 @@
 //                               ),
 //                             ),
 //                             SizedBox(
-//                               height: globals.heightMediaQuery * 32,
+//                               height: SizeConfig.heightMultiplier(context) * 32,
 //                             ),
 //                             Container(
-//                               height: globals.heightMediaQuery * 44,
+//                               height: SizeConfig.heightMultiplier(context) * 44,
 //                               decoration: BoxDecoration(
 //                                 color: AppColors.grayscale10,
 //                                 borderRadius: BorderRadius.circular(24),
@@ -195,11 +195,11 @@
 //                               ),
 //                             ),
 //                             SizedBox(
-//                               height: globals.heightMediaQuery * 24,
+//                               height: SizeConfig.heightMultiplier(context) * 24,
 //                             ),
 //                             SizedBox(
-//                               height: globals.heightMediaQuery * 325,
-//                               width: globals.widthMediaQuery * 341,
+//                               height: SizeConfig.heightMultiplier(context) * 325,
+//                               width: SizeConfig.widthMultiplier(context) * 341,
 //                               child: TabBarView(
 //                                 controller: _tabController,
 //                                 children: [

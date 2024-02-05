@@ -1,7 +1,8 @@
 // ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
+import '../../data/globals.dart';
 import '../../data/place_holders.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
@@ -43,7 +44,7 @@ class _DrowupAnimalSpeciesState extends ConsumerState<DrowupAnimalSpecies> {
       heading: 'Animal Species',
       heightFactor: 0.9,
       content: SizedBox(
-        //height: globals.heightMediaQuery * 530,
+        //height: SizeConfig.heightMultiplier(context) * 530,
         height: MediaQuery.of(context).size.height * 0.6,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -61,7 +62,7 @@ class _DrowupAnimalSpeciesState extends ConsumerState<DrowupAnimalSpecies> {
                 },
                 hintText: 'Search by species'),
             SizedBox(
-              height: globals.heightMediaQuery * 24,
+              height: SizeConfig.heightMultiplier(context) * 24,
             ),
             Expanded(
               child: ListView.builder(
@@ -81,13 +82,13 @@ class _DrowupAnimalSpeciesState extends ConsumerState<DrowupAnimalSpecies> {
                       child: Row(
                         children: [
                           CircleAvatar(
-                            radius: globals.widthMediaQuery * 24,
-                            backgroundImage: AssetImage(speciesImages[widget
-                                .filteredModalList[index]]!.path),
+                            radius: SizeConfig.widthMultiplier(context) * 24,
+                            backgroundImage: AssetImage(speciesImages[
+                                widget.filteredModalList[index]]!),
                             backgroundColor: Colors.transparent,
                           ),
                           SizedBox(
-                            width: globals.widthMediaQuery * 16,
+                            width: SizeConfig.widthMultiplier(context) * 16,
                           ),
                           Text(
                             widget.filteredModalList[index],

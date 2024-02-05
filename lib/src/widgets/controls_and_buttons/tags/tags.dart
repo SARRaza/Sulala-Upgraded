@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../theme/colors/colors.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import '../../../theme/fonts/fonts.dart';
 
 class Tags extends StatefulWidget {
@@ -65,9 +65,9 @@ class _TagsState extends State<Tags> {
                 Icon(
                   widget.icon,
                   color: iconColor,
-                  size: globals.widthMediaQuery * 30,
+                  size: SizeConfig.widthMultiplier(context) * 30,
                 ),
-                SizedBox(width: globals.widthMediaQuery * 8),
+                SizedBox(width: SizeConfig.widthMultiplier(context) * 8),
               ],
             ),
           Text(widget.text,
@@ -84,32 +84,30 @@ enum TagStatus {
   disabled,
 }
 
-
 //Example of use:
-          //  Tags(
-          //     text: 'Tag 1',
-          //     icon: Icons.ac_unit,
-          //     onPress: () {
-          //       // Handle tag click
-          //     },
-          //     status: TagStatus.active,
-          //   ),
-          //   Tags(
-          //     text: 'Tag 1',
-          //     icon: Icons.ac_unit,
-          //     onPress: () {
-          //       // Handle tag click
-          //     },
-          //     status: TagStatus.notActive,
-          //   ),±±
-          //   Tags(
-          //     text: 'Tag 1',
-          //     icon: Icons.ac_unit,
-          //     onPress: () {
-          //       // Handle tag click
-          //     },
-          //     status: TagStatus.disabled,
-          //   ),
-
+//  Tags(
+//     text: 'Tag 1',
+//     icon: Icons.ac_unit,
+//     onPress: () {
+//       // Handle tag click
+//     },
+//     status: TagStatus.active,
+//   ),
+//   Tags(
+//     text: 'Tag 1',
+//     icon: Icons.ac_unit,
+//     onPress: () {
+//       // Handle tag click
+//     },
+//     status: TagStatus.notActive,
+//   ),±±
+//   Tags(
+//     text: 'Tag 1',
+//     icon: Icons.ac_unit,
+//     onPress: () {
+//       // Handle tag click
+//     },
+//     status: TagStatus.disabled,
+//   ),
 
 //You can also pass images instead of icons.

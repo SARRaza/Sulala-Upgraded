@@ -1,5 +1,5 @@
 // // import 'package:flutter/material.dart';
-// // import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+// // import 'package:sulala_upgrade/src/data/globals.dart';
 // // import '../../theme/colors/colors.dart';
 // // import '../../theme/fonts/fonts.dart';
 // // import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
@@ -160,8 +160,8 @@
 // //       ),
 // //       body: Padding(
 // //         padding: EdgeInsets.only(
-// //             right: 16 * globals.widthMediaQuery,
-// //             left: 16 * globals.widthMediaQuery),
+// //             right: 16 * SizeConfig.widthMultiplier(context),
+// //             left: 16 * SizeConfig.widthMultiplier(context)),
 // //         child: Column(
 // //           crossAxisAlignment: CrossAxisAlignment.start,
 // //           children: [
@@ -170,7 +170,7 @@
 // //               style: AppFonts.title3(color: AppColors.grayscale90),
 // //             ),
 // //             SizedBox(
-// //               height: 16 * globals.heightMediaQuery,
+// //               height: 16 * SizeConfig.heightMultiplier(context),
 // //             ),
 // //             Expanded(
 // //               child: children.isEmpty
@@ -179,17 +179,17 @@
 // //                         crossAxisAlignment: CrossAxisAlignment.center,
 // //                         children: [
 // //                           SizedBox(
-// //                             height: 151 * globals.heightMediaQuery,
+// //                             height: 151 * SizeConfig.heightMultiplier(context),
 // //                           ),
 // //                           Image.asset('assets/illustrations/cow_childx.png'),
-// //                           SizedBox(height: 32 * globals.heightMediaQuery),
+// //                           SizedBox(height: 32 * SizeConfig.heightMultiplier(context)),
 // //                           Text(
 // //                             'No Children',
 // //                             style: AppFonts.headline3(
 // //                                 color: AppColors.grayscale90),
 // //                           ),
 // //                           SizedBox(
-// //                             height: 8 * globals.heightMediaQuery,
+// //                             height: 8 * SizeConfig.heightMultiplier(context),
 // //                           ),
 // //                           Text(
 // //                             "This animal doesn’t have children.",
@@ -200,11 +200,11 @@
 // //                             style: AppFonts.body2(color: AppColors.grayscale70),
 // //                           ),
 // //                           SizedBox(
-// //                             height: 125 * globals.heightMediaQuery,
+// //                             height: 125 * SizeConfig.heightMultiplier(context),
 // //                           ),
 // //                           SizedBox(
-// //                             width: 130 * globals.widthMediaQuery,
-// //                             height: 52 * globals.heightMediaQuery,
+// //                             width: 130 * SizeConfig.widthMultiplier(context),
+// //                             height: 52 * SizeConfig.heightMultiplier(context),
 // //                             child: PrimaryButton(
 // //                               text: 'Add Children',
 // //                               onPressed: () {
@@ -239,7 +239,7 @@
 // //                               ],
 // //                             ),
 // //                             SizedBox(
-// //                               height: 8 * globals.heightMediaQuery,
+// //                               height: 8 * SizeConfig.heightMultiplier(context),
 // //                             ),
 // //                             ListView.builder(
 // //                               shrinkWrap: true,
@@ -253,7 +253,7 @@
 // //                                 return ListTile(
 // //                                   contentPadding: EdgeInsets.zero,
 // //                                   leading: CircleAvatar(
-// //                                     radius: 24 * globals.widthMediaQuery,
+// //                                     radius: 24 * SizeConfig.widthMultiplier(context),
 // //                                     backgroundColor: Colors.transparent,
 // //                                     backgroundImage:
 // //                                         AssetImage(child['avatarImage']),
@@ -277,7 +277,7 @@
 // //                               },
 // //                             ),
 // //                             SizedBox(
-// //                               height: 16 * globals.heightMediaQuery,
+// //                               height: 16 * SizeConfig.heightMultiplier(context),
 // //                             ),
 // //                           ],
 // //                         );
@@ -295,7 +295,7 @@
 // import 'package:flutter/material.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+// import 'package:sulala_upgrade/src/data/globals.dart';
 // import '../../data/riverpod_globals.dart';
 // import '../../theme/colors/colors.dart';
 // import '../../theme/fonts/fonts.dart';
@@ -448,8 +448,8 @@
 //       ),
 //       body: Padding(
 //         padding: EdgeInsets.only(
-//           right: 16 * globals.widthMediaQuery,
-//           left: 16 * globals.widthMediaQuery,
+//           right: 16 * SizeConfig.widthMultiplier(context),
+//           left: 16 * SizeConfig.widthMultiplier(context),
 //         ),
 //         child: Column(
 //           crossAxisAlignment: CrossAxisAlignment.start,
@@ -457,7 +457,7 @@
 //             Text('List Of Children',
 //                 style: AppFonts.title3(color: AppColors.grayscale90)),
 //             SizedBox(
-//               height: 16 * globals.heightMediaQuery,
+//               height: 16 * SizeConfig.heightMultiplier(context),
 //             ),
 //             if (breedingEvents.isEmpty)
 //               Visibility(
@@ -468,7 +468,7 @@
 //                       children: [
 //                         Image.asset('assets/illustrations/child_x.png'),
 //                         SizedBox(
-//                           height: 32 * globals.heightMediaQuery,
+//                           height: 32 * SizeConfig.heightMultiplier(context),
 //                         ),
 //                         Text(
 //                           'No Breeding Events Yet',
@@ -476,17 +476,17 @@
 //                               AppFonts.headline3(color: AppColors.grayscale90),
 //                         ),
 //                         SizedBox(
-//                           height: 8 * globals.heightMediaQuery,
+//                           height: 8 * SizeConfig.heightMultiplier(context),
 //                         ),
 //                         Text(
 //                           'Add a breeding event to get started',
 //                           style: AppFonts.body2(color: AppColors.grayscale70),
 //                         ),
 //                         SizedBox(
-//                           height: 140 * globals.heightMediaQuery,
+//                           height: 140 * SizeConfig.heightMultiplier(context),
 //                         ),
 //                         SizedBox(
-//                           height: 52 * globals.heightMediaQuery,
+//                           height: 52 * SizeConfig.heightMultiplier(context),
 //                           child: PrimaryButton(
 //                             onPressed: () {
 //                               // Navigator.push(
@@ -553,7 +553,7 @@
 //                             return ListTile(
 //                               contentPadding: EdgeInsets.zero,
 //                               leading: CircleAvatar(
-//                                 radius: 24 * globals.widthMediaQuery,
+//                                 radius: 24 * SizeConfig.widthMultiplier(context),
 //                                 backgroundColor: Colors.transparent,
 //                                 backgroundImage: child.selectedOviImage != null
 //                                     ? FileImage(child.selectedOviImage!)

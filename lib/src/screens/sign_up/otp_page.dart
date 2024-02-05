@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -99,13 +99,13 @@ class _OTPPageState extends ConsumerState<OTPPage> {
         ),
         body: _buildContent(),
         floatingActionButton: SizedBox(
-          height: globals.heightMediaQuery * 122,
+          height: SizeConfig.heightMultiplier(context) * 122,
           child: Column(
             children: [
               if (isResendButtonVisible) _buildResendButton(),
               if (!isResendButtonVisible) _buildCountdown(),
               SizedBox(
-                height: globals.heightMediaQuery * 16,
+                height: SizeConfig.heightMultiplier(context) * 16,
               ),
               if (isResendButtonVisible)
                 _buildConfirmButton(PrimaryButtonStatus.disabled, () {}),
@@ -125,9 +125,9 @@ class _OTPPageState extends ConsumerState<OTPPage> {
     final countryCode = ref.watch(selectedCountryCodeProvider);
     return Padding(
       padding: EdgeInsets.only(
-        left: globals.widthMediaQuery * 19,
-        right: globals.widthMediaQuery * 19,
-        top: globals.heightMediaQuery * 41,
+        left: SizeConfig.widthMultiplier(context) * 19,
+        right: SizeConfig.widthMultiplier(context) * 19,
+        top: SizeConfig.heightMultiplier(context) * 41,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,7 +137,7 @@ class _OTPPageState extends ConsumerState<OTPPage> {
             style: AppFonts.title2(color: AppColors.grayscale90),
           ),
           SizedBox(
-            height: globals.heightMediaQuery * 7,
+            height: SizeConfig.heightMultiplier(context) * 7,
           ),
           Text.rich(
             TextSpan(
@@ -162,10 +162,10 @@ class _OTPPageState extends ConsumerState<OTPPage> {
             ),
           ),
           SizedBox(
-            height: globals.heightMediaQuery * 41,
+            height: SizeConfig.heightMultiplier(context) * 41,
           ),
           SizedBox(
-            width: globals.widthMediaQuery * 337,
+            width: SizeConfig.widthMultiplier(context) * 337,
             child: OTPField(
               onFilled: onOTPFilled,
               onError: isOTPError,
@@ -177,7 +177,7 @@ class _OTPPageState extends ConsumerState<OTPPage> {
             ),
           ),
           SizedBox(
-            height: globals.heightMediaQuery * 24,
+            height: SizeConfig.heightMultiplier(context) * 24,
           ),
           if (otpErrorState)
             Center(
@@ -217,8 +217,8 @@ class _OTPPageState extends ConsumerState<OTPPage> {
   Widget _buildConfirmButton(
       PrimaryButtonStatus status, VoidCallback onPressed) {
     return SizedBox(
-      height: globals.heightMediaQuery * 52,
-      width: globals.widthMediaQuery * 343,
+      height: SizeConfig.heightMultiplier(context) * 52,
+      width: SizeConfig.widthMultiplier(context) * 343,
       child: PrimaryButton(
         text: "Confirm".tr,
         status: status,

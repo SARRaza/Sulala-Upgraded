@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -108,7 +108,7 @@ class _SignUpState extends ConsumerState<SignUp>
             Align(
               alignment: Alignment.topCenter,
               child: SizedBox(
-                width: globals.widthMediaQuery * 375,
+                width: SizeConfig.widthMultiplier(context) * 375,
                 child: Image.asset(
                   "assets/graphic/Animal_p.png",
                   fit: BoxFit.fitWidth,
@@ -119,31 +119,31 @@ class _SignUpState extends ConsumerState<SignUp>
               child: Column(
                 children: [
                   SizedBox(
-                    height: globals.heightMediaQuery * 185,
+                    height: SizeConfig.heightMultiplier(context) * 185,
                   ),
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(
-                          globals.widthMediaQuery * 32,
+                          SizeConfig.widthMultiplier(context) * 32,
                         ),
                         topRight: Radius.circular(
-                          globals.widthMediaQuery * 32,
+                          SizeConfig.widthMultiplier(context) * 32,
                         ),
                       ),
                     ),
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(
-                        globals.widthMediaQuery * 16,
+                        SizeConfig.widthMultiplier(context) * 16,
                         0,
-                        globals.widthMediaQuery * 16,
+                        SizeConfig.widthMultiplier(context) * 16,
                         MediaQuery.of(context).viewInsets.bottom,
                       ),
                       child: Column(
                         children: [
                           SizedBox(
-                            height: globals.heightMediaQuery * 41,
+                            height: SizeConfig.heightMultiplier(context) * 41,
                           ),
                           Column(
                             children: [
@@ -154,7 +154,8 @@ class _SignUpState extends ConsumerState<SignUp>
                                 ),
                               ),
                               SizedBox(
-                                height: 8 * globals.heightMediaQuery,
+                                height:
+                                    8 * SizeConfig.heightMultiplier(context),
                               ),
                               showEmailField
                                   ? Text(
@@ -172,7 +173,8 @@ class _SignUpState extends ConsumerState<SignUp>
                                       ),
                                     ),
                               SizedBox(
-                                height: 40 * globals.heightMediaQuery,
+                                height:
+                                    40 * SizeConfig.heightMultiplier(context),
                               ),
                               if (showEmailField)
                                 PrimaryTextField(
@@ -196,10 +198,12 @@ class _SignUpState extends ConsumerState<SignUp>
                               else
                                 const PhoneNumberField(),
                               SizedBox(
-                                height: globals.heightMediaQuery * 24,
+                                height:
+                                    SizeConfig.heightMultiplier(context) * 24,
                               ),
                               SizedBox(
-                                height: globals.heightMediaQuery * 52,
+                                height:
+                                    SizeConfig.heightMultiplier(context) * 52,
                                 width: double.infinity,
                                 child: PrimaryButton(
                                   status: buttonStatus,
@@ -235,17 +239,20 @@ class _SignUpState extends ConsumerState<SignUp>
                                 ),
                               ),
                               SizedBox(
-                                height: globals.heightMediaQuery * 41,
+                                height:
+                                    SizeConfig.heightMultiplier(context) * 41,
                               ),
                               const Divider(
                                 color: AppColors.grayscale20,
                                 thickness: 1,
                               ),
                               SizedBox(
-                                height: globals.heightMediaQuery * 41,
+                                height:
+                                    SizeConfig.heightMultiplier(context) * 41,
                               ),
                               SizedBox(
-                                height: globals.heightMediaQuery * 52,
+                                height:
+                                    SizeConfig.heightMultiplier(context) * 52,
                                 width: double.infinity,
                                 child: AppleButton(
                                   status: appleButtonStatus,
@@ -253,10 +260,12 @@ class _SignUpState extends ConsumerState<SignUp>
                                 ),
                               ),
                               SizedBox(
-                                height: globals.heightMediaQuery * 12,
+                                height:
+                                    SizeConfig.heightMultiplier(context) * 12,
                               ),
                               SizedBox(
-                                height: globals.heightMediaQuery * 52,
+                                height:
+                                    SizeConfig.heightMultiplier(context) * 52,
                                 width: double.infinity,
                                 child: GoogleButton(
                                   status: googleButtonStatus,
@@ -264,7 +273,8 @@ class _SignUpState extends ConsumerState<SignUp>
                                 ),
                               ),
                               SizedBox(
-                                height: globals.heightMediaQuery * 12,
+                                height:
+                                    SizeConfig.heightMultiplier(context) * 12,
                               ),
                               PrimaryTextButton(
                                 status: textStatus,

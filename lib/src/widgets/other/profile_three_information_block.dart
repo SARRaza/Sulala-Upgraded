@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 class ProfileThreeInformationBlock extends StatelessWidget {
   final String head1;
@@ -67,7 +67,7 @@ class ProfileThreeInformationBlock extends StatelessWidget {
             ),
           ),
           Container(
-            height: globals.heightMediaQuery * 22,
+            height: SizeConfig.heightMultiplier(context) * 22,
             width: 1,
             color: AppColors.grayscale30,
           ),
@@ -88,7 +88,7 @@ class ProfileThreeInformationBlock extends StatelessWidget {
             ),
           ),
           Container(
-            height: globals.heightMediaQuery * 22,
+            height: SizeConfig.heightMultiplier(context) * 22,
             width: 1,
             color: AppColors.grayscale30,
           ),
@@ -113,7 +113,6 @@ class ProfileThreeInformationBlock extends StatelessWidget {
     );
   }
 }
-
 
 // Example of use:
 

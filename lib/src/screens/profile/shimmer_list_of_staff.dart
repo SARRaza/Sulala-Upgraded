@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 class ShimmerListOfStaff extends StatelessWidget {
   const ShimmerListOfStaff({super.key});
@@ -23,31 +24,31 @@ class ShimmerListOfStaff extends StatelessWidget {
                       baseColor: Colors.grey[300]!,
                       highlightColor: Colors.grey[100]!,
                       child: Container(
-                          height: 60 * globals.heightMediaQuery,
+                          height: 60 * SizeConfig.heightMultiplier(context),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(
-                                20 * globals.widthMediaQuery),
+                                20 * SizeConfig.widthMultiplier(context)),
                           )),
                     ),
-                    SizedBox(height: 10 * globals.heightMediaQuery),
+                    SizedBox(height: 10 * SizeConfig.heightMultiplier(context)),
                   ],
                 ),
-              SizedBox(height: 14 * globals.heightMediaQuery),
+              SizedBox(height: 14 * SizeConfig.heightMultiplier(context)),
               Text(
                 'Requests',
                 style: AppFonts.headline3(color: AppColors.grayscale80),
               ),
-              SizedBox(height: 8 * globals.heightMediaQuery),
+              SizedBox(height: 8 * SizeConfig.heightMultiplier(context)),
               Shimmer.fromColors(
                 baseColor: Colors.grey[300]!,
                 highlightColor: Colors.grey[100]!,
                 child: Container(
-                    height: 60 * globals.heightMediaQuery,
+                    height: 60 * SizeConfig.heightMultiplier(context),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius:
-                          BorderRadius.circular(20 * globals.widthMediaQuery),
+                      borderRadius: BorderRadius.circular(
+                          20 * SizeConfig.widthMultiplier(context)),
                     )),
               ),
             ],

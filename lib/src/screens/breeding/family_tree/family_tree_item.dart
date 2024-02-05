@@ -20,7 +20,9 @@ class FamilyTreeItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if ((node.children.isNotEmpty || node.parents.isNotEmpty || node.animal == null) &&
+    if ((node.children.isNotEmpty ||
+            node.parents.isNotEmpty ||
+            node.animal == null) &&
         !selected &&
         !node.expanded) {
       return buildExpandButton();
@@ -116,10 +118,10 @@ class FamilyTreeItem extends StatelessWidget {
                         SizedBox(
                             width: 16,
                             height: 16,
-                            child: Image.asset(node.animal!.selectedOviGender ==
-                                'Male'
-                                ? 'assets/avatars/48px/gender_male.png'
-                                : 'assets/avatars/80px/gender_female.png')),
+                            child: Image.asset(
+                                node.animal!.selectedOviGender == 'Male'
+                                    ? 'assets/avatars/48px/gender_male.png'
+                                    : 'assets/avatars/80px/gender_female.png')),
                     ],
                   ),
                 ),

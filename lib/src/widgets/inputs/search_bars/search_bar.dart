@@ -114,11 +114,7 @@ class _PrimarySearchBarState extends State<PrimarySearchBar> {
   }
 }
 
-
-
-
 // Example of use:
-
 
 //  SizedBox(
 //               height: 48,

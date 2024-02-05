@@ -93,7 +93,6 @@ enum FlatIconButtonStatus {
   disabled,
 }
 
-
 // Example of use:
 
 // SecondaryIconButton(

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../data/classes.dart';
+import '../../data/classes/breed_child_item.dart';
+import '../../data/classes/breeding_partner.dart';
+import '../../data/classes/main_animal_dam.dart';
+import '../../data/classes/main_animal_sire.dart';
+import '../../data/classes/ovi_variables.dart';
 import '../../helpers/breeding_helper.dart';
 
 class AnimalPartnerModal extends ConsumerStatefulWidget {
@@ -35,10 +39,10 @@ class _AnimalPartnerModalState extends ConsumerState<AnimalPartnerModal> {
     selectedPartner = widget.selectedPartner;
     _breedingHelper = BreedingHelper(ref);
     animals = _breedingHelper.getPossiblePartners(widget.selectedAnimal
-        .copyWith(selectedOviSire: widget.selectedFather,
-        selectedOviDam: widget.selectedMother, breedchildren: widget
-            .selectedChildren)
-    );
+        .copyWith(
+            selectedOviSire: widget.selectedFather,
+            selectedOviDam: widget.selectedMother,
+            breedChildren: widget.selectedChildren));
     super.initState();
   }
 
@@ -100,8 +104,8 @@ class _AnimalPartnerModalState extends ConsumerState<AnimalPartnerModal> {
                   final isSelected = OviDetails.id == selectedPartner?.id;
                   // Apply the filter here
                   if (!OviDetails.animalName
-                      .toLowerCase()
-                      .contains(searchQuery) &&
+                          .toLowerCase()
+                          .contains(searchQuery) &&
                       !OviDetails.selectedAnimalType
                           .toLowerCase()
                           .contains(searchQuery)) {
@@ -109,13 +113,12 @@ class _AnimalPartnerModalState extends ConsumerState<AnimalPartnerModal> {
                   }
 
                   return ListTile(
-                    tileColor: isSelected
-                        ? Colors.green.withOpacity(0.5)
-                        : null,
+                    tileColor:
+                        isSelected ? Colors.green.withOpacity(0.5) : null,
                     shape: isSelected
                         ? RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50.0),
-                    )
+                            borderRadius: BorderRadius.circular(50.0),
+                          )
                         : null,
                     leading: CircleAvatar(
                       radius: 25,
@@ -123,19 +126,20 @@ class _AnimalPartnerModalState extends ConsumerState<AnimalPartnerModal> {
                       backgroundImage: OviDetails.selectedOviImage,
                       child: OviDetails.selectedOviImage == null
                           ? const Icon(
-                        Icons.camera_alt_outlined,
-                        size: 50,
-                        color: Colors.grey,
-                      )
+                              Icons.camera_alt_outlined,
+                              size: 50,
+                              color: Colors.grey,
+                            )
                           : null,
                     ),
                     title: Text(OviDetails.animalName),
                     subtitle: Text(OviDetails.selectedAnimalType),
                     onTap: () {
                       setState(() {
-                        selectedPartner = BreedingPartner(OviDetails.animalName,
-                            OviDetails.selectedOviImage, OviDetails
-                                .selectedOviGender);
+                        selectedPartner = BreedingPartner(
+                            OviDetails.animalName,
+                            OviDetails.selectedOviImage,
+                            OviDetails.selectedOviGender);
                       });
                     },
                   );

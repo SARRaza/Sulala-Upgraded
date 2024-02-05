@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 import '../controls_and_buttons/buttons/primary_button.dart';
 import '../controls_and_buttons/tags/custom_tags.dart';
 
 class AnimalTagsModal extends StatefulWidget {
-  const AnimalTagsModal({
-    super.key, required this.selectedTags
-  });
+  const AnimalTagsModal({super.key, required this.selectedTags});
   final List<String> selectedTags;
 
   @override
@@ -46,7 +44,7 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
               style: AppFonts.headline3(color: AppColors.grayscale90),
             ),
             SizedBox(
-              height: globals.heightMediaQuery * 10,
+              height: SizeConfig.heightMultiplier(context) * 10,
             ),
             Wrap(
               spacing: 8.0,
@@ -135,14 +133,14 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
               ],
             ),
             SizedBox(
-              height: globals.heightMediaQuery * 20,
+              height: SizeConfig.heightMultiplier(context) * 20,
             ),
             Text(
               'Medical State',
               style: AppFonts.headline3(color: AppColors.grayscale90),
             ),
             SizedBox(
-              height: globals.heightMediaQuery * 10,
+              height: SizeConfig.heightMultiplier(context) * 10,
             ),
             Wrap(
               spacing: 8.0,
@@ -244,7 +242,7 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
               ],
             ),
             SizedBox(
-              height: globals.heightMediaQuery * 20,
+              height: SizeConfig.heightMultiplier(context) * 20,
             ),
             const Text(
               'Other',
@@ -254,7 +252,7 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
               ),
             ),
             SizedBox(
-              height: globals.heightMediaQuery * 10,
+              height: SizeConfig.heightMultiplier(context) * 10,
             ),
             Wrap(
               spacing: 8.0,

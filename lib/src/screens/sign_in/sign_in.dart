@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/apple_button.dart';
@@ -137,7 +137,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
             Align(
               alignment: Alignment.topCenter,
               child: SizedBox(
-                width: globals.widthMediaQuery * 375,
+                width: SizeConfig.widthMultiplier(context) * 375,
                 child: Image.asset(
                   "assets/graphic/Animal_p.png",
                   fit: BoxFit.fitWidth,
@@ -148,30 +148,32 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
               child: Column(
                 children: [
                   SizedBox(
-                    height: globals.heightMediaQuery * 185,
+                    height: SizeConfig.heightMultiplier(context) * 185,
                   ),
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(
-                          globals.widthMediaQuery * 32,
+                          SizeConfig.widthMultiplier(context) * 32,
                         ),
                         topRight: Radius.circular(
-                          globals.widthMediaQuery * 32,
+                          SizeConfig.widthMultiplier(context) * 32,
                         ),
                       ),
                     ),
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(
-                        globals.widthMediaQuery * 15,
+                        SizeConfig.widthMultiplier(context) * 15,
                         0,
-                        globals.widthMediaQuery * 15,
+                        SizeConfig.widthMultiplier(context) * 15,
                         MediaQuery.of(context).viewInsets.bottom,
                       ),
                       child: Column(
                         children: [
-                          SizedBox(height: globals.heightMediaQuery * 41),
+                          SizedBox(
+                              height:
+                                  SizeConfig.heightMultiplier(context) * 41),
                           Column(
                             children: [
                               Text(
@@ -180,7 +182,9 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                   color: AppColors.grayscale90,
                                 ),
                               ),
-                              SizedBox(height: globals.heightMediaQuery * 41),
+                              SizedBox(
+                                  height: SizeConfig.heightMultiplier(context) *
+                                      41),
                               if (showEmailField)
                                 PrimaryTextField(
                                   controller: emailController,
@@ -209,9 +213,12 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                     });
                                   },
                                 ),
-                              SizedBox(height: globals.heightMediaQuery * 24),
                               SizedBox(
-                                height: globals.heightMediaQuery * 52,
+                                  height: SizeConfig.heightMultiplier(context) *
+                                      24),
+                              SizedBox(
+                                height:
+                                    SizeConfig.heightMultiplier(context) * 52,
                                 width: double.infinity,
                                 child: PrimaryButton(
                                   status: buttonStatus,
@@ -255,30 +262,40 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                   },
                                 ),
                               ),
-                              SizedBox(height: globals.heightMediaQuery * 41),
+                              SizedBox(
+                                  height: SizeConfig.heightMultiplier(context) *
+                                      41),
                               const Divider(
                                 color: AppColors.grayscale20,
                                 thickness: 1,
                               ),
-                              SizedBox(height: globals.heightMediaQuery * 41),
                               SizedBox(
-                                height: globals.heightMediaQuery * 52,
+                                  height: SizeConfig.heightMultiplier(context) *
+                                      41),
+                              SizedBox(
+                                height:
+                                    SizeConfig.heightMultiplier(context) * 52,
                                 width: double.infinity,
                                 child: AppleButton(
                                   status: appleButtonStatus,
                                   onPressed: () {},
                                 ),
                               ),
-                              SizedBox(height: globals.heightMediaQuery * 12),
                               SizedBox(
-                                height: globals.heightMediaQuery * 52,
+                                  height: SizeConfig.heightMultiplier(context) *
+                                      12),
+                              SizedBox(
+                                height:
+                                    SizeConfig.heightMultiplier(context) * 52,
                                 width: double.infinity,
                                 child: GoogleButton(
                                   status: googleButtonStatus,
                                   onPressed: () {},
                                 ),
                               ),
-                              SizedBox(height: globals.heightMediaQuery * 12),
+                              SizedBox(
+                                  height: SizeConfig.heightMultiplier(context) *
+                                      12),
                               PrimaryTextButton(
                                 status: textStatus,
                                 text: showEmailField == false

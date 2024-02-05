@@ -1,7 +1,7 @@
 // import 'package:flutter/material.dart';
 // import '../../theme/colors/colors.dart';
 
-// import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+// import 'package:sulala_upgrade/src/data/globals.dart';
 
 // import '../../theme/fonts/fonts.dart';
 // import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
@@ -65,7 +65,7 @@
 //           actions: [
 //             Padding(
 //               padding: EdgeInsets.only(
-//                 right: globals.widthMediaQuery * 16,
+//                 right: SizeConfig.widthMultiplier(context) * 16,
 //               ),
 //               child: IconButton(
 //                 padding: EdgeInsets.zero,
@@ -83,8 +83,8 @@
 //                   Navigator.pop(context);
 //                 },
 //                 icon: Container(
-//                   width: globals.widthMediaQuery * 37.5,
-//                   height: globals.widthMediaQuery * 37.5,
+//                   width: SizeConfig.widthMultiplier(context) * 37.5,
+//                   height: SizeConfig.widthMultiplier(context) * 37.5,
 //                   decoration: const BoxDecoration(
 //                     shape: BoxShape.circle,
 //                     color: AppColors.grayscale10,
@@ -112,8 +112,8 @@
 //         ),
 //         persistentFooterButtons: [
 //           SizedBox(
-//             width: globals.widthMediaQuery * 343,
-//             height: globals.heightMediaQuery * 52,
+//             width: SizeConfig.widthMultiplier(context) * 343,
+//             height: SizeConfig.heightMultiplier(context) * 52,
 //             child: PrimaryButton(
 //               onPressed: () {
 //                 List<String> selectedFiltersList = [];
@@ -154,8 +154,8 @@
 
 //     return Padding(
 //       padding: EdgeInsets.only(
-//           left: globals.widthMediaQuery * 16,
-//           right: globals.widthMediaQuery * 16),
+//           left: SizeConfig.widthMultiplier(context) * 16,
+//           right: SizeConfig.widthMultiplier(context) * 16),
 //       child: Column(
 //         crossAxisAlignment: CrossAxisAlignment.start,
 //         children: [
@@ -190,10 +190,10 @@
 //           ),
 //           Container(
 //             height: 1,
-//             width: globals.widthMediaQuery * 343,
+//             width: SizeConfig.widthMultiplier(context) * 343,
 //             color: AppColors.grayscale20,
 //           ),
-//           SizedBox(height: globals.heightMediaQuery * 15),
+//           SizedBox(height: SizeConfig.heightMultiplier(context) * 15),
 //         ],
 //       ),
 //     );
@@ -208,8 +208,8 @@
 
 //     return Padding(
 //       padding: EdgeInsets.only(
-//           left: globals.widthMediaQuery * 16,
-//           right: globals.widthMediaQuery * 16),
+//           left: SizeConfig.widthMultiplier(context) * 16,
+//           right: SizeConfig.widthMultiplier(context) * 16),
 //       child: Column(
 //         crossAxisAlignment: CrossAxisAlignment.start,
 //         children: [
@@ -244,10 +244,10 @@
 //           ),
 //           Container(
 //             height: 1,
-//             width: globals.heightMediaQuery * 343,
+//             width: SizeConfig.heightMultiplier(context) * 343,
 //             color: AppColors.grayscale20,
 //           ),
-//           SizedBox(height: globals.heightMediaQuery * 15),
+//           SizedBox(height: SizeConfig.heightMultiplier(context) * 15),
 //         ],
 //       ),
 //     );
@@ -269,7 +269,7 @@
 //         style: AppFonts.body2(color: textColor),
 //       ),
 //       trailing: Container(
-//         width: globals.widthMediaQuery * 24,
+//         width: SizeConfig.widthMultiplier(context) * 24,
 //         decoration: BoxDecoration(
 //           shape: BoxShape.circle,
 //           border: Border.all(

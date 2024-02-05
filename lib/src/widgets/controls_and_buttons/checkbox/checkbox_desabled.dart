@@ -38,7 +38,6 @@ class CheckBoxDisabled extends StatelessWidget {
   }
 }
 
-
 // Example of use:
 
 // CheckBoxDisabled(

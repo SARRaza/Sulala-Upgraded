@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
-import '../../data/classes.dart';
+import '../../data/classes/breed_child_item.dart';
+import '../../data/classes/main_animal_dam.dart';
+import '../../data/classes/main_animal_sire.dart';
+import '../../data/classes/ovi_variables.dart';
 import '../../data/riverpod_globals.dart';
 import '../../helpers/breeding_helper.dart';
 import '../controls_and_buttons/buttons/primary_button.dart';
@@ -41,11 +44,10 @@ class _AnimalSireModalState extends ConsumerState<AnimalSireModal> {
   @override
   Widget build(BuildContext context) {
     _breedingHelper = BreedingHelper(ref);
-    animals = _breedingHelper.getPossibleFathers(widget.selectedAnimal
-        .copyWith(selectedOviSire: selectedFather,
-        selectedOviDam: widget.selectedMother, breedchildren: widget
-            .selectedChildren)
-    );
+    animals = _breedingHelper.getPossibleFathers(widget.selectedAnimal.copyWith(
+        selectedOviSire: selectedFather,
+        selectedOviDam: widget.selectedMother,
+        breedChildren: widget.selectedChildren));
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -55,8 +57,8 @@ class _AnimalSireModalState extends ConsumerState<AnimalSireModal> {
           height: 4,
           decoration: ShapeDecoration(
             color: const Color(0xFFE3E5E7),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
           ),
         ),
         const SizedBox(
@@ -107,8 +109,7 @@ class _AnimalSireModalState extends ConsumerState<AnimalSireModal> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding:
-                      const EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Container(
                         decoration: ShapeDecoration(
                           shape: RoundedRectangleBorder(
@@ -139,8 +140,7 @@ class _AnimalSireModalState extends ConsumerState<AnimalSireModal> {
                     const SizedBox(height: 24),
                     Expanded(
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: ListView.builder(
                             shrinkWrap: true,
                             itemCount: animals.length,
@@ -150,8 +150,8 @@ class _AnimalSireModalState extends ConsumerState<AnimalSireModal> {
                                   selectedFather!.id == OviDetails.id;
 
                               if (!OviDetails.animalName
-                                  .toLowerCase()
-                                  .contains(searchQuery) &&
+                                      .toLowerCase()
+                                      .contains(searchQuery) &&
                                   !OviDetails.selectedAnimalType
                                       .toLowerCase()
                                       .contains(searchQuery)) {
@@ -163,60 +163,47 @@ class _AnimalSireModalState extends ConsumerState<AnimalSireModal> {
                                   contentPadding: EdgeInsets.zero,
                                   selected: isSelected,
                                   selectedTileColor:
-                                  Colors.green.withOpacity(0.5),
+                                      Colors.green.withOpacity(0.5),
                                   shape: isSelected
                                       ? RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(50.0),
-                                  )
+                                          borderRadius:
+                                              BorderRadius.circular(50.0),
+                                        )
                                       : null,
                                   leading: CircleAvatar(
                                     radius: 25,
                                     backgroundColor: Colors.grey[100],
-                                    backgroundImage: OviDetails
-                                        .selectedOviImage,
-                                    child: OviDetails.selectedOviImage ==
-                                        null
+                                    backgroundImage:
+                                        OviDetails.selectedOviImage,
+                                    child: OviDetails.selectedOviImage == null
                                         ? const Icon(
-                                      Icons.camera_alt_outlined,
-                                      size: 50,
-                                      color: Colors.grey,
-                                    )
+                                            Icons.camera_alt_outlined,
+                                            size: 50,
+                                            color: Colors.grey,
+                                          )
                                         : null,
                                   ),
                                   title: Text(OviDetails.animalName),
                                   subtitle: Column(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                           'Gender: ${OviDetails.selectedOviGender}'),
                                       Text(
-                                          'Mother: ${OviDetails.selectedOviDam
-                                              != null ? OviDetails.selectedOviDam!
-                                              .animalName : 'Unknown'}'),
+                                          'Mother: ${OviDetails.selectedOviDam != null ? OviDetails.selectedOviDam!.animalName : 'Unknown'}'),
                                       if (OviDetails.selectedOviDam != null)
                                         Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                                'Maternal Father: ${OviDetails
-                                                    .selectedOviDam!.father !=
-                                                    null ? OviDetails
-                                                    .selectedOviDam!.father!
-                                                    .animalName : 'Unknown'.tr}'
-                                            ),
-                                            if (OviDetails.selectedOviDam!
-                                                .mother !=
+                                                'Maternal Father: ${OviDetails.selectedOviDam!.father != null ? OviDetails.selectedOviDam!.father!.animalName : 'Unknown'.tr}'),
+                                            if (OviDetails
+                                                    .selectedOviDam!.mother !=
                                                 null)
                                               Text(
-                                                  'Maternal Mother: ${OviDetails
-                                                      .selectedOviDam!.mother !=
-                                                      null ? OviDetails
-                                                      .selectedOviDam!.mother!
-                                                      .animalName : 'Unknown'.tr
-                                                  }'),
+                                                  'Maternal Mother: ${OviDetails.selectedOviDam!.mother != null ? OviDetails.selectedOviDam!.mother!.animalName : 'Unknown'.tr}'),
                                           ],
                                         ),
                                     ],
@@ -229,11 +216,11 @@ class _AnimalSireModalState extends ConsumerState<AnimalSireModal> {
                                         // Use a default image (icon) if selectedOviImage is null
                                         final ImageProvider? oviImage =
                                             OviDetails.selectedOviImage;
-                                        MainAnimalDam? mother = OviDetails
-                                            .selectedOviDam;
+                                        MainAnimalDam? mother =
+                                            OviDetails.selectedOviDam;
 
-                                        MainAnimalSire? father = OviDetails
-                                            .selectedOviSire;
+                                        MainAnimalSire? father =
+                                            OviDetails.selectedOviSire;
 
                                         selectedFather = MainAnimalSire(
                                             OviDetails.animalName,
@@ -241,7 +228,6 @@ class _AnimalSireModalState extends ConsumerState<AnimalSireModal> {
                                             OviDetails.selectedOviGender,
                                             mother: mother,
                                             father: father);
-
                                       }
                                     });
                                   },
@@ -280,19 +266,19 @@ class _AnimalSireModalState extends ConsumerState<AnimalSireModal> {
                           Navigator.pop(context, selectedFather);
                           // Append the selected children to the existing list
                           final List<MainAnimalDam> existingSelectedDam = [];
-                          final animalDamDetails = ref.read(
-                              animalDamDetailsProvider);
-                          if(animalDamDetails != null) {
+                          final animalDamDetails =
+                              ref.read(animalDamDetailsProvider);
+                          if (animalDamDetails != null) {
                             existingSelectedDam.add(animalDamDetails);
                           }
 
                           final List<MainAnimalSire> existingSelectedSire = [];
-                          final animalSireDetails = ref.read(
-                              animalSireDetailsProvider);
-                          if(animalSireDetails != null) {
+                          final animalSireDetails =
+                              ref.read(animalSireDetailsProvider);
+                          if (animalSireDetails != null) {
                             existingSelectedSire.add(animalSireDetails);
                           }
-                          if(selectedFather != null) {
+                          if (selectedFather != null) {
                             existingSelectedSire.add(selectedFather!);
                           }
 

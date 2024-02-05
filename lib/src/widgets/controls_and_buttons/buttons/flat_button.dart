@@ -136,7 +136,6 @@ enum FlatButtonStatus {
   disabled,
 }
 
-
 // Example of use:
 
 // SizedBox(

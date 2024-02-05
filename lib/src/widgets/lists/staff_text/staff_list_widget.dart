@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 
@@ -35,7 +35,7 @@ class StaffListWidget extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(
-            width: globals.widthMediaQuery * 15,
+            width: SizeConfig.widthMultiplier(context) * 15,
           ),
           CircleAvatar(
             backgroundColor: Colors.transparent,
@@ -43,7 +43,7 @@ class StaffListWidget extends StatelessWidget {
             backgroundImage: AssetImage(imagePath),
           ),
           SizedBox(
-            width: globals.widthMediaQuery * 9,
+            width: SizeConfig.widthMultiplier(context) * 9,
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -67,10 +67,10 @@ class StaffListWidget extends StatelessWidget {
           Icon(
             Icons.arrow_forward_ios_rounded,
             color: AppColors.primary40,
-            size: globals.widthMediaQuery * 13,
+            size: SizeConfig.widthMultiplier(context) * 13,
           ),
           SizedBox(
-            width: globals.widthMediaQuery * 15,
+            width: SizeConfig.widthMultiplier(context) * 15,
           ),
         ],
       ),

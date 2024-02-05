@@ -1,12 +1,13 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
 import '../../widgets/inputs/search_bars/search_bar.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 class AddParentsDrowup extends StatelessWidget {
   StateSetter setState;
@@ -47,7 +48,7 @@ class AddParentsDrowup extends StatelessWidget {
       heading: 'Add Mother',
       heightFactor: 0.9,
       content: SizedBox(
-        height: globals.heightMediaQuery * 552.16,
+        height: SizeConfig.heightMultiplier(context) * 552.16,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -64,7 +65,7 @@ class AddParentsDrowup extends StatelessWidget {
                 },
                 hintText: 'Search by species'),
             SizedBox(
-              height: globals.heightMediaQuery * 24,
+              height: SizeConfig.heightMultiplier(context) * 24,
             ),
             Expanded(
               child: ListView.builder(
@@ -87,13 +88,16 @@ class AddParentsDrowup extends StatelessWidget {
                             ? Row(
                                 children: [
                                   CircleAvatar(
-                                    radius: globals.widthMediaQuery * 24,
+                                    radius:
+                                        SizeConfig.widthMultiplier(context) *
+                                            24,
                                     backgroundImage: const AssetImage(
                                         'assets/avatars/120px/Horse_avatar.png'),
                                     backgroundColor: Colors.transparent,
                                   ),
                                   SizedBox(
-                                    width: globals.widthMediaQuery * 16,
+                                    width: SizeConfig.widthMultiplier(context) *
+                                        16,
                                   ),
                                   Text(
                                     modalAnimalSpeciesList[index],
@@ -105,13 +109,16 @@ class AddParentsDrowup extends StatelessWidget {
                             : Row(
                                 children: [
                                   CircleAvatar(
-                                    radius: globals.widthMediaQuery * 24,
+                                    radius:
+                                        SizeConfig.widthMultiplier(context) *
+                                            24,
                                     backgroundImage: const AssetImage(
                                         'assets/avatars/120px/Horse_avatar.png'),
                                     backgroundColor: Colors.transparent,
                                   ),
                                   SizedBox(
-                                    width: globals.widthMediaQuery * 16,
+                                    width: SizeConfig.widthMultiplier(context) *
+                                        16,
                                   ),
                                   Text(
                                     filteredModalList[index],

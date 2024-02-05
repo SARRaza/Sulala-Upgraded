@@ -2,8 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
+import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -56,11 +57,12 @@ class _DrowupAnimalBreedState extends ConsumerState<DrowupAnimalBreed> {
                 setState(() {
                   value = widget.searchValue.text;
                   if (value.isNotEmpty) {
-                    List<String> breedsForSpecies = widget.selectedAnimalSpecies
-                        != null ?
-                        widget.morespeciesToBreedsMap[
-                                widget.selectedAnimalSpecies] ??
-                            [] : totalBreedsList;
+                    List<String> breedsForSpecies =
+                        widget.selectedAnimalSpecies != null
+                            ? widget.morespeciesToBreedsMap[
+                                    widget.selectedAnimalSpecies] ??
+                                []
+                            : totalBreedsList;
 
                     widget.filteredBreedList = breedsForSpecies
                         .where((breed) =>
@@ -77,7 +79,7 @@ class _DrowupAnimalBreedState extends ConsumerState<DrowupAnimalBreed> {
               hintText: 'Search by breed',
             ),
             SizedBox(
-              height: globals.heightMediaQuery * 24,
+              height: SizeConfig.heightMultiplier(context) * 24,
             ),
             Expanded(
               child: ListView.builder(
@@ -88,7 +90,7 @@ class _DrowupAnimalBreedState extends ConsumerState<DrowupAnimalBreed> {
                     title: Text(widget.filteredBreedList[index],
                         style: AppFonts.body2(color: AppColors.grayscale90)),
                     trailing: Container(
-                      width: globals.widthMediaQuery * 24,
+                      width: SizeConfig.widthMultiplier(context) * 24,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(

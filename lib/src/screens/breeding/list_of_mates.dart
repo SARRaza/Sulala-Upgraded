@@ -1,5 +1,5 @@
 // import 'package:flutter/material.dart';
-// import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+// import 'package:sulala_upgrade/src/data/globals.dart';
 // import '../../theme/colors/colors.dart';
 // import '../../theme/fonts/fonts.dart';
 // import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
@@ -73,8 +73,8 @@
 //       ),
 //       body: Padding(
 //         padding: EdgeInsets.only(
-//             left: 16 * globals.widthMediaQuery,
-//             right: 16 * globals.widthMediaQuery),
+//             left: 16 * SizeConfig.widthMultiplier(context),
+//             right: 16 * SizeConfig.widthMultiplier(context)),
 //         child: Column(
 //           crossAxisAlignment: CrossAxisAlignment.start,
 //           children: [
@@ -89,29 +89,29 @@
 //                         crossAxisAlignment: CrossAxisAlignment.center,
 //                         children: [
 //                           SizedBox(
-//                             height: 151 * globals.heightMediaQuery,
+//                             height: 151 * SizeConfig.heightMultiplier(context),
 //                           ),
 //                           Image.asset(
 //                               'assets/illustrations/cow_broke_adult.png'),
-//                           SizedBox(height: 32 * globals.heightMediaQuery),
+//                           SizedBox(height: 32 * SizeConfig.heightMultiplier(context)),
 //                           Text(
 //                             'No Mates Yet',
 //                             style: AppFonts.headline3(
 //                                 color: AppColors.grayscale90),
 //                           ),
 //                           SizedBox(
-//                             height: 8 * globals.heightMediaQuery,
+//                             height: 8 * SizeConfig.heightMultiplier(context),
 //                           ),
 //                           Text(
 //                             "This animal hasn’t been mated yet.",
 //                             style: AppFonts.body2(color: AppColors.grayscale70),
 //                           ),
 //                           SizedBox(
-//                             height: 125 * globals.heightMediaQuery,
+//                             height: 125 * SizeConfig.heightMultiplier(context),
 //                           ),
 //                           SizedBox(
-//                             width: 130 * globals.widthMediaQuery,
-//                             height: 52 * globals.heightMediaQuery,
+//                             width: 130 * SizeConfig.widthMultiplier(context),
+//                             height: 52 * SizeConfig.heightMultiplier(context),
 //                             child: PrimaryButton(
 //                               text: 'Add Mate',
 //                               onPressed: () {
@@ -146,10 +146,10 @@
 //                             ),
 //                             ListTile(
 //                               contentPadding: EdgeInsets.only(
-//                                   top: 8 * globals.heightMediaQuery,
-//                                   bottom: 16 * globals.heightMediaQuery),
+//                                   top: 8 * SizeConfig.heightMultiplier(context),
+//                                   bottom: 16 * SizeConfig.heightMultiplier(context)),
 //                               leading: CircleAvatar(
-//                                 radius: 24 * globals.widthMediaQuery,
+//                                 radius: 24 * SizeConfig.widthMultiplier(context),
 //                                 backgroundColor: Colors.transparent,
 //                                 backgroundImage:
 //                                     AssetImage(partner['avatarImage']),
@@ -187,8 +187,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
-import '../../data/classes.dart';
+import 'package:sulala_upgrade/src/data/globals.dart';
+import '../../data/classes/breeding_partner.dart';
+import '../../data/classes/ovi_variables.dart';
+import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -226,21 +228,25 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
         child: Text('Animal not found.'),
       );
     }
-    final breedingEvents = ref.read(breedingEventsProvider).where((event
-        ) => event.sire?.id == widget.OviDetails.id || event.dam?.id == widget
-        .OviDetails.id).map((event) {
-          if(event.partner?.id == widget.OviDetails.id) {
-            return event.copyWith(partner: event.sire?.id == widget.OviDetails
-                .id ? BreedingPartner(event.dam!.animalName, event.dam!
-                .selectedOviImage, event.dam!.selectedOviGender) :
-            BreedingPartner(event.sire!.animalName, event.sire!
-                .selectedOviImage, event.sire!.selectedOviGender));
-          } else {
-            return event;
-          }
+    final breedingEvents = ref
+        .read(breedingEventsProvider)
+        .where((event) =>
+            event.sire?.id == widget.OviDetails.id ||
+            event.dam?.id == widget.OviDetails.id)
+        .map((event) {
+      if (event.partner?.id == widget.OviDetails.id) {
+        return event.copyWith(
+            partner: event.sire?.id == widget.OviDetails.id
+                ? BreedingPartner(event.dam!.animalName,
+                    event.dam!.selectedOviImage, event.dam!.selectedOviGender)
+                : BreedingPartner(
+                    event.sire!.animalName,
+                    event.sire!.selectedOviImage,
+                    event.sire!.selectedOviGender));
+      } else {
+        return event;
+      }
     }).toList();
-
-
 
     // Filter the breeding events based on the query
     return Scaffold(
@@ -274,8 +280,8 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
       ),
       body: Padding(
         padding: EdgeInsets.only(
-          right: 16 * globals.widthMediaQuery,
-          left: 16 * globals.widthMediaQuery,
+          right: 16 * SizeConfig.widthMultiplier(context),
+          left: 16 * SizeConfig.widthMultiplier(context),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -283,7 +289,7 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
             Text('List Of Mates',
                 style: AppFonts.title3(color: AppColors.grayscale90)),
             SizedBox(
-              height: 16 * globals.heightMediaQuery,
+              height: 16 * SizeConfig.heightMultiplier(context),
             ),
             breedingEvents.isEmpty
                 ? Expanded(
@@ -292,28 +298,29 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(
-                          height: 151 * globals.heightMediaQuery,
+                          height: 151 * SizeConfig.heightMultiplier(context),
                         ),
                         Image.asset('assets/illustrations/cow_broke_adult.png'),
-                        SizedBox(height: 32 * globals.heightMediaQuery),
+                        SizedBox(
+                            height: 32 * SizeConfig.heightMultiplier(context)),
                         Text(
                           'No Mates Yet',
                           style:
                               AppFonts.headline3(color: AppColors.grayscale90),
                         ),
                         SizedBox(
-                          height: 8 * globals.heightMediaQuery,
+                          height: 8 * SizeConfig.heightMultiplier(context),
                         ),
                         Text(
                           "This animal hasn’t been mated yet.",
                           style: AppFonts.body2(color: AppColors.grayscale70),
                         ),
                         SizedBox(
-                          height: 125 * globals.heightMediaQuery,
+                          height: 125 * SizeConfig.heightMultiplier(context),
                         ),
                         SizedBox(
-                          width: 130 * globals.widthMediaQuery,
-                          height: 52 * globals.heightMediaQuery,
+                          width: 130 * SizeConfig.widthMultiplier(context),
+                          height: 52 * SizeConfig.heightMultiplier(context),
                           child: PrimaryButton(
                             text: 'Add Mate',
                             onPressed: () {
@@ -373,7 +380,8 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
                                   return ListTile(
                                     contentPadding: EdgeInsets.zero,
                                     leading: CircleAvatar(
-                                      radius: 24 * globals.widthMediaQuery,
+                                      radius: 24 *
+                                          SizeConfig.widthMultiplier(context),
                                       backgroundColor: Colors.transparent,
                                       backgroundImage: partner.selectedOviImage,
                                       child: partner.selectedOviImage == null

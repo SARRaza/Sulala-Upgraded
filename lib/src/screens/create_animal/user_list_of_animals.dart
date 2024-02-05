@@ -6,7 +6,7 @@
 
 // import 'animal_filters.dart';
 // import 'create_animal.dart';
-// import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+// import 'package:sulala_upgrade/src/data/globals.dart';
 
 // import 'owned_animal_detail_reg_mode.dart';
 
@@ -129,8 +129,8 @@
 //               IconButton(
 //                 padding: EdgeInsets.zero,
 //                 icon: Container(
-//                   width: globals.widthMediaQuery * 37.5,
-//                   height: globals.widthMediaQuery * 37.5,
+//                   width: SizeConfig.widthMultiplier(context) * 37.5,
+//                   height: SizeConfig.widthMultiplier(context) * 37.5,
 //                   decoration: const BoxDecoration(
 //                     shape: BoxShape.circle,
 //                     color: AppColors.primary50,
@@ -154,8 +154,8 @@
 //         body: SingleChildScrollView(
 //           child: Padding(
 //             padding: EdgeInsets.only(
-//                 left: globals.widthMediaQuery * 16,
-//                 right: globals.widthMediaQuery * 16),
+//                 left: SizeConfig.widthMultiplier(context) * 16,
+//                 right: SizeConfig.widthMultiplier(context) * 16),
 //             child: Column(
 //               crossAxisAlignment: CrossAxisAlignment.start,
 //               children: [
@@ -172,19 +172,19 @@
 //                     );
 //                   },
 //                 ),
-//                 SizedBox(height: globals.heightMediaQuery * 16),
+//                 SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
 //                 mammals.isNotEmpty
 //                     ? Visibility(
 //                         visible: widget.selectedFilters
 //                             .isNotEmpty, // Show space if there are selected filters
 //                         child: Wrap(
-//                           spacing: globals.widthMediaQuery * 8,
+//                           spacing: SizeConfig.widthMultiplier(context) * 8,
 //                           children: widget.selectedFilters.map((filter) {
 //                             return Chip(
 //                               deleteIcon: Icon(
 //                                 Icons.close_rounded,
 //                                 color: AppColors.grayscale90,
-//                                 size: globals.widthMediaQuery * 18,
+//                                 size: SizeConfig.widthMultiplier(context) * 18,
 //                               ),
 //                               labelStyle:
 //                                   AppFonts.body2(color: AppColors.grayscale90),
@@ -207,7 +207,7 @@
 //                 mammals.isNotEmpty
 //                     ? _filteredMammals.isNotEmpty
 //                         ? SizedBox(
-//                             height: globals.heightMediaQuery * 812,
+//                             height: SizeConfig.heightMultiplier(context) * 812,
 //                             child: ListView.builder(
 //                               shrinkWrap: true,
 //                               itemCount: _filteredMammals.length,
@@ -217,7 +217,7 @@
 //                                   contentPadding: EdgeInsets.zero,
 //                                   leading: CircleAvatar(
 //                                     backgroundColor: Colors.transparent,
-//                                     radius: globals.widthMediaQuery * 24,
+//                                     radius: SizeConfig.widthMultiplier(context) * 24,
 //                                     backgroundImage:
 //                                         AssetImage(mammal['image']),
 //                                   ),
@@ -240,7 +240,7 @@
 //                                     'assets/illustrations/cow_search.png',
 //                                   ),
 //                                   SizedBox(
-//                                     height: globals.heightMediaQuery * 32,
+//                                     height: SizeConfig.heightMultiplier(context) * 32,
 //                                   ),
 //                                   Text(
 //                                     'No Animals Found',
@@ -253,7 +253,7 @@
 //                                         color: AppColors.grayscale70),
 //                                   ),
 //                                   SizedBox(
-//                                     height: globals.heightMediaQuery * 24,
+//                                     height: SizeConfig.heightMultiplier(context) * 24,
 //                                   ),
 //                                 ],
 //                               ),
@@ -268,7 +268,7 @@
 //                               'assets/illustrations/cow_search.png',
 //                             ),
 //                             SizedBox(
-//                               height: globals.heightMediaQuery * 32,
+//                               height: SizeConfig.heightMultiplier(context) * 32,
 //                             ),
 //                             Text(
 //                               'No Animals Added',
@@ -281,11 +281,11 @@
 //                                   AppFonts.body2(color: AppColors.grayscale70),
 //                             ),
 //                             SizedBox(
-//                               height: globals.heightMediaQuery * 24,
+//                               height: SizeConfig.heightMultiplier(context) * 24,
 //                             ),
 //                             SizedBox(
-//                               width: globals.widthMediaQuery * 168.75,
-//                               height: globals.heightMediaQuery * 40,
+//                               width: SizeConfig.widthMultiplier(context) * 168.75,
+//                               height: SizeConfig.heightMultiplier(context) * 40,
 //                               child: PrimaryButton(
 //                                   text: 'Add',
 //                                   onPressed: () {

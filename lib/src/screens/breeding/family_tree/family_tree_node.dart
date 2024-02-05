@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sulala_upgrade/src/data/classes.dart';
+
+import '../../../data/classes/ovi_variables.dart';
 
 class FamilyTreeNode {
   final OviVariables? animal;

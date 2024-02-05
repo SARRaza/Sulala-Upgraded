@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sulala_upgrade/src/screens/profile/privacy_security.dart';
+import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 class AboutApp extends StatefulWidget {
   const AboutApp({super.key});
@@ -49,16 +50,16 @@ class _AboutApp extends State<AboutApp> {
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(
-                left: 16 * globals.widthMediaQuery,
-                right: 16 * globals.widthMediaQuery,
-                top: 24 * globals.heightMediaQuery),
+                left: 16 * SizeConfig.widthMultiplier(context),
+                right: 16 * SizeConfig.widthMultiplier(context),
+                top: 24 * SizeConfig.heightMultiplier(context)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
                   child: Container(
-                    width: 120 * globals.widthMediaQuery,
-                    height: 120 * globals.widthMediaQuery,
+                    width: 120 * SizeConfig.widthMultiplier(context),
+                    height: 120 * SizeConfig.widthMultiplier(context),
                     decoration: BoxDecoration(
                       color: AppColors.secondary10,
                       borderRadius: BorderRadius.circular(30),
@@ -69,15 +70,15 @@ class _AboutApp extends State<AboutApp> {
                     )),
                   ),
                 ),
-                SizedBox(height: 16 * globals.heightMediaQuery),
+                SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
                 FutureBuilder(
                     future: PackageInfo.fromPlatform(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return Center(
                           child: Text(
-                              'appVersion'.trParams({'version': snapshot.data!
-                                  .version}),
+                              'appVersion'.trParams(
+                                  {'version': snapshot.data!.version}),
                               style:
                                   AppFonts.body2(color: AppColors.grayscale70)),
                         );
@@ -86,7 +87,7 @@ class _AboutApp extends State<AboutApp> {
                       }
                     }),
                 SizedBox(
-                  height: 32 * globals.heightMediaQuery,
+                  height: 32 * SizeConfig.heightMultiplier(context),
                 ),
                 Container(
                   decoration: const BoxDecoration(

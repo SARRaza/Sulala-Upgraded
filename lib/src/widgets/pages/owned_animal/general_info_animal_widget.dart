@@ -8,7 +8,7 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sulala_upgrade/src/screens/reg_mode/image_view_page.dart';
 import 'package:sulala_upgrade/src/widgets/styled_dismissible.dart';
-import '../../../data/classes.dart';
+import '../../../data/classes/ovi_variables.dart';
 import '../../../data/riverpod_globals.dart';
 import '../../../screens/pdf/pdf_view_page.dart';
 import '../../../theme/colors/colors.dart';
@@ -16,7 +16,7 @@ import '../../../theme/fonts/fonts.dart';
 import '../../dialogs/confirm_delete_dialog.dart';
 import '../../lists/table_lsit/table_textbutton.dart';
 import '../../other/three_information_block.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 class GeneralInfoAnimalWidget extends ConsumerStatefulWidget {
   final VoidCallback onDateOfBirthPressed;
@@ -86,18 +86,19 @@ class _GeneralInfoAnimalWidgetState
     extends ConsumerState<GeneralInfoAnimalWidget> {
   @override
   Widget build(BuildContext context) {
-    final selectedDate = parseSelectedDate(widget.OviDetails.dateOfBirth);
+    final selectedDate = widget.OviDetails.dateOfBirth;
 
-    final animalDetails = ref.watch(ovianimalsProvider).firstWhere((animal
-        ) => animal.id == widget.OviDetails.id);
-    final List<String> uploadedFiles = animalDetails.files?.map((file) => file
-        .path).toList()?? [];
+    final animalDetails = ref
+        .watch(ovianimalsProvider)
+        .firstWhere((animal) => animal.id == widget.OviDetails.id);
+    final List<String> uploadedFiles =
+        animalDetails.files?.map((file) => file.path).toList() ?? [];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: globals.widthMediaQuery * 343,
+          width: SizeConfig.widthMultiplier(context) * 343,
           child: ThreeInformationBlock(
             head1: widget.OviDetails.selectedAnimalType,
             head2: widget.OviDetails.selectedAnimalSpecies,
@@ -107,7 +108,7 @@ class _GeneralInfoAnimalWidgetState
           ),
         ),
         SizedBox(
-          height: globals.heightMediaQuery * 24,
+          height: SizeConfig.heightMultiplier(context) * 24,
         ),
         Text(
           "General Information",
@@ -124,10 +125,11 @@ class _GeneralInfoAnimalWidgetState
                   textHead: "Age",
                 ),
                 Visibility(
-                  visible: widget.OviDetails.dateOfBirth.isNotEmpty,
+                  visible: widget.OviDetails.dateOfBirth != null,
                   child: TableTextButton(
                     onPressed: widget.onDateOfBirthPressed,
-                    textButton: widget.OviDetails.dateOfBirth,
+                    textButton: DateFormat('dd/MM/yyyy').format(
+                        widget.OviDetails.dateOfBirth ?? DateTime.now()),
                     textHead: "Date of Birth",
                   ),
                 ),
@@ -212,16 +214,19 @@ class _GeneralInfoAnimalWidgetState
                 Visibility(
                   visible: widget.OviDetails.customFields != null,
                   child: Column(
-                    children: widget.OviDetails.customFields!.keys.map((fieldName) => TableTextButton(
-                        onPressed: () {},
-                        textButton: widget.OviDetails.customFields![fieldName]!,
-                        textHead: fieldName)).toList(),
+                    children: widget.OviDetails.customFields!.keys
+                        .map((fieldName) => TableTextButton(
+                            onPressed: () {},
+                            textButton:
+                                widget.OviDetails.customFields![fieldName]!,
+                            textHead: fieldName))
+                        .toList(),
                   ),
                 ),
                 SizedBox(
-                  height: globals.heightMediaQuery * 24,
+                  height: SizeConfig.heightMultiplier(context) * 24,
                 ),
-                if(widget.OviDetails.notes.isNotEmpty)
+                if (widget.OviDetails.notes.isNotEmpty)
                   Column(
                     children: [
                       Text(
@@ -229,7 +234,7 @@ class _GeneralInfoAnimalWidgetState
                         style: AppFonts.title5(color: AppColors.grayscale90),
                       ),
                       SizedBox(
-                        height: globals.heightMediaQuery * 14,
+                        height: SizeConfig.heightMultiplier(context) * 14,
                       ),
                       Text(
                         widget.OviDetails.notes,
@@ -261,8 +266,8 @@ class _GeneralInfoAnimalWidgetState
                               Expanded(
                                 child: Text(
                                   filePath.split('/').last,
-                                  style:
-                                      AppFonts.body1(color: AppColors.grayscale90),
+                                  style: AppFonts.body1(
+                                      color: AppColors.grayscale90),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -272,7 +277,8 @@ class _GeneralInfoAnimalWidgetState
                                 Expanded(
                                   child: LinearProgressIndicator(
                                     value: _uploadProgress,
-                                    valueColor: const AlwaysStoppedAnimation<Color>(
+                                    valueColor:
+                                        const AlwaysStoppedAnimation<Color>(
                                       AppColors.primary30,
                                     ),
                                     backgroundColor: AppColors.grayscale10,
@@ -298,7 +304,7 @@ class _GeneralInfoAnimalWidgetState
 
   void showFile(String filePath) {
     final file = File(filePath);
-    if(mounted) {
+    if (mounted) {
       if (filePath.endsWith('.pdf')) {
         // Open PDF
         Navigator.push(
@@ -306,8 +312,11 @@ class _GeneralInfoAnimalWidgetState
           MaterialPageRoute(builder: (context) => PDFViewPage(file: file)),
         );
       } else {
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>
-            ImageViewPage(imageProvider: FileImage(file))));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    ImageViewPage(imageProvider: FileImage(file))));
       }
     }
   }
@@ -317,7 +326,8 @@ class _GeneralInfoAnimalWidgetState
       context: context,
       builder: (BuildContext context) {
         return ConfirmDeleteDialog(
-          content: 'Are you sure you want to delete this file?'.tr,);
+          content: 'Are you sure you want to delete this file?'.tr,
+        );
       },
     );
   }
@@ -325,10 +335,13 @@ class _GeneralInfoAnimalWidgetState
   _deleteFile(String filePath) {
     File(filePath).delete();
     ref.read(ovianimalsProvider.notifier).update((state) {
-      final animalIndex = state.indexWhere((animal) => animal.id == widget
-          .OviDetails.id);
-      state[animalIndex] = state[animalIndex].copyWith(files: state[animalIndex]
-          .files!.where((file) => file.path !=  filePath).toList());
+      final animalIndex =
+          state.indexWhere((animal) => animal.id == widget.OviDetails.id);
+      state[animalIndex] = state[animalIndex].copyWith(
+          files: state[animalIndex]
+              .files!
+              .where((file) => file.path != filePath)
+              .toList());
 
       return state;
     });

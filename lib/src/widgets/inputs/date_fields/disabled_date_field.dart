@@ -64,7 +64,6 @@ class DisabledDateField extends StatelessWidget {
   }
 }
 
-
 // Example of use:
 
 // SizedBox(

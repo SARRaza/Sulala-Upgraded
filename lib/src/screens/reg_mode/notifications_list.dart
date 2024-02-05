@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sulala_upgrade/src/widgets/styled_dismissible.dart';
+import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 class NotificationList extends StatefulWidget {
-
   const NotificationList({super.key});
 
   @override
@@ -70,7 +70,7 @@ class _NotificationListState extends State<NotificationList> {
           backgroundColor: Colors.transparent,
           leading: IconButton(
             icon: Container(
-              padding: EdgeInsets.all(globals.widthMediaQuery * 6),
+              padding: EdgeInsets.all(SizeConfig.widthMultiplier(context) * 6),
               decoration: BoxDecoration(
                 color: AppColors.grayscale10,
                 borderRadius: BorderRadius.circular(50),
@@ -87,8 +87,8 @@ class _NotificationListState extends State<NotificationList> {
         ),
         body: Padding(
           padding: EdgeInsets.only(
-              left: 16 * globals.widthMediaQuery,
-              right: globals.widthMediaQuery * 16),
+              left: 16 * SizeConfig.widthMultiplier(context),
+              right: SizeConfig.widthMultiplier(context) * 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -96,7 +96,7 @@ class _NotificationListState extends State<NotificationList> {
                 'Notifications',
                 style: AppFonts.title4(color: AppColors.grayscale90),
               ),
-              SizedBox(height: globals.heightMediaQuery * 16),
+              SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
               Expanded(
                 child: ListView.builder(
                   itemCount: notifications.length,
@@ -114,14 +114,15 @@ class _NotificationListState extends State<NotificationList> {
                       child: ListTile(
                         leading: CircleAvatar(
                           backgroundColor: Colors.transparent,
-                          radius: globals.widthMediaQuery * 24,
+                          radius: SizeConfig.widthMultiplier(context) * 24,
                           backgroundImage:
                               AssetImage(notification['imagePath'] as String),
                         ),
                         title: Text(
                           truncateTextWithEllipsis(
                               notification['title'] as String, 15),
-                          style: AppFonts.headline4(color: AppColors.grayscale90),
+                          style:
+                              AppFonts.headline4(color: AppColors.grayscale90),
                         ),
                         subtitle: Text(
                           truncateTextWithEllipsis(
@@ -144,7 +145,8 @@ class _NotificationListState extends State<NotificationList> {
                                       backgroundColor: AppColors.primary50,
                                       shape: const CircleBorder(),
                                       padding: EdgeInsets.all(
-                                          globals.widthMediaQuery * 12),
+                                          SizeConfig.widthMultiplier(context) *
+                                              12),
                                     ),
                                     child: const Icon(
                                       Icons.check,
@@ -164,7 +166,8 @@ class _NotificationListState extends State<NotificationList> {
                                       elevation: 0,
                                       shape: const CircleBorder(),
                                       padding: EdgeInsets.all(
-                                          globals.widthMediaQuery * 12),
+                                          SizeConfig.widthMultiplier(context) *
+                                              12),
                                     ),
                                     child: const Icon(Icons.close_rounded,
                                         color: AppColors.grayscale90),
@@ -173,8 +176,8 @@ class _NotificationListState extends State<NotificationList> {
                               )
                             : Text(
                                 timeAgo,
-                                style:
-                                    AppFonts.body2(color: AppColors.grayscale60),
+                                style: AppFonts.body2(
+                                    color: AppColors.grayscale60),
                               ),
                         onTap: () {
                           // Handle tap on the list item

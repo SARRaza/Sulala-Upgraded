@@ -61,8 +61,6 @@ class _RadioActiveState extends State<RadioActive> {
   }
 }
 
-
-
 // Example of use:
 
 // RadioActive(

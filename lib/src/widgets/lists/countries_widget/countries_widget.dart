@@ -81,8 +81,7 @@ class _CountriesWidgetState extends ConsumerState<CountriesWidget> {
 
 typedef CountrySelectionCallback = void Function(CountryInfo countryInfo);
 
-// Example of use: 
-
+// Example of use:
 
 //Functions to be added to the class:
 // void _onCountrySelected(CountryInfo countryInfo) {
@@ -96,8 +95,6 @@ typedef CountrySelectionCallback = void Function(CountryInfo countryInfo);
 //     );
 //     Navigator.pop(context);
 //   }
-
-
 
 // SizedBox(
 //                   height: MediaQuery.of(context).size.height * 0.95,

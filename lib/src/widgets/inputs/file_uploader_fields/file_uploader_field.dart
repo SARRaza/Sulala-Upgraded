@@ -16,9 +16,12 @@ import '../../../theme/fonts/fonts.dart';
 // Create a Riverpod provider to hold the list of uploaded files
 
 class FileUploaderField extends ConsumerStatefulWidget {
-  const FileUploaderField({Key? key, this.onFileUploaded = _defaultFunction,
-    this.uploadedFiles, this.onDelete}) :
-        super(key: key);
+  const FileUploaderField(
+      {Key? key,
+      this.onFileUploaded = _defaultFunction,
+      this.uploadedFiles,
+      this.onDelete})
+      : super(key: key);
   final void Function(File) onFileUploaded;
   final List<String>? uploadedFiles;
   final Function(String)? onDelete;
@@ -60,20 +63,22 @@ class _FileUploaderFieldState extends ConsumerState<FileUploaderField> {
       final selectedFile = File(filePath);
 
       // Create a new file path in the app's data directory
-      final String newFilePath = '${directory.path}/${selectedFile.uri.pathSegments.last}';
+      final String newFilePath =
+          '${directory.path}/${selectedFile.uri.pathSegments.last}';
 
       // Copy the file to the new location
       final newFile = await selectedFile.copy(newFilePath);
       widget.onFileUploaded(newFile);
 
       // Update the state to reflect the file has been saved
-      if(mounted) {
+      if (mounted) {
         setState(() {
-        ref.read(uploadedFilesProvider).add(newFilePath);
-        uploadedFiles.add(newFilePath);
-        _uploadProgress = 1; // Assuming the file is saved, set progress to 100%
-        // You may also want to update other states or notify the user
-      });
+          ref.read(uploadedFilesProvider).add(newFilePath);
+          uploadedFiles.add(newFilePath);
+          _uploadProgress =
+              1; // Assuming the file is saved, set progress to 100%
+          // You may also want to update other states or notify the user
+        });
       }
     } catch (e) {
       // Handle errors (e.g., file not found, no permission, etc.)
@@ -90,7 +95,7 @@ class _FileUploaderFieldState extends ConsumerState<FileUploaderField> {
       uploadedFiles.remove(filePath);
     });
 
-    if(widget.onDelete != null) {
+    if (widget.onDelete != null) {
       widget.onDelete!(filePath);
     }
   }
@@ -98,12 +103,13 @@ class _FileUploaderFieldState extends ConsumerState<FileUploaderField> {
   @override
   void initState() {
     ref.read(uploadedFilesProvider).clear();
-    if(widget.uploadedFiles != null) {
-      ref.read(uploadedFilesProvider).addAll(widget.uploadedFiles!.map(
-              (path) => path));
+    if (widget.uploadedFiles != null) {
+      ref
+          .read(uploadedFilesProvider)
+          .addAll(widget.uploadedFiles!.map((path) => path));
     }
 
-    uploadedFiles = widget.uploadedFiles?? [];
+    uploadedFiles = widget.uploadedFiles ?? [];
     super.initState();
   }
 
@@ -220,17 +226,19 @@ class _FileUploaderFieldState extends ConsumerState<FileUploaderField> {
         const SizedBox(
           height: 16,
         ),
-        Column(
-          children: fileWidgets
-        )
+        Column(children: fileWidgets)
       ],
     );
   }
 
   void showFile(String filePath) {
     final index = uploadedFiles.indexOf(filePath);
-    Navigator.push(context, MaterialPageRoute(builder: (context) =>
-        FileViewPage(files: uploadedFiles.map((path) => File(path)).toList(),
-          index: index,)));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => FileViewPage(
+                  files: uploadedFiles.map((path) => File(path)).toList(),
+                  index: index,
+                )));
   }
 }

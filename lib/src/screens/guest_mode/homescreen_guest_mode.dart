@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
 import '../../widgets/pages/homepage_widgets/card.dart';
 import '../../widgets/pages/homepage_widgets/title_text.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 import '../sign_in/sign_in.dart';
 import '../sign_up/join_now.dart';
@@ -24,8 +25,6 @@ class HomeScreenGuestMode extends StatefulWidget {
 }
 
 class _HomeScreenGuestModeState extends State<HomeScreenGuestMode> {
-  double heightMediaQuery = globals.heightMediaQuery;
-  double widthMediaQuery = globals.widthMediaQuery;
   bool _isLoading = true; // Add a boolean for loading state
 
   @override
@@ -75,7 +74,7 @@ class _HomeScreenGuestModeState extends State<HomeScreenGuestMode> {
                           AssetImage('assets/icons/frame/24px/Icon-button.png'),
                     ),
                   ),
-                  SizedBox(width: globals.widthMediaQuery * 4),
+                  SizedBox(width: SizeConfig.widthMultiplier(context) * 4),
                 ],
               ),
             ],
@@ -86,15 +85,15 @@ class _HomeScreenGuestModeState extends State<HomeScreenGuestMode> {
         ),
         body: SingleChildScrollView(
           child: SizedBox(
-            height: globals.heightMediaQuery * 704.004,
+            height: SizeConfig.heightMultiplier(context) * 704.004,
             child: Stack(
               children: [
                 // Background Image (Bottom Sheet)
                 _isLoading == false
                     ? Positioned(
-                        bottom: globals.heightMediaQuery * 110,
-                        left: globals.widthMediaQuery * 225,
-                        right: globals.widthMediaQuery * 18.75,
+                        bottom: SizeConfig.heightMultiplier(context) * 110,
+                        left: SizeConfig.widthMultiplier(context) * 225,
+                        right: SizeConfig.widthMultiplier(context) * 18.75,
                         child: Image.asset(
                           'assets/illustrations/cow_eating.png',
                           fit: BoxFit.fill,
@@ -104,7 +103,8 @@ class _HomeScreenGuestModeState extends State<HomeScreenGuestMode> {
 
                 // Content
                 Padding(
-                  padding: EdgeInsets.all(globals.widthMediaQuery * 16),
+                  padding:
+                      EdgeInsets.all(SizeConfig.widthMultiplier(context) * 16),
                   child: Column(
                     children: _isLoading
                         ? [
@@ -140,7 +140,7 @@ class _HomeScreenGuestModeState extends State<HomeScreenGuestMode> {
               },
             ),
           ),
-          SizedBox(width: globals.widthMediaQuery * 6),
+          SizedBox(width: SizeConfig.widthMultiplier(context) * 6),
           Expanded(
             child: CardWidget(
               color: const Color.fromRGBO(246, 239, 205, 1),
@@ -158,12 +158,12 @@ class _HomeScreenGuestModeState extends State<HomeScreenGuestMode> {
           ),
         ],
       ),
-      SizedBox(height: globals.heightMediaQuery * 110),
+      SizedBox(height: SizeConfig.heightMultiplier(context) * 110),
       TitleText(text: 'Want to start your farm\nright now and join?'.tr),
-      SizedBox(height: globals.heightMediaQuery * 24),
+      SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
       SizedBox(
-        height: globals.heightMediaQuery * 48,
-        width: globals.widthMediaQuery * 108,
+        height: SizeConfig.heightMultiplier(context) * 48,
+        width: SizeConfig.widthMultiplier(context) * 108,
         child: PrimaryButton(
           text: 'Join Now'.tr,
           onPressed: () {
@@ -176,7 +176,7 @@ class _HomeScreenGuestModeState extends State<HomeScreenGuestMode> {
           status: PrimaryButtonStatus.idle,
         ),
       ),
-      SizedBox(height: globals.heightMediaQuery * 8),
+      SizedBox(height: SizeConfig.heightMultiplier(context) * 8),
       PrimaryTextButton(
         status: TextStatus.idle,
         text: 'Sign In'.tr,

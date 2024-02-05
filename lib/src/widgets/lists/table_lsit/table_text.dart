@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 
@@ -34,7 +34,7 @@ class _TableTextState extends State<TableText> {
         Row(
           children: [
             SizedBox(
-              width: globals.widthMediaQuery * 15,
+              width: SizeConfig.widthMultiplier(context) * 15,
             ),
             Text(
               truncateTextWithEllipsis(widget.text1, 25),
@@ -50,7 +50,7 @@ class _TableTextState extends State<TableText> {
               ),
             ),
             SizedBox(
-              width: globals.widthMediaQuery * 15,
+              width: SizeConfig.widthMultiplier(context) * 15,
             ),
           ],
         ),
@@ -58,7 +58,6 @@ class _TableTextState extends State<TableText> {
     );
   }
 }
-
 
 // Exapmle of use:
 

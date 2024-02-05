@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
@@ -72,7 +72,7 @@ class DisabledPhoneNumberField extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(width: globals.widthMediaQuery * 9),
+                    SizedBox(width: SizeConfig.widthMultiplier(context) * 9),
                     Image.asset(
                       countryFlag,
                       width: 24,
@@ -83,14 +83,14 @@ class DisabledPhoneNumberField extends StatelessWidget {
                     ),
                     Icon(Icons.arrow_downward_rounded,
                         color: AppColors.primary40,
-                        size: globals.widthMediaQuery * 13),
-                    SizedBox(width: globals.widthMediaQuery * 2),
+                        size: SizeConfig.widthMultiplier(context) * 13),
+                    SizedBox(width: SizeConfig.widthMultiplier(context) * 2),
                   ],
                 ),
               ),
             ),
             Container(
-              height: globals.heightMediaQuery * 41,
+              height: SizeConfig.heightMultiplier(context) * 41,
               width: 1,
               color: AppColors.grayscale20, // Gray border color
             ),

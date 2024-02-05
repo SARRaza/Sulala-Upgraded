@@ -3,12 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/toggles/toggle_active.dart';
 import '../../widgets/controls_and_buttons/toggles/toggle_disabled.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 class PrivacySecurityPage extends ConsumerStatefulWidget {
   const PrivacySecurityPage({super.key});
@@ -53,16 +54,16 @@ class _PrivacySecurityPage extends ConsumerState<PrivacySecurityPage> {
           ),
           body: Padding(
             padding: EdgeInsets.only(
-                left: 16 * globals.widthMediaQuery,
-                right: 16 * globals.widthMediaQuery,
-                top: 24 * globals.heightMediaQuery),
+                left: 16 * SizeConfig.widthMultiplier(context),
+                right: 16 * SizeConfig.widthMultiplier(context),
+                top: 24 * SizeConfig.heightMultiplier(context)),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
                 'Privacy & Security'.tr,
                 style: AppFonts.title4(color: AppColors.grayscale90),
               ),
-              SizedBox(height: 16 * globals.heightMediaQuery),
+              SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
@@ -116,13 +117,13 @@ class _PrivacySecurityPage extends ConsumerState<PrivacySecurityPage> {
                         }),
               ),
               SizedBox(
-                height: 32 * globals.heightMediaQuery,
+                height: 32 * SizeConfig.heightMultiplier(context),
               ),
               Text(
                 'Contact Information'.tr,
                 style: AppFonts.title4(color: AppColors.grayscale90),
               ),
-              SizedBox(height: 16 * globals.heightMediaQuery),
+              SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(

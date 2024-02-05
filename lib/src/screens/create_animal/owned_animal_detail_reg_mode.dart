@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import 'package:sulala_upgrade/src/screens/reg_mode/image_view_page.dart';
 
-import '../../data/classes.dart';
+import '../../data/classes/breeding_event_variables.dart';
+import '../../data/classes/ovi_variables.dart';
+import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/animal_info_modal_sheets.dart/animal_image_picker.dart';
@@ -75,7 +77,7 @@ class _OwnedAnimalDetailsRegModeState
             Align(
               alignment: Alignment.topCenter,
               child: SizedBox(
-                width: globals.widthMediaQuery * 375,
+                width: SizeConfig.widthMultiplier(context) * 375,
                 child: Image.asset(
                   "assets/graphic/Animal_p.png",
                   fit: BoxFit.fill,
@@ -93,7 +95,7 @@ class _OwnedAnimalDetailsRegModeState
                   icon: Icon(
                     Icons.arrow_back_rounded,
                     color: Colors.black,
-                    size: globals.widthMediaQuery * 24,
+                    size: SizeConfig.widthMultiplier(context) * 24,
                   ),
                   onPressed: () {
                     // Handle close button press
@@ -106,7 +108,7 @@ class _OwnedAnimalDetailsRegModeState
               top: 8.0,
               right: 8.0,
               child: Container(
-                width: globals.widthMediaQuery * 40,
+                width: SizeConfig.widthMultiplier(context) * 40,
                 decoration: const BoxDecoration(
                     color: AppColors.grayscale10, shape: BoxShape.circle),
                 child: IconButton(
@@ -128,7 +130,7 @@ class _OwnedAnimalDetailsRegModeState
               ),
             ),
             Positioned(
-              top: globals.heightMediaQuery * 185,
+              top: SizeConfig.heightMultiplier(context) * 185,
               bottom: 0,
               left: 0,
               right: 0,
@@ -137,9 +139,10 @@ class _OwnedAnimalDetailsRegModeState
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(
-                      globals.heightMediaQuery * 32,
+                      SizeConfig.heightMultiplier(context) * 32,
                     ),
-                    topRight: Radius.circular(globals.widthMediaQuery * 32),
+                    topRight: Radius.circular(
+                        SizeConfig.widthMultiplier(context) * 32),
                   ),
                 ),
                 child: const SizedBox(), // Add your content here
@@ -147,7 +150,8 @@ class _OwnedAnimalDetailsRegModeState
             ),
             Center(
               child: FractionalTranslation(
-                translation: Offset(0, globals.heightMediaQuery * 0.15),
+                translation:
+                    Offset(0, SizeConfig.heightMultiplier(context) * 0.15),
                 child: Expanded(
                   child: Column(
                     children: [
@@ -167,7 +171,7 @@ class _OwnedAnimalDetailsRegModeState
                         ),
                       ),
                       SizedBox(
-                        height: globals.heightMediaQuery * 16,
+                        height: SizeConfig.heightMultiplier(context) * 16,
                       ),
                       if (editMode == true)
                         Row(
@@ -188,12 +192,12 @@ class _OwnedAnimalDetailsRegModeState
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
                       SizedBox(
-                        height: globals.heightMediaQuery * 16,
+                        height: SizeConfig.heightMultiplier(context) * 16,
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                            left: globals.widthMediaQuery * 16,
-                            right: globals.widthMediaQuery * 16),
+                            left: SizeConfig.widthMultiplier(context) * 16,
+                            right: SizeConfig.widthMultiplier(context) * 16),
                         child: Column(
                           children: [
                             Wrap(
@@ -229,10 +233,10 @@ class _OwnedAnimalDetailsRegModeState
                                         TextStyle(color: AppColors.primary50),
                                   )),
                             SizedBox(
-                              height: globals.heightMediaQuery * 32,
+                              height: SizeConfig.heightMultiplier(context) * 32,
                             ),
                             Container(
-                              height: globals.heightMediaQuery * 44,
+                              height: SizeConfig.heightMultiplier(context) * 44,
                               decoration: BoxDecoration(
                                 color: AppColors.grayscale10,
                                 borderRadius: BorderRadius.circular(24),
@@ -258,11 +262,12 @@ class _OwnedAnimalDetailsRegModeState
                               ),
                             ),
                             SizedBox(
-                              height: globals.heightMediaQuery * 24,
+                              height: SizeConfig.heightMultiplier(context) * 24,
                             ),
                             SizedBox(
-                              height: globals.heightMediaQuery * 325,
-                              width: globals.widthMediaQuery * 341,
+                              height:
+                                  SizeConfig.heightMultiplier(context) * 325,
+                              width: SizeConfig.widthMultiplier(context) * 341,
                               child: TabBarView(
                                 controller: _tabController,
                                 children: [
@@ -304,7 +309,7 @@ class _OwnedAnimalDetailsRegModeState
                                     OviDetails: oviDetails,
                                     pregnancyStatusUpdated: (status) {
                                       setState(() {
-                                        oviDetails.pregnant = status;
+                                        oviDetails.copyWith(pregnant: status);
                                       });
                                     },
                                   ),
@@ -357,7 +362,6 @@ class _OwnedAnimalDetailsRegModeState
         return state;
       });
     }
-
   }
 
   void _showImagePicker(BuildContext context) {

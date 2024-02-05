@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/buttons/secondary_button.dart';
 import '../../widgets/controls_and_buttons/tags/tags.dart';
 import 'reg_home_page.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 class ShowFilterReg extends StatefulWidget {
   final List<Tag> currentStateTags;
@@ -35,14 +36,14 @@ class _ShowFilterRegState extends State<ShowFilterReg> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          height: globals.heightMediaQuery * 20,
+          height: SizeConfig.heightMultiplier(context) * 20,
         ),
         Text(
           'Current State',
           style: AppFonts.headline3(color: AppColors.grayscale90),
         ),
         SizedBox(
-          height: globals.heightMediaQuery * 10,
+          height: SizeConfig.heightMultiplier(context) * 10,
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +75,7 @@ class _ShowFilterRegState extends State<ShowFilterReg> {
                         },
                       ),
                       SizedBox(
-                        width: globals.widthMediaQuery * 10,
+                        width: SizeConfig.widthMultiplier(context) * 10,
                       ),
                     ],
                   );
@@ -84,14 +85,14 @@ class _ShowFilterRegState extends State<ShowFilterReg> {
           ),
         ),
         SizedBox(
-          height: globals.heightMediaQuery * 20,
+          height: SizeConfig.heightMultiplier(context) * 20,
         ),
         Text(
           'Medical State',
           style: AppFonts.headline3(color: AppColors.grayscale90),
         ),
         SizedBox(
-          height: globals.heightMediaQuery * 10,
+          height: SizeConfig.heightMultiplier(context) * 10,
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,7 +124,7 @@ class _ShowFilterRegState extends State<ShowFilterReg> {
                         },
                       ),
                       SizedBox(
-                        width: globals.widthMediaQuery * 10,
+                        width: SizeConfig.widthMultiplier(context) * 10,
                       ),
                     ],
                   );
@@ -133,14 +134,14 @@ class _ShowFilterRegState extends State<ShowFilterReg> {
           ),
         ),
         SizedBox(
-          height: globals.heightMediaQuery * 20,
+          height: SizeConfig.heightMultiplier(context) * 20,
         ),
         Text(
           'Other',
           style: AppFonts.headline3(color: AppColors.grayscale90),
         ),
         SizedBox(
-          height: globals.heightMediaQuery * 10,
+          height: SizeConfig.heightMultiplier(context) * 10,
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,7 +173,7 @@ class _ShowFilterRegState extends State<ShowFilterReg> {
                         },
                       ),
                       SizedBox(
-                        width: globals.widthMediaQuery * 10,
+                        width: SizeConfig.widthMultiplier(context) * 10,
                       ),
                     ],
                   );
@@ -182,14 +183,14 @@ class _ShowFilterRegState extends State<ShowFilterReg> {
           ),
         ),
         SizedBox(
-          height: globals.heightMediaQuery * 20,
+          height: SizeConfig.heightMultiplier(context) * 20,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(
-              height: globals.heightMediaQuery * 52,
-              width: globals.widthMediaQuery * 165,
+              height: SizeConfig.heightMultiplier(context) * 52,
+              width: SizeConfig.widthMultiplier(context) * 165,
               child: SecondaryButton(
                 onPressed: () {
                   Navigator.pop(context);
@@ -199,8 +200,8 @@ class _ShowFilterRegState extends State<ShowFilterReg> {
               ),
             ),
             SizedBox(
-              height: globals.heightMediaQuery * 52,
-              width: globals.widthMediaQuery * 165,
+              height: SizeConfig.heightMultiplier(context) * 52,
+              width: SizeConfig.widthMultiplier(context) * 165,
               child: PrimaryButton(
                 onPressed: () {
                   Navigator.pop(context);

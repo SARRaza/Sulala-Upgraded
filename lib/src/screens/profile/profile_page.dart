@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import 'package:sulala_upgrade/src/screens/guest_mode/homescreen_guest_mode.dart';
+import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/navigate_button.dart';
@@ -18,7 +19,7 @@ import 'list_of_staff.dart';
 import 'notifications_pause.dart';
 import 'privacy_security.dart';
 import 'shimmer_profile_page.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   final bool showEditIcon;
@@ -94,13 +95,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           children: [
             Padding(
               padding: EdgeInsets.only(
-                  left: 16 * globals.widthMediaQuery,
-                  right: 16 * globals.widthMediaQuery),
+                  left: 16 * SizeConfig.widthMultiplier(context),
+                  right: 16 * SizeConfig.widthMultiplier(context)),
               child: isLoading
                   ? const ShimmerProfilePage()
                   : Column(
                       children: [
-                        SizedBox(height: 40 * globals.heightMediaQuery),
+                        SizedBox(
+                            height: 40 * SizeConfig.heightMultiplier(context)),
                         CircleAvatar(
                           radius: MediaQuery.of(context).size.width * 0.16,
                           backgroundColor: AppColors.grayscale10,
@@ -109,14 +111,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               : null,
                           child: profilePicture == null
                               ? CircleAvatar(
-                                  radius: 60 * globals.widthMediaQuery,
+                                  radius:
+                                      60 * SizeConfig.widthMultiplier(context),
                                   backgroundImage: const AssetImage(
                                       'assets/avatars/120px/Staff1.png'),
                                 )
                               : null,
                         ),
                         SizedBox(
-                          height: 16 * globals.heightMediaQuery,
+                          height: 16 * SizeConfig.heightMultiplier(context),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -140,14 +143,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           phoneNumber.isNotEmpty ? phoneNumber : '123-456-7890',
                           style: AppFonts.body2(color: AppColors.grayscale70),
                         ),
-                        SizedBox(height: 16 * globals.heightMediaQuery),
+                        SizedBox(
+                            height: 16 * SizeConfig.heightMultiplier(context)),
                         Text(
                           'Head of Farm'.tr,
                           style: AppFonts.body2(color: AppColors.grayscale70),
                         ),
-                        SizedBox(height: 32 * globals.heightMediaQuery),
                         SizedBox(
-                          height: 40 * globals.heightMediaQuery,
+                            height: 32 * SizeConfig.heightMultiplier(context)),
+                        SizedBox(
+                          height: 40 * SizeConfig.heightMultiplier(context),
                           child: PrimaryButton(
                             onPressed: () {
                               Navigator.push(
@@ -161,13 +166,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                             position: PrimaryButtonPosition.right,
                           ),
                         ),
-                        SizedBox(height: 24 * globals.heightMediaQuery),
+                        SizedBox(
+                            height: 24 * SizeConfig.heightMultiplier(context)),
                         ProfileThreeInformationBlock(
-                          head1: ref.refresh(totalAnimalsCountProvider).toString(),
+                          head1:
+                              ref.refresh(totalAnimalsCountProvider).toString(),
                           head2: '1',
                           head3: ref.watch(totalStaffProvider).toString(),
                         ),
-                        SizedBox(height: 24 * globals.heightMediaQuery),
+                        SizedBox(
+                            height: 24 * SizeConfig.heightMultiplier(context)),
                       ],
                     ),
             ),
@@ -178,14 +186,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             ),
             Padding(
               padding: EdgeInsets.only(
-                  left: 16 * globals.widthMediaQuery,
-                  right: 16 * globals.widthMediaQuery),
+                  left: 16 * SizeConfig.widthMultiplier(context),
+                  right: 16 * SizeConfig.widthMultiplier(context)),
               child: Column(
                 children: [
                   ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: Container(
-                        padding: EdgeInsets.all(6 * globals.widthMediaQuery),
+                        padding: EdgeInsets.all(
+                            6 * SizeConfig.widthMultiplier(context)),
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: AppColors.grayscale0,
@@ -210,7 +219,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: Container(
-                        padding: EdgeInsets.all(6 * globals.widthMediaQuery),
+                        padding: EdgeInsets.all(
+                            6 * SizeConfig.widthMultiplier(context)),
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: AppColors.grayscale0,
@@ -234,7 +244,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: Container(
-                        padding: EdgeInsets.all(6 * globals.widthMediaQuery),
+                        padding: EdgeInsets.all(
+                            6 * SizeConfig.widthMultiplier(context)),
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: AppColors.grayscale0,
@@ -265,14 +276,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             ),
             Padding(
               padding: EdgeInsets.only(
-                  left: 16 * globals.widthMediaQuery,
-                  right: 16 * globals.widthMediaQuery),
+                  left: 16 * SizeConfig.widthMultiplier(context),
+                  right: 16 * SizeConfig.widthMultiplier(context)),
               child: Column(
                 children: [
                   ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: Container(
-                        padding: EdgeInsets.all(6 * globals.widthMediaQuery),
+                        padding: EdgeInsets.all(
+                            6 * SizeConfig.widthMultiplier(context)),
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: AppColors.grayscale0,
@@ -297,7 +309,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: Container(
-                        padding: EdgeInsets.all(6 * globals.widthMediaQuery),
+                        padding: EdgeInsets.all(
+                            6 * SizeConfig.widthMultiplier(context)),
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: AppColors.grayscale0,
@@ -329,14 +342,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             ),
             Padding(
               padding: EdgeInsets.only(
-                  left: 16 * globals.widthMediaQuery,
-                  right: 16 * globals.widthMediaQuery),
+                  left: 16 * SizeConfig.widthMultiplier(context),
+                  right: 16 * SizeConfig.widthMultiplier(context)),
               child: Column(
                 children: [
                   ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: Container(
-                        padding: EdgeInsets.all(6 * globals.widthMediaQuery),
+                        padding: EdgeInsets.all(
+                            6 * SizeConfig.widthMultiplier(context)),
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: AppColors.grayscale0,
@@ -360,7 +374,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: Container(
-                        padding: EdgeInsets.all(6 * globals.widthMediaQuery),
+                        padding: EdgeInsets.all(
+                            6 * SizeConfig.widthMultiplier(context)),
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: AppColors.grayscale0,
@@ -384,7 +399,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: Container(
-                          padding: EdgeInsets.all(6 * globals.widthMediaQuery),
+                          padding: EdgeInsets.all(
+                              6 * SizeConfig.widthMultiplier(context)),
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             color: AppColors.grayscale0,
@@ -412,14 +428,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             ),
             Padding(
               padding: EdgeInsets.only(
-                  left: 16 * globals.widthMediaQuery,
-                  right: 16 * globals.widthMediaQuery),
+                  left: 16 * SizeConfig.widthMultiplier(context),
+                  right: 16 * SizeConfig.widthMultiplier(context)),
               child: Column(
                 children: [
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: Container(
-                      padding: EdgeInsets.all(6 * globals.widthMediaQuery),
+                      padding: EdgeInsets.all(
+                          6 * SizeConfig.widthMultiplier(context)),
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: AppColors.grayscale0,
@@ -449,16 +466,22 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   style: AppFonts.title3(
                                       color: AppColors.grayscale90),
                                 ),
-                                SizedBox(height: 32 * globals.heightMediaQuery),
                                 SizedBox(
-                                  height: 52 * globals.heightMediaQuery,
+                                    height: 32 *
+                                        SizeConfig.heightMultiplier(context)),
+                                SizedBox(
+                                  height:
+                                      52 * SizeConfig.heightMultiplier(context),
                                   width: double.infinity,
                                   child: NavigateButton(
                                       onPressed: signOut, text: 'Yes'.tr),
                                 ),
-                                SizedBox(height: 8 * globals.heightMediaQuery),
                                 SizedBox(
-                                  height: 52 * globals.heightMediaQuery,
+                                    height: 8 *
+                                        SizeConfig.heightMultiplier(context)),
+                                SizedBox(
+                                  height:
+                                      52 * SizeConfig.heightMultiplier(context),
                                   width: double.infinity,
                                   child: SecondaryButton(
                                       onPressed: () => Navigator.pop(context),
@@ -486,7 +509,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   }
 
   void signOut() {
-    Navigator.push(context, MaterialPageRoute(builder: (context
-        ) => const HomeScreenGuestMode()));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const HomeScreenGuestMode()));
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 
@@ -25,14 +25,15 @@ class CustomSnackBar {
               color: Colors.white,
               borderRadius: BorderRadius.circular(8.0),
               child: Padding(
-                padding: EdgeInsets.all(16 * globals.widthMediaQuery),
+                padding:
+                    EdgeInsets.all(16 * SizeConfig.widthMultiplier(context)),
                 child: Row(
                   children: [
                     Icon(
                       icon,
                       color: color,
                     ),
-                    SizedBox(width: 8 * globals.widthMediaQuery),
+                    SizedBox(width: 8 * SizeConfig.widthMultiplier(context)),
                     Expanded(
                       child: Text(
                         message,
@@ -56,7 +57,6 @@ class CustomSnackBar {
     }
   }
 }
-
 
 //Emaple of use:
 

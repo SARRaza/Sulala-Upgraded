@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
+import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
@@ -48,7 +49,8 @@ class _AddMedicalCheckUpState extends State<AddMedicalCheckUp> {
             IconButton(
               padding: EdgeInsets.zero,
               icon: Container(
-                padding: EdgeInsets.all(8 * globals.widthMediaQuery),
+                padding:
+                    EdgeInsets.all(8 * SizeConfig.widthMultiplier(context)),
                 decoration: const BoxDecoration(
                     color: AppColors.grayscale10, shape: BoxShape.circle),
                 child: const Icon(
@@ -65,10 +67,9 @@ class _AddMedicalCheckUpState extends State<AddMedicalCheckUp> {
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(
-                left: 16 * globals.widthMediaQuery,
-                right: 16 * globals.widthMediaQuery,
-                bottom: 52 * globals.heightMediaQuery + 10
-            ),
+                left: 16 * SizeConfig.widthMultiplier(context),
+                right: 16 * SizeConfig.widthMultiplier(context),
+                bottom: 52 * SizeConfig.heightMultiplier(context) + 10),
             child: Form(
               key: _formKey,
               child: Column(
@@ -79,7 +80,7 @@ class _AddMedicalCheckUpState extends State<AddMedicalCheckUp> {
                     style: AppFonts.title3(color: AppColors.grayscale90),
                   ),
                   SizedBox(
-                    height: 32 * globals.heightMediaQuery,
+                    height: 32 * SizeConfig.heightMultiplier(context),
                   ),
                   PrimaryTextField(
                     hintText: 'Checkup Name',
@@ -92,19 +93,20 @@ class _AddMedicalCheckUpState extends State<AddMedicalCheckUp> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 24 * globals.heightMediaQuery),
+                  SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                   PrimaryDateField(
                     hintText: 'Date Of Checkup',
                     labelText: 'Date Of Checkup',
                     onChanged: (value) => setState(() => firstDoseDate = value),
                   ),
-                  SizedBox(height: 24 * globals.heightMediaQuery),
+                  SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                   PrimaryDateField(
                     hintText: 'Date Of Next Checkup',
                     labelText: 'Date Of Next Checkup',
-                    onChanged: (value) => setState(() => secondDoseDate = value),
+                    onChanged: (value) =>
+                        setState(() => secondDoseDate = value),
                   ),
-                  SizedBox(height: 24 * globals.heightMediaQuery),
+                  SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                   Focus(
                     onFocusChange:
                         (hasFocus) {}, // Dummy onFocusChange callback
@@ -116,11 +118,11 @@ class _AddMedicalCheckUpState extends State<AddMedicalCheckUp> {
           ),
         ),
         floatingActionButton: SizedBox(
-          height: 52 * globals.heightMediaQuery,
-          width: 343 * globals.widthMediaQuery,
+          height: 52 * SizeConfig.heightMultiplier(context),
+          width: 343 * SizeConfig.widthMultiplier(context),
           child: PrimaryButton(
             onPressed: () {
-              if(_formKey.currentState!.validate()) {
+              if (_formKey.currentState!.validate()) {
                 _saveDataAndNavigateBack();
               }
             },

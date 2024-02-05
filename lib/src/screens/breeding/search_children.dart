@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/inputs/search_bars/search_bar.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 
 class SearchChildren extends StatefulWidget {
   const SearchChildren({super.key});
@@ -38,10 +39,10 @@ class _SearchChildrenState extends State<SearchChildren> {
       child: Scaffold(
           body: Padding(
         padding: EdgeInsets.only(
-            left: 16 * globals.widthMediaQuery,
-            right: 16 * globals.widthMediaQuery,
-            top: 16 * globals.heightMediaQuery,
-            bottom: 16 * globals.heightMediaQuery),
+            left: 16 * SizeConfig.widthMultiplier(context),
+            right: 16 * SizeConfig.widthMultiplier(context),
+            top: 16 * SizeConfig.heightMultiplier(context),
+            bottom: 16 * SizeConfig.heightMultiplier(context)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -49,8 +50,8 @@ class _SearchChildrenState extends State<SearchChildren> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
-                  height: 40 * globals.heightMediaQuery,
-                  width: 300 * globals.widthMediaQuery,
+                  height: 40 * SizeConfig.heightMultiplier(context),
+                  width: 300 * SizeConfig.widthMultiplier(context),
                   child: PrimarySearchBar(
                     hintText: 'Search By Name Or ID',
                     onChange: (value) {
@@ -132,8 +133,8 @@ class _SearchChildrenState extends State<SearchChildren> {
                 ),
                 // I want a X button
                 Container(
-                  height: 40 * globals.heightMediaQuery,
-                  width: 40 * globals.widthMediaQuery,
+                  height: 40 * SizeConfig.heightMultiplier(context),
+                  width: 40 * SizeConfig.widthMultiplier(context),
                   decoration: const BoxDecoration(
                     color: AppColors.grayscale10,
                     shape: BoxShape.circle,
@@ -148,7 +149,7 @@ class _SearchChildrenState extends State<SearchChildren> {
               ],
             ),
             SizedBox(
-              height: 24 * globals.heightMediaQuery,
+              height: 24 * SizeConfig.heightMultiplier(context),
             ),
             breedChildrenDetails.isEmpty
                 ? Expanded(
@@ -159,7 +160,7 @@ class _SearchChildrenState extends State<SearchChildren> {
                           children: [
                             Image.asset('assets/illustrations/cow_childx.png'),
                             SizedBox(
-                              height: 32 * globals.heightMediaQuery,
+                              height: 32 * SizeConfig.heightMultiplier(context),
                             ),
                             Text(
                               'No Results',
@@ -168,7 +169,7 @@ class _SearchChildrenState extends State<SearchChildren> {
                               ),
                             ),
                             SizedBox(
-                              height: 8 * globals.heightMediaQuery,
+                              height: 8 * SizeConfig.heightMultiplier(context),
                             ),
                             Text(
                               'Do you want to create an animal?',
@@ -177,11 +178,12 @@ class _SearchChildrenState extends State<SearchChildren> {
                               ),
                             ),
                             SizedBox(
-                              height: 105 * globals.heightMediaQuery,
+                              height:
+                                  105 * SizeConfig.heightMultiplier(context),
                             ),
                             SizedBox(
-                              height: 52 * globals.heightMediaQuery,
-                              width: 160 * globals.widthMediaQuery,
+                              height: 52 * SizeConfig.heightMultiplier(context),
+                              width: 160 * SizeConfig.widthMultiplier(context),
                               child: PrimaryButton(
                                 text: 'Create Animal',
                                 onPressed: () {},
@@ -199,7 +201,7 @@ class _SearchChildrenState extends State<SearchChildren> {
                         return ListTile(
                           contentPadding: EdgeInsets.zero,
                           leading: CircleAvatar(
-                            radius: 24 * globals.widthMediaQuery,
+                            radius: 24 * SizeConfig.widthMultiplier(context),
                             child: Text(breedChildrenDetails[index]['name']![0],
                                 style: AppFonts.headline3(
                                     color: AppColors.grayscale90)),

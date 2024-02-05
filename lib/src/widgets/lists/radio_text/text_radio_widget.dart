@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sulala_upgrade/src/data/globals.dart' as globals;
+import 'package:sulala_upgrade/src/data/globals.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 
@@ -48,7 +48,7 @@ class _TextRadioWidgetState extends State<TextRadioWidget> {
       child: Row(
         children: [
           SizedBox(
-            width: globals.widthMediaQuery * 15,
+            width: SizeConfig.widthMultiplier(context) * 15,
           ),
           Text(
             widget.truncateTextWithEllipsis(widget.text, 25),
@@ -90,7 +90,7 @@ class _TextRadioWidgetState extends State<TextRadioWidget> {
             ),
           ),
           SizedBox(
-            width: globals.widthMediaQuery * 15,
+            width: SizeConfig.widthMultiplier(context) * 15,
           ),
         ],
       ),
@@ -98,21 +98,20 @@ class _TextRadioWidgetState extends State<TextRadioWidget> {
   }
 }
 
-
 // Example of use:
 
-    // TextRadioWidget(
-    //                 text: 'Text Radio Widget',
-    //                 isActive:
-    //                     true, // Replace with the actual boolean value for the radio button state
-    //                 onChanged: (isActive) {
-    //                   // Do something when the radio button is toggled
-    //                   if (isActive) {
-    //                     // Handle the case when the radio button is active
-    //                     print('Radio button is active');
-    //                   } else {
-    //                     // Handle the case when the radio button is not active
-    //                     print('Radio button is not active');
-    //                   }
-    //                 },
-    //               ),
+// TextRadioWidget(
+//                 text: 'Text Radio Widget',
+//                 isActive:
+//                     true, // Replace with the actual boolean value for the radio button state
+//                 onChanged: (isActive) {
+//                   // Do something when the radio button is toggled
+//                   if (isActive) {
+//                     // Handle the case when the radio button is active
+//                     print('Radio button is active');
+//                   } else {
+//                     // Handle the case when the radio button is not active
+//                     print('Radio button is not active');
+//                   }
+//                 },
+//               ),
