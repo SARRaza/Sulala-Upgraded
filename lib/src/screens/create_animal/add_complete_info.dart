@@ -100,11 +100,13 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
 
   @override
   void dispose() {
+    super.dispose();
     _nameController.dispose();
     _frequencyEggsController.dispose();
     _numberofEggsController.dispose();
-
-    super.dispose();
+    _scrollController.dispose();
+    _customFieldNameController.dispose();
+    _customFieldContentController.dispose();
   }
 
   void _showImagePicker(BuildContext context) {
