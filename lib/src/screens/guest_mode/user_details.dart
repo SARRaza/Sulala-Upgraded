@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/screens/sign_up/join_now.dart';
-import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/icon_secondary_button.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/buttons/secondary_button.dart';
 import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
-import '../../widgets/lists/table_lsit/table_clickable_link.dart';
+import '../../widgets/lists/table_list/table_clickable_link.dart';
 import '../../widgets/other/two_information_block.dart';
 import 'search_page_owner_animals.dart';
 
@@ -93,7 +93,7 @@ class _SearchDetails extends State<UserDetails> {
                   height: SizeConfig.heightMultiplier(context) * 15,
                 ),
                 Text(
-                  'House Farm',
+                  'House Farm'.tr,
                   style: AppFonts.body2(color: AppColors.grayscale70),
                 ),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
@@ -110,7 +110,7 @@ class _SearchDetails extends State<UserDetails> {
                           onPressed: () {
                             _showFilterModalSheet(context);
                           },
-                          text: "Join farm",
+                          text: "Join farm".tr,
                           status: SecondaryIconStatus.idle,
                         ),
                       ),
@@ -129,7 +129,7 @@ class _SearchDetails extends State<UserDetails> {
                               ),
                             );
                           },
-                          text: "View animals",
+                          text: "View animals".tr,
                           status: SecondaryIconStatus.idle,
                         ),
                       ),
@@ -139,11 +139,11 @@ class _SearchDetails extends State<UserDetails> {
                 SizedBox(
                   height: SizeConfig.heightMultiplier(context) * 32,
                 ),
-                const TwoInformationBlock(
+                TwoInformationBlock(
                     head1: '24',
                     head2: '4',
-                    subtitle1: 'Animals',
-                    subtitle2: 'Collaborations'),
+                    subtitle1: 'Animals'.tr,
+                    subtitle2: 'Collaborations'.tr),
                 SizedBox(
                   height: SizeConfig.heightMultiplier(context) * 32,
                 ),
@@ -151,7 +151,7 @@ class _SearchDetails extends State<UserDetails> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Contact Details',
+                      'Contact Details'.tr,
                       style: AppFonts.title5(
                         color: AppColors.grayscale90,
                       ),
@@ -162,7 +162,7 @@ class _SearchDetails extends State<UserDetails> {
                     SizedBox(
                       height: SizeConfig.heightMultiplier(context) * 40,
                       child: TableClickableText(
-                        text1: 'Phone number',
+                        text1: 'Phone number'.tr,
                         urlText: widget.phoneNumber,
                         url: 'tel:${widget.phoneNumber}',
                         iconPath: 'assets/icons/frame/24px/Outlined_Phone.png',
@@ -171,7 +171,7 @@ class _SearchDetails extends State<UserDetails> {
                     SizedBox(
                       height: SizeConfig.heightMultiplier(context) * 41,
                       child: TableClickableText(
-                        text1: 'Email address',
+                        text1: 'Email address'.tr,
                         urlText: widget.email,
                         url: 'mailto:${widget.email}',
                         iconPath: 'assets/icons/frame/24px/16_Mail.png',
@@ -188,7 +188,7 @@ class _SearchDetails extends State<UserDetails> {
           height: SizeConfig.heightMultiplier(context) * 52,
           width: SizeConfig.widthMultiplier(context) * 150,
           child: PrimaryButton(
-            text: "Start your farm",
+            text: "Start your farm".tr,
             onPressed: () {
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const JoinNow()));
@@ -223,13 +223,13 @@ class _SearchDetails extends State<UserDetails> {
                 ),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
                 Text(
-                  'Join this farm?',
+                  'Join this farm?'.tr,
                   style: AppFonts.title3(color: AppColors.grayscale90),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 15),
                 Text(
-                  "If you join ${widget.title}, you won't be able to create your own farm.",
+                  'ifYouJoin'.trParams({'name': widget.title}),
                   style: AppFonts.body2(color: AppColors.grayscale70),
                 ),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
@@ -243,7 +243,7 @@ class _SearchDetails extends State<UserDetails> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        text: "Cancel",
+                        text: "Cancel".tr,
                         status: SecondaryButtonStatus.idle,
                       ),
                     ),
@@ -252,7 +252,7 @@ class _SearchDetails extends State<UserDetails> {
                       width: SizeConfig.widthMultiplier(context) * 165,
                       child: PrimaryButton(
                         onPressed: () {},
-                        text: "Join farm",
+                        text: "Join farm".tr,
                         status: PrimaryButtonStatus.idle,
                       ),
                     ),

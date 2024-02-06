@@ -5,11 +5,9 @@ import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 
-import 'package:sulala_upgrade/src/data/globals.dart';
-
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
-import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
+import '../../widgets/controls_and_buttons/text_buttons/primary_text_button.dart';
 import '../../widgets/inputs/phone_number_field.dart/phone_number_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 import 'add_some_details.dart';
@@ -23,43 +21,27 @@ class AddPersonalInfoPage extends ConsumerStatefulWidget {
 }
 
 class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController lastNameController = TextEditingController();
-  TextEditingController farmNameController = TextEditingController();
-  TextEditingController ownerNameController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _farmNameController = TextEditingController();
+  final _ownerNameController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _emailController = TextEditingController();
 
   String? savedPhoneNumber;
   String? savedEmail;
   bool emailHasError = false;
   bool phoneHasError = false;
-
   PrimaryButtonStatus buttonStatus = PrimaryButtonStatus.idle;
+
   @override
   void initState() {
     super.initState();
     // Initialize text controllers with widget values
-    farmNameController.text = ref.read(whatIsTheNameOfYourFarmProvider);
-    ownerNameController.text = ref.read(whoOwnTheFarmProvider);
-    phoneController.text = ref.read(phoneNumberProvider);
-    emailController.text = ref.read(emailAdressProvider);
-  }
-
-  void _saveEmailAddress(String emailAddress) {
-    if (_isValidEmail(emailAddress)) {
-      setState(() {
-        savedEmail = emailAddress;
-      });
-    }
-  }
-
-  void _savePhoneNumber(String phoneNumber) {
-    if (_isValidPhoneNumber(phoneNumber)) {
-      setState(() {
-        savedPhoneNumber = phoneNumber;
-      });
-    }
+    _farmNameController.text = ref.read(whatIsTheNameOfYourFarmProvider);
+    _ownerNameController.text = ref.read(whoOwnTheFarmProvider);
+    _phoneController.text = ref.read(phoneNumberProvider);
+    _emailController.text = ref.read(emailAddressProvider);
   }
 
   bool _isValidEmail(String email) {
@@ -132,7 +114,7 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                     style: AppFonts.headline3(color: AppColors.grayscale90)),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
                 PrimaryTextField(
-                  controller: nameController,
+                  controller: _nameController,
                   hintText: "Enter First Name".tr,
                   onChanged: (value) {
                     ref
@@ -142,7 +124,7 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                 ),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
                 PrimaryTextField(
-                  controller: lastNameController,
+                  controller: _lastNameController,
                   hintText: "Enter Last Name".tr,
                   onChanged: (value) {
                     ref
@@ -155,7 +137,7 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                     style: AppFonts.headline3(color: AppColors.grayscale90)),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
                 PrimaryTextField(
-                  controller: farmNameController,
+                  controller: _farmNameController,
                   hintText: 'Farm Name'.tr,
                   onChanged: (value) {
                     ref
@@ -168,7 +150,7 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                     style: AppFonts.headline3(color: AppColors.grayscale90)),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
                 PrimaryTextField(
-                  controller: ownerNameController,
+                  controller: _ownerNameController,
                   hintText: "Owner name".tr,
                   onChanged: (value) {
                     ref
@@ -186,19 +168,19 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                     style: AppFonts.body2(color: AppColors.grayscale70)),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
                 PhoneNumberField(
-                  controller: phoneController,
+                  controller: _phoneController,
                 ),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 20),
                 const SizedBox(height: 8),
                 PrimaryTextField(
                   keyboardType: TextInputType.emailAddress,
                   hintText: 'Enter Email'.tr,
-                  controller: emailController,
+                  controller: _emailController,
                   errorMessage:
                       emailHasError == true ? 'Invalid email address'.tr : null,
                   onChanged: (value) {
                     ref
-                        .read(emailAdressProvider.notifier)
+                        .read(emailAddressProvider.notifier)
                         .update((state) => value);
                   },
                   onErrorChanged: (hasError) {
@@ -215,16 +197,16 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
                     status: buttonStatus,
                     text: 'Continue'.tr,
                     onPressed: () {
-                      if (emailController.text.isNotEmpty &&
-                          !_isValidEmail(emailController.text)) {
+                      if (_emailController.text.isNotEmpty &&
+                          !_isValidEmail(_emailController.text)) {
                         setState(() {
                           emailHasError = true;
                         });
                       } else {
                         emailHasError = false;
                       }
-                      if (phoneController.text.isNotEmpty &&
-                          !_isValidPhoneNumber(phoneController.text)) {
+                      if (_phoneController.text.isNotEmpty &&
+                          !_isValidPhoneNumber(_phoneController.text)) {
                         setState(() {
                           phoneHasError = true;
                         });

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart';
-import 'package:sulala_upgrade/src/screens/sign_in/sign_in.dart';
 
-import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
@@ -13,13 +12,17 @@ import '../sign_up/join_now.dart';
 class AnimalDetails extends StatefulWidget {
   final String imagePath;
   final String title;
-  final String geninfo;
+  final String genInfo;
+  final String animalType;
+  final String animalDiet;
 
   const AnimalDetails({
     Key? key,
     required this.imagePath,
     required this.title,
-    required this.geninfo,
+    required this.genInfo,
+    required this.animalType,
+    required this.animalDiet
   }) : super(key: key);
 
   @override
@@ -105,30 +108,7 @@ class _AnimalDetailsState extends State<AnimalDetails> {
                   SizedBox(
                     height: SizeConfig.heightMultiplier(context) * 16,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Tags(
-                        text: 'Mammal',
-                        icon: null,
-                        onPress: () {
-                          // Handle tag click
-                        },
-                        status: TagStatus.active,
-                      ),
-                      SizedBox(
-                        width: SizeConfig.widthMultiplier(context) * 8,
-                      ),
-                      Tags(
-                        text: 'Herbivore',
-                        icon: null,
-                        onPress: () {
-                          // Handle tag click
-                        },
-                        status: TagStatus.active,
-                      ),
-                    ],
-                  ),
+                  _buildAnimalTags(),
                   SizedBox(
                     height: SizeConfig.heightMultiplier(context) * 24,
                   ),
@@ -143,7 +123,7 @@ class _AnimalDetailsState extends State<AnimalDetails> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'General Information',
+                                'General Information'.tr,
                                 style: AppFonts.title5(
                                   color: AppColors.grayscale90,
                                 ),
@@ -153,7 +133,7 @@ class _AnimalDetailsState extends State<AnimalDetails> {
                                     SizeConfig.heightMultiplier(context) * 14,
                               ),
                               Text(
-                                widget.geninfo * 5,
+                                widget.genInfo * 5,
                                 style: AppFonts.body2(
                                   color: AppColors.grayscale100,
                                 ),
@@ -174,7 +154,7 @@ class _AnimalDetailsState extends State<AnimalDetails> {
         height: SizeConfig.heightMultiplier(context) * 52,
         width: SizeConfig.widthMultiplier(context) * 150,
         child: PrimaryButton(
-          text: "Start your farm",
+          text: "Start your farm".tr,
           onPressed: () => Navigator.push(context,
               MaterialPageRoute(builder: (context) => const JoinNow())),
           status: PrimaryButtonStatus.idle,
@@ -184,4 +164,27 @@ class _AnimalDetailsState extends State<AnimalDetails> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
+
+  Widget _buildAnimalTags() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildTag(widget.animalType),
+        SizedBox(width: SizeConfig.widthMultiplier(context) * 8),
+        _buildTag(widget.animalDiet),
+      ],
+    );
+  }
+
+  Widget _buildTag(String text) {
+    return Tags(
+      text: text,
+      icon: null,
+      onPress: () {
+        // Handle tag click
+      },
+      status: TagStatus.active,
+    );
+  }
+
 }

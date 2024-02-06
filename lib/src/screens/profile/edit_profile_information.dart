@@ -5,11 +5,10 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
-import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
-import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
+import '../../widgets/controls_and_buttons/text_buttons/primary_text_button.dart';
 import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
 import '../../widgets/inputs/phone_number_field.dart/phone_number_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
@@ -19,21 +18,20 @@ class EditProfileInformation extends ConsumerStatefulWidget {
   const EditProfileInformation({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _EditProfileInformation createState() => _EditProfileInformation();
+  ConsumerState<EditProfileInformation> createState() =>
+      _EditProfileInformation();
 }
 
 class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
   final _firstnameController = TextEditingController();
   final _lastnameController = TextEditingController();
-  final _phonenumController = TextEditingController();
+  final _phoneNumController = TextEditingController();
   final _cityController = TextEditingController();
   final _emailController = TextEditingController();
   final _addressController = TextEditingController();
   final _countryController = TextEditingController();
-
-  TextEditingController farmNameController = TextEditingController();
-  TextEditingController ownerNameController = TextEditingController();
+  final _farmNameController = TextEditingController();
+  final _ownerNameController = TextEditingController();
   File? photo;
 
   @override
@@ -41,24 +39,24 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
     super.initState();
     _firstnameController.text = ref.read(firstNameProvider);
     _lastnameController.text = ref.read(lastNameProvider);
-    _phonenumController.text = ref.read(phoneNumberProvider);
+    _phoneNumController.text = ref.read(phoneNumberProvider);
     _cityController.text = ref.read(cityProvider);
 
-    _emailController.text = ref.read(emailAdressProvider);
+    _emailController.text = ref.read(emailAddressProvider);
 
     _addressController.text = ref.read(farmAddressProvider);
 
     _countryController.text = ref.read(countryProvider);
-    farmNameController.text = ref.read(whatIsTheNameOfYourFarmProvider);
-    ownerNameController.text = ref.read(whoOwnTheFarmProvider);
-    photo = ref.read(proflePictureProvider);
+    _farmNameController.text = ref.read(whatIsTheNameOfYourFarmProvider);
+    _ownerNameController.text = ref.read(whoOwnTheFarmProvider);
+    photo = ref.read(profilePictureProvider);
   }
 
   @override
   void dispose() {
     _firstnameController.dispose();
     _lastnameController.dispose();
-    _phonenumController.dispose();
+    _phoneNumController.dispose();
     _cityController.dispose();
     _emailController.dispose();
     _addressController.dispose();
@@ -163,7 +161,7 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                 SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
                 PrimaryTextField(
                   hintText: 'Enter Your Farm Name'.tr,
-                  controller: farmNameController,
+                  controller: _farmNameController,
                 ),
                 SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                 Text(
@@ -173,7 +171,7 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                 SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
                 PrimaryTextField(
                   hintText: 'Enter Farm Owner Name'.tr,
-                  controller: ownerNameController,
+                  controller: _ownerNameController,
                 ),
                 SizedBox(height: 32 * SizeConfig.heightMultiplier(context)),
                 Text("Contact Details".tr,
@@ -214,8 +212,10 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
           width: 343 * SizeConfig.widthMultiplier(context),
           child: PrimaryButton(
             onPressed: () {
-              //Save informations
-              ref.read(proflePictureProvider.notifier).update((state) => photo);
+              //Save information
+              ref
+                  .read(profilePictureProvider.notifier)
+                  .update((state) => photo);
               ref
                   .read(firstNameProvider.notifier)
                   .update((state) => _firstnameController.text);
@@ -224,15 +224,15 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
                   .update((state) => _lastnameController.text);
               ref
                   .read(whatIsTheNameOfYourFarmProvider.notifier)
-                  .update((state) => farmNameController.text);
+                  .update((state) => _farmNameController.text);
               ref
                   .read(whoOwnTheFarmProvider.notifier)
-                  .update((state) => ownerNameController.text);
+                  .update((state) => _ownerNameController.text);
               ref
                   .read(phoneNumberProvider.notifier)
-                  .update((state) => _phonenumController.text);
+                  .update((state) => _phoneNumController.text);
               ref
-                  .read(emailAdressProvider.notifier)
+                  .read(emailAddressProvider.notifier)
                   .update((state) => _emailController.text);
               ref
                   .read(farmAddressProvider.notifier)

@@ -14,7 +14,7 @@ import '../../../screens/pdf/pdf_view_page.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 import '../../dialogs/confirm_delete_dialog.dart';
-import '../../lists/table_lsit/table_textbutton.dart';
+import '../../lists/table_list/table_textbutton.dart';
 import '../../other/three_information_block.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
 
@@ -89,7 +89,7 @@ class _GeneralInfoAnimalWidgetState
     final selectedDate = widget.OviDetails.dateOfBirth;
 
     final animalDetails = ref
-        .watch(ovianimalsProvider)
+        .watch(oviAnimalsProvider)
         .firstWhere((animal) => animal.id == widget.OviDetails.id);
     final List<String> uploadedFiles =
         animalDetails.files?.map((file) => file.path).toList() ?? [];
@@ -334,7 +334,7 @@ class _GeneralInfoAnimalWidgetState
 
   _deleteFile(String filePath) {
     File(filePath).delete();
-    ref.read(ovianimalsProvider.notifier).update((state) {
+    ref.read(oviAnimalsProvider.notifier).update((state) {
       final animalIndex =
           state.indexWhere((animal) => animal.id == widget.OviDetails.id);
       state[animalIndex] = state[animalIndex].copyWith(

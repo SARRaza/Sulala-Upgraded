@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
-import 'package:sulala_upgrade/src/data/globals.dart';
 
-// ignore: must_be_immutable
 class PregnantStatusWidget extends StatefulWidget {
-  bool mammalpregnantStatuses;
+  final bool mammalPregnantStatus;
 
-  PregnantStatusWidget({super.key, required this.mammalpregnantStatuses});
+  const PregnantStatusWidget({super.key, required this.mammalPregnantStatus});
 
   @override
   State<PregnantStatusWidget> createState() => _PregnantStatusWidgetState();
 }
 
 class _PregnantStatusWidgetState extends State<PregnantStatusWidget> {
-  late bool mammalpregnantStatuses;
+  late bool mammalPregnantStatuses;
 
   @override
   void initState() {
-    mammalpregnantStatuses = widget.mammalpregnantStatuses;
+    mammalPregnantStatuses = widget.mammalPregnantStatus;
     super.initState();
   }
 
@@ -30,7 +29,7 @@ class _PregnantStatusWidgetState extends State<PregnantStatusWidget> {
       color: Colors.transparent,
       child: DrowupWidget(
         heightFactor: 0.45,
-        heading: 'Pregnancy Status',
+        heading: 'Pregnancy Status'.tr,
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -39,8 +38,8 @@ class _PregnantStatusWidgetState extends State<PregnantStatusWidget> {
               children: [
                 ListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: const Text('Not Pregnant'),
-                  trailing: mammalpregnantStatuses == false
+                  title: Text('Not Pregnant'.tr),
+                  trailing: mammalPregnantStatuses == false
                       ? Container(
                           width: 25,
                           height: 25,
@@ -66,15 +65,15 @@ class _PregnantStatusWidgetState extends State<PregnantStatusWidget> {
                   onTap: () {
                     setState(
                       () {
-                        mammalpregnantStatuses = false;
+                        mammalPregnantStatuses = false;
                       },
                     );
                   },
                 ),
                 ListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: const Text('Pregnant'),
-                  trailing: mammalpregnantStatuses == true
+                  title: Text('Pregnant'.tr),
+                  trailing: mammalPregnantStatuses == true
                       ? Container(
                           width: 25,
                           height: 25,
@@ -99,7 +98,7 @@ class _PregnantStatusWidgetState extends State<PregnantStatusWidget> {
                         ),
                   onTap: () {
                     setState(() {
-                      mammalpregnantStatuses = true;
+                      mammalPregnantStatuses = true;
                     });
                   },
                 ),
@@ -110,9 +109,9 @@ class _PregnantStatusWidgetState extends State<PregnantStatusWidget> {
                   width: 343 * SizeConfig.widthMultiplier(context),
                   height: 52 * SizeConfig.heightMultiplier(context),
                   child: PrimaryButton(
-                      text: 'Confirm',
+                      text: 'Confirm'.tr,
                       onPressed: () {
-                        Navigator.pop(context, mammalpregnantStatuses);
+                        Navigator.pop(context, mammalPregnantStatuses);
                       }),
                 )
               ],

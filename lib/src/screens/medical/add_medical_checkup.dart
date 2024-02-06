@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
-import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
@@ -19,18 +18,18 @@ class AddMedicalCheckUp extends StatefulWidget {
 }
 
 class _AddMedicalCheckUpState extends State<AddMedicalCheckUp> {
-  TextEditingController checkupNameController = TextEditingController();
+  final _checkupNameController = TextEditingController();
   DateTime? firstDoseDate;
   DateTime? secondDoseDate;
   final _formKey = GlobalKey<FormState>();
   @override
   void dispose() {
-    checkupNameController.dispose();
+    _checkupNameController.dispose();
     super.dispose();
   }
 
   void _saveDataAndNavigateBack() {
-    String newCheckUpName = checkupNameController.text;
+    String newCheckUpName = _checkupNameController.text;
     widget.onSave(newCheckUpName, firstDoseDate, secondDoseDate);
 
     // Close the modal sheet and return to MyPage
@@ -76,16 +75,16 @@ class _AddMedicalCheckUpState extends State<AddMedicalCheckUp> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "Add Medical Checkup",
+                    "Add Medical Checkup".tr,
                     style: AppFonts.title3(color: AppColors.grayscale90),
                   ),
                   SizedBox(
                     height: 32 * SizeConfig.heightMultiplier(context),
                   ),
                   PrimaryTextField(
-                    hintText: 'Checkup Name',
-                    controller: checkupNameController,
-                    labelText: 'Checkup Name',
+                    hintText: 'Checkup Name'.tr,
+                    controller: _checkupNameController,
+                    labelText: 'Checkup Name'.tr,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter some text'.tr;
@@ -95,14 +94,14 @@ class _AddMedicalCheckUpState extends State<AddMedicalCheckUp> {
                   ),
                   SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                   PrimaryDateField(
-                    hintText: 'Date Of Checkup',
-                    labelText: 'Date Of Checkup',
+                    hintText: 'Date Of Checkup'.tr,
+                    labelText: 'Date Of Checkup'.tr,
                     onChanged: (value) => setState(() => firstDoseDate = value),
                   ),
                   SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                   PrimaryDateField(
-                    hintText: 'Date Of Next Checkup',
-                    labelText: 'Date Of Next Checkup',
+                    hintText: 'Date Of Next Checkup'.tr,
+                    labelText: 'Date Of Next Checkup'.tr,
                     onChanged: (value) =>
                         setState(() => secondDoseDate = value),
                   ),
@@ -126,7 +125,7 @@ class _AddMedicalCheckUpState extends State<AddMedicalCheckUp> {
                 _saveDataAndNavigateBack();
               }
             },
-            text: 'Save',
+            text: 'Save'.tr,
           ),
         ),
       ),

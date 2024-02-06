@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
-import 'package:sulala_upgrade/src/data/globals.dart';
 
 class ShimmerListOfStaff extends StatelessWidget {
   const ShimmerListOfStaff({super.key});
@@ -36,7 +36,7 @@ class ShimmerListOfStaff extends StatelessWidget {
                 ),
               SizedBox(height: 14 * SizeConfig.heightMultiplier(context)),
               Text(
-                'Requests',
+                'Requests'.tr,
                 style: AppFonts.headline3(color: AppColors.grayscale80),
               ),
               SizedBox(height: 8 * SizeConfig.heightMultiplier(context)),

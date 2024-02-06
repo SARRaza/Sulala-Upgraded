@@ -1,209 +1,22 @@
-// import 'package:flutter/material.dart';
-// import 'package:sulala_upgrade/src/data/globals.dart';
-// import '../../theme/colors/colors.dart';
-// import '../../theme/fonts/fonts.dart';
-// import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
-
-// class ListOfMates extends StatefulWidget {
-//   const ListOfMates({super.key});
-
-//   @override
-//   State<ListOfMates> createState() => _ListOfMatesState();
-// }
-
-// class _ListOfMatesState extends State<ListOfMates> {
-//   final List<Map<String, dynamic>> partners = [
-//     // {
-//     //   'heading': 'Breeding Event 1',
-//     //   'date': '02.09.2023',
-//     //   'title': 'Loyce',
-//     //   'subtitle': 'Male, 1 Year',
-//     //   'trailing': 'ID #13542',
-//     //   'avatarImage': 'assets/avatars/120px/Cat.png',
-//     // },
-//     // {
-//     //   'heading': 'Breeding Event 2',
-//     //   'date': '02.09.2023',
-//     //   'title': 'Joyce',
-//     //   'subtitle': 'Male, 3 Years',
-//     //   'trailing': 'ID #13542',
-//     //   'avatarImage': 'assets/avatars/120px/Cat.png',
-//     // },
-//     // {
-//     //   'heading': 'Breeding Event 3',
-//     //   'date': '02.09.2023',
-//     //   'title': 'Angel',
-//     //   'subtitle': 'Male, 3.5 Years',
-//     //   'trailing': 'ID #13542',
-//     //   'avatarImage': 'assets/avatars/120px/Cat.png',
-//     // },
-//     // Your list of partners data goes here
-//   ];
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         scrolledUnderElevation: 0.0,
-//         centerTitle: true,
-//         title: Text(
-//           'Harry',
-//           style: AppFonts.headline3(color: AppColors.grayscale90),
-//         ),
-//         backgroundColor: Colors.transparent,
-//         elevation: 0,
-//         leading: Padding(
-//           padding: const EdgeInsets.all(8.0),
-//           child: Container(
-//             decoration: const BoxDecoration(
-//               shape: BoxShape.circle,
-//               color: AppColors.grayscale10,
-//             ),
-//             child: IconButton(
-//               icon: const Icon(
-//                 Icons.arrow_back,
-//                 color: Colors.black,
-//               ),
-//               onPressed: () {
-//                 Navigator.pop(context);
-//               },
-//             ),
-//           ),
-//         ),
-//       ),
-//       body: Padding(
-//         padding: EdgeInsets.only(
-//             left: 16 * SizeConfig.widthMultiplier(context),
-//             right: 16 * SizeConfig.widthMultiplier(context)),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text(
-//               'List of Mates',
-//               style: AppFonts.title3(color: AppColors.grayscale90),
-//             ),
-//             Expanded(
-//               child: partners.isEmpty
-//                   ? Center(
-//                       child: Column(
-//                         crossAxisAlignment: CrossAxisAlignment.center,
-//                         children: [
-//                           SizedBox(
-//                             height: 151 * SizeConfig.heightMultiplier(context),
-//                           ),
-//                           Image.asset(
-//                               'assets/illustrations/cow_broke_adult.png'),
-//                           SizedBox(height: 32 * SizeConfig.heightMultiplier(context)),
-//                           Text(
-//                             'No Mates Yet',
-//                             style: AppFonts.headline3(
-//                                 color: AppColors.grayscale90),
-//                           ),
-//                           SizedBox(
-//                             height: 8 * SizeConfig.heightMultiplier(context),
-//                           ),
-//                           Text(
-//                             "This animal hasn’t been mated yet.",
-//                             style: AppFonts.body2(color: AppColors.grayscale70),
-//                           ),
-//                           SizedBox(
-//                             height: 125 * SizeConfig.heightMultiplier(context),
-//                           ),
-//                           SizedBox(
-//                             width: 130 * SizeConfig.widthMultiplier(context),
-//                             height: 52 * SizeConfig.heightMultiplier(context),
-//                             child: PrimaryButton(
-//                               text: 'Add Mate',
-//                               onPressed: () {
-//                                 // Implement the logic to add children here
-//                               },
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                     )
-//                   : ListView.builder(
-//                       itemCount: partners.length,
-//                       itemBuilder: (BuildContext context, int index) {
-//                         final partner = partners[index];
-//                         return Column(
-//                           crossAxisAlignment: CrossAxisAlignment.start,
-//                           children: [
-//                             Row(
-//                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                               children: [
-//                                 Text(
-//                                   partner['heading'],
-//                                   style: AppFonts.caption1(
-//                                       color: AppColors.grayscale80),
-//                                 ),
-//                                 Text(
-//                                   partner['date'],
-//                                   style: AppFonts.caption2(
-//                                       color: AppColors.grayscale80),
-//                                 ),
-//                               ],
-//                             ),
-//                             ListTile(
-//                               contentPadding: EdgeInsets.only(
-//                                   top: 8 * SizeConfig.heightMultiplier(context),
-//                                   bottom: 16 * SizeConfig.heightMultiplier(context)),
-//                               leading: CircleAvatar(
-//                                 radius: 24 * SizeConfig.widthMultiplier(context),
-//                                 backgroundColor: Colors.transparent,
-//                                 backgroundImage:
-//                                     AssetImage(partner['avatarImage']),
-//                               ),
-//                               title: Text(
-//                                 partner['title'],
-//                                 style: AppFonts.headline3(
-//                                     color: AppColors.grayscale90),
-//                               ),
-//                               subtitle: Text(
-//                                 partner['subtitle'],
-//                                 style: AppFonts.body2(
-//                                     color: AppColors.grayscale70),
-//                               ),
-//                               trailing: Text(
-//                                 partner['trailing'],
-//                                 style: AppFonts.body2(
-//                                     color: AppColors.grayscale70),
-//                               ),
-//                             ),
-//                           ],
-//                         );
-//                       },
-//                     ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// ignore_for_file: non_constant_identifier_names
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart';
 import '../../data/classes/breeding_partner.dart';
 import '../../data/classes/ovi_variables.dart';
-import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
-import '../create_animal/owned_animal_detail_reg_mode.dart';
 import 'breeding_event_detail.dart';
 
 class ListOfBreedingMates extends ConsumerStatefulWidget {
-  final OviVariables OviDetails;
+  final OviVariables oviDetails;
 
   const ListOfBreedingMates({
     super.key,
-    required this.OviDetails,
+    required this.oviDetails,
   });
 
   @override
@@ -212,31 +25,27 @@ class ListOfBreedingMates extends ConsumerStatefulWidget {
 
 class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
   String filterQuery = '';
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
-    final animalIndex = ref.read(ovianimalsProvider).indexWhere(
-        (animal) => animal.animalName == widget.OviDetails.animalName);
+    final animalIndex = ref.read(oviAnimalsProvider).indexWhere(
+        (animal) => animal.animalName == widget.oviDetails.animalName);
 
     if (animalIndex == -1) {
       // Animal not found, you can show an error message or handle it accordingly
-      return const Center(
-        child: Text('Animal not found.'),
+      return Center(
+        child: Text('Animal not found.'.tr),
       );
     }
     final breedingEvents = ref
         .read(breedingEventsProvider)
         .where((event) =>
-            event.sire?.id == widget.OviDetails.id ||
-            event.dam?.id == widget.OviDetails.id)
+            event.sire?.id == widget.oviDetails.id ||
+            event.dam?.id == widget.oviDetails.id)
         .map((event) {
-      if (event.partner?.id == widget.OviDetails.id) {
+      if (event.partner?.id == widget.oviDetails.id) {
         return event.copyWith(
-            partner: event.sire?.id == widget.OviDetails.id
+            partner: event.sire?.id == widget.oviDetails.id
                 ? BreedingPartner(event.dam!.animalName,
                     event.dam!.selectedOviImage, event.dam!.selectedOviGender)
                 : BreedingPartner(
@@ -254,7 +63,7 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
         scrolledUnderElevation: 0.0,
         centerTitle: true,
         title: Text(
-          widget.OviDetails.animalName,
+          widget.oviDetails.animalName,
           style: AppFonts.headline3(color: AppColors.grayscale90),
         ),
         backgroundColor: Colors.transparent,
@@ -286,7 +95,7 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('List Of Mates',
+            Text('List Of Mates'.tr,
                 style: AppFonts.title3(color: AppColors.grayscale90)),
             SizedBox(
               height: 16 * SizeConfig.heightMultiplier(context),
@@ -304,7 +113,7 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
                         SizedBox(
                             height: 32 * SizeConfig.heightMultiplier(context)),
                         Text(
-                          'No Mates Yet',
+                          'No Mates Yet'.tr,
                           style:
                               AppFonts.headline3(color: AppColors.grayscale90),
                         ),
@@ -312,7 +121,7 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
                           height: 8 * SizeConfig.heightMultiplier(context),
                         ),
                         Text(
-                          "This animal hasn’t been mated yet.",
+                          "This animal hasn't been mated yet.".tr,
                           style: AppFonts.body2(color: AppColors.grayscale70),
                         ),
                         SizedBox(
@@ -322,7 +131,7 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
                           width: 130 * SizeConfig.widthMultiplier(context),
                           height: 52 * SizeConfig.heightMultiplier(context),
                           child: PrimaryButton(
-                            text: 'Add Mate',
+                            text: 'Add Mate'.tr,
                             onPressed: () {
                               // Implement the logic to add children here
                             },
@@ -346,7 +155,7 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
                                   MaterialPageRoute(
                                     builder: (context) => BreedingEventDetails(
                                       breedingEvents: breedingEvents,
-                                      OviDetails: widget.OviDetails,
+                                      oviDetails: widget.oviDetails,
                                       breedingEvent: breedingEvent,
                                     ),
                                   ),
@@ -357,7 +166,7 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   breedingEvent.eventNumber.isEmpty
-                                      ? const Text('New Event')
+                                      ? Text('New Event'.tr)
                                       : Text(
                                           breedingEvent.eventNumber,
                                           style: AppFonts.body2(
@@ -400,7 +209,7 @@ class _ListOfBreedingMates extends ConsumerState<ListOfBreedingMates> {
                                     // ignore: unnecessary_null_comparison
                                     subtitle: partner.selectedOviGender.isEmpty
                                         ? Text(
-                                            'Gender Not Selected',
+                                            'Gender Not Selected'.tr,
                                             style: AppFonts.body2(
                                                 color: AppColors.grayscale70),
                                           )

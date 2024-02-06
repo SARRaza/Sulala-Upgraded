@@ -22,7 +22,7 @@ import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/animal_info_modal_sheets.dart/eggs_number_modal.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
-import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
+import '../../widgets/controls_and_buttons/text_buttons/primary_text_button.dart';
 import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/paragraph_text_fields/medical_needs_paragraph.dart';
 import '../../widgets/other/one_information_block.dart';
@@ -100,20 +100,20 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
 
   @override
   Widget build(BuildContext context) {
-    animalIndex = ref.read(ovianimalsProvider).indexWhere(
+    animalIndex = ref.read(oviAnimalsProvider).indexWhere(
         (animal) => animal.animalName == widget.OviDetails.animalName);
 
-    animalDetails = ref.watch(ovianimalsProvider)[animalIndex];
+    animalDetails = ref.watch(oviAnimalsProvider)[animalIndex];
 
     files = animalDetails.files;
     vaccineDetailsList = ref
-            .read(ovianimalsProvider)[animalIndex]
+            .read(oviAnimalsProvider)[animalIndex]
             .vaccineDetails[widget.OviDetails.animalName] ??
         [];
     medicalCheckUpList =
         animalDetails.checkUpDetails[widget.OviDetails.animalName] ?? [];
     surgeryDetailsList = ref
-            .read(ovianimalsProvider)[animalIndex]
+            .read(oviAnimalsProvider)[animalIndex]
             .surgeryDetails[widget.OviDetails.animalName] ??
         [];
     final now = DateTime.now();
@@ -310,11 +310,11 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                             medicalNeeds: medicalNeedsController.text,
                           );
 
-                          final oviAnimals = ref.read(ovianimalsProvider);
+                          final oviAnimals = ref.read(oviAnimalsProvider);
                           final index = oviAnimals.indexOf(widget.OviDetails);
                           if (index >= 0) {
                             ref
-                                .read(ovianimalsProvider.notifier)
+                                .read(oviAnimalsProvider.notifier)
                                 .update((state) {
                               state[index] = updatedOviDetails;
                               return state;
@@ -353,7 +353,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                     ),
                     FileUploaderField(
                       onFileUploaded: (file) {
-                        ref.read(ovianimalsProvider.notifier).update((state) {
+                        ref.read(oviAnimalsProvider.notifier).update((state) {
                           final files = state[animalIndex].files ?? [];
                           files.add(file);
                           final newState = List<OviVariables>.from(state);
@@ -370,13 +370,13 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ref
-                                .read(ovianimalsProvider)[animalIndex]
+                                .read(oviAnimalsProvider)[animalIndex]
                                 .medicalNeeds
                                 ?.isNotEmpty !=
                             null
                         ? Text(
                             ref
-                                .read(ovianimalsProvider)[animalIndex]
+                                .read(oviAnimalsProvider)[animalIndex]
                                 .medicalNeeds!,
                             // 'Be sure to include joint support medicine, antibiotics, anti-inflammatory medication, and topical antiseptics when packing your first-aid kit for your horses. If you have the essentials, you can keep your four-legged friends in the best condition possible.',
                             style: AppFonts.body2(color: AppColors.grayscale70),
@@ -716,7 +716,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                   onDismissed: (direction) {
                     setState(() {
                       vaccineDetailsList.removeAt(index);
-                      ref.read(ovianimalsProvider.notifier).update((state) {
+                      ref.read(oviAnimalsProvider.notifier).update((state) {
                         state[animalIndex] = state[animalIndex].copyWith(
                             vaccineDetails: {
                               state[animalIndex].animalName: vaccineDetailsList
@@ -764,7 +764,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => EditVaccination(
-                            OviDetails: widget.OviDetails,
+                            oviDetails: widget.OviDetails,
                             breedingEvents: const [],
                             selectedVaccine: vaccineDetailsList[index],
                           ),
@@ -811,9 +811,9 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                       builder: (context) => AddVaccination(
                         onSave: (vaccineName, firstDoseDate, secondDoseDate) {
                           setState(() {
-                            final oviVariables = ref.read(ovianimalsProvider);
+                            final oviVariables = ref.read(oviAnimalsProvider);
                             final animalIndex = ref
-                                .read(ovianimalsProvider)
+                                .read(oviAnimalsProvider)
                                 .indexWhere((animal) =>
                                     animal.animalName ==
                                     widget.OviDetails.animalName);
@@ -822,7 +822,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                                 oviVariables[animalIndex].vaccineDetails;
 
                             // Update the vaccineDetails map for that animal with the new vaccine details
-                            ref.read(ovianimalsProvider)[animalIndex] =
+                            ref.read(oviAnimalsProvider)[animalIndex] =
                                 oviVariables[animalIndex].copyWith(
                               vaccineDetails: {
                                 ...animalVaccineDetails,
@@ -902,7 +902,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                   onDismissed: (direction) {
                     setState(() {
                       medicalCheckUpList.removeAt(index);
-                      ref.read(ovianimalsProvider.notifier).update((state) {
+                      ref.read(oviAnimalsProvider.notifier).update((state) {
                         state[animalIndex] = state[animalIndex].copyWith(
                             checkUpDetails: {
                               state[animalIndex].animalName: medicalCheckUpList
@@ -938,7 +938,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => EditMedicalCheckUp(
-                                OviDetails: widget.OviDetails,
+                                oviDetails: widget.OviDetails,
                                 breedingEvents: const [],
                                 selectedCheckup: medicalCheckUpList[index],
                               ),
@@ -990,9 +990,9 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                       builder: (context) => AddMedicalCheckUp(
                         onSave: (checkUpName, firstCheckUp, secondCheckUp) {
                           setState(() {
-                            final oviVariables = ref.read(ovianimalsProvider);
+                            final oviVariables = ref.read(oviAnimalsProvider);
                             final animalIndex = ref
-                                .read(ovianimalsProvider)
+                                .read(oviAnimalsProvider)
                                 .indexWhere((animal) =>
                                     animal.animalName ==
                                     widget.OviDetails.animalName);
@@ -1002,7 +1002,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
 
                             // Update the vaccineDetails map for that animal with the new vaccine details
                             ref
-                                .read(ovianimalsProvider.notifier)
+                                .read(oviAnimalsProvider.notifier)
                                 .update((state) {
                               state[animalIndex] =
                                   oviVariables[animalIndex].copyWith(
@@ -1086,7 +1086,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                   onDismissed: (direction) {
                     setState(() {
                       surgeryDetailsList.removeAt(index);
-                      ref.read(ovianimalsProvider.notifier).update((state) {
+                      ref.read(oviAnimalsProvider.notifier).update((state) {
                         state[animalIndex] = state[animalIndex].copyWith(
                             surgeryDetails: {
                               state[animalIndex].animalName: surgeryDetailsList
@@ -1124,7 +1124,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                               MaterialPageRoute(
                                 builder: (context) => EditSurgeriesRecords(
                                   breedingEvents: const [],
-                                  OviDetails: widget.OviDetails,
+                                  oviDetails: widget.OviDetails,
                                   selectedSurgery: surgeryDetailsList[index],
                                 ),
                               ),
@@ -1174,9 +1174,9 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                       builder: (context) => AddSurgeriesRecords(
                         onSave: (surgeryName, firstSurgery, secondSurgery) {
                           setState(() {
-                            final oviVariables = ref.read(ovianimalsProvider);
+                            final oviVariables = ref.read(oviAnimalsProvider);
                             final animalIndex = ref
-                                .read(ovianimalsProvider)
+                                .read(oviAnimalsProvider)
                                 .indexWhere((animal) =>
                                     animal.animalName ==
                                     widget.OviDetails.animalName);
@@ -1185,7 +1185,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                                 oviVariables[animalIndex].surgeryDetails;
 
                             // Update the vaccineDetails map for that animal with the new vaccine details
-                            ref.read(ovianimalsProvider)[animalIndex] =
+                            ref.read(oviAnimalsProvider)[animalIndex] =
                                 oviVariables[animalIndex].copyWith(
                               surgeryDetails: {
                                 ...animalSurgeryDetails,
@@ -1271,7 +1271,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
           expDlvDate: expdeliveryDate,
         );
 
-        final oviAnimals = ref.read(ovianimalsProvider);
+        final oviAnimals = ref.read(oviAnimalsProvider);
         final index = oviAnimals.indexOf(widget.OviDetails);
         if (index >= 0) {
           oviAnimals[index] = updatedOviDetails;
@@ -1310,7 +1310,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
           dateOfSonar: dateOfSonar,
         );
 
-        final oviAnimals = ref.read(ovianimalsProvider);
+        final oviAnimals = ref.read(oviAnimalsProvider);
         final index = oviAnimals.indexOf(widget.OviDetails);
         if (index >= 0) {
           oviAnimals[index] = updatedOviDetails;
@@ -1360,7 +1360,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
           dateOfLayingEggs: dateOfLayingEggs,
         );
 
-        final oviAnimals = ref.read(ovianimalsProvider);
+        final oviAnimals = ref.read(oviAnimalsProvider);
         final index = oviAnimals.indexOf(widget.OviDetails);
         if (index >= 0) {
           oviAnimals[index] = updatedOviDetails;
@@ -1411,7 +1411,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
           incubationDate: incubationDate,
         );
 
-        final oviAnimals = ref.read(ovianimalsProvider);
+        final oviAnimals = ref.read(oviAnimalsProvider);
         final index = oviAnimals.indexOf(widget.OviDetails);
         if (index >= 0) {
           oviAnimals[index] = updatedOviDetails;
@@ -1479,7 +1479,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                         keptInOval: keptInOval,
                       );
 
-                      final oviAnimals = ref.read(ovianimalsProvider);
+                      final oviAnimals = ref.read(oviAnimalsProvider);
                       final index = oviAnimals.indexOf(widget.OviDetails);
                       if (index >= 0) {
                         oviAnimals[index] = updatedOviDetails;
@@ -1526,7 +1526,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                         keptInOval: keptInOval,
                       );
 
-                      final oviAnimals = ref.read(ovianimalsProvider);
+                      final oviAnimals = ref.read(oviAnimalsProvider);
                       final index = oviAnimals.indexOf(widget.OviDetails);
                       if (index >= 0) {
                         oviAnimals[index] = updatedOviDetails;
@@ -1580,19 +1580,19 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
       isDismissible: true,
       builder: (BuildContext context) {
         return PregnantStatusWidget(
-          mammalpregnantStatuses: currentPregnantStatus,
+          mammalPregnantStatus: currentPregnantStatus,
         );
       },
     ).then((newStatus) {
       if (currentPregnantStatus == false && newStatus == true) {
-        ref.read(ovianimalsProvider.notifier).update((state) {
+        ref.read(oviAnimalsProvider.notifier).update((state) {
           state[animalIndex] = state[animalIndex].copyWith(
               pregnant: true,
               pregnanciesCount: (state[animalIndex].pregnanciesCount ?? 0) + 1);
           return state;
         });
       } else {
-        ref.read(ovianimalsProvider.notifier).update((state) {
+        ref.read(oviAnimalsProvider.notifier).update((state) {
           state[animalIndex] = state[animalIndex].copyWith(
             pregnant: newStatus,
           );
@@ -1692,7 +1692,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
         });
     if (newCount != null) {
       setState(() {
-        ref.read(ovianimalsProvider.notifier).update((state) {
+        ref.read(oviAnimalsProvider.notifier).update((state) {
           state[animalIndex] =
               state[animalIndex].copyWith(pregnanciesCount: newCount);
           return state;

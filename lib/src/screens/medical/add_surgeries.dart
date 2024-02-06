@@ -7,7 +7,6 @@ import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/inputs/date_fields/primary_date_field.dart';
 import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
-import 'package:sulala_upgrade/src/data/globals.dart';
 
 class AddSurgeriesRecords extends StatefulWidget {
   final Function(String, DateTime?, DateTime?) onSave;
@@ -19,21 +18,20 @@ class AddSurgeriesRecords extends StatefulWidget {
 }
 
 class _AddSurgeriesRecordsState extends State<AddSurgeriesRecords> {
-  TextEditingController surgeryNameController = TextEditingController();
+  final _surgeryNameController = TextEditingController();
   DateTime? firstDoseDate;
   DateTime? secondDoseDate;
   final _formKey = GlobalKey<FormState>();
   @override
   void dispose() {
-    surgeryNameController.dispose();
+    _surgeryNameController.dispose();
     super.dispose();
   }
 
   void _saveDataAndNavigateBack() {
-    String newSurgeryName = surgeryNameController.text;
+    String newSurgeryName = _surgeryNameController.text;
     widget.onSave(newSurgeryName, firstDoseDate, secondDoseDate);
 
-    // Close the modal sheet and return to MyPage
     Navigator.pop(context);
   }
 
@@ -76,16 +74,16 @@ class _AddSurgeriesRecordsState extends State<AddSurgeriesRecords> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "Add Surgeries Records",
+                    "Add Surgeries Records".tr,
                     style: AppFonts.title3(color: AppColors.grayscale90),
                   ),
                   SizedBox(
                     height: 32 * SizeConfig.heightMultiplier(context),
                   ),
                   PrimaryTextField(
-                    hintText: 'Surgery Name',
-                    controller: surgeryNameController,
-                    labelText: 'Surgery Name',
+                    hintText: 'Surgery Name'.tr,
+                    controller: _surgeryNameController,
+                    labelText: 'Surgery Name'.tr,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter some text'.tr;
@@ -95,14 +93,14 @@ class _AddSurgeriesRecordsState extends State<AddSurgeriesRecords> {
                   ),
                   SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                   PrimaryDateField(
-                    hintText: 'Date Of Surgery',
-                    labelText: 'Date Of Surgery',
+                    hintText: 'Date Of Surgery'.tr,
+                    labelText: 'Date Of Surgery'.tr,
                     onChanged: (value) => setState(() => firstDoseDate = value),
                   ),
                   SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                   PrimaryDateField(
-                    hintText: 'Date Of Next Surgery',
-                    labelText: 'Date Of Next Surgery',
+                    hintText: 'Date Of Next Surgery'.tr,
+                    labelText: 'Date Of Next Surgery'.tr,
                     onChanged: (value) =>
                         setState(() => secondDoseDate = value),
                   ),
@@ -126,7 +124,7 @@ class _AddSurgeriesRecordsState extends State<AddSurgeriesRecords> {
                 _saveDataAndNavigateBack();
               }
             },
-            text: 'Save',
+            text: 'Save'.tr,
           ),
         ),
       ),

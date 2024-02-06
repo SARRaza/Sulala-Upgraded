@@ -1,5 +1,3 @@
-// ignore_for_file: non_constant_identifier_names
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -9,16 +7,14 @@ import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
-import 'package:sulala_upgrade/src/data/globals.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
-// import 'path_to_breeding_event_file.dart';
 
 class BreedingEventChildrenList extends ConsumerStatefulWidget {
-  final OviVariables OviDetails;
+  final OviVariables oviDetails;
 
   const BreedingEventChildrenList({
     Key? key,
-    required this.OviDetails,
+    required this.oviDetails,
   }) : super(key: key);
 
   @override
@@ -30,25 +26,25 @@ class _BreedingEventChildrenListState
     extends ConsumerState<BreedingEventChildrenList> {
   @override
   Widget build(BuildContext context) {
-    final animalIndex = ref.read(ovianimalsProvider).indexWhere(
-        (animal) => animal.animalName == widget.OviDetails.animalName);
+    final animalIndex = ref.read(oviAnimalsProvider).indexWhere(
+        (animal) => animal.animalName == widget.oviDetails.animalName);
 
     if (animalIndex == -1) {
       // Animal not found, you can show an error message or handle it accordingly
-      return const Center(
-        child: Text('Animal not found.'),
+      return Center(
+        child: Text('Animal not found.'.tr),
       );
     }
-    final selectedAnimal = ref.read(ovianimalsProvider)[animalIndex];
+    final selectedAnimal = ref.read(oviAnimalsProvider)[animalIndex];
     final breedingEvents = ref
         .read(breedingEventsProvider)
         .where((event) =>
-            event.sire?.id == widget.OviDetails.id ||
-            event.dam?.id == widget.OviDetails.id)
+            event.sire?.id == widget.oviDetails.id ||
+            event.dam?.id == widget.oviDetails.id)
         .toList();
 
     final otherChildren = ref
-        .read(ovianimalsProvider)
+        .read(oviAnimalsProvider)
         .where((animal) =>
             (animal.selectedOviSire?.id == selectedAnimal.id ||
                 animal.selectedOviDam?.id == selectedAnimal.id) &&
@@ -95,7 +91,7 @@ class _BreedingEventChildrenListState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'List Of Children',
+              'List Of Children'.tr,
               style: AppFonts.title3(color: AppColors.grayscale90),
             ),
             SizedBox(
@@ -114,7 +110,11 @@ class _BreedingEventChildrenListState
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Event Number: ${breedingEvent.eventNumber.isNotEmpty ? breedingEvent.eventNumber : 'empty'.tr}',
+                            'eventNumber'.trParams({
+                              'number': breedingEvent.eventNumber.isNotEmpty
+                                  ? breedingEvent.eventNumber
+                                  : 'empty'.tr
+                            }),
                             style:
                                 AppFonts.caption1(color: AppColors.grayscale80),
                           ),
@@ -161,7 +161,7 @@ class _BreedingEventChildrenListState
                               // ignore: unnecessary_null_comparison
                               subtitle: child.selectedOviGender.isEmpty
                                   ? Text(
-                                      'Gender Not Selected',
+                                      'Gender Not Selected'.tr,
                                       style: AppFonts.body2(
                                           color: AppColors.grayscale70),
                                     )
@@ -179,8 +179,8 @@ class _BreedingEventChildrenListState
                           },
                         )
                       else
-                        const Text(
-                            'No children recorded for this breeding event.'),
+                        Text(
+                            'No children recorded for this breeding event.'.tr),
                       SizedBox(
                         height: 16 * SizeConfig.heightMultiplier(context),
                       ),
@@ -196,7 +196,7 @@ class _BreedingEventChildrenListState
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Children without breeding events:',
+                        'Children without breeding events:'.tr,
                         style: AppFonts.caption1(color: AppColors.grayscale80),
                       ),
                     ],
@@ -233,7 +233,7 @@ class _BreedingEventChildrenListState
                         // ignore: unnecessary_null_comparison
                         subtitle: child.selectedOviGender.isEmpty
                             ? Text(
-                                'Gender Not Selected',
+                                'Gender Not Selected'.tr,
                                 style: AppFonts.body2(
                                     color: AppColors.grayscale70),
                               )
@@ -262,21 +262,21 @@ class _BreedingEventChildrenListState
                     SizedBox(
                       height: 151 * SizeConfig.heightMultiplier(context),
                     ),
-                    Image.asset('assets/illustrations/cow_childx.png'),
+                    Image.asset('assets/illustrations/cow_child.png'),
                     SizedBox(height: 32 * SizeConfig.heightMultiplier(context)),
                     Text(
-                      'No Children',
+                      'No Children'.tr,
                       style: AppFonts.headline3(color: AppColors.grayscale90),
                     ),
                     SizedBox(
                       height: 8 * SizeConfig.heightMultiplier(context),
                     ),
                     Text(
-                      "This selectedAnimal doesn’t have children.",
+                      "This selectedAnimal doesn't have children.".tr,
                       style: AppFonts.body2(color: AppColors.grayscale70),
                     ),
                     Text(
-                      "Add a child to see it here.",
+                      "Add a child to see it here.".tr,
                       style: AppFonts.body2(color: AppColors.grayscale70),
                     ),
                     SizedBox(
@@ -286,7 +286,7 @@ class _BreedingEventChildrenListState
                       width: 130 * SizeConfig.widthMultiplier(context),
                       height: 52 * SizeConfig.heightMultiplier(context),
                       child: PrimaryButton(
-                        text: 'Add Children',
+                        text: 'Add Children'.tr,
                         onPressed: () {
                           // Implement the logic to add children here
                         },

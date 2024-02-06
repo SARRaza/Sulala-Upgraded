@@ -18,8 +18,8 @@ class _FileViewPageState extends State<FileViewPage> {
 
   @override
   void initState() {
-    index = widget.index;
     super.initState();
+    index = widget.index;
   }
 
   @override

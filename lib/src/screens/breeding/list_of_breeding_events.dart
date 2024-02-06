@@ -1,49 +1,28 @@
-// ignore_for_file: non_constant_identifier_names
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/widgets/styled_dismissible.dart';
 import '../../data/classes/breeding_event_variables.dart';
 import '../../data/classes/ovi_variables.dart';
-import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/dialogs/confirm_delete_dialog.dart';
-import '../create_animal/owned_animal_detail_reg_mode.dart';
 import 'breeding_event_detail.dart';
 import 'create_breeding_event.dart';
 
 class ListOfBreedingEvents extends ConsumerStatefulWidget {
-  // final TextEditingController breedingNotesController;
-  // final TextEditingController breedingEventNumberController;
-  // final String selectedBreedSire;
-  // final String selectedBreedDam;
-  // final String selectedBreedPartner;
-  // // final String selectedBreedChildren;
-  // final String selectedBreedingDate;
-  // final String selectedDeliveryDate;
   final bool shouldAddBreedEvent;
-  final OviVariables OviDetails;
+  final OviVariables oviDetails;
   final List<BreedingEventVariables> breedingEvents;
 
   const ListOfBreedingEvents(
       {super.key,
-      // required this.breedingNotesController,
-      // required this.breedingEventNumberController,
-      // required this.selectedBreedSire,
-      // required this.selectedBreedDam,
-      // required this.selectedBreedPartner,
-      // // required this.selectedBreedChildren,
-      // required this.selectedBreedingDate,
-      // required this.selectedDeliveryDate,
       required this.shouldAddBreedEvent,
-      required this.OviDetails,
+      required this.oviDetails,
       required this.breedingEvents});
 
   @override
@@ -55,20 +34,20 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
 
   @override
   Widget build(BuildContext context) {
-    final animalIndex = ref.read(ovianimalsProvider).indexWhere(
-        (animal) => animal.animalName == widget.OviDetails.animalName);
+    final animalIndex = ref.read(oviAnimalsProvider).indexWhere(
+        (animal) => animal.animalName == widget.oviDetails.animalName);
 
     if (animalIndex == -1) {
       // Animal not found, you can show an error message or handle it accordingly
-      return const Center(
-        child: Text('Animal not found.'),
+      return Center(
+        child: Text('Animal not found.'.tr),
       );
     }
     final breedingEvents = ref
         .read(breedingEventsProvider)
         .where((event) =>
-            event.sire?.id == widget.OviDetails.id ||
-            event.dam?.id == widget.OviDetails.id)
+            event.sire?.id == widget.oviDetails.id ||
+            event.dam?.id == widget.oviDetails.id)
         .toList();
 
     // Filter the breeding events based on the query
@@ -76,7 +55,7 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          widget.OviDetails.animalName,
+          widget.oviDetails.animalName,
           style: const TextStyle(
             fontSize: 25,
             fontWeight: FontWeight.bold,
@@ -127,7 +106,7 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => CreateBreedingEvents(
-                        OviDetails: widget.OviDetails,
+                        oviDetails: widget.oviDetails,
                         breedingEvents: widget.breedingEvents,
                       ),
                     ),
@@ -147,7 +126,7 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Breeding History',
+            Text('Breeding History'.tr,
                 style: AppFonts.title3(color: AppColors.grayscale90)),
             SizedBox(
               height: 16 * SizeConfig.heightMultiplier(context),
@@ -163,7 +142,7 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                             height: 32 * SizeConfig.heightMultiplier(context),
                           ),
                           Text(
-                            'No Breeding Events Yet',
+                            'No Breeding Events Yet'.tr,
                             style: AppFonts.headline3(
                                 color: AppColors.grayscale90),
                           ),
@@ -171,7 +150,7 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                             height: 8 * SizeConfig.heightMultiplier(context),
                           ),
                           Text(
-                            'Add a breeding event to get started',
+                            'Add a breeding event to get started'.tr,
                             style: AppFonts.body2(color: AppColors.grayscale70),
                           ),
                           SizedBox(
@@ -191,7 +170,7 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => CreateBreedingEvents(
-                                      OviDetails: widget.OviDetails,
+                                      oviDetails: widget.oviDetails,
                                       breedingEvents: widget.breedingEvents,
                                     ),
                                   ),
@@ -199,7 +178,7 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                                   setState(() {});
                                 });
                               },
-                              text: 'Add Breeding Event',
+                              text: 'Add Breeding Event'.tr,
                             ),
                           ),
                         ],
@@ -233,7 +212,7 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                                       builder: (context) =>
                                           BreedingEventDetails(
                                         breedingEvents: breedingEvents,
-                                        OviDetails: widget.OviDetails,
+                                        oviDetails: widget.oviDetails,
                                         breedingEvent: breedingEvent,
                                       ),
                                     ),
@@ -245,7 +224,7 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
                                       MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     breedingEvent.eventNumber.isEmpty
-                                        ? const Text('New Event')
+                                        ? Text('New Event'.tr)
                                         : Text(
                                             breedingEvent.eventNumber,
                                             style: AppFonts.body2(

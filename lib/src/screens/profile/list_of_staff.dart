@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../data/classes/staff_member.dart';
-import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
@@ -27,10 +27,10 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
   @override
   void initState() {
     super.initState();
-    fetchDataFromBackend(); // Fetch initial data from the backend
+    _fetchDataFromBackend(); // Fetch initial data from the backend
   }
 
-  String truncateTextWithEllipsis(String text, int maxLength) {
+  String _truncateTextWithEllipsis(String text, int maxLength) {
     if (text.length <= maxLength) {
       return text;
     } else {
@@ -38,7 +38,7 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
     }
   }
 
-  Future<void> fetchDataFromBackend() async {
+  Future<void> _fetchDataFromBackend() async {
     // Simulate fetching data from the backend
     await Future.delayed(const Duration(seconds: 2));
 
@@ -89,9 +89,7 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
                 ),
               ),
               onPressed: () {
-                inviteMembarDrowup(
-                    context,
-                    SizeConfig.heightMultiplier(context),
+                _showInviteDrawUp(context, SizeConfig.heightMultiplier(context),
                     SizeConfig.widthMultiplier(context));
               },
             ),
@@ -107,7 +105,7 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Your Staff',
+                  'Your Staff'.tr,
                   style: AppFonts.title3(color: AppColors.grayscale90),
                 ),
                 SizedBox(
@@ -130,7 +128,7 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
                                   height: 44 *
                                       SizeConfig.heightMultiplier(context)),
                               Text(
-                                'You have no staff',
+                                'You have no staff'.tr,
                                 style: AppFonts.headline3(
                                     color: AppColors.grayscale90),
                               ),
@@ -143,9 +141,9 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
                                   height:
                                       52 * SizeConfig.heightMultiplier(context),
                                   child: PrimaryButton(
-                                      text: 'Invite a Member',
+                                      text: 'Invite a Member'.tr,
                                       onPressed: () {
-                                        inviteMembarDrowup(
+                                        _showInviteDrawUp(
                                             context,
                                             SizeConfig.heightMultiplier(
                                                 context),
@@ -208,7 +206,7 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
                               height:
                                   24 * SizeConfig.heightMultiplier(context)),
                           Text(
-                            'Requests',
+                            'Requests'.tr,
                             style: AppFonts.headline3(
                                 color: AppColors.grayscale80),
                           ),
@@ -309,7 +307,7 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
     );
   }
 
-  Future<dynamic> inviteMembarDrowup(
+  Future<dynamic> _showInviteDrawUp(
       BuildContext context, double heightMediaQuery, double widthMediaQuery) {
     return showModalBottomSheet(
       showDragHandle: true,
@@ -324,11 +322,12 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Invite Member',
+                'Invite Member'.tr,
                 style: AppFonts.title3(color: AppColors.grayscale90),
               ),
               Text(
-                'Share this link that will provide users access to your farm',
+                'Share this link that will provide users access to your farm'
+                    .tr,
                 style: AppFonts.body2(color: AppColors.grayscale70),
               ),
               SizedBox(
@@ -339,7 +338,7 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
                 children: [
                   TextFormField(
                     style: AppFonts.body2(color: AppColors.grayscale90),
-                    initialValue: truncateTextWithEllipsis(
+                    initialValue: _truncateTextWithEllipsis(
                         'https://example.com',
                         30), // Replace with your link value from the backend
                     readOnly: true,
@@ -363,12 +362,12 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
                           'https://example.com'; // Replace with your link value from the backend
                       Clipboard.setData(const ClipboardData(text: link));
                       CustomSnackBar.show(
-                          context, 'Link Copied To Clipboard', Icons.copy, 20);
+                          context, 'Link Copied To Clipboard'.tr, Icons.copy, 20);
 
                       Navigator.pop(
                           context); // Navigate back to the previous screen
                     },
-                    child: Text('Copy Link    ',
+                    child: Text('Copy Link'.tr,
                         style: AppFonts.body1(color: AppColors.primary40)),
                   ),
                 ],
@@ -381,7 +380,7 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
                 height: 52 * heightMediaQuery,
                 child: PrimaryButton(
                   onPressed: _shareLink,
-                  text: 'Share Link',
+                  text: 'Share Link'.tr,
                 ),
               ),
             ],

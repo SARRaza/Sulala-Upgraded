@@ -8,7 +8,7 @@ import '../../widgets/controls_and_buttons/buttons/navigate_button.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/buttons/secondary_button.dart';
 import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
-import '../../widgets/lists/table_lsit/table_clickable_link.dart';
+import '../../widgets/lists/table_list/table_clickable_link.dart';
 import '../../widgets/other/custom_snack_bar.dart';
 import 'list_of_staff.dart';
 import 'manage_permissions.dart';

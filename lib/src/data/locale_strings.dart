@@ -18,7 +18,11 @@ class LocalStrings extends Translations {
           'Welcome': 'Welcome',
           '1 year': '1 year',
           'numYears': '%s years',
-          'appVersion': 'Version Of The App: @version'
+          'appVersion': 'Version Of The App: @version',
+          'animalsFamilyTree': "@name's Family Tree",
+          'eventNumber': "Event number: @number",
+          'editAnimal': "Edit animal: @name",
+          "ifYouJoin": "If you join @name, you won't be able to create your own farm."
         },
         // Hindi Language
         'hi_IN': {
@@ -27,10 +31,10 @@ class LocalStrings extends Translations {
           'ChangeLang': 'भाषा बदलें',
           'SearchFarms': 'खेतों की खोज करें',
           'SearchAnimals': 'जानवरों की खोज करें',
-          'Findfarms': 'फार्म खोजें',
-          'Findanimals': 'पशु खोजें',
-          'Wannajoin': 'अभी अपना फार्म शुरू करना चाहते हैं और जुड़ना चाहते हैं',
-          'Joinnow': 'अब शामिल हों',
+          'findFarms': 'फार्म खोजें',
+          'findAnimals': 'पशु खोजें',
+          'wannaJoin': 'अभी अपना फार्म शुरू करना चाहते हैं और जुड़ना चाहते हैं',
+          'joinNow': 'अब शामिल हों',
           'SignIn': 'दाखिल करना',
           'Welcome': 'स्वागत',
           'appVersion': 'ऐप का संस्करण: @version'

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -6,7 +7,6 @@ import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/inputs/date_fields/primary_date_field.dart';
 import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
-import 'package:sulala_upgrade/src/data/globals.dart';
 
 class AddVaccination extends StatefulWidget {
   final Function(String, DateTime?, DateTime?) onSave;
@@ -18,22 +18,21 @@ class AddVaccination extends StatefulWidget {
 }
 
 class _AddVaccinationState extends State<AddVaccination> {
-  TextEditingController vaccineNameController = TextEditingController();
+  final _vaccineNameController = TextEditingController();
   DateTime? firstDoseDate;
   DateTime? secondDoseDate;
   final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
-    vaccineNameController.dispose();
+    _vaccineNameController.dispose();
     super.dispose();
   }
 
   void _saveDataAndNavigateBack() {
-    String newVaccineName = vaccineNameController.text;
+    String newVaccineName = _vaccineNameController.text;
     widget.onSave(newVaccineName, firstDoseDate, secondDoseDate);
 
-    // Close the modal sheet and return to MyPage
     Navigator.pop(context);
   }
 
@@ -76,33 +75,33 @@ class _AddVaccinationState extends State<AddVaccination> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "Add Vaccination",
+                    "Add Vaccination".tr,
                     style: AppFonts.title3(color: AppColors.grayscale90),
                   ),
                   SizedBox(
                     height: 32 * SizeConfig.heightMultiplier(context),
                   ),
                   PrimaryTextField(
-                    hintText: 'Vaccine Name',
-                    controller: vaccineNameController,
-                    labelText: 'Vaccine Name',
+                    hintText: 'Vaccine Name'.tr,
+                    controller: _vaccineNameController,
+                    labelText: 'Vaccine Name'.tr,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
+                        return 'Please enter some text'.tr;
                       }
                       return null;
                     },
                   ),
                   SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                   PrimaryDateField(
-                    hintText: 'Date Of Vaccination',
-                    labelText: 'Date Of Vaccination',
+                    hintText: 'Date Of Vaccination'.tr,
+                    labelText: 'Date Of Vaccination'.tr,
                     onChanged: (value) => setState(() => firstDoseDate = value),
                   ),
                   SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                   PrimaryDateField(
-                    hintText: 'Date Of Next Vaccination',
-                    labelText: 'Date Of Next Vaccination',
+                    hintText: 'Date Of Next Vaccination'.tr,
+                    labelText: 'Date Of Next Vaccination'.tr,
                     onChanged: (value) =>
                         setState(() => secondDoseDate = value),
                   ),
@@ -131,7 +130,7 @@ class _AddVaccinationState extends State<AddVaccination> {
               }
               // Navigator.pop(context);
             },
-            text: 'Save',
+            text: 'Save'.tr,
           ),
         ),
       ),

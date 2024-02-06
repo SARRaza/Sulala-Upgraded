@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
-import 'package:sulala_upgrade/src/screens/guest_mode/homescreen_guest_mode.dart';
+import 'package:sulala_upgrade/src/screens/guest_mode/home_screen_guest_mode.dart';
 import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -19,7 +19,6 @@ import 'list_of_staff.dart';
 import 'notifications_pause.dart';
 import 'privacy_security.dart';
 import 'shimmer_profile_page.dart';
-import 'package:sulala_upgrade/src/data/globals.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   final bool showEditIcon;
@@ -35,10 +34,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    fetchDataFromBackend();
+    _fetchDataFromBackend();
   }
 
-  Future<void> fetchDataFromBackend() async {
+  Future<void> _fetchDataFromBackend() async {
     // Simulate fetching data from the backend
     await Future.delayed(const Duration(seconds: 3));
 
@@ -51,7 +50,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   Widget build(BuildContext context) {
     final firstName = ref.watch(firstNameProvider);
     final lastName = ref.watch(lastNameProvider);
-    final profilePicture = ref.watch(proflePictureProvider);
+    final profilePicture = ref.watch(profilePictureProvider);
     final phoneNumber = ref.read(phoneNumberProvider);
     return Scaffold(
       appBar: AppBar(
@@ -209,12 +208,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         style: AppFonts.body2(color: AppColors.grayscale90),
                       ),
                       onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //       builder: (context) =>
-                        //           const AuthorizationMethodsPage()),
-                        // );
                       }),
                   ListTile(
                       contentPadding: EdgeInsets.zero,
@@ -235,11 +228,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         style: AppFonts.body2(color: AppColors.grayscale90),
                       ),
                       onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //       builder: (context) => const PaymentPage()),
-                        // );
                       }),
                   ListTile(
                       contentPadding: EdgeInsets.zero,
@@ -260,11 +248,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         style: AppFonts.body2(color: AppColors.grayscale90),
                       ),
                       onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //       builder: (context) => SubscriptionPage()),
-                        // );
                       }),
                 ],
               ),
@@ -474,7 +457,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       52 * SizeConfig.heightMultiplier(context),
                                   width: double.infinity,
                                   child: NavigateButton(
-                                      onPressed: signOut, text: 'Yes'.tr),
+                                      onPressed: _signOut, text: 'Yes'.tr),
                                 ),
                                 SizedBox(
                                     height: 8 *
@@ -508,7 +491,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     );
   }
 
-  void signOut() {
+  void _signOut() {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => const HomeScreenGuestMode()));
   }

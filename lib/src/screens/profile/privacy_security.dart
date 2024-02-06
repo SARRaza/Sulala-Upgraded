@@ -1,5 +1,3 @@
-// ignore_for_file: non_constant_identifier_names
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -9,21 +7,19 @@ import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/toggles/toggle_active.dart';
 import '../../widgets/controls_and_buttons/toggles/toggle_disabled.dart';
-import 'package:sulala_upgrade/src/data/globals.dart';
 
 class PrivacySecurityPage extends ConsumerStatefulWidget {
   const PrivacySecurityPage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _PrivacySecurityPage createState() => _PrivacySecurityPage();
+  ConsumerState<PrivacySecurityPage> createState() => _PrivacySecurityPage();
 }
 
 class _PrivacySecurityPage extends ConsumerState<PrivacySecurityPage> {
-  bool _AllowCollab = true;
-  bool _ShowListOfAnimals = false;
-  bool _ShowFamilyTree = false;
-  bool _ShowContactInfo = false;
+  bool allowCollaboration = true;
+  bool showListOfAnimals = false;
+  bool showFamilyTree = false;
+  bool showContactInfo = false;
 
   @override
   Widget build(BuildContext context) {
@@ -71,14 +67,14 @@ class _PrivacySecurityPage extends ConsumerState<PrivacySecurityPage> {
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
                 trailing: ToggleActive(
-                  value: _AllowCollab,
+                  value: allowCollaboration,
                   onChanged: (value) {
                     setState(() {
-                      _AllowCollab = value;
+                      allowCollaboration = value;
                       if (!value) {
                         // Reset the values of Phone Number and Email Address switches
-                        _ShowListOfAnimals = false;
-                        _ShowFamilyTree = false;
+                        showListOfAnimals = false;
+                        showFamilyTree = false;
                       }
                     });
                   },
@@ -90,13 +86,13 @@ class _PrivacySecurityPage extends ConsumerState<PrivacySecurityPage> {
                   'Show List Of Animals'.tr,
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
-                trailing: _AllowCollab
+                trailing: allowCollaboration
                     ? const ToggleDisabled(checked: true)
                     : ToggleActive(
-                        value: _ShowListOfAnimals,
+                        value: showListOfAnimals,
                         onChanged: (value) {
                           setState(() {
-                            _ShowListOfAnimals = value;
+                            showListOfAnimals = value;
                           });
                         }),
               ),
@@ -106,13 +102,13 @@ class _PrivacySecurityPage extends ConsumerState<PrivacySecurityPage> {
                   'Show Family Tree'.tr,
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
-                trailing: _AllowCollab
+                trailing: allowCollaboration
                     ? const ToggleDisabled(checked: true)
                     : ToggleActive(
-                        value: _ShowFamilyTree,
+                        value: showFamilyTree,
                         onChanged: (value) {
                           setState(() {
-                            _ShowFamilyTree = value;
+                            showFamilyTree = value;
                           });
                         }),
               ),
@@ -131,17 +127,17 @@ class _PrivacySecurityPage extends ConsumerState<PrivacySecurityPage> {
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
                 trailing: ToggleActive(
-                  value: _ShowContactInfo,
+                  value: showContactInfo,
                   onChanged: (value) {
                     setState(() {
-                      _ShowContactInfo = value;
+                      showContactInfo = value;
                       if (!value) {}
                     });
                   },
                 ),
               ),
               Visibility(
-                visible: _ShowContactInfo,
+                visible: showContactInfo,
                 child: Column(
                   children: [
                     Consumer(
@@ -157,7 +153,7 @@ class _PrivacySecurityPage extends ConsumerState<PrivacySecurityPage> {
                           ),
                           trailing: ToggleActive(
                             value: phoneNumberVisibility,
-                            onChanged: _ShowContactInfo
+                            onChanged: showContactInfo
                                 ? (value) {
                                     ref
                                         .read(phoneNumberVisibilityProvider
@@ -182,7 +178,7 @@ class _PrivacySecurityPage extends ConsumerState<PrivacySecurityPage> {
                           ),
                           trailing: ToggleActive(
                             value: emailAddressVisibility,
-                            onChanged: _ShowContactInfo
+                            onChanged: showContactInfo
                                 ? (value) {
                                     ref
                                         .read(emailAddressVisibilityProvider

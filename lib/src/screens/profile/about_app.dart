@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:sulala_upgrade/src/screens/profile/privacy_security.dart';
 import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
-import 'package:sulala_upgrade/src/data/globals.dart';
 
 class AboutApp extends StatefulWidget {
   const AboutApp({super.key});

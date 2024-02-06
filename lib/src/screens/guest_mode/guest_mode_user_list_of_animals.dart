@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sulala_upgrade/src/screens/guest_mode/animal_details.dart';
+import 'package:sulala_upgrade/src/widgets/other/animal_list_item.dart';
 import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
-import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
-import 'package:sulala_upgrade/src/data/globals.dart';
+import '../../widgets/controls_and_buttons/text_buttons/primary_text_button.dart';
 import '../sign_in/sign_in.dart';
 import '../sign_up/join_now.dart';
 
@@ -50,17 +51,16 @@ class _GuestModeUserListOfAnimals extends State<GuestModeUserListOfAnimals> {
     });
   }
 
-  void navigateToAnimalInfo(Map<String, dynamic> mammal) {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => OwnedAnimalDetailsRegMode(
-    //       imagePath: mammal['image'],
-    //       title: mammal['name'],
-    //       geninfo: mammal['subtitle'],
-    //     ),
-    //   ),
-    // );
+  void _navigateToAnimalInfo(Map<String, dynamic> mammal) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => AnimalDetails(
+                imagePath: mammal['image'],
+                title: mammal['name'],
+                genInfo: mammal['subtitle'],
+                animalType: mammal['type'],
+                animalDiet: mammal['diet'])));
   }
 
   @override
@@ -127,22 +127,9 @@ class _GuestModeUserListOfAnimals extends State<GuestModeUserListOfAnimals> {
                               itemCount: _filteredMammals.length,
                               itemBuilder: (context, index) {
                                 final mammal = _filteredMammals[index];
-                                return ListTile(
-                                  contentPadding: EdgeInsets.zero,
-                                  leading: CircleAvatar(
-                                    backgroundColor: Colors.transparent,
-                                    radius:
-                                        SizeConfig.widthMultiplier(context) *
-                                            24,
-                                    backgroundImage:
-                                        AssetImage(mammal['image']),
-                                  ),
-                                  title: Text(mammal['name']),
-                                  subtitle: Text(mammal['subtitle']),
-                                  onTap: () {
-                                    navigateToAnimalInfo(mammal);
-                                  },
-                                );
+                                return AnimalListItem(
+                                    mammal: mammal,
+                                    onTap: () => _navigateToAnimalInfo(mammal));
                               },
                             ),
                           )
@@ -161,12 +148,12 @@ class _GuestModeUserListOfAnimals extends State<GuestModeUserListOfAnimals> {
                                             32,
                                   ),
                                   Text(
-                                    'No Animals Found',
+                                    'No Animals Found'.tr,
                                     style: AppFonts.headline3(
                                         color: AppColors.grayscale90),
                                   ),
                                   Text(
-                                    'Try adjusting the filters',
+                                    'Try adjusting the filters'.tr,
                                     style: AppFonts.body2(
                                         color: AppColors.grayscale70),
                                   ),

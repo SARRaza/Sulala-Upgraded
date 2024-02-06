@@ -3,13 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
 import '../../data/classes/breeding_event_variables.dart';
-import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
-import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
-import 'drow_up_animal_breed.dart';
-import 'drow_up_animal_species.dart';
+import '../../widgets/controls_and_buttons/text_buttons/primary_text_button.dart';
+import 'draw_up_animal_breed.dart';
+import 'draw_up_animal_species.dart';
 import 'select_options.dart';
 
 class CreateAnimalPage extends ConsumerStatefulWidget {
@@ -27,8 +26,9 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
   String selectedAnimalBreed = '';
   bool showAnimalSpeciesSection = false;
   bool showAnimalBreedsSection = false;
-  bool areAllOptionsSelected() {
-    final selectedAnimalType = ref.watch(selectedAnimalTypeProvider);
+
+  bool _areAllOptionsSelected() {
+    final selectedAnimalType = ref.read(selectedAnimalTypeProvider);
     return selectedAnimalType.isNotEmpty &&
         selectedAnimalSpecies.isNotEmpty &&
         selectedAnimalBreed.isNotEmpty;
@@ -130,12 +130,7 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
               SizedBox(
                 height: SizeConfig.heightMultiplier(context) * 24,
               ),
-              Column(
-                children: [
-                  _buildAnimalTypeOption('Mammal'),
-                  _buildAnimalTypeOption('Oviparous'),
-                ],
-              ),
+              _buildAnimalTypeSection(context),
               SizedBox(
                 height: SizeConfig.heightMultiplier(context) * 16,
               ),
@@ -209,7 +204,7 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
                     onPressed: () {
                       _showAnimalBreed('breeds', context);
                     },
-                    text: 'Show More',
+                    text: 'Show More'.tr,
                     status: TextStatus.idle,
                     position: TextButtonPosition.right,
                   ),
@@ -227,7 +222,7 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
               showAnimalSpeciesSection = selectedAnimalType.isNotEmpty;
               showAnimalBreedsSection = selectedAnimalSpecies.isNotEmpty;
             });
-            if (areAllOptionsSelected()) {
+            if (_areAllOptionsSelected()) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -246,46 +241,13 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
               borderRadius: BorderRadius.circular(50),
             ),
           ),
-          child: const Text(
-            'Continue',
-            style: TextStyle(color: Colors.white),
+          child: Text(
+            'Continue'.tr,
+            style: const TextStyle(color: Colors.white),
           ),
         ),
       ),
     ));
-  }
-
-  Widget _buildAnimalTypeOption(String animalType) {
-    final imageAsset = animalImages[animalType]!;
-    final isSelected =
-        ref.read(selectedAnimalTypeProvider.notifier).state == animalType;
-
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: CircleAvatar(
-        backgroundImage: AssetImage(imageAsset),
-        backgroundColor: Colors.transparent,
-      ),
-      title:
-          Text(animalType, style: AppFonts.body2(color: AppColors.grayscale90)),
-      trailing: Container(
-        width: SizeConfig.widthMultiplier(context) * 24,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: isSelected ? AppColors.primary20 : AppColors.grayscale30,
-            width: isSelected ? 6.0 : 1.0,
-          ),
-        ),
-      ),
-      onTap: () {
-        setState(() {
-          ref
-              .read(selectedAnimalTypeProvider.notifier)
-              .update((state) => animalType);
-        });
-      },
-    );
   }
 
   Widget _buildAnimalSpeciesOption(String optionText) {
@@ -306,9 +268,6 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
         ),
       ),
       onTap: () {
-        // setState(() {
-        //   selectedAnimalSpecies = isSelected ? '' : optionText;
-        // });
         setState(() {
           ref
               .read(selectedAnimalSpeciesProvider.notifier)
@@ -354,14 +313,11 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
     List<String> filteredModalList = List.from(speciesList);
     TextEditingController searchValue = TextEditingController();
 
-    DrowupAnimalSpecies drowupAnimalSpecies = DrowupAnimalSpecies(
+    DrawUpAnimalSpecies drawUpAnimalSpecies = DrawUpAnimalSpecies(
       searchValue: searchValue,
-      filteredModalList: filteredModalList,
+      speciesList: filteredModalList,
       modalAnimalSpeciesList: speciesList,
-      setState: setState,
     );
-
-    drowupAnimalSpecies.resetSelection();
 
     final selectedSpeciesValue = await showModalBottomSheet<String>(
       showDragHandle: true,
@@ -370,7 +326,7 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
       isScrollControlled: true,
       isDismissible: true,
       builder: (BuildContext context) {
-        return drowupAnimalSpecies;
+        return drawUpAnimalSpecies;
       },
     );
 
@@ -392,18 +348,15 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
 
   void _showAnimalBreed(String section, BuildContext context) async {
     List<String> filteredBreedList =
-        List.from(morespeciesToBreedsMap[selectedAnimalSpecies] ?? []);
+        List.from(moreSpeciesToBreedsMap[selectedAnimalSpecies] ?? []);
     TextEditingController searchValue = TextEditingController();
 
-    DrowupAnimalBreed drowupAnimalBreed = DrowupAnimalBreed(
+    DrawUpAnimalBreed drawUpAnimalBreed = DrawUpAnimalBreed(
       searchValue: searchValue,
-      filteredBreedList: filteredBreedList,
-      setState: setState,
-      morespeciesToBreedsMap: morespeciesToBreedsMap,
+      breedList: filteredBreedList,
+      moreSpeciesToBreedsMap: moreSpeciesToBreedsMap,
       selectedAnimalSpecies: selectedAnimalSpecies,
     );
-
-    drowupAnimalBreed.resetSelection();
 
     final selectedBreedValue = await showModalBottomSheet<String>(
       showDragHandle: true,
@@ -412,7 +365,7 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
       isScrollControlled: true,
       isDismissible: true,
       builder: (BuildContext context) {
-        return drowupAnimalBreed;
+        return drawUpAnimalBreed;
       },
     );
 
@@ -426,5 +379,29 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
         selectedAnimalBreed = selectedBreedValue;
       });
     }
+  }
+
+  Widget _buildAnimalTypeSection(BuildContext context) {
+    final animalTypes = ['Mammal', 'Oviparous'];
+    return Column(
+      children: animalTypes
+          .map((type) => _buildAnimalTypeOption(context, type))
+          .toList(),
+    );
+  }
+
+  Widget _buildAnimalTypeOption(BuildContext context, String animalType) {
+    final isSelected = ref.watch(selectedAnimalTypeProvider) == animalType;
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundImage: AssetImage(animalImages[animalType]!),
+      ),
+      title: Text(animalType.tr),
+      trailing: isSelected
+          ? const Icon(Icons.check_circle, color: Colors.green)
+          : null,
+      onTap: () =>
+          ref.read(selectedAnimalTypeProvider.notifier).state = animalType,
+    );
   }
 }

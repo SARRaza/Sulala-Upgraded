@@ -1,11 +1,8 @@
-// ignore_for_file: non_constant_identifier_names
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:sulala_upgrade/src/widgets/dialogs/confirm_delete_dialog.dart';
 import '../../data/classes/breeding_event_variables.dart';
@@ -20,10 +17,9 @@ import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/inputs/date_fields/primary_date_field.dart';
 import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
-import 'package:sulala_upgrade/src/data/globals.dart';
 
 class EditMedicalCheckUp extends ConsumerStatefulWidget {
-  final OviVariables OviDetails;
+  final OviVariables oviDetails;
   final List<BreedingEventVariables> breedingEvents;
   final MedicalCheckupDetails? selectedCheckup;
 
@@ -31,13 +27,13 @@ class EditMedicalCheckUp extends ConsumerStatefulWidget {
       {super.key,
       required this.breedingEvents,
       this.selectedCheckup,
-      required this.OviDetails});
+      required this.oviDetails});
   @override
   ConsumerState<EditMedicalCheckUp> createState() => _EditMedicalCheckUpState();
 }
 
 class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
-  TextEditingController checkUpNameController = TextEditingController();
+  final _checkUpNameController = TextEditingController();
   DateTime? firstCheckUp;
   DateTime? secondCheckUp;
   List<MedicalCheckupDetails> checkupDetailsList = [];
@@ -49,19 +45,9 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
 
     if (widget.selectedCheckup != null) {
       // Initialize text controller and date variables with selected vaccine details
-      checkUpNameController.text = widget.selectedCheckup!.checkupName;
+      _checkUpNameController.text = widget.selectedCheckup!.checkupName;
       firstCheckUp = widget.selectedCheckup!.firstCheckUp;
       secondCheckUp = widget.selectedCheckup!.secondCheckUp;
-    }
-  }
-
-  void updateCheckUpDetailsList(MedicalCheckupDetails updatedCheckup) {
-    int index = checkupDetailsList.indexWhere((checkup) =>
-        checkup.checkupName == widget.selectedCheckup?.checkupName);
-
-    // Replace the old vaccine with the updated one
-    if (index != -1) {
-      checkupDetailsList[index] = updatedCheckup;
     }
   }
 
@@ -103,16 +89,16 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "Edit Medical Checkup",
+                    "Edit Medical Checkup".tr,
                     style: AppFonts.title3(color: AppColors.grayscale90),
                   ),
                   SizedBox(
                     height: 32 * SizeConfig.heightMultiplier(context),
                   ),
                   PrimaryTextField(
-                    hintText: 'Checkup Name',
-                    controller: checkUpNameController,
-                    labelText: 'Checkup Name',
+                    hintText: 'Checkup Name'.tr,
+                    controller: _checkUpNameController,
+                    labelText: 'Checkup Name'.tr,
                     validator: (value) => value == null || value.isEmpty
                         ? 'Please enter some text'.tr
                         : null,
@@ -122,7 +108,7 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                     hintText: firstCheckUp != null
                         ? DateFormat('yyyy-MM-dd').format(firstCheckUp!)
                         : 'dd/MM/yyyy',
-                    labelText: 'Date Of Checkup',
+                    labelText: 'Date Of Checkup'.tr,
                     onChanged: (value) => setState(() => firstCheckUp = value),
                   ),
                   SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
@@ -130,7 +116,7 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                     hintText: secondCheckUp != null
                         ? DateFormat('yyyy-MM-dd').format(secondCheckUp!)
                         : 'dd/MM/yyyy',
-                    labelText: 'Date Of Next Checkup',
+                    labelText: 'Date Of Next Checkup'.tr,
                     onChanged: (value) => setState(() => secondCheckUp = value),
                   ),
                   SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
@@ -154,7 +140,7 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                         if (_formKey.currentState!.validate()) {
                           MedicalCheckupDetails updatedCheckUp =
                               widget.selectedCheckup!.copyWith(
-                                  checkupName: checkUpNameController.text,
+                                  checkupName: _checkUpNameController.text,
                                   firstCheckUp: firstCheckUp,
                                   secondCheckUp: secondCheckUp,
                                   files: ref
@@ -164,18 +150,18 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
 
                           // Update the vaccineDetailsList for the selected animal
                           final animalIndex =
-                              ref.read(ovianimalsProvider).indexWhere(
+                              ref.read(oviAnimalsProvider).indexWhere(
                                     (animal) =>
                                         animal.animalName ==
-                                        widget.OviDetails.animalName,
+                                        widget.oviDetails.animalName,
                                   );
 
                           if (animalIndex != -1) {
                             // Replace the existing vaccine with the updated one
                             final List<MedicalCheckupDetails> currentList = ref
-                                        .read(ovianimalsProvider)[animalIndex]
+                                        .read(oviAnimalsProvider)[animalIndex]
                                         .checkUpDetails[
-                                    widget.OviDetails.animalName] ??
+                                    widget.oviDetails.animalName] ??
                                 [];
 
                             final List<MedicalCheckupDetails> updatedList =
@@ -185,7 +171,7 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
 
                             if (indexToUpdate != -1) {
                               ref
-                                  .read(ovianimalsProvider.notifier)
+                                  .read(oviAnimalsProvider.notifier)
                                   .update((state) {
                                 final newState = List<OviVariables>.from(state);
                                 final checkupDetails =
@@ -196,11 +182,6 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                                     .copyWith(checkUpDetails: checkupDetails);
                                 return newState;
                               });
-                              // updatedList[indexToUpdate] = updatedCheckUp;
-                              // ref
-                              //         .read(ovianimalsProvider)[animalIndex]
-                              //         .checkUpDetails[
-                              //     widget.OviDetails.animalName] = updatedList;
                             }
                           }
 
@@ -209,7 +190,7 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                         }
                         // Update details using copyWith method
                       },
-                      text: 'Save',
+                      text: 'Save'.tr,
                     ),
                   ),
                   SizedBox(
@@ -219,8 +200,8 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                     height: 52 * SizeConfig.heightMultiplier(context),
                     width: 343 * SizeConfig.widthMultiplier(context),
                     child: NavigateButton(
-                      onPressed: deleteCheckup,
-                      text: 'Delete',
+                      onPressed: _deleteCheckup,
+                      text: 'Delete'.tr,
                     ),
                   ),
                 ],
@@ -232,21 +213,21 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
     );
   }
 
-  void deleteCheckup() {
+  void _deleteCheckup() {
     showDialog(
             context: context,
             builder: (context) => ConfirmDeleteDialog(
                 content: "Are you sure you want to delete the checkup".tr))
         .then((confirm) {
       if (confirm) {
-        final animalIndex = ref.read(ovianimalsProvider).indexWhere(
-              (animal) => animal.animalName == widget.OviDetails.animalName,
+        final animalIndex = ref.read(oviAnimalsProvider).indexWhere(
+              (animal) => animal.animalName == widget.oviDetails.animalName,
             );
 
-        ref.read(ovianimalsProvider.notifier).update((state) {
+        ref.read(oviAnimalsProvider.notifier).update((state) {
           final newState = List<OviVariables>.from(state);
           newState[animalIndex]
-              .checkUpDetails[widget.OviDetails.animalName]!
+              .checkUpDetails[widget.oviDetails.animalName]!
               .removeWhere((checkup) =>
                   checkup.checkupName == widget.selectedCheckup!.checkupName);
 

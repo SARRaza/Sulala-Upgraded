@@ -1,4 +1,3 @@
-// ignore_for_file: unnecessary_null_comparison, non_constant_identifier_names
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -9,21 +8,19 @@ import 'package:sulala_upgrade/src/screens/create_animal/owned_animal_detail_reg
 import '../../data/classes/breeding_event_variables.dart';
 import '../../data/classes/breeding_partner.dart';
 import '../../data/classes/ovi_variables.dart';
-import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import 'edit_breeding_event_detail.dart';
-import 'list_of_childrens.dart';
 
 class BreedingEventDetails extends ConsumerStatefulWidget {
   final List<BreedingEventVariables> breedingEvents;
   final BreedingEventVariables breedingEvent;
-  final OviVariables OviDetails;
+  final OviVariables oviDetails;
 
   const BreedingEventDetails({
     super.key,
     required this.breedingEvents,
-    required this.OviDetails,
+    required this.oviDetails,
     required this.breedingEvent,
   });
 
@@ -37,18 +34,12 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
 
   @override
   Widget build(BuildContext context) {
-    final animals = ref.read(ovianimalsProvider);
-    final animalIndex =
-        animals.indexWhere((animal) => animal.id == widget.OviDetails.id);
-    final eventIndex = widget.breedingEvents.indexWhere(
-        (event) => event.eventNumber == widget.breedingEvent.eventNumber);
-
     breedingEvent = ref.read(breedingEventsProvider).firstWhere((event) =>
-        event.sire?.id == widget.OviDetails.id ||
-        event.dam?.id == widget.OviDetails.id);
-    if (breedingEvent.partner?.id == widget.OviDetails.id) {
+        event.sire?.id == widget.oviDetails.id ||
+        event.dam?.id == widget.oviDetails.id);
+    if (breedingEvent.partner?.id == widget.oviDetails.id) {
       breedingEvent = breedingEvent.copyWith(
-          partner: breedingEvent.sire?.id == widget.OviDetails.id
+          partner: breedingEvent.sire?.id == widget.oviDetails.id
               ? BreedingPartner(
                   breedingEvent.dam!.animalName,
                   breedingEvent.dam!.selectedOviImage,
@@ -65,7 +56,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
           scrolledUnderElevation: 0.0,
           centerTitle: true,
           title: Text(
-            widget.OviDetails.animalName,
+            widget.oviDetails.animalName,
             style: AppFonts.headline3(color: AppColors.grayscale90),
           ),
           backgroundColor: Colors.transparent,
@@ -96,7 +87,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                   MaterialPageRoute(
                     builder: (context) => EditBreedingEventDetails(
                       breedingEvents: widget.breedingEvents,
-                      OviDetails: widget.OviDetails,
+                      oviDetails: widget.oviDetails,
                       breedingEvent: breedingEvent,
                     ),
                   ),
@@ -147,7 +138,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Breeding ID',
+                      'Breeding ID'.tr,
                       style: AppFonts.body2(color: AppColors.grayscale70),
                     ),
                     Text(
@@ -163,12 +154,12 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Breeding Date',
+                      'Breeding Date'.tr,
                       style: AppFonts.body2(color: AppColors.grayscale70),
                     ),
                     breedingEvent.breedingDate == null
                         ? Text(
-                            'No Date Added',
+                            'No Date Added'.tr,
                             style: AppFonts.body2(color: AppColors.grayscale90),
                           )
                         : Text(
@@ -181,27 +172,27 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                 SizedBox(
                   height: 20 * SizeConfig.heightMultiplier(context),
                 ),
-                if (widget.OviDetails.selectedAnimalType == 'Mammal')
-                  buildDateRow('Delivery Date'.tr, breedingEvent.deliveryDate),
-                if (widget.OviDetails.selectedAnimalType == 'Oviparous')
+                if (widget.oviDetails.selectedAnimalType == 'Mammal')
+                  _buildDateRow('Delivery Date'.tr, breedingEvent.deliveryDate),
+                if (widget.oviDetails.selectedAnimalType == 'Oviparous')
                   Column(
                     children: [
-                      buildDateRow('Date of laying eggs'.tr,
+                      _buildDateRow('Date of laying eggs'.tr,
                           breedingEvent.layingEggsDate),
                       SizedBox(
                         height: 20 * SizeConfig.heightMultiplier(context),
                       ),
-                      buildNumberRow('Number of eggs'.tr,
+                      _buildNumberRow('Number of eggs'.tr,
                           breedingEvent.eggsNumber.toString()),
                       SizedBox(
                         height: 20 * SizeConfig.heightMultiplier(context),
                       ),
-                      buildDateRow(
+                      _buildDateRow(
                           'Incubation date'.tr, breedingEvent.incubationDate),
                       SizedBox(
                         height: 20 * SizeConfig.heightMultiplier(context),
                       ),
-                      buildDateRow(
+                      _buildDateRow(
                           'Hatching date'.tr, breedingEvent.hatchingDate)
                     ],
                   ),
@@ -216,7 +207,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Breeding Partner',
+                      'Breeding Partner'.tr,
                       style: AppFonts.title5(color: AppColors.grayscale90),
                     ),
                   ],
@@ -231,7 +222,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                   itemBuilder: (context, index) {
                     final partner = breedingEvent.partner;
                     final partnerOviDetails = ref
-                        .read(ovianimalsProvider)
+                        .read(oviAnimalsProvider)
                         .firstWhere((animal) =>
                             animal.animalName == partner!.animalName);
 
@@ -242,8 +233,8 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                               builder: (context) => OwnedAnimalDetailsRegMode(
                                   imagePath: '',
                                   title: '',
-                                  geninfo: '',
-                                  OviDetails: partnerOviDetails,
+                                  genInfo: '',
+                                  oviDetails: partnerOviDetails,
                                   breedingEvents: const [])),
                         );
                       },
@@ -280,7 +271,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                   height: 6 * SizeConfig.heightMultiplier(context),
                 ),
                 Text(
-                  "Children",
+                  "Children".tr,
                   style: AppFonts.title5(color: AppColors.grayscale90),
                 ),
                 SizedBox(
@@ -294,7 +285,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                           ),
                           Center(
                               child: Image.asset(
-                                  'assets/illustrations/cow_childx.png')),
+                                  'assets/illustrations/cow_child.png')),
                         ],
                       )
                     : ListView.builder(
@@ -304,7 +295,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                         itemBuilder: (context, index) {
                           final child = breedingEvent.children[index];
                           final childOviDetails = ref
-                              .read(ovianimalsProvider)
+                              .read(oviAnimalsProvider)
                               .firstWhere((animal) =>
                                   animal.animalName == child.animalName);
 
@@ -316,8 +307,8 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                                         OwnedAnimalDetailsRegMode(
                                             imagePath: '',
                                             title: '',
-                                            geninfo: '',
-                                            OviDetails: childOviDetails,
+                                            genInfo: '',
+                                            oviDetails: childOviDetails,
                                             breedingEvents: const [])),
                               );
                             },
@@ -360,7 +351,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Notes",
+                      "Notes".tr,
                       style: AppFonts.title5(color: AppColors.grayscale90),
                     ),
                     InkWell(
@@ -385,7 +376,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
     );
   }
 
-  Row buildDateRow(String label, DateTime? value) {
+  Row _buildDateRow(String label, DateTime? value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -406,7 +397,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
     );
   }
 
-  Row buildNumberRow(String label, String? value) {
+  Row _buildNumberRow(String label, String? value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

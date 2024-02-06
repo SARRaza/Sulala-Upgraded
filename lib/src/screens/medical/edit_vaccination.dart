@@ -1,5 +1,3 @@
-// ignore_for_file: non_constant_identifier_names
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -18,12 +16,11 @@ import '../../widgets/controls_and_buttons/buttons/navigate_button.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/inputs/date_fields/primary_date_field.dart';
 import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
-import 'package:sulala_upgrade/src/data/globals.dart';
 
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 
 class EditVaccination extends ConsumerStatefulWidget {
-  final OviVariables OviDetails;
+  final OviVariables oviDetails;
   final List<BreedingEventVariables> breedingEvents;
   final VaccineDetails? selectedVaccine;
 
@@ -31,14 +28,14 @@ class EditVaccination extends ConsumerStatefulWidget {
       {super.key,
       required this.breedingEvents,
       this.selectedVaccine,
-      required this.OviDetails});
+      required this.oviDetails});
 
   @override
   ConsumerState<EditVaccination> createState() => _EditVaccinationState();
 }
 
 class _EditVaccinationState extends ConsumerState<EditVaccination> {
-  TextEditingController vaccineNameController = TextEditingController();
+  final _vaccineNameController = TextEditingController();
   DateTime? firstDoseDate;
   DateTime? secondDoseDate;
   List<VaccineDetails> vaccineDetailsList = [];
@@ -50,19 +47,9 @@ class _EditVaccinationState extends ConsumerState<EditVaccination> {
 
     if (widget.selectedVaccine != null) {
       // Initialize text controller and date variables with selected vaccine details
-      vaccineNameController.text = widget.selectedVaccine!.vaccineName;
+      _vaccineNameController.text = widget.selectedVaccine!.vaccineName;
       firstDoseDate = widget.selectedVaccine!.firstDoseDate;
       secondDoseDate = widget.selectedVaccine!.secondDoseDate;
-    }
-  }
-
-  void _updateVaccineDetailsList(VaccineDetails updatedVaccine) {
-    int index = vaccineDetailsList.indexWhere(
-        (vaccine) => vaccine.vaccineName == updatedVaccine.vaccineName);
-
-    // Replace the old vaccine with the updated one
-    if (index != -1) {
-      vaccineDetailsList[index] = updatedVaccine;
     }
   }
 
@@ -104,16 +91,16 @@ class _EditVaccinationState extends ConsumerState<EditVaccination> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "Edit Vaccination",
+                    "Edit Vaccination".tr,
                     style: AppFonts.title3(color: AppColors.grayscale90),
                   ),
                   SizedBox(
                     height: 32 * SizeConfig.heightMultiplier(context),
                   ),
                   PrimaryTextField(
-                    hintText: 'Vaccine Name',
-                    controller: vaccineNameController,
-                    labelText: 'Vaccine Name',
+                    hintText: 'Vaccine Name'.tr,
+                    controller: _vaccineNameController,
+                    labelText: 'Vaccine Name'.tr,
                     validator: (value) => value == null || value.isEmpty
                         ? 'Please enter some text'.tr
                         : null,
@@ -123,7 +110,7 @@ class _EditVaccinationState extends ConsumerState<EditVaccination> {
                     hintText: firstDoseDate != null
                         ? DateFormat('yyyy-MM-dd').format(firstDoseDate!)
                         : 'yyyy-MM-dd',
-                    labelText: 'Date Of Vaccination',
+                    labelText: 'Date Of Vaccination'.tr,
                     onChanged: (value) => setState(() => firstDoseDate = value),
                   ),
                   SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
@@ -131,7 +118,7 @@ class _EditVaccinationState extends ConsumerState<EditVaccination> {
                     hintText: secondDoseDate != null
                         ? DateFormat('yyyy-MM-dd').format(secondDoseDate!)
                         : 'yyyy-MM-dd',
-                    labelText: 'Date Of Next Vaccination',
+                    labelText: 'Date Of Next Vaccination'.tr,
                     onChanged: (value) =>
                         setState(() => secondDoseDate = value),
                   ),
@@ -158,7 +145,7 @@ class _EditVaccinationState extends ConsumerState<EditVaccination> {
                           // Update details using copyWith method
                           VaccineDetails updatedVaccine =
                               widget.selectedVaccine!.copyWith(
-                                  vaccineName: vaccineNameController.text,
+                                  vaccineName: _vaccineNameController.text,
                                   firstDoseDate: firstDoseDate,
                                   secondDoseDate: secondDoseDate,
                                   files: ref
@@ -168,18 +155,18 @@ class _EditVaccinationState extends ConsumerState<EditVaccination> {
 
                           // Update the vaccineDetailsList for the selected animal
                           final animalIndex =
-                              ref.read(ovianimalsProvider).indexWhere(
+                              ref.read(oviAnimalsProvider).indexWhere(
                                     (animal) =>
                                         animal.animalName ==
-                                        widget.OviDetails.animalName,
+                                        widget.oviDetails.animalName,
                                   );
 
                           if (animalIndex != -1) {
                             // Replace the existing vaccine with the updated one
                             final List<VaccineDetails> currentList = ref
-                                        .read(ovianimalsProvider)[animalIndex]
+                                        .read(oviAnimalsProvider)[animalIndex]
                                         .vaccineDetails[
-                                    widget.OviDetails.animalName] ??
+                                    widget.oviDetails.animalName] ??
                                 [];
 
                             final List<VaccineDetails> updatedList =
@@ -192,7 +179,7 @@ class _EditVaccinationState extends ConsumerState<EditVaccination> {
                             if (indexToUpdate != -1) {
                               updatedList[indexToUpdate] = updatedVaccine;
                               ref
-                                  .read(ovianimalsProvider.notifier)
+                                  .read(oviAnimalsProvider.notifier)
                                   .update((state) {
                                 final newState = List<OviVariables>.from(state);
                                 final vaccineDetails =
@@ -203,10 +190,6 @@ class _EditVaccinationState extends ConsumerState<EditVaccination> {
                                     .copyWith(vaccineDetails: vaccineDetails);
                                 return state;
                               });
-                              // ref
-                              //         .read(ovianimalsProvider)[animalIndex]
-                              //         .vaccineDetails[
-                              //     widget.OviDetails.animalName] = updatedList;
                             }
                           }
 
@@ -214,7 +197,7 @@ class _EditVaccinationState extends ConsumerState<EditVaccination> {
                           Navigator.pop(context);
                         }
                       },
-                      text: 'Save',
+                      text: 'Save'.tr,
                     ),
                   ),
                   SizedBox(
@@ -224,8 +207,8 @@ class _EditVaccinationState extends ConsumerState<EditVaccination> {
                     height: 52 * SizeConfig.heightMultiplier(context),
                     width: 343 * SizeConfig.widthMultiplier(context),
                     child: NavigateButton(
-                      onPressed: deleteVaccination,
-                      text: 'Delete',
+                      onPressed: _deleteVaccination,
+                      text: 'Delete'.tr,
                     ),
                   ),
                 ],
@@ -237,19 +220,19 @@ class _EditVaccinationState extends ConsumerState<EditVaccination> {
     );
   }
 
-  void deleteVaccination() {
+  void _deleteVaccination() {
     showDialog(
             context: context,
             builder: (context) => ConfirmDeleteDialog(
                 content: "Are you sure you want to delete the vaccination?".tr))
         .then((confirm) {
       if (confirm) {
-        ref.read(ovianimalsProvider.notifier).update((state) {
+        ref.read(oviAnimalsProvider.notifier).update((state) {
           final newState = List<OviVariables>.from(state);
           final animalIndex = newState
-              .indexWhere((animal) => animal.id == widget.OviDetails.id);
+              .indexWhere((animal) => animal.id == widget.oviDetails.id);
           newState[animalIndex]
-              .vaccineDetails[widget.OviDetails.animalName]!
+              .vaccineDetails[widget.oviDetails.animalName]!
               .removeWhere((vaccination) =>
                   vaccination.vaccineName ==
                   widget.selectedVaccine!.vaccineName);

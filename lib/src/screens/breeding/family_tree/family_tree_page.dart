@@ -1,7 +1,3 @@
-// ignore_for_file: non_constant_identifier_names
-
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -12,7 +8,6 @@ import '../../../data/classes/main_animal_dam.dart';
 import '../../../data/classes/main_animal_sire.dart';
 import '../../../data/classes/ovi_variables.dart';
 import '../../../data/riverpod_globals.dart';
-import '../../../widgets/animal_info_modal_sheets.dart/animal_children_modal.dart';
 import '../../../widgets/animal_info_modal_sheets.dart/animal_dam_modal.dart';
 import '../../../widgets/animal_info_modal_sheets.dart/animal_sire_modal.dart';
 import 'family_tree_item.dart';
@@ -40,18 +35,17 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
 
   @override
   void initState() {
-    animals = ref.read(ovianimalsProvider);
+    super.initState();
+    animals = ref.read(oviAnimalsProvider);
 
     _selectedAnimal =
         animals.firstWhere((member) => member.id == widget.selectedAnimalId);
 
     root =
-        createTree(_selectedAnimal, attachParents: true, attachChildren: true);
-
-    super.initState();
+        _createTree(_selectedAnimal, attachParents: true, attachChildren: true);
   }
 
-  FamilyTreeNode createTree(OviVariables? nodeAnimal,
+  FamilyTreeNode _createTree(OviVariables? nodeAnimal,
       {bool attachParents = false, bool attachChildren = false}) {
     final List<FamilyTreeNode> parents = [];
     List<FamilyTreeNode> children = [];
@@ -60,7 +54,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
           (animal) => animal.id == nodeAnimal.selectedOviSire?.id);
 
       if (father != null || nodeAnimal.id == _selectedAnimal.id) {
-        final fatherNode = createTree(father, attachParents: true);
+        final fatherNode = _createTree(father, attachParents: true);
         parents.add(fatherNode);
       }
 
@@ -68,7 +62,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
           (animal) => animal.id == nodeAnimal.selectedOviDam?.id);
 
       if (mother != null || nodeAnimal.id == _selectedAnimal.id) {
-        final motherNode = createTree(mother, attachParents: true);
+        final motherNode = _createTree(mother, attachParents: true);
         parents.add(motherNode);
       }
     }
@@ -77,7 +71,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
           .where((animal) =>
               animal.selectedOviSire?.id == nodeAnimal.id ||
               animal.selectedOviDam?.id == nodeAnimal.id)
-          .map((animal) => createTree(animal, attachChildren: true))
+          .map((animal) => _createTree(animal, attachChildren: true))
           .toList();
       if (nodeAnimal.id == _selectedAnimal.id) {
         children.add(FamilyTreeNode(animal: null, parents: [], children: []));
@@ -155,7 +149,8 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
                       SizedBox(
                         width: 247,
                         child: Text(
-                          '${_selectedAnimal.animalName}’s Family Tree',
+                          'animalsFamilyTree'
+                              .trParams({'name': _selectedAnimal.animalName}),
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             color: Color(0xFF14181F),
@@ -179,7 +174,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
             fit: BoxFit.cover,
             child: Column(
               children: [
-                buildTree(),
+                _buildTree(),
               ],
             ),
           ),
@@ -188,7 +183,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
     );
   }
 
-  Widget buildTree() {
+  Widget _buildTree() {
     return SingleChildScrollView(
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -208,7 +203,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (root.parents.isNotEmpty)
-                    buildParentsBranch(root.parents,
+                    _buildParentsBranch(root.parents,
                         itemMargin: const EdgeInsets.symmetric(horizontal: 52)),
                   FamilyTreeItem(
                     node: root,
@@ -217,7 +212,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
                     key: root.key,
                   ),
                   if (root.children.isNotEmpty)
-                    buildChildrenBranch(root.children)
+                    _buildChildrenBranch(root.children)
                 ],
               ),
             ),
@@ -227,7 +222,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
     );
   }
 
-  Widget buildParentsBranch(List<FamilyTreeNode> nodes,
+  Widget _buildParentsBranch(List<FamilyTreeNode> nodes,
       {EdgeInsets itemMargin = const EdgeInsets.symmetric(horizontal: 7.5)}) {
     final parentItems = <Widget>[];
     for (var i = 0; i < 2; i++) {
@@ -235,13 +230,13 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
       parentItems.add(Column(
         children: [
           if (node.expanded && node.parents.isNotEmpty)
-            buildParentsBranch(node.parents),
+            _buildParentsBranch(node.parents),
           FamilyTreeItem(
             margin: itemMargin,
             node: node,
             showGender: true,
             key: node.key,
-            onTap: (ItemType itemType) => handleTap(
+            onTap: (ItemType itemType) => _handleTap(
                 itemType, node, BranchType.parents,
                 gender: i == 0 ? 'Male' : 'Female'),
           ),
@@ -263,7 +258,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
     );
   }
 
-  Widget buildChildrenBranch(List<FamilyTreeNode> nodes) {
+  Widget _buildChildrenBranch(List<FamilyTreeNode> nodes) {
     return Column(
       children: [
         const SizedBox(
@@ -280,9 +275,9 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
                           showGender: false,
                           key: node.key,
                           onTap: (ItemType itemType) =>
-                              handleTap(itemType, node, BranchType.children)),
+                              _handleTap(itemType, node, BranchType.children)),
                       if (node.expanded && node.children.isNotEmpty)
-                        buildChildrenBranch(node.children)
+                        _buildChildrenBranch(node.children)
                     ],
                   ))
               .toList(),
@@ -291,43 +286,40 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
     );
   }
 
-  void handleTap(ItemType itemType, FamilyTreeNode node, BranchType branchType,
+  void _handleTap(ItemType itemType, FamilyTreeNode node, BranchType branchType,
       {String? gender}) {
     if (itemType == ItemType.expandButton) {
       if (node.animal == null && branchType == BranchType.parents) {
-        addParent(gender!);
+        _addParent(gender!);
       } else if (node.animal == null && branchType == BranchType.children) {
-        addChildren();
+        _addChildren();
       } else {
         setState(() {
           node.expanded = true;
         });
       }
     } else {
-      selectAnimal(node.animal!.id);
+      _selectAnimal(node.animal!.id);
     }
   }
 
-  void selectAnimal(int id) {
+  void _selectAnimal(int id) {
     setState(() {
       _selectedAnimal = animals.firstWhere((member) => member.id == id);
-      root = createTree(_selectedAnimal,
+      root = _createTree(_selectedAnimal,
           attachParents: true, attachChildren: true);
     });
   }
 
-  Future<void> addParent(String gender) async {
+  Future<void> _addParent(String gender) async {
     final selectedAnimal = ref
-        .read(ovianimalsProvider)
+        .read(oviAnimalsProvider)
         .firstWhere((animal) => animal.id == _selectedAnimal.id);
-    final ovianimals = ref.watch(ovianimalsProvider);
-    List<MainAnimalSire> selectedSire = [];
-    List<MainAnimalDam> selectedDam = [];
 
     final selectedPersonIndex =
         animals.indexWhere((person) => person.id == _selectedAnimal.id);
 
-    final fatherDetails = ref.read(ovianimalsProvider).firstWhereOrNull(
+    final fatherDetails = ref.read(oviAnimalsProvider).firstWhereOrNull(
         (animal) =>
             selectedAnimal.selectedOviSire != null &&
             animal.id == selectedAnimal.selectedOviSire!.id);
@@ -335,7 +327,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
         ? MainAnimalSire(
             fatherDetails.animalName, fatherDetails.selectedOviImage, 'Male')
         : null;
-    final motherDetails = ref.read(ovianimalsProvider).firstWhereOrNull(
+    final motherDetails = ref.read(oviAnimalsProvider).firstWhereOrNull(
         (animal) =>
             selectedAnimal.selectedOviDam != null &&
             animal.id == selectedAnimal.selectedOviDam!.id);
@@ -395,27 +387,27 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
       }
     }
 
-    ref.read(ovianimalsProvider.notifier).update((state) {
+    ref.read(oviAnimalsProvider.notifier).update((state) {
       final index = state.indexWhere(
           (animal) => animal.animalName == selectedAnimal.animalName);
       state[index] = selectedAnimal;
       return state;
     });
     setState(() {
-      root = createTree(_selectedAnimal,
+      root = _createTree(_selectedAnimal,
           attachParents: true, attachChildren: true);
     });
   }
 
-  Future<void> addChildren() async {
+  Future<void> _addChildren() async {
     await Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => CreateBreedingEvents(
-                OviDetails: _selectedAnimal, breedingEvents: const [])));
+                oviDetails: _selectedAnimal, breedingEvents: const [])));
     setState(() {
-      animals = ref.read(ovianimalsProvider);
-      root = createTree(_selectedAnimal,
+      animals = ref.read(oviAnimalsProvider);
+      root = _createTree(_selectedAnimal,
           attachParents: true, attachChildren: true);
     });
   }

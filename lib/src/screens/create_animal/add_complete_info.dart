@@ -1,13 +1,8 @@
-// ignore_for_file: non_constant_identifier_names, duplicate_ignore, iterable_contains_unrelated_type
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import 'package:sulala_upgrade/src/widgets/animal_info_modal_sheets.dart/animal_image_picker.dart';
 
@@ -17,7 +12,6 @@ import '../../data/classes/main_animal_dam.dart';
 import '../../data/classes/main_animal_sire.dart';
 import '../../data/classes/ovi_variables.dart';
 import '../../data/classes/reminder_item.dart';
-import '../../data/globals.dart';
 import '../../data/place_holders.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
@@ -26,10 +20,9 @@ import '../../widgets/animal_info_modal_sheets.dart/animal_children_modal.dart';
 import '../../widgets/animal_info_modal_sheets.dart/animal_dam_modal.dart';
 import '../../widgets/animal_info_modal_sheets.dart/animal_sire_modal.dart';
 import '../../widgets/animal_info_modal_sheets.dart/animal_tags_modal.dart';
-import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
-import '../../widgets/controls_and_buttons/buttons/sar_buttonwidget.dart';
+import '../../widgets/controls_and_buttons/buttons/sar_button_widget.dart';
 import '../../widgets/controls_and_buttons/tags/custom_tags.dart';
-import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
+import '../../widgets/controls_and_buttons/text_buttons/primary_text_button.dart';
 import '../../widgets/controls_and_buttons/toggles/toggle_active.dart';
 import '../../widgets/inputs/date_fields/primary_date_field.dart';
 
@@ -37,7 +30,7 @@ import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/paragraph_text_fields/paragraph_text_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 import '../../widgets/other/custom_field.dart';
-import 'sar_listofanimals.dart';
+import 'sar_list_of_animals.dart';
 
 class AddCompleteInfo extends ConsumerStatefulWidget {
   final List<BreedingEventVariables> breedingEvents;
@@ -45,26 +38,19 @@ class AddCompleteInfo extends ConsumerStatefulWidget {
   const AddCompleteInfo({super.key, required this.breedingEvents});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _CreateOviCumMammal createState() => _CreateOviCumMammal();
+  ConsumerState<AddCompleteInfo> createState() => _CreateOviCumMammal();
 }
 
 class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _frequencyEggsController =
-      TextEditingController();
-  final TextEditingController _numberofEggsController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _frequencyEggsController = TextEditingController();
+  final _numberOfEggsController = TextEditingController();
 
   String selectedBreedingStage = '';
-  List<ReminderItem> mathdDates = [];
+  List<ReminderItem> mastDoDates = [];
   List<MainAnimalSire> selectedSire = [];
   List<MainAnimalDam> selectedDam = [];
-  // ignore: non_constant_identifier_names
-  // void dateOfBirth(String DateOfBirth) {
-  //   setState(() {
-  //     ref.read(dateOfBirthProvider.notifier).update((state) => DateOfBirth);
-  //   });
-  // }
+ 
 
   Map<String, DateTime?> selectedMammalDates = {};
   List<String> selectedOviChips = [];
@@ -76,8 +62,6 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
   String selectedOviGender = '';
   bool _addAnimalParents = false;
   bool _addOviChildren = false;
-  // ignore: non_constant_identifier_names
-  final ImagePicker _Animalpicker = ImagePicker();
   final ScrollController _scrollController = ScrollController();
 
   late String selectedAnimalSpecies;
@@ -87,6 +71,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
 
   @override
   void initState() {
+    super.initState();
     _scrollController.addListener(() {
       if (_scrollController.position.userScrollDirection !=
           ScrollDirection.idle) {
@@ -95,7 +80,6 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
         }
       }
     });
-    super.initState();
   }
 
   @override
@@ -103,7 +87,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
     super.dispose();
     _nameController.dispose();
     _frequencyEggsController.dispose();
-    _numberofEggsController.dispose();
+    _numberOfEggsController.dispose();
     _scrollController.dispose();
     _customFieldNameController.dispose();
     _customFieldContentController.dispose();
@@ -123,14 +107,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
     );
   }
 
-  void _showmainAnimalSireSelectionSheet(BuildContext context) async {
-    // Initialize an empty list
-    final ovianimals = ref
-        .watch(ovianimalsProvider)
-        .where(
-            (animal) => animal.selectedAnimalSpecies == selectedAnimalSpecies)
-        .toList();
-
+  void _showMainAnimalSireSelectionSheet(BuildContext context) async {
     final animalSire = await showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -148,16 +125,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
     ref.read(animalSireDetailsProvider.notifier).update((state) => animalSire);
   }
 
-  void _showmainAnimalDamSelectionSheet(BuildContext context) async {
-    // Initialize an empty list
-    final ovianimals = ref
-        .watch(ovianimalsProvider)
-        .where(
-            (animal) => animal.selectedAnimalSpecies == selectedAnimalSpecies)
-        .toList();
-
-    final selectedFather = <MainAnimalSire>[];
-    final selectedMother = <MainAnimalDam>[];
+  void _showMainAnimalDamSelectionSheet(BuildContext context) async {
     final animalDam = await showModalBottomSheet(
       context: context,
       showDragHandle: false,
@@ -174,16 +142,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
     ref.read(animalDamDetailsProvider.notifier).update((state) => animalDam);
   }
 
-  void _showmainAnimalChilrenSelectionSheet(BuildContext context) async {
-    // Initialize an empty list
-    final ovianimals = ref
-        .watch(ovianimalsProvider)
-        .where(
-            (animal) => animal.selectedAnimalSpecies == selectedAnimalSpecies)
-        .toList();
-
-    final selectedChildren = <BreedChildItem>[];
-
+  void _showMainAnimalChildrenSelectionSheet(BuildContext context) async {
     await showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -200,25 +159,13 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
     );
   }
 
-  final List<Map<String, String>> animalDams = [
-    {'name': 'Alice'},
-    {'name': 'John'},
-    {'name': 'Jack'},
-    {'name': 'Kiran'},
-    {'name': 'Mantic'},
-    {'name': 'Mongolia'},
-    // Add more country codes and names as needed
-  ];
-
   void _showDateSelectionSheet(BuildContext context, selectedAnimalType) async {
-    // ignore: non_constant_identifier_names
-    List<String> OvidateTypes = [
+    List<String> oviDateTypes = [
       'Date Of Hatching',
       'Date Of Death',
       'Date Of Sale',
     ];
-    // ignore: non_constant_identifier_names
-    List<String> MammaldateTypes = [
+    List<String> mammalDateTypes = [
       'Date Of Weaning',
       'Date Of Mating',
       'Date Of Death',
@@ -234,11 +181,11 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 10),
-              const Padding(
-                padding: EdgeInsets.all(16.0),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  'Add Date ',
-                  style: TextStyle(
+                  'Add Date '.tr,
+                  style: const TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
@@ -249,18 +196,18 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                 Expanded(
                   child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: OvidateTypes.length,
+                    itemCount: oviDateTypes.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Column(
                         children: [
                           ListTile(
-                            title: Text(OvidateTypes[index]),
+                            title: Text(oviDateTypes[index].tr),
                             dense: true,
                             minVerticalPadding: double.minPositive,
                             trailing: const Icon(Icons.arrow_right_alt_rounded),
                             onTap: () {
                               Navigator.pop(context);
-                              _showOviDatePicker(context, OvidateTypes[index]);
+                              _showOviDatePicker(context, oviDateTypes[index]);
                             },
                           ),
                           const Divider(),
@@ -273,19 +220,19 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                 Expanded(
                   child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: MammaldateTypes.length,
+                    itemCount: mammalDateTypes.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Column(
                         children: [
                           ListTile(
-                            title: Text(MammaldateTypes[index]),
+                            title: Text(mammalDateTypes[index].tr),
                             dense: true,
                             minVerticalPadding: double.minPositive,
                             trailing: const Icon(Icons.arrow_right_alt_rounded),
                             onTap: () {
                               Navigator.pop(context);
                               _showOviDatePicker(
-                                  context, MammaldateTypes[index]);
+                                  context, mammalDateTypes[index]);
                             },
                           ),
                           const Divider(),
@@ -321,7 +268,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
         final formattedDate =
             DateFormat('dd/MM/yyyy').format(selectedDate.toLocal());
 
-        // Add the selected date to the mathdDates list
+        // Add the selected date to the mast do Dates list
         final ReminderItem newItem = ReminderItem(
           selectedAnimalName, // Add the animal name
           dateType,
@@ -384,9 +331,9 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  'Add Custom Field',
-                  style: TextStyle(
+                Text(
+                  'Add Custom Field'.tr,
+                  style: const TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
@@ -397,12 +344,12 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                 PrimaryTextField(
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
+                        return 'Please enter some text'.tr;
                       }
                       return null;
                     },
-                    hintText: 'Enter Custom Field Name',
-                    labelText: 'Enter Field Name',
+                    hintText: 'Enter Custom Field Name'.tr,
+                    labelText: 'Enter Field Name'.tr,
                     onChanged: (value) {
                       ref
                           .read(fieldNameProvider.notifier)
@@ -417,7 +364,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                       _showOviFieldContentModal(context);
                     }
                   },
-                  buttonText: 'Confirm',
+                  buttonText: 'Confirm'.tr,
                 ),
                 const SizedBox(
                   height: 10,
@@ -438,7 +385,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                             borderRadius: BorderRadius.circular(50),
                           ),
                         ),
-                        child: const Text('Cancel'),
+                        child: Text('Cancel'.tr),
                       ),
                     ),
                   ],
@@ -468,9 +415,9 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                'Add Text Area',
-                style: TextStyle(
+              Text(
+                'Add Text Area'.tr,
+                style: const TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                 ),
@@ -481,7 +428,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
               TextField(
                 maxLines: 5,
                 decoration: InputDecoration(
-                  labelText: 'Enter Field Content',
+                  labelText: 'Enter Field Content'.tr,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: const BorderSide(
@@ -509,7 +456,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                   Navigator.pop(context);
                   _addNewOviTextField(context);
                 },
-                buttonText: 'Confirm',
+                buttonText: 'Confirm'.tr,
               ),
               const SizedBox(
                 height: 10,
@@ -530,7 +477,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                           borderRadius: BorderRadius.circular(50),
                         ),
                       ),
-                      child: const Text('Cancel'),
+                      child: Text('Cancel'.tr),
                     ),
                   ),
                 ],
@@ -560,7 +507,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
     final animalChildren = ref.watch(breedingChildrenDetailsProvider);
     final chips = ref.watch(selectedOviChipsProvider);
     final customFields = ref.watch(customOviTextFieldsProvider);
-    final ovianimals = ref.watch(ovianimalsProvider);
+    final oviAnimals = ref.watch(oviAnimalsProvider);
     selectedAnimalSpecies = ref.read(selectedAnimalSpeciesProvider);
     if (selectedAnimalImage == null &&
         speciesImages[selectedAnimalSpecies] != null) {
@@ -583,7 +530,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Create ',
+                'Create '.tr,
                 style: AppFonts.headline3(color: AppColors.grayscale90),
               ),
               Text(
@@ -662,9 +609,9 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                     onPressed: () {
                       _showImagePicker(context);
                     },
-                    child: const Text(
-                      'Add Photo',
-                      style: TextStyle(
+                    child: Text(
+                      'Add Photo'.tr,
+                      style: const TextStyle(
                         fontSize: 14,
                         color: AppColors.primary40,
                         fontWeight: FontWeight.bold,
@@ -679,17 +626,17 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                           .read(animalNameProvider.notifier)
                           .update((state) => value);
                     },
-                    labelText: 'Name',
-                    hintText: 'Enter Name',
+                    labelText: 'Name'.tr,
+                    hintText: 'Enter Name'.tr,
                     controller: _nameController),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 32),
                 Text(
-                  "Family Tree",
+                  "Family Tree".tr,
                   style: AppFonts.headline2(color: AppColors.grayscale90),
                 ),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 8),
                 Text(
-                  "Add Parents If They're In The System",
+                  "Add Parents If They're In The System".tr,
                   style: AppFonts.body2(color: AppColors.grayscale60),
                 ),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
@@ -701,7 +648,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                     children: [
                       Expanded(
                         child: Text(
-                          'Add Parents',
+                          'Add Parents'.tr,
                           style: AppFonts.body2(color: AppColors.grayscale90),
                         ),
                       ),
@@ -727,15 +674,15 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                         Row(
                           children: [
                             Text(
-                              'Sire (Father)',
+                              'Sire (Father)'.tr,
                               style:
                                   AppFonts.body2(color: AppColors.grayscale70),
                             ),
                             const Spacer(),
-                            ovianimals.isNotEmpty
+                            oviAnimals.isNotEmpty
                                 ? PrimaryTextButton(
                                     onPressed: () {
-                                      _showmainAnimalSireSelectionSheet(
+                                      _showMainAnimalSireSelectionSheet(
                                           context);
                                     },
                                     status: TextStatus.idle,
@@ -752,15 +699,15 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                         Row(
                           children: [
                             Text(
-                              'Dam (Mother)',
+                              'Dam (Mother)'.tr,
                               style:
                                   AppFonts.body2(color: AppColors.grayscale70),
                             ),
                             const Spacer(),
-                            ovianimals.isNotEmpty
+                            oviAnimals.isNotEmpty
                                 ? PrimaryTextButton(
                                     onPressed: () {
-                                      _showmainAnimalDamSelectionSheet(context);
+                                      _showMainAnimalDamSelectionSheet(context);
                                     },
                                     status: TextStatus.idle,
                                     text: animalDam != null
@@ -783,7 +730,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                   child: Row(
                     children: [
                       Text(
-                        'Add Children',
+                        'Add Children'.tr,
                         style: AppFonts.body2(color: AppColors.grayscale90),
                       ),
                       const Spacer(),
@@ -850,10 +797,10 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                           children: [
                             TextButton(
                               onPressed: () {
-                                _showmainAnimalChilrenSelectionSheet(context);
+                                _showMainAnimalChildrenSelectionSheet(context);
                               },
                               child: Text(
-                                "Add Children",
+                                "Add Children".tr,
                                 style:
                                     AppFonts.body1(color: AppColors.primary40),
                               ),
@@ -875,7 +822,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                   height: SizeConfig.heightMultiplier(context) * 16,
                 ),
                 Text(
-                  "Animal Sex",
+                  "Animal Sex".tr,
                   style: AppFonts.headline2(color: AppColors.grayscale90),
                 ),
                 SizedBox(
@@ -900,7 +847,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                       children: [
                         Expanded(
                           child: Text(
-                            'Unknown',
+                            'Unknown'.tr,
                             style: AppFonts.body2(color: AppColors.grayscale90),
                           ),
                         ),
@@ -942,7 +889,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                       children: [
                         Expanded(
                           child: Text(
-                            'Male',
+                            'Male'.tr,
                             style: AppFonts.body2(color: AppColors.grayscale90),
                           ),
                         ),
@@ -985,7 +932,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                       children: [
                         Expanded(
                           child: Text(
-                            'Female',
+                            'Female'.tr,
                             style: AppFonts.body2(color: AppColors.grayscale90),
                           ),
                         ),
@@ -1021,9 +968,9 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Frequency Of Laying Eggs/Month',
-                          style: TextStyle(
+                        Text(
+                          'Frequency Of Laying Eggs/Month'.tr,
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -1037,7 +984,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                           controller: _frequencyEggsController,
                           decoration: InputDecoration(
                             hintText:
-                                'Enter Frequency', // Add your hint text here
+                                'Enter Frequency'.tr, // Add your hint text here
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(50.0),
                             ),
@@ -1049,9 +996,9 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                         ),
                         // Your first additional text field widget here
                         const SizedBox(height: 10),
-                        const Text(
-                          'Number Of Eggs/Month',
-                          style: TextStyle(
+                        Text(
+                          'Number Of Eggs/Month'.tr,
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -1062,10 +1009,10 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                                 .read(eggsPerMonthProvider.notifier)
                                 .update((state) => value);
                           },
-                          controller: _numberofEggsController,
+                          controller: _numberOfEggsController,
                           decoration: InputDecoration(
                             hintText:
-                                'Enter The Number', // Add your hint text here
+                                'Enter The Number'.tr, // Add your hint text here
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(50.0),
                             ),
@@ -1091,7 +1038,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                           height: SizeConfig.heightMultiplier(context) * 16,
                         ),
                         Text(
-                          "Breeding Stage",
+                          "Breeding Stage".tr,
                           style:
                               AppFonts.headline2(color: AppColors.grayscale90),
                         ),
@@ -1116,7 +1063,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    'Ready For Breeding',
+                                    'Ready For Breeding'.tr,
                                     style: AppFonts.body2(
                                         color: AppColors.grayscale90),
                                   ),
@@ -1164,7 +1111,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    'Pregnant',
+                                    'Pregnant'.tr,
                                     style: AppFonts.body2(
                                         color: AppColors.grayscale90),
                                   ),
@@ -1212,7 +1159,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    'Lactating',
+                                    'Lactating'.tr,
                                     style: AppFonts.body2(
                                         color: AppColors.grayscale90),
                                   ),
@@ -1250,13 +1197,13 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                   ),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
                 Text(
-                  "Dates",
+                  "Dates".tr,
                   style: AppFonts.headline2(color: AppColors.grayscale90),
                 ),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
-                const PrimaryDateField(
-                  hintText: 'DD.MM.YYYY',
-                  labelText: 'Date of Birth',
+                PrimaryDateField(
+                  hintText: 'dd/MM/yyyy',
+                  labelText: 'Date of Birth'.tr,
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.029),
                 _buildOviDateFields(),
@@ -1267,7 +1214,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                         _showDateSelectionSheet(context, selectedAnimalType);
                       },
                       status: TextStatus.idle,
-                      text: 'Add Date',
+                      text: 'Add Date'.tr,
                     ),
                     const Icon(Icons.add_rounded,
                         color: AppColors.primary40, size: 20),
@@ -1278,7 +1225,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                 ),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
                 Text(
-                  "Add Tag",
+                  "Add Tag".tr,
                   style: AppFonts.headline2(color: AppColors.grayscale90),
                 ),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
@@ -1304,7 +1251,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                         _showAnimalTagsModalSheet();
                       },
                       status: TextStatus.idle,
-                      text: 'Add Tags',
+                      text: 'Add Tags'.tr,
                     ),
                     const Icon(Icons.add_rounded,
                         color: AppColors.primary40, size: 20),
@@ -1315,11 +1262,11 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                 ),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
                 Text(
-                  "Custom Fields",
+                  "Custom Fields".tr,
                   style: AppFonts.headline2(color: AppColors.grayscale90),
                 ),
                 Text(
-                  "Add Custom Fields If Needed",
+                  "Add Custom Fields If Needed".tr,
                   style: AppFonts.body2(color: AppColors.grayscale60),
                 ),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
@@ -1344,7 +1291,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                         _showOviFieldNameModal(context);
                       },
                       status: TextStatus.idle,
-                      text: 'Add Custom Fields',
+                      text: 'Add Custom Fields'.tr,
                     ),
                     SizedBox(width: SizeConfig.widthMultiplier(context) * 8),
                     const Icon(Icons.add_rounded,
@@ -1356,16 +1303,16 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                 ),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
                 Text(
-                  'Additional Notes',
+                  'Additional Notes'.tr,
                   style: AppFonts.headline2(color: AppColors.grayscale90),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 ParagraphTextField(
-                  hintText: 'Add Any Additional Notes if Needed',
+                  hintText: 'Add Any Additional Notes if Needed'.tr,
                   maxLines: 8,
                   onChanged: (value) {
                     ref
-                        .read(additionalnotesProvider.notifier)
+                        .read(additionalNotesProvider.notifier)
                         .update((state) => value);
                   },
                 ),
@@ -1398,9 +1345,9 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                 borderRadius: BorderRadius.circular(50),
               ),
             ),
-            child: const Text(
-              'Save',
-              style: TextStyle(color: Colors.white),
+            child: Text(
+              'Save'.tr,
+              style: const TextStyle(color: Colors.white),
             ),
           ),
         ),
@@ -1449,7 +1396,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                           enabled: false,
                           style: AppFonts.body2(color: AppColors.grayscale90),
                           decoration: InputDecoration(
-                            hintText: 'DD:MM:YYYY',
+                            hintText: 'dd/MM/yyyy',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(50.0),
                               borderSide: const BorderSide(
@@ -1470,7 +1417,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                           ),
                           readOnly: true,
                           controller: TextEditingController(
-                            text: DateFormat('dd-MM-yyyy').format(selectedDate),
+                            text: DateFormat('dd/MM/yyyy').format(selectedDate),
                           ),
                         ),
                       ),
@@ -1508,7 +1455,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
       animalName: animalName,
       breedingEventNumber: '',
       medicalNeeds: ref.read(medicalNeedsProvider),
-      shouldAddAnimal: ref.read(shoudlAddAnimalProvider),
+      shouldAddAnimal: ref.read(shouldAddAnimalProvider),
       selectedBreedingStage: ref.read(selectedBreedingStageProvider),
       layingFrequency: ref.read(layingFrequencyProvider),
       eggsPerMonth: ref.read(eggsPerMonthProvider),
@@ -1517,12 +1464,11 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
       dateOfBirth: ref.read(dateOfBirthProvider),
       keptInOval: ref.read(keptInOvalProvider),
       dateOfLayingEggs: ref.read(dateOfLayingEggsProvider),
-      numOfEggs: ref.read(numOfEggsProvider),
       dateOfSonar: ref.read(dateOfSonarProvider),
       expDlvDate: ref.read(expDeliveryDateProvider),
       incubationDate: ref.read(incubationDateProvider),
       customFields: ref.read(customOviTextFieldsProvider),
-      notes: ref.read(additionalnotesProvider),
+      notes: ref.read(additionalNotesProvider),
       selectedOviGender: ref.read(selectedOviGenderProvider),
       selectedOviDates: ref.read(selectedOviDatesProvider),
       selectedAnimalBreed: ref.read(selectedAnimalBreedsProvider),
@@ -1537,8 +1483,8 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
       breedChildren: ref.read(breedingChildrenDetailsProvider),
       breedingDate: ref.read(breedingDateProvider),
       breedDeliveryDate: ref.read(deliveryDateProvider),
-      breedingNotes: ref.read(breedingnotesProvider),
-      shouldAddEvent: ref.read(shoudlAddEventProvider),
+      breedingNotes: ref.read(breedingNotesProvider),
+      shouldAddEvent: ref.read(shouldAddEventProvider),
       vaccineDetails: {animalName: []},
       checkUpDetails: {animalName: []},
       surgeryDetails: {animalName: []},

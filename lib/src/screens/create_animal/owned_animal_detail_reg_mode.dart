@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -10,10 +8,8 @@ import 'package:sulala_upgrade/src/screens/reg_mode/image_view_page.dart';
 
 import '../../data/classes/breeding_event_variables.dart';
 import '../../data/classes/ovi_variables.dart';
-import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
-import '../../widgets/animal_info_modal_sheets.dart/animal_image_picker.dart';
 import '../../widgets/animal_info_modal_sheets.dart/animal_tags_modal.dart';
 import '../../widgets/controls_and_buttons/tags/custom_tags.dart';
 import '../../widgets/pages/owned_animal/breeding_info.dart';
@@ -21,24 +17,21 @@ import '../../widgets/pages/owned_animal/general_info_animal_widget.dart';
 
 import '../medical/mammals_medical.dart';
 
-import 'edit_animal_details/new_editpage.dart';
-import 'sar_listofanimals.dart';
+import 'edit_animal_details/edit_page.dart';
 
 class OwnedAnimalDetailsRegMode extends ConsumerStatefulWidget {
   final String imagePath;
   final String title;
-  final String geninfo;
-  // ignore: non_constant_identifier_names
-  final OviVariables OviDetails;
+  final String genInfo;
+  final OviVariables oviDetails;
   final List<BreedingEventVariables> breedingEvents;
 
   const OwnedAnimalDetailsRegMode(
       {Key? key,
       required this.imagePath,
       required this.title,
-      required this.geninfo,
-      // ignore: non_constant_identifier_names
-      required this.OviDetails,
+      required this.genInfo,
+      required this.oviDetails,
       required this.breedingEvents})
       : super(key: key);
 
@@ -50,7 +43,7 @@ class OwnedAnimalDetailsRegMode extends ConsumerStatefulWidget {
 class _OwnedAnimalDetailsRegModeState
     extends ConsumerState<OwnedAnimalDetailsRegMode>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+  late final TabController _tabController;
   bool editMode = false;
   late OviVariables oviDetails;
 
@@ -58,13 +51,13 @@ class _OwnedAnimalDetailsRegModeState
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    oviDetails = widget.OviDetails.copyWith();
+    oviDetails = widget.oviDetails.copyWith();
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
     super.dispose();
+    _tabController.dispose();
   }
 
   @override
@@ -227,95 +220,19 @@ class _OwnedAnimalDetailsRegModeState
                             if (oviDetails.selectedOviChips.length > 2)
                               TextButton(
                                   onPressed: _showAnimalTagsModalSheet,
-                                  child: const Text(
-                                    'See more',
-                                    style:
-                                        TextStyle(color: AppColors.primary50),
+                                  child: Text(
+                                    'See more'.tr,
+                                    style: const TextStyle(
+                                        color: AppColors.primary50),
                                   )),
                             SizedBox(
                               height: SizeConfig.heightMultiplier(context) * 32,
                             ),
-                            Container(
-                              height: SizeConfig.heightMultiplier(context) * 44,
-                              decoration: BoxDecoration(
-                                color: AppColors.grayscale10,
-                                borderRadius: BorderRadius.circular(24),
-                              ),
-                              child: TabBar(
-                                controller: _tabController,
-                                indicator: BoxDecoration(
-                                  color: AppColors.primary50,
-                                  borderRadius: BorderRadius.circular(24),
-                                ),
-                                dividerColor: Colors.transparent,
-                                indicatorSize: TabBarIndicatorSize.tab,
-                                indicatorColor: Colors.transparent,
-                                labelColor: AppColors.grayscale0,
-                                unselectedLabelColor: AppColors.grayscale60,
-                                labelStyle:
-                                    AppFonts.body2(color: AppColors.grayscale0),
-                                tabs: const [
-                                  Tab(text: 'General'),
-                                  Tab(text: 'Breeding'),
-                                  Tab(text: 'Medical'),
-                                ],
-                              ),
-                            ),
+                            _buildTabBar(),
                             SizedBox(
                               height: SizeConfig.heightMultiplier(context) * 24,
                             ),
-                            SizedBox(
-                              height:
-                                  SizeConfig.heightMultiplier(context) * 325,
-                              width: SizeConfig.widthMultiplier(context) * 341,
-                              child: TabBarView(
-                                controller: _tabController,
-                                children: [
-                                  // Content for the 'General' tab
-                                  GeneralInfoAnimalWidget(
-                                    onDateOfBirthPressed: () {},
-                                    onDateOfDeathPressed: () {
-                                      updateDateField('Date Of Death');
-                                    },
-                                    onDateOfMatingPressed: () {
-                                      updateDateField('Date Of Mating');
-                                    },
-                                    onDateOfSalePressed: () {
-                                      updateDateField('Date Of Sale');
-                                    },
-                                    onDateOfWeaningPressed: () {
-                                      updateDateField('Date Of Weaning');
-                                    },
-                                    onDateOfHatchingPressed: () {
-                                      updateDateField('Date Of Hatching');
-                                    },
-                                    age: "3 years",
-                                    type: "Mammal",
-                                    sex: "Female",
-                                    OviDetails: oviDetails,
-                                    breed: '',
-                                    fieldName: '',
-                                    fieldContent: '',
-                                  ),
-
-                                  // Content for the 'Breeding' tab
-                                  BreedingInfo(
-                                    OviDetails: oviDetails,
-                                    breedingEvents: widget.breedingEvents,
-                                  ),
-
-                                  // Content for the 'Medical' tab
-                                  MammalsMedical(
-                                    OviDetails: oviDetails,
-                                    pregnancyStatusUpdated: (status) {
-                                      setState(() {
-                                        oviDetails.copyWith(pregnant: status);
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
+                            _buildTabBarView(context),
                           ],
                         ),
                       ),
@@ -330,7 +247,89 @@ class _OwnedAnimalDetailsRegModeState
     );
   }
 
-  Future<void> updateDateField(dateType) async {
+  SizedBox _buildTabBarView(BuildContext context) {
+    return SizedBox(
+      height: SizeConfig.heightMultiplier(context) * 325,
+      width: SizeConfig.widthMultiplier(context) * 341,
+      child: TabBarView(
+        controller: _tabController,
+        children: [
+          // Content for the 'General' tab
+          GeneralInfoAnimalWidget(
+            onDateOfBirthPressed: () {},
+            onDateOfDeathPressed: () {
+              _updateDateField('Date Of Death');
+            },
+            onDateOfMatingPressed: () {
+              _updateDateField('Date Of Mating');
+            },
+            onDateOfSalePressed: () {
+              _updateDateField('Date Of Sale');
+            },
+            onDateOfWeaningPressed: () {
+              _updateDateField('Date Of Weaning');
+            },
+            onDateOfHatchingPressed: () {
+              _updateDateField('Date Of Hatching');
+            },
+            age: "3 years",
+            type: "Mammal",
+            sex: "Female",
+            OviDetails: oviDetails,
+            breed: '',
+            fieldName: '',
+            fieldContent: '',
+          ),
+
+          // Content for the 'Breeding' tab
+          BreedingInfo(
+            OviDetails: oviDetails,
+            breedingEvents: widget.breedingEvents,
+          ),
+
+          // Content for the 'Medical' tab
+          MammalsMedical(
+            OviDetails: oviDetails,
+            pregnancyStatusUpdated: (status) {
+              setState(() {
+                oviDetails.copyWith(pregnant: status);
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container _buildTabBar() {
+    return Container(
+      height: SizeConfig.heightMultiplier(context) * 44,
+      decoration: BoxDecoration(
+        color: AppColors.grayscale10,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: TabBar(
+        controller: _tabController,
+        indicator: BoxDecoration(
+          color: AppColors.primary50,
+          borderRadius: BorderRadius.circular(24),
+        ),
+        dividerColor: Colors.transparent,
+        indicatorSize: TabBarIndicatorSize.tab,
+        indicatorColor: Colors.transparent,
+        labelColor: AppColors.grayscale0,
+        unselectedLabelColor: AppColors.grayscale60,
+        labelStyle: AppFonts.body2(color: AppColors.grayscale0),
+        tabs: [
+          Tab(text: 'General'.tr),
+          Tab(text: 'Breeding'.tr),
+          Tab(text: 'Medical'.tr),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _updateDateField(dateType) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: oviDetails.selectedOviDates[dateType] ?? DateTime.now(),
@@ -355,34 +354,13 @@ class _OwnedAnimalDetailsRegModeState
       setState(() {
         oviDetails.selectedOviDates[dateType] = pickedDate;
       });
-      ref.read(ovianimalsProvider.notifier).update((state) {
+      ref.read(oviAnimalsProvider.notifier).update((state) {
         final index = state
             .indexWhere((animal) => animal.animalName == oviDetails.animalName);
         state[index] = oviDetails;
         return state;
       });
     }
-  }
-
-  void _showImagePicker(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.white,
-      builder: (BuildContext context) {
-        return AnimalImagePickerWidget(onImageSelected: (file) {
-          setState(() {
-            oviDetails.selectedOviImage = FileImage(file);
-          });
-
-          ref.read(ovianimalsProvider.notifier).update((state) {
-            final index = state.indexWhere(
-                (animal) => animal.animalName == oviDetails.animalName);
-            state[index] = oviDetails;
-            return state;
-          });
-        });
-      },
-    );
   }
 
   void _viewImage() {
@@ -405,7 +383,7 @@ class _OwnedAnimalDetailsRegModeState
     if (result != null) {
       setState(() {
         oviDetails = oviDetails.copyWith(selectedOviChips: result);
-        ref.read(ovianimalsProvider.notifier).update((state) {
+        ref.read(oviAnimalsProvider.notifier).update((state) {
           final animalIndex =
               state.indexWhere((animal) => animal.id == oviDetails.id);
           state[animalIndex] = oviDetails;

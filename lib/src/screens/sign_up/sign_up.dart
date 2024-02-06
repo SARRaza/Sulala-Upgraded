@@ -8,7 +8,7 @@ import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/apple_button.dart';
 import '../../widgets/controls_and_buttons/buttons/google_button.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
-import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
+import '../../widgets/controls_and_buttons/text_buttons/primary_text_button.dart';
 import '../../widgets/inputs/phone_number_field.dart/phone_number_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 import 'otp_page.dart';
@@ -71,7 +71,7 @@ class _SignUpState extends ConsumerState<SignUp>
   @override
   Widget build(BuildContext context) {
     final phoneNumber = ref.watch(phoneNumberProvider);
-    final email = ref.watch(emailAdressProvider);
+    final email = ref.watch(emailAddressProvider);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -185,7 +185,7 @@ class _SignUpState extends ConsumerState<SignUp>
                                       : null,
                                   onChanged: (value) {
                                     ref
-                                        .read(emailAdressProvider.notifier)
+                                        .read(emailAddressProvider.notifier)
                                         .update((state) => value);
                                   },
                                   onErrorChanged: (hasError) {

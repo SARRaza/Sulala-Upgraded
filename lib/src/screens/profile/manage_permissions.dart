@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../data/classes/staff_member.dart';
 import '../../data/globals.dart';
@@ -8,7 +9,6 @@ import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/tags/tags.dart';
 import '../../widgets/controls_and_buttons/toggles/toggle_active.dart';
-import 'package:sulala_upgrade/src/data/globals.dart';
 
 typedef PermissionsCallback = void Function({
   bool isViewOnlySelected,
@@ -98,21 +98,22 @@ class _ManagePermissionsState extends ConsumerState<ManagePermissions> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Manage Permissions',
+                  'Manage Permissions'.tr,
                   style: AppFonts.title3(color: AppColors.grayscale90),
                 ),
                 SizedBox(
                   height: 32 * SizeConfig.heightMultiplier(context),
                 ),
                 Text(
-                  'Role',
+                  'Role'.tr,
                   style: AppFonts.headline3(color: AppColors.grayscale90),
                 ),
                 SizedBox(
                   height: 8 * SizeConfig.heightMultiplier(context),
                 ),
                 Text(
-                  'When the staff member is given permission to edit, they can add/edit data',
+                  'When the staff member is given permission to edit, they can add/edit data'
+                      .tr,
                   style: AppFonts.body2(color: AppColors.grayscale70),
                 ),
                 SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
@@ -120,7 +121,7 @@ class _ManagePermissionsState extends ConsumerState<ManagePermissions> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Tags(
-                      text: 'Viewer',
+                      text: 'Viewer'.tr,
                       onPress: () {
                         setState(() {
                           isViewOnlySelected = true;
@@ -138,7 +139,7 @@ class _ManagePermissionsState extends ConsumerState<ManagePermissions> {
                     ),
                     const SizedBox(width: 10),
                     Tags(
-                      text: 'Helper',
+                      text: 'Helper'.tr,
                       onPress: () {
                         setState(() {
                           isViewOnlySelected = false;
@@ -156,7 +157,7 @@ class _ManagePermissionsState extends ConsumerState<ManagePermissions> {
                     ),
                     const SizedBox(width: 10),
                     Tags(
-                      text: 'Worker',
+                      text: 'Worker'.tr,
                       onPress: () {
                         setState(() {
                           isViewOnlySelected = false;
@@ -177,7 +178,7 @@ class _ManagePermissionsState extends ConsumerState<ManagePermissions> {
                 if (showList) ...[
                   SizedBox(height: 32 * SizeConfig.heightMultiplier(context)),
                   Text(
-                    'What Info Can This Member Edit?',
+                    'What Info Can This Member Edit?'.tr,
                     style: AppFonts.headline3(color: AppColors.grayscale90),
                   ),
                   SizedBox(
@@ -189,7 +190,7 @@ class _ManagePermissionsState extends ConsumerState<ManagePermissions> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'General Informations',
+                          'General Information'.tr,
                           style: AppFonts.body2(color: AppColors.grayscale70),
                         ),
                         ToggleActive(
@@ -209,7 +210,7 @@ class _ManagePermissionsState extends ConsumerState<ManagePermissions> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Breeding Info',
+                          'Breeding Info'.tr,
                           style: AppFonts.body2(color: AppColors.grayscale70),
                         ),
                         ToggleActive(
@@ -229,7 +230,7 @@ class _ManagePermissionsState extends ConsumerState<ManagePermissions> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Medical Info',
+                          'Medical Info'.tr,
                           style: AppFonts.body2(color: AppColors.grayscale70),
                         ),
                         ToggleActive(
@@ -266,7 +267,7 @@ class _ManagePermissionsState extends ConsumerState<ManagePermissions> {
                 });
                 Navigator.pop(context);
               },
-              text: 'Save Changes',
+              text: 'Save Changes'.tr,
             ),
           )),
     );

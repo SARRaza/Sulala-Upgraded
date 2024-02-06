@@ -70,7 +70,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
       for (var tag in tags) {
         if (tag.status == TagStatus.active) {
           final count = ref
-              .read(ovianimalsProvider)
+              .read(oviAnimalsProvider)
               .where((animal) =>
                   animal.selectedAnimalType.toLowerCase() == animalType &&
                   animal.selectedOviChips.contains(tag.name))
@@ -584,7 +584,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
       for (var tag in tags) {
         if (tag.status == TagStatus.active) {
           final count = ref
-              .read(ovianimalsProvider)
+              .read(oviAnimalsProvider)
               .where((animal) => animal.selectedOviChips.contains(tag.name))
               .toList()
               .length;
@@ -648,7 +648,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
         for (var tag in tags) {
           if (tag.status == TagStatus.active) {
             final count = ref
-                .read(ovianimalsProvider)
+                .read(oviAnimalsProvider)
                 .where((animal) =>
                     animal.selectedAnimalType.toLowerCase() == animalType &&
                     animal.selectedOviChips.contains(tag.name))
@@ -696,7 +696,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
 
   void navigateToAnimal(String animalName) {
     final animal = ref
-        .read(ovianimalsProvider)
+        .read(oviAnimalsProvider)
         .firstWhere((animal) => animal.animalName == animalName);
 
     Navigator.push(
@@ -705,8 +705,8 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
             builder: (context) => OwnedAnimalDetailsRegMode(
                 imagePath: '',
                 title: '',
-                geninfo: '',
-                OviDetails: animal,
+                genInfo: '',
+                oviDetails: animal,
                 breedingEvents: [])));
   }
 }

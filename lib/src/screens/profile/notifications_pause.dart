@@ -5,22 +5,20 @@ import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/toggles/toggle_active.dart';
 import '../../widgets/controls_and_buttons/toggles/toggle_disabled.dart';
-import 'package:sulala_upgrade/src/data/globals.dart';
 
 class NotificationSettingsPage extends StatefulWidget {
   const NotificationSettingsPage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _NotificationSettingsPageState createState() =>
+  State<NotificationSettingsPage> createState() =>
       _NotificationSettingsPageState();
 }
 
 class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
-  bool _pauseAll = false;
-  bool _sysNotifications = false;
-  bool _animalNotifications = false;
-  bool _collaboration = false;
+  bool pauseAll = false;
+  bool sysNotifications = false;
+  bool animalNotifications = false;
+  bool collaboration = false;
 
   @override
   Widget build(BuildContext context) {
@@ -71,16 +69,16 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                 trailing: ToggleActive(
                   onChanged: (value) {
                     setState(() {
-                      _pauseAll = value;
+                      pauseAll = value;
                       if (value) {
                         // Disable other switches and turn them off
-                        _sysNotifications = false;
-                        _animalNotifications = false;
-                        _collaboration = false;
+                        sysNotifications = false;
+                        animalNotifications = false;
+                        collaboration = false;
                       }
                     });
                   },
-                  value: _pauseAll,
+                  value: pauseAll,
                 ),
               ),
               ListTile(
@@ -89,17 +87,17 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                   'System Notifications'.tr,
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
-                trailing: _pauseAll
+                trailing: pauseAll
                     ? const ToggleDisabled(
                         checked: false,
                       )
                     : ToggleActive(
                         onChanged: (value) {
                           setState(() {
-                            _sysNotifications = value;
+                            sysNotifications = value;
                           });
                         },
-                        value: _sysNotifications,
+                        value: sysNotifications,
                       ),
               ),
               ListTile(
@@ -108,15 +106,15 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                   'Animal Management'.tr,
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
-                trailing: _pauseAll
+                trailing: pauseAll
                     ? const ToggleDisabled(
                         checked: false,
                       )
                     : ToggleActive(
-                        value: _animalNotifications,
+                        value: animalNotifications,
                         onChanged: (value) {
                           setState(() {
-                            _animalNotifications = value;
+                            animalNotifications = value;
                           });
                         },
                       ),
@@ -127,15 +125,15 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                   'Collaboration'.tr,
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
-                trailing: _pauseAll
+                trailing: pauseAll
                     ? const ToggleDisabled(
                         checked: false,
                       )
                     : ToggleActive(
-                        value: _collaboration,
+                        value: collaboration,
                         onChanged: (value) {
                           setState(() {
-                            _collaboration = value;
+                            collaboration = value;
                           });
                         },
                       ),

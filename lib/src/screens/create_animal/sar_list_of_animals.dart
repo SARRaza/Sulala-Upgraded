@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -5,14 +6,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/animal_filters.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
-import 'package:sulala_upgrade/src/screens/create_animal/sar_animalfilters.dart';
+import 'package:sulala_upgrade/src/screens/create_animal/sar_animal_filters.dart';
 import 'package:sulala_upgrade/src/widgets/pages/main_widgets/navigation_bar_reg_mode.dart';
 import 'package:sulala_upgrade/src/widgets/styled_dismissible.dart';
 import '../../data/classes/breeding_event_variables.dart';
 import '../../data/classes/main_animal_dam.dart';
 import '../../data/classes/main_animal_sire.dart';
 import '../../data/classes/ovi_variables.dart';
-import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -23,7 +23,6 @@ import 'create_animal.dart';
 
 import 'owned_animal_detail_reg_mode.dart';
 
-// ignore: must_be_immutable
 class UserListOfAnimals extends ConsumerStatefulWidget {
   final bool shouldAddAnimal;
   final List<BreedingEventVariables> breedingEvents;
@@ -37,7 +36,8 @@ class UserListOfAnimals extends ConsumerStatefulWidget {
 
 class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
   String filterQuery = '';
-  final TextEditingController searchController = TextEditingController();
+  Timer? _debounce;
+  
   Future<void> _refreshOviAnimals() async {
     // Add your logic to refresh the list here
     // For example, you can fetch new data or update existing data
@@ -54,20 +54,25 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
 
     // Add the initial breeding event to the list only if shouldAddAnimal is true
     if (widget.shouldAddAnimal) {
-      addOviAnimal(
+      _addOviAnimal(
         ref.read(animalNameProvider),
         ref.read(breedingEventNumberProvider),
       );
     }
   }
 
-  void addOviAnimal(String animalName, String breedingeventNumber) {
-    // ignore: non_constant_identifier_names
-    final OviDetails = OviVariables(
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
+
+  void _addOviAnimal(String animalName, String breedingEventNumber) {
+    final oviDetails = OviVariables(
         animalName: animalName,
-        breedingEventNumber: breedingeventNumber,
+        breedingEventNumber: breedingEventNumber,
         medicalNeeds: ref.read(medicalNeedsProvider),
-        shouldAddAnimal: ref.read(shoudlAddAnimalProvider),
+        shouldAddAnimal: ref.read(shouldAddAnimalProvider),
         selectedBreedingStage: ref.read(selectedBreedingStageProvider),
         layingFrequency: ref.read(layingFrequencyProvider),
         eggsPerMonth: ref.read(eggsPerMonthProvider),
@@ -76,12 +81,11 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
         dateOfBirth: ref.read(dateOfBirthProvider),
         keptInOval: ref.read(keptInOvalProvider),
         dateOfLayingEggs: ref.read(dateOfLayingEggsProvider),
-        numOfEggs: ref.read(numOfEggsProvider),
         dateOfSonar: ref.read(dateOfSonarProvider),
         expDlvDate: ref.read(expDeliveryDateProvider),
         incubationDate: ref.read(incubationDateProvider),
         customFields: ref.read(customOviTextFieldsProvider),
-        notes: ref.read(additionalnotesProvider),
+        notes: ref.read(additionalNotesProvider),
         selectedOviGender: ref.read(selectedOviGenderProvider),
         selectedOviDates: ref.read(selectedOviDatesProvider),
         selectedAnimalBreed: ref.read(selectedAnimalBreedsProvider),
@@ -96,44 +100,40 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
         breedChildren: ref.read(breedingChildrenDetailsProvider),
         breedingDate: ref.read(breedingDateProvider),
         breedDeliveryDate: ref.read(deliveryDateProvider),
-        breedingNotes: ref.read(breedingnotesProvider),
-        shouldAddEvent: ref.read(shoudlAddEventProvider),
+        breedingNotes: ref.read(breedingNotesProvider),
+        shouldAddEvent: ref.read(shouldAddEventProvider),
         vaccineDetails: {animalName: []},
         checkUpDetails: {animalName: []},
         surgeryDetails: {animalName: []},
         files:
             ref.read(uploadedFilesProvider).map((path) => File(path)).toList());
 
-    final ovianimals = ref.read(ovianimalsProvider);
+    final oviAnimals = ref.read(oviAnimalsProvider);
     final breedingChildrenDetails = ref.read(breedingChildrenDetailsProvider);
     for (var child in breedingChildrenDetails) {
       final childIndex =
-          ovianimals.indexWhere((animal) => animal.id == child.id);
+          oviAnimals.indexWhere((animal) => animal.id == child.id);
 
-      ref.read(ovianimalsProvider.notifier).update((state) {
-        if (OviDetails.selectedOviGender == 'Male') {
+      ref.read(oviAnimalsProvider.notifier).update((state) {
+        if (oviDetails.selectedOviGender == 'Male') {
           state[childIndex].copyWith(
-              selectedOviSire: MainAnimalSire(OviDetails.animalName,
-                  OviDetails.selectedOviImage, OviDetails.selectedOviGender));
+              selectedOviSire: MainAnimalSire(oviDetails.animalName,
+                  oviDetails.selectedOviImage, oviDetails.selectedOviGender));
         } else {
           state[childIndex].copyWith(
-              selectedOviDam: MainAnimalDam(OviDetails.animalName,
-                  OviDetails.selectedOviImage, OviDetails.selectedOviGender));
+              selectedOviDam: MainAnimalDam(oviDetails.animalName,
+                  oviDetails.selectedOviImage, oviDetails.selectedOviGender));
         }
         return state;
       });
     }
 
     setState(() {
-      if (ref.read(ovianimalsProvider).isEmpty) {
-        ref.read(ovianimalsProvider).add(OviDetails);
+      if (ref.read(oviAnimalsProvider).isEmpty) {
+        ref.read(oviAnimalsProvider).add(oviDetails);
       } else {
-        ref.read(ovianimalsProvider).insert(0, OviDetails);
+        ref.read(oviAnimalsProvider).insert(0, oviDetails);
       }
-      // ignore: unused_result
-      ref.refresh(mammalCountProvider);
-      // ignore: unused_result
-      ref.refresh(oviparousCountProvider);
     });
   }
 
@@ -158,7 +158,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
     BuildContext context,
   ) {
     // Filter the OviAnimals list based on the filterQuery
-    final filteredOviAnimals = ref.read(ovianimalsProvider).where((animal) {
+    final filteredOviAnimals = ref.watch(oviAnimalsProvider).where((animal) {
       final filters = ref.read(selectedFiltersProvider);
       final animalType = filters.firstWhereOrNull((filter) =>
           AnimalFilters.filterItems['Animal Type']!.contains(filter));
@@ -261,7 +261,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                 ).then((_) {
                   // When returning from CreateBreedingEvents, add the new event
                   if (ref.read(animalNameProvider).isNotEmpty) {
-                    addOviAnimal(
+                    _addOviAnimal(
                       ref.read(animalNameProvider),
                       ref.read(breedingEventNumberProvider),
                     );
@@ -290,7 +290,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                     height: MediaQuery.of(context).size.height * 0.029,
                   ),
                   ButtonSearchBar(
-                    onChange: _filterMammals,
+                    onChange: _onSearchChanged,
                     hintText: "Search by name or ID".tr,
                     icon: Icons.filter_alt_outlined,
                     // controller: _searchController,
@@ -338,8 +338,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                           shrinkWrap: true,
                           itemCount: filteredOviAnimals.length,
                           itemBuilder: (context, index) {
-                            // ignore: non_constant_identifier_names
-                            final OviDetails = filteredOviAnimals[index];
+                            final oviDetails = filteredOviAnimals[index];
                             return StyledDismissible(
                                 onDismissed: (direction) {
                                   // Handle item dismissal here
@@ -347,24 +346,15 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                                     final removedAnimal =
                                         filteredOviAnimals.removeAt(index);
                                     ref
-                                        .read(ovianimalsProvider)
+                                        .read(oviAnimalsProvider)
                                         .remove(removedAnimal);
-                                    // You may want to update your data source (e.g., ovianimalsProvider) here too
+                                    // You may want to update your data source (e.g., oviAnimalsProvider) here too
                                   });
                                 },
                                 child: ListTile(
                                   contentPadding: EdgeInsets.zero,
                                   leading: GestureDetector(
                                     onTap: () {
-                                      // Navigator.push(
-                                      //   context,
-                                      //   MaterialPageRoute(
-                                      //     builder: (context) =>
-                                      //         EnlargedAnimalImageScreen(
-                                      //       image: OviDetails.selectedOviImage,
-                                      //     ),
-                                      //   ),
-                                      // );
                                     },
                                     child: CircleAvatar(
                                       radius:
@@ -372,8 +362,8 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                                               24,
                                       backgroundColor: Colors.transparent,
                                       backgroundImage:
-                                          OviDetails.selectedOviImage,
-                                      child: OviDetails.selectedOviImage == null
+                                          oviDetails.selectedOviImage,
+                                      child: oviDetails.selectedOviImage == null
                                           ? const Icon(
                                               Icons.camera_alt_outlined,
                                               size: 50,
@@ -382,22 +372,21 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                                           : null,
                                     ),
                                   ),
-                                  title: Text(OviDetails.animalName),
-                                  subtitle: Text(OviDetails.selectedAnimalType),
-                                  onTap: () async {
-                                    await Navigator.of(context).push(
+                                  title: Text(oviDetails.animalName),
+                                  subtitle: Text(oviDetails.selectedAnimalType),
+                                  onTap: () {
+                                    Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             OwnedAnimalDetailsRegMode(
-                                          OviDetails: OviDetails,
+                                          oviDetails: oviDetails,
                                           imagePath: '',
                                           title: '',
-                                          geninfo: '',
+                                          genInfo: '',
                                           breedingEvents: widget.breedingEvents,
                                         ),
                                       ),
                                     );
-                                    setState(() {});
                                   },
                                 ));
                           },
@@ -460,7 +449,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                                         if (ref
                                             .read(animalNameProvider)
                                             .isNotEmpty) {
-                                          addOviAnimal(
+                                          _addOviAnimal(
                                             ref.read(animalNameProvider),
                                             ref.read(
                                                 breedingEventNumberProvider),
@@ -482,5 +471,13 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
         ),
       ),
     );
+  }
+
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      // Implement your search logic here
+      _filterMammals(query);
+    });
   }
 }

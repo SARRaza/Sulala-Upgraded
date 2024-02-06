@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../screens/create_animal/sar_listofanimals.dart';
+import '../../../screens/create_animal/sar_list_of_animals.dart';
 
 import '../../../screens/profile/profile_page.dart';
 import '../../../screens/reg_mode/reg_home_page.dart';

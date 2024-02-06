@@ -8,11 +8,10 @@ import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 
 import 'dart:io';
-import 'package:sulala_upgrade/src/data/globals.dart';
 
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
-import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
+import '../../widgets/controls_and_buttons/text_buttons/primary_text_button.dart';
 import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 import '../../widgets/pages/main_widgets/navigation_bar_reg_mode.dart';
@@ -25,8 +24,8 @@ class AddSomeDetailsPage extends ConsumerStatefulWidget {
 }
 
 class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
-  TextEditingController countrycontroller = TextEditingController();
-  TextEditingController citycontroller = TextEditingController();
+  final _countryController = TextEditingController();
+  final _cityController = TextEditingController();
 
   final ImagePicker _picker = ImagePicker();
 
@@ -56,7 +55,7 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
                         await _picker.pickImage(source: ImageSource.gallery);
                     if (pickedImage != null) {
                       ref
-                          .read(proflePictureProvider.notifier)
+                          .read(profilePictureProvider.notifier)
                           .update((state) => File(pickedImage.path));
                       setState(() {});
                     }
@@ -79,7 +78,7 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
                         await _picker.pickImage(source: ImageSource.camera);
                     if (pickedImage != null) {
                       ref
-                          .read(proflePictureProvider.notifier)
+                          .read(profilePictureProvider.notifier)
                           .update((state) => File(pickedImage.path));
                       setState(() {});
                     }
@@ -95,7 +94,7 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final profilePicture = ref.watch(proflePictureProvider);
+    final profilePicture = ref.watch(profilePictureProvider);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -184,7 +183,7 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
                 ),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
                 PrimaryTextField(
-                  controller: countrycontroller,
+                  controller: _countryController,
                   hintText: 'Country'.tr,
                   onChanged: (value) {
                     ref.read(countryProvider.notifier).update((state) => value);
@@ -192,7 +191,7 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
                 ),
                 SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
                 PrimaryTextField(
-                  controller: citycontroller,
+                  controller: _cityController,
                   hintText: 'City'.tr,
                   onChanged: (value) {
                     ref.read(cityProvider.notifier).update((state) => value);
@@ -210,7 +209,7 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
                             builder: (context) => const NavigationBarRegMode()),
                       );
                     },
-                    text: 'Save',
+                    text: 'Save'.tr,
                   ),
                 ),
               ],

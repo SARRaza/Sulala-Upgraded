@@ -7,9 +7,8 @@ import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
+import '../../widgets/option_row.dart';
 import 'add_complete_info.dart';
-
-import 'package:sulala_upgrade/src/data/globals.dart';
 
 class SelectedOptionsPage extends ConsumerStatefulWidget {
   final List<BreedingEventVariables> breedingEvents;
@@ -104,73 +103,24 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
             SizedBox(
               height: SizeConfig.heightMultiplier(context) * 24,
             ),
-            Row(
-              children: [
-                Text(
-                  'Animal Type'.tr,
-                  style: AppFonts.body2(color: AppColors.grayscale70),
-                ),
-                const Spacer(),
-                Text(
-                  selectedAnimalType,
-                  style: AppFonts.body2(color: AppColors.grayscale90),
-                ),
-                SizedBox(
-                  width: SizeConfig.widthMultiplier(context) * 8,
-                ),
-                Icon(Icons.arrow_forward_ios_rounded,
-                    color: AppColors.primary40,
-                    size: SizeConfig.widthMultiplier(context) * 12.75),
-              ],
+            OptionRow(
+              label: 'Animal Type'.tr,
+              value: selectedAnimalType.tr,
             ),
             SizedBox(height: SizeConfig.heightMultiplier(context) * 8),
             const Divider(
               color: AppColors.grayscale50,
             ),
             SizedBox(height: SizeConfig.heightMultiplier(context) * 8),
-            Row(
-              children: [
-                Text(
-                  'Animal Species'.tr,
-                  style: AppFonts.body2(color: AppColors.grayscale70),
-                ),
-                const Spacer(),
-                Text(
-                  selectedAnimalSpecies,
-                  style: AppFonts.body2(color: AppColors.grayscale90),
-                ),
-                SizedBox(
-                  width: SizeConfig.widthMultiplier(context) * 8,
-                ),
-                Icon(Icons.arrow_forward_ios_rounded,
-                    color: AppColors.primary40,
-                    size: SizeConfig.widthMultiplier(context) * 12.75),
-              ],
-            ),
+            OptionRow(
+                label: 'Animal Species'.tr, value: selectedAnimalSpecies.tr),
             SizedBox(height: SizeConfig.heightMultiplier(context) * 8),
             const Divider(
               color: AppColors.grayscale50,
             ),
             SizedBox(height: SizeConfig.heightMultiplier(context) * 8),
-            Row(
-              children: [
-                Text(
-                  'Animal Breeds'.tr,
-                  style: AppFonts.body2(color: AppColors.grayscale70),
-                ),
-                const Spacer(),
-                Text(
-                  selectedAnimalBreeds,
-                  style: AppFonts.body2(color: AppColors.grayscale90),
-                ),
-                SizedBox(
-                  width: SizeConfig.widthMultiplier(context) * 8,
-                ),
-                Icon(Icons.arrow_forward_ios_rounded,
-                    color: AppColors.primary40,
-                    size: SizeConfig.widthMultiplier(context) * 12.75),
-              ],
-            ),
+            OptionRow(
+                label: 'Animal Breeds'.tr, value: selectedAnimalBreeds.tr),
           ],
         ),
       ),
@@ -196,7 +146,7 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
               ref.read(selectedOviChipsProvider.notifier).update((state) => []);
               ref.read(fieldNameProvider.notifier).update((state) => '');
               ref.read(fieldContentProvider.notifier).update((state) => '');
-              ref.read(additionalnotesProvider.notifier).update((state) => '');
+              ref.read(additionalNotesProvider.notifier).update((state) => '');
               Navigator.push(
                 context,
                 MaterialPageRoute(

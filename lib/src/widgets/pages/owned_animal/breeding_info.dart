@@ -45,7 +45,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
 
   @override
   Widget build(BuildContext context) {
-    final animalIndex = ref.read(ovianimalsProvider).indexWhere(
+    final animalIndex = ref.read(oviAnimalsProvider).indexWhere(
           (animal) => animal.animalName == widget.OviDetails.animalName,
         );
 
@@ -161,7 +161,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                           // breedingEventNumberController:
                           //     TextEditingController(),
                           shouldAddBreedEvent: false,
-                          OviDetails: widget.OviDetails,
+                          oviDetails: widget.OviDetails,
                           breedingEvents: widget.breedingEvents,
                         );
                       },
@@ -188,7 +188,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                           selectedMammalSire: '',
                           selectedOviDam: '',
                           selectedOviSire: '',
-                          OviDetails: widget.OviDetails,
+                          oviDetails: widget.OviDetails,
                         );
                       },
                     ),
@@ -239,7 +239,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                     MaterialPageRoute(
                       builder: (context) {
                         return ListOfBreedingMates(
-                          OviDetails: widget.OviDetails,
+                          oviDetails: widget.OviDetails,
                         );
                       },
                     ),
@@ -264,7 +264,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
                     MaterialPageRoute(
                       builder: (context) {
                         return BreedingEventChildrenList(
-                          OviDetails: widget.OviDetails,
+                          oviDetails: widget.OviDetails,
                         );
                       },
                     ),
@@ -303,7 +303,7 @@ class _BreedingInfoState extends ConsumerState<BreedingInfo> {
       widget.OviDetails.selectedOviDates[dateType] = pickedDate;
     });
 
-    ref.read(ovianimalsProvider.notifier).update((state) {
+    ref.read(oviAnimalsProvider.notifier).update((state) {
       final index = state.indexWhere(
           (animal) => animal.animalName == widget.OviDetails.animalName);
       state[index] = widget.OviDetails;

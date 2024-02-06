@@ -34,7 +34,6 @@ class OviVariables {
   ImageProvider? selectedOviImage;
   final String layingFrequency;
   final String eggsPerMonth;
-  final String numOfEggs;
   final String selectedBreedingStage;
   final String? medicalNeeds;
   final bool shouldAddAnimal;
@@ -68,7 +67,6 @@ class OviVariables {
       required this.incubationDate,
       required this.selectedOviGender,
       this.customFields,
-      required this.numOfEggs,
       required this.keptInOval,
       required this.notes,
       required this.selectedOviDates,
@@ -111,7 +109,6 @@ class OviVariables {
       String? keptInOval,
       DateTime? incubationDate,
       String? fieldName,
-      String? numOfEggs,
       String? fieldContent,
       String? notes,
       String? selectedOviGender,
@@ -157,7 +154,6 @@ class OviVariables {
         notes: notes ?? this.notes,
         incubationDate: incubationDate ?? this.incubationDate,
         keptInOval: keptInOval ?? this.keptInOval,
-        numOfEggs: numOfEggs ?? this.numOfEggs,
         selectedOviGender: selectedOviGender ?? this.selectedOviGender,
         selectedOviDates: selectedOviDates ?? this.selectedOviDates,
         selectedAnimalBreed: selectedAnimalBreed ?? this.selectedAnimalBreed,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
-import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 
 class ShimmerHomePageWidget extends StatelessWidget {

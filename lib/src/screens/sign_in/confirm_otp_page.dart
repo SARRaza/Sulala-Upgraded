@@ -4,7 +4,7 @@ import 'package:sulala_upgrade/src/data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
-import '../../widgets/controls_and_buttons/text_buttons/primary_textbutton.dart';
+import '../../widgets/controls_and_buttons/text_buttons/primary_text_button.dart';
 import '../../widgets/inputs/otp_fields/otp_field.dart';
 
 class ConfirmOTPPage extends StatefulWidget {

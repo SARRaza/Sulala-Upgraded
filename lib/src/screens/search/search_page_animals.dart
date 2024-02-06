@@ -105,7 +105,9 @@ class _SearchPageAnimalsState extends State<SearchPageAnimals> {
         builder: (context) => AnimalDetails(
           imagePath: option['imagePath'],
           title: option['title'],
-          geninfo: option['geninfo'],
+          genInfo: option['geninfo'],
+          animalType: option['type'],
+          animalDiet: option['diet'],
         ),
       ),
     );

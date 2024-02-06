@@ -9,20 +9,18 @@ import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/buttons/secondary_button.dart';
 import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
-import 'package:sulala_upgrade/src/data/globals.dart';
 
 class CustomerSupport extends StatefulWidget {
   const CustomerSupport({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _CustomerSupportState createState() => _CustomerSupportState();
+  State<CustomerSupport> createState() => _CustomerSupportState();
 }
 
 class _CustomerSupportState extends State<CustomerSupport> {
   final List<bool> _isExpanded = [false, false, false, false, false];
 
-  List<Map<String, dynamic>> quastions = [
+  List<Map<String, dynamic>> questions = [
     {
       'question': 'Question #1'.tr,
       'answer': 'Subtitle1'.tr,
@@ -175,7 +173,7 @@ class _CustomerSupportState extends State<CustomerSupport> {
                     style: AppFonts.title3(color: AppColors.grayscale90)),
               ),
               SizedBox(height: 32 * SizeConfig.heightMultiplier(context)),
-              for (int i = 0; i < quastions.length; i++)
+              for (int i = 0; i < questions.length; i++)
                 Container(
                   decoration: const BoxDecoration(
                     border: Border(
@@ -190,13 +188,13 @@ class _CustomerSupportState extends State<CustomerSupport> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          quastions[i]['question'],
+                          questions[i]['question'],
                           style: AppFonts.body1(color: AppColors.grayscale90),
                         ),
-                        if (quastions[i]['answer'] != null &&
+                        if (questions[i]['answer'] != null &&
                             _isExpanded[i] == true)
                           Text(
-                            quastions[i]['answer'],
+                            questions[i]['answer'],
                             style: AppFonts.body2(color: AppColors.grayscale70),
                           ),
                       ],

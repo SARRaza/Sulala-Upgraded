@@ -1,5 +1,3 @@
-// ignore_for_file: camel_case_types
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,13 +23,13 @@ final selectedCountryCodeProvider = StateProvider<String>((ref) => "+966");
 final selectedCountryFlagProvider =
     StateProvider<String>((ref) => "assets/icons/flags/Country=SA.png");
 final phoneNumberProvider = StateProvider<String>((ref) => '');
-final emailAdressProvider = StateProvider<String>((ref) => '');
+final emailAddressProvider = StateProvider<String>((ref) => '');
 
 // Create Password Global Variables
 final passwordProvider = StateProvider<String>((ref) => '');
-final passwrodConfirmProvider = StateProvider<String>((ref) => '');
+final passwordConfirmProvider = StateProvider<String>((ref) => '');
 
-// Add Personal Information Gloabl Varibales
+// Add Personal Information Global Variables
 final firstNameProvider = StateProvider<String>((ref) => '');
 final lastNameProvider = StateProvider<String>((ref) => '');
 
@@ -39,7 +37,7 @@ final lastNameProvider = StateProvider<String>((ref) => '');
 final farmAddressProvider = StateProvider<String>((ref) => '');
 final cityProvider = StateProvider<String>((ref) => '');
 final countryProvider = StateProvider<String>((ref) => '');
-final proflePictureProvider = StateProvider<File?>((ref) => null);
+final profilePictureProvider = StateProvider<File?>((ref) => null);
 
 // Privacy & Security Global Variables
 final emailAddressVisibilityProvider = StateProvider<bool>((ref) => false);
@@ -50,11 +48,11 @@ final selectedAnimalTypeProvider = StateProvider<String>((ref) => '');
 final selectedAnimalSpeciesProvider = StateProvider<String>((ref) => '');
 final selectedAnimalBreedsProvider = StateProvider<String>((ref) => '');
 
-// Enter Complete Info Global Varibales
+// Enter Complete Info Global Variables
 final selectedAnimalImageProvider =
     StateProvider<ImageProvider?>((ref) => null);
 final animalNameProvider = StateProvider<String>((ref) => '');
-final shoudlAddAnimalProvider = StateProvider<bool>((ref) => false);
+final shouldAddAnimalProvider = StateProvider<bool>((ref) => false);
 final layingFrequencyProvider = StateProvider<String>((ref) => '');
 final eggsPerMonthProvider = StateProvider<String>((ref) => '');
 final selectedBreedingStageProvider = StateProvider<String>((ref) => '');
@@ -64,7 +62,7 @@ final numOfEggsProvider = StateProvider<String>((ref) => '');
 final fieldNameProvider = StateProvider<String>((ref) => '');
 final incubationDateProvider = StateProvider<DateTime?>((ref) => null);
 final fieldContentProvider = StateProvider<String>((ref) => '');
-final additionalnotesProvider = StateProvider<String>((ref) => '');
+final additionalNotesProvider = StateProvider<String>((ref) => '');
 final selectedOviGenderProvider = StateProvider<String>((ref) => '');
 final selectedOviDatesProvider =
     StateProvider<Map<String, DateTime?>>((ref) => {});
@@ -83,9 +81,9 @@ final breedingDamDetailsProvider = StateProvider<String?>((ref) => null);
 final breedingPartnerDetailsProvider = StateProvider<String?>((ref) => null);
 final breedingDateProvider = StateProvider<DateTime?>((ref) => null);
 final deliveryDateProvider = StateProvider<DateTime?>((ref) => null);
-final breedingnotesProvider = StateProvider<String>((ref) => '');
-final shoudlAddEventProvider = StateProvider<bool>((ref) => false);
-final ovianimalsProvider = StateProvider<List<OviVariables>>((ref) => []);
+final breedingNotesProvider = StateProvider<String>((ref) => '');
+final shouldAddEventProvider = StateProvider<bool>((ref) => false);
+final oviAnimalsProvider = StateProvider<List<OviVariables>>((ref) => []);
 final breedingEventsProvider =
     StateProvider<List<BreedingEventVariables>>((ref) => []);
 final vaccineDetailsListProvider =
@@ -103,19 +101,19 @@ final animalDamDetailsProvider = StateProvider<MainAnimalDam?>((ref) => null);
 // Reg Home Page Pie Chart Global Variables
 final mammalCountProvider = Provider<int>((ref) {
   return ref
-      .watch(ovianimalsProvider)
+      .watch(oviAnimalsProvider)
       .where((animal) => animal.selectedAnimalType.toLowerCase() == 'mammal')
       .length;
 });
 final oviparousCountProvider = Provider<int>((ref) {
   return ref
-      .watch(ovianimalsProvider)
+      .watch(oviAnimalsProvider)
       .where((animal) => animal.selectedAnimalType.toLowerCase() == 'oviparous')
       .length;
 });
 
 final totalAnimalsCountProvider = Provider<int>((ref) {
-  return ref.watch(ovianimalsProvider).length;
+  return ref.watch(oviAnimalsProvider).length;
 });
 
 List<String> mammalSpeciesList = [
@@ -244,8 +242,8 @@ Map<String, List<String>> speciesToBreedsMap = {
   'Gecko': ['Leopard Gecko', 'Crested Gecko', 'Tokay Gecko'],
 };
 
-Map<String, List<String>> morespeciesToBreedsMap = {
-  'Dog': ['suhail', 'German Shepherd', 'Golden Retriever'],
+Map<String, List<String>> moreSpeciesToBreedsMap = {
+  'Dog': ['German Shepherd', 'Golden Retriever'],
   'Cat': ['Siamese', 'Persian', 'Maine Coon'],
   'Elephant': ['African Elephant', 'Asian Elephant'],
   'Lion': ['African Lion', 'Asiatic Lion'],
@@ -320,7 +318,7 @@ Map<String, int> incubationPeriods = {
 
 final mammalSpeciesCountProvider = Provider<Map<String, int>>((ref) {
   final mammals = ref
-      .watch(ovianimalsProvider)
+      .watch(oviAnimalsProvider)
       .where((animal) => animal.selectedAnimalType.toLowerCase() == 'mammal')
       .toList();
 
@@ -338,7 +336,7 @@ final mammalSpeciesCountProvider = Provider<Map<String, int>>((ref) {
 
 final oviparousSpeciesCountProvider = Provider<Map<String, int>>((ref) {
   final oviparous = ref
-      .watch(ovianimalsProvider)
+      .watch(oviAnimalsProvider)
       .where((animal) => animal.selectedAnimalType.toLowerCase() == 'oviparous')
       .toList();
 
@@ -363,8 +361,8 @@ final dateOfWeaningProvider = StateProvider<DateTime?>((ref) => null);
 final dateOfMatingProvider = StateProvider<DateTime?>((ref) => null);
 final uploadedFilesProvider = Provider<List<String>>((ref) => []);
 final selectedAnimalNameProvider = Provider<String>((ref) => '');
-final selectedbreeddamProvider = Provider<String>((ref) => '');
-final breeddamPictureProvider = StateProvider<File?>((ref) => null);
+final selectedBreedDamProvider = Provider<String>((ref) => '');
+final breedDamPictureProvider = StateProvider<File?>((ref) => null);
 
 final breedingChildrenDetailsProvider =
     StateProvider<List<BreedChildItem>>((ref) => []);

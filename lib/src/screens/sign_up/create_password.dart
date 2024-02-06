@@ -29,7 +29,7 @@ class _CreatePasswordState extends ConsumerState<CreatePassword> {
   @override
   Widget build(BuildContext context) {
     final enteredPassword = ref.watch(passwordProvider);
-    final enteredConfirmPassword = ref.watch(passwrodConfirmProvider);
+    final enteredConfirmPassword = ref.watch(passwordConfirmProvider);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -87,7 +87,7 @@ class _CreatePasswordState extends ConsumerState<CreatePassword> {
                         : null,
                 onChanged: (value) {
                   ref
-                      .read(passwrodConfirmProvider.notifier)
+                      .read(passwordConfirmProvider.notifier)
                       .update((state) => value);
                   setState(() {
                     // enteredConfirmPassword = value;
