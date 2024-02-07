@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart';
 
-import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/inputs/search_bars/button_search_bar.dart';
@@ -59,6 +61,7 @@ class _SearchPageHouseFarmState extends State<SearchPageHouseFarm> {
   List<Map<String, dynamic>> filteredOptions = [];
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> filteredFarms = [];
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -67,7 +70,14 @@ class _SearchPageHouseFarmState extends State<SearchPageHouseFarm> {
     // Initialize filteredOptions with all options
   }
 
-  void filterOptions(String searchText) {
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterOptions(String searchText) {
     setState(() {
       filteredFarms = farms
           .where(
@@ -79,7 +89,7 @@ class _SearchPageHouseFarmState extends State<SearchPageHouseFarm> {
     });
   }
 
-  void navigateToUserDetailsPage(Map<String, dynamic> option) {
+  void _navigateToUserDetailsPage(Map<String, dynamic> option) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -120,7 +130,7 @@ class _SearchPageHouseFarmState extends State<SearchPageHouseFarm> {
                 SizeConfig.widthMultiplier(context) * 16,
                 SizeConfig.widthMultiplier(context) * 4,
               ),
-              child: Text("House Farm",
+              child: Text("House Farm".tr,
                   style: AppFonts.title3(color: AppColors.grayscale90)),
             ),
             Padding(
@@ -131,13 +141,10 @@ class _SearchPageHouseFarmState extends State<SearchPageHouseFarm> {
                 SizeConfig.widthMultiplier(context) * 4,
               ),
               child: ButtonSearchBar(
-                onChange: filterOptions,
-                hintText: "Search by name or ID",
+                onChange: _onSearchChanged,
+                hintText: "Search by name or ID".tr,
                 icon: Icons.filter_alt_outlined,
                 controller: _searchController,
-                onIconPressed: () {
-                  // print("Filter Pressed");
-                },
               ),
             ),
             SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
@@ -162,7 +169,7 @@ class _SearchPageHouseFarmState extends State<SearchPageHouseFarm> {
                                   height: SizeConfig.heightMultiplier(context) *
                                       32),
                               Text(
-                                "No farms found",
+                                "No farms found".tr,
                                 style: AppFonts.headline3(
                                     color: AppColors.grayscale90),
                               ),
@@ -170,7 +177,7 @@ class _SearchPageHouseFarmState extends State<SearchPageHouseFarm> {
                                   height:
                                       SizeConfig.heightMultiplier(context) * 4),
                               Text(
-                                "Try adjusting the filters",
+                                "Try adjusting the filters".tr,
                                 style: AppFonts.body2(
                                     color: AppColors.grayscale70),
                               ),
@@ -189,7 +196,7 @@ class _SearchPageHouseFarmState extends State<SearchPageHouseFarm> {
                           textHead: option['title'],
                           textBody: option['subtitle'],
                           onPressed: () {
-                            navigateToUserDetailsPage(option);
+                            _navigateToUserDetailsPage(option);
                           },
                         ),
                       );
@@ -211,13 +218,13 @@ class _SearchPageHouseFarmState extends State<SearchPageHouseFarm> {
                       SizedBox(
                           height: SizeConfig.heightMultiplier(context) * 32),
                       Text(
-                        "No farms found",
+                        "No farms found".tr,
                         style: AppFonts.headline3(color: AppColors.grayscale90),
                       ),
                       SizedBox(
                           height: SizeConfig.heightMultiplier(context) * 4),
                       Text(
-                        "Try adjusting the filters",
+                        "Try adjusting the filters".tr,
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
                     ],
@@ -228,5 +235,12 @@ class _SearchPageHouseFarmState extends State<SearchPageHouseFarm> {
         ),
       ),
     );
+  }
+
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      _filterOptions(query);
+    });
   }
 }

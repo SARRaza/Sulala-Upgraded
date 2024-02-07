@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart';
 
-import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/inputs/search_bars/button_search_bar.dart';
@@ -21,55 +23,55 @@ class _SearchPageAnimalsState extends State<SearchPageAnimals> {
     {
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Horse',
-      'geninfo':
+      'genInfo':
           'The horse is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Cow',
-      'geninfo':
+      'genInfo':
           'The cow is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Ox',
-      'geninfo':
+      'genInfo':
           'The ox is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Sheep',
-      'geninfo':
+      'genInfo':
           'The sheep is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Bull',
-      'geninfo':
+      'genInfo':
           'The bull is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Bull',
-      'geninfo':
+      'genInfo':
           'The bull is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Bull',
-      'geninfo':
+      'genInfo':
           'The bull is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Bull',
-      'geninfo':
+      'genInfo':
           'The bull is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Bull',
-      'geninfo':
+      'genInfo':
           'The bull is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     // Add more data here if needed
@@ -78,6 +80,7 @@ class _SearchPageAnimalsState extends State<SearchPageAnimals> {
   List<Map<String, dynamic>> filteredOptions = [];
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> filteredAnimals = [];
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -86,7 +89,14 @@ class _SearchPageAnimalsState extends State<SearchPageAnimals> {
     // Initialize filteredOptions with all options
   }
 
-  void filterOptions(String searchText) {
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterOptions(String searchText) {
     setState(() {
       filteredAnimals = animals
           .where(
@@ -98,14 +108,14 @@ class _SearchPageAnimalsState extends State<SearchPageAnimals> {
     });
   }
 
-  void navigateToAnimalDetailsPage(Map<String, dynamic> option) {
+  void _navigateToAnimalDetailsPage(Map<String, dynamic> option) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => AnimalDetails(
           imagePath: option['imagePath'],
           title: option['title'],
-          genInfo: option['geninfo'],
+          genInfo: option['genInfo'],
           animalType: option['type'],
           animalDiet: option['diet'],
         ),
@@ -139,7 +149,7 @@ class _SearchPageAnimalsState extends State<SearchPageAnimals> {
                 SizeConfig.widthMultiplier(context) * 16,
                 SizeConfig.widthMultiplier(context) * 4,
               ),
-              child: Text("Animals",
+              child: Text("Animals".tr,
                   style: AppFonts.title3(color: AppColors.grayscale90)),
             ),
             Padding(
@@ -150,8 +160,8 @@ class _SearchPageAnimalsState extends State<SearchPageAnimals> {
                 SizeConfig.widthMultiplier(context) * 4,
               ),
               child: ButtonSearchBar(
-                onChange: filterOptions,
-                hintText: "Search by name or ID",
+                onChange: _onSearchChanged,
+                hintText: "Search by name or ID".tr,
                 icon: Icons.filter_alt_outlined,
                 controller: _searchController,
                 onIconPressed: () {
@@ -183,7 +193,7 @@ class _SearchPageAnimalsState extends State<SearchPageAnimals> {
                                   height: SizeConfig.heightMultiplier(context) *
                                       33),
                               Text(
-                                "No animals found",
+                                "No animals found".tr,
                                 style: AppFonts.headline3(
                                     color: AppColors.grayscale90),
                               ),
@@ -191,7 +201,7 @@ class _SearchPageAnimalsState extends State<SearchPageAnimals> {
                                   height:
                                       SizeConfig.heightMultiplier(context) * 4),
                               Text(
-                                "Try adjusting the filters",
+                                "Try adjusting the filters".tr,
                                 style: AppFonts.body2(
                                     color: AppColors.grayscale70),
                               ),
@@ -208,9 +218,9 @@ class _SearchPageAnimalsState extends State<SearchPageAnimals> {
                               SizeConfig.widthMultiplier(context) * 24,
                           imagePath: option['imagePath'],
                           textHead: option['title'],
-                          textBody: option['geninfo'],
+                          textBody: option['genInfo'],
                           onPressed: () {
-                            navigateToAnimalDetailsPage(option);
+                            _navigateToAnimalDetailsPage(option);
                           },
                         ),
                       );
@@ -232,13 +242,13 @@ class _SearchPageAnimalsState extends State<SearchPageAnimals> {
                       SizedBox(
                           height: SizeConfig.heightMultiplier(context) * 32),
                       Text(
-                        "No animals found",
+                        "No animals found".tr,
                         style: AppFonts.headline3(color: AppColors.grayscale90),
                       ),
                       SizedBox(
                           height: SizeConfig.heightMultiplier(context) * 4),
                       Text(
-                        "Try adjusting the filters",
+                        "Try adjusting the filters".tr,
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
                     ],
@@ -249,5 +259,12 @@ class _SearchPageAnimalsState extends State<SearchPageAnimals> {
         ),
       ),
     );
+  }
+
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      _filterOptions(query);
+    });
   }
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/widgets/styled_dismissible.dart';
 import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
-import 'package:sulala_upgrade/src/data/globals.dart';
 
 class NotificationList extends StatefulWidget {
   const NotificationList({super.key});
@@ -38,21 +38,21 @@ class _NotificationListState extends State<NotificationList> {
     // Add more data here if needed
   ];
 
-  String formatTimeAgo(DateTime time) {
+  String _formatTimeAgo(DateTime time) {
     final now = DateTime.now();
     final difference = now.difference(time);
     if (difference.inDays > 0) {
-      return '${difference.inDays} ${difference.inDays == 1 ? 'day ago' : 'days ago'}';
+      return '1dayAgo'.trPlural('daysAgo', difference.inDays);
     } else if (difference.inHours > 0) {
-      return '${difference.inHours} ${difference.inHours == 1 ? 'hour ago' : 'hours ago'}';
+      return '1hourAgo'.trPlural('hoursAgo', difference.inHours);
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes} ${difference.inMinutes == 1 ? 'minute ago' : 'minutes ago'}';
+      return '1minuteAgo'.trPlural('minutesAgo', difference.inMinutes);
     } else {
-      return 'Just now';
+      return 'Just now'.tr;
     }
   }
 
-  String truncateTextWithEllipsis(String text, int maxLength) {
+  String _truncateTextWithEllipsis(String text, int maxLength) {
     if (text.length <= maxLength) {
       return text;
     } else {
@@ -93,7 +93,7 @@ class _NotificationListState extends State<NotificationList> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Notifications',
+                'Notifications'.tr,
                 style: AppFonts.title4(color: AppColors.grayscale90),
               ),
               SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
@@ -103,9 +103,16 @@ class _NotificationListState extends State<NotificationList> {
                   itemBuilder: (context, index) {
                     final notification = notifications[index];
                     final timeAgo =
-                        formatTimeAgo(notification['time'] as DateTime);
+                        _formatTimeAgo(notification['time'] as DateTime);
                     return StyledDismissible(
+                      key: Key(notification['id'].toString()), // Assuming each notification has a unique ID
                       onDismissed: (direction) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Notification dismissed'.tr),
+                          ),
+                        );
+
                         // Remove the item from the list
                         setState(() {
                           notifications.removeAt(index);
@@ -119,13 +126,13 @@ class _NotificationListState extends State<NotificationList> {
                               AssetImage(notification['imagePath'] as String),
                         ),
                         title: Text(
-                          truncateTextWithEllipsis(
+                          _truncateTextWithEllipsis(
                               notification['title'] as String, 15),
                           style:
                               AppFonts.headline4(color: AppColors.grayscale90),
                         ),
                         subtitle: Text(
-                          truncateTextWithEllipsis(
+                          _truncateTextWithEllipsis(
                               notification['subtitle'] as String, 20),
                           style: AppFonts.body2(color: AppColors.grayscale70),
                         ),

@@ -190,6 +190,7 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
                                         subtitle: staff[index].role,
                                         email: staff[index].email,
                                         phoneNumber: staff[index].phoneNumber,
+                                        address: staff[index].address,
                                       ),
                                     ),
                                   );

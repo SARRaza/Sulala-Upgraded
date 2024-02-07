@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 
 import '../../data/classes/breed_child_item.dart';
 import '../../data/classes/breeding_partner.dart';
@@ -36,6 +37,7 @@ class _AnimalPartnerModalState extends ConsumerState<AnimalPartnerModal> {
 
   @override
   void initState() {
+    super.initState();
     selectedPartner = widget.selectedPartner;
     _breedingHelper = BreedingHelper(ref);
     animals = _breedingHelper.getPossiblePartners(widget.selectedAnimal
@@ -43,7 +45,6 @@ class _AnimalPartnerModalState extends ConsumerState<AnimalPartnerModal> {
             selectedOviSire: widget.selectedFather,
             selectedOviDam: widget.selectedMother,
             breedChildren: widget.selectedChildren));
-    super.initState();
   }
 
   @override
@@ -61,9 +62,9 @@ class _AnimalPartnerModalState extends ConsumerState<AnimalPartnerModal> {
             const SizedBox(
               height: 25,
             ),
-            const Text(
-              "Select Partner",
-              style: TextStyle(
+            Text(
+              "Select Partner".tr,
+              style: const TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
               ),
@@ -85,9 +86,9 @@ class _AnimalPartnerModalState extends ConsumerState<AnimalPartnerModal> {
                           searchQuery = value.toLowerCase();
                         });
                       },
-                      decoration: const InputDecoration(
-                        hintText: "Search By Name Or ID",
-                        prefixIcon: Icon(Icons.search),
+                      decoration: InputDecoration(
+                        hintText: "Search By Name Or ID".tr,
+                        prefixIcon: const Icon(Icons.search),
                         border: InputBorder.none,
                       ),
                     ),
@@ -100,13 +101,13 @@ class _AnimalPartnerModalState extends ConsumerState<AnimalPartnerModal> {
                 shrinkWrap: true,
                 itemCount: animals.length,
                 itemBuilder: (context, index) {
-                  final OviDetails = animals[index];
-                  final isSelected = OviDetails.id == selectedPartner?.id;
+                  final oviDetails = animals[index];
+                  final isSelected = oviDetails.id == selectedPartner?.id;
                   // Apply the filter here
-                  if (!OviDetails.animalName
+                  if (!oviDetails.animalName
                           .toLowerCase()
                           .contains(searchQuery) &&
-                      !OviDetails.selectedAnimalType
+                      !oviDetails.selectedAnimalType
                           .toLowerCase()
                           .contains(searchQuery)) {
                     return Container(); // Skip this item if it doesn't match the search query
@@ -123,8 +124,8 @@ class _AnimalPartnerModalState extends ConsumerState<AnimalPartnerModal> {
                     leading: CircleAvatar(
                       radius: 25,
                       backgroundColor: Colors.grey[100],
-                      backgroundImage: OviDetails.selectedOviImage,
-                      child: OviDetails.selectedOviImage == null
+                      backgroundImage: oviDetails.selectedOviImage,
+                      child: oviDetails.selectedOviImage == null
                           ? const Icon(
                               Icons.camera_alt_outlined,
                               size: 50,
@@ -132,14 +133,14 @@ class _AnimalPartnerModalState extends ConsumerState<AnimalPartnerModal> {
                             )
                           : null,
                     ),
-                    title: Text(OviDetails.animalName),
-                    subtitle: Text(OviDetails.selectedAnimalType),
+                    title: Text(oviDetails.animalName),
+                    subtitle: Text(oviDetails.selectedAnimalType),
                     onTap: () {
                       setState(() {
                         selectedPartner = BreedingPartner(
-                            OviDetails.animalName,
-                            OviDetails.selectedOviImage,
-                            OviDetails.selectedOviGender);
+                            oviDetails.animalName,
+                            oviDetails.selectedOviImage,
+                            oviDetails.selectedOviGender);
                       });
                     },
                   );
@@ -150,7 +151,7 @@ class _AnimalPartnerModalState extends ConsumerState<AnimalPartnerModal> {
               onPressed: () {
                 Navigator.pop(context, selectedPartner);
               },
-              child: const Text("Done"),
+              child: Text("Done".tr),
             ),
           ],
         ),

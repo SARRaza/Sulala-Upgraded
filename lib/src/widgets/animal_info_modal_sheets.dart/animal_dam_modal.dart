@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -8,7 +6,6 @@ import '../../data/classes/breed_child_item.dart';
 import '../../data/classes/main_animal_dam.dart';
 import '../../data/classes/main_animal_sire.dart';
 import '../../data/classes/ovi_variables.dart';
-import '../../data/riverpod_globals.dart';
 import '../../helpers/breeding_helper.dart';
 import '../controls_and_buttons/buttons/primary_button.dart';
 
@@ -39,8 +36,8 @@ class _AnimalDamModalState extends ConsumerState<AnimalDamModal> {
 
   @override
   void initState() {
-    selectedMother = widget.selectedMother;
     super.initState();
+    selectedMother = widget.selectedMother;
   }
 
   @override
@@ -126,11 +123,11 @@ class _AnimalDamModalState extends ConsumerState<AnimalDamModal> {
                                 searchQuery = value.toLowerCase();
                               });
                             },
-                            decoration: const InputDecoration(
-                                hintText: "Search By Name Or ID",
-                                prefixIcon: Icon(Icons.search),
+                            decoration: InputDecoration(
+                                hintText: "Search By Name Or ID".tr,
+                                prefixIcon: const Icon(Icons.search),
                                 border: InputBorder.none,
-                                hintStyle: TextStyle(
+                                hintStyle: const TextStyle(
                                   color: Color(0xFFA2A6AC),
                                   fontSize: 14,
                                   fontFamily: 'IBM Plex Sans',
@@ -147,14 +144,14 @@ class _AnimalDamModalState extends ConsumerState<AnimalDamModal> {
                             shrinkWrap: true,
                             itemCount: animals.length,
                             itemBuilder: (context, index) {
-                              final OviDetails = animals[index];
+                              final oviDetails = animals[index];
                               final bool isSelected = selectedMother != null &&
-                                  selectedMother!.id == OviDetails.id;
+                                  selectedMother!.id == oviDetails.id;
 
-                              if (!OviDetails.animalName
+                              if (!oviDetails.animalName
                                       .toLowerCase()
                                       .contains(searchQuery) &&
-                                  !OviDetails.selectedAnimalType
+                                  !oviDetails.selectedAnimalType
                                       .toLowerCase()
                                       .contains(searchQuery)) {
                                 return Container(); // Skip this item if it doesn't match the search query
@@ -176,8 +173,8 @@ class _AnimalDamModalState extends ConsumerState<AnimalDamModal> {
                                     radius: 25,
                                     backgroundColor: Colors.grey[100],
                                     backgroundImage:
-                                        OviDetails.selectedOviImage,
-                                    child: OviDetails.selectedOviImage == null
+                                        oviDetails.selectedOviImage,
+                                    child: oviDetails.selectedOviImage == null
                                         ? const Icon(
                                             Icons.camera_alt_outlined,
                                             size: 50,
@@ -185,30 +182,44 @@ class _AnimalDamModalState extends ConsumerState<AnimalDamModal> {
                                           )
                                         : null,
                                   ),
-                                  title: Text(OviDetails.animalName),
+                                  title: Text(oviDetails.animalName),
                                   subtitle: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                          'Gender: ${OviDetails.selectedOviGender}'),
-                                      Text(
-                                          'Mother: ${OviDetails.selectedOviDam != null ? OviDetails.selectedOviDam!.animalName : 'Unknown'.tr}'),
-                                      if (OviDetails.selectedOviDam != null)
+                                      Text('Gender:'.trParams({
+                                        'gender': oviDetails.selectedOviGender
+                                      })),
+                                      Text('Mother:'.trParams({
+                                        'mother':
+                                        oviDetails.selectedOviDam != null
+                                            ? oviDetails
+                                            .selectedOviDam!.animalName
+                                            : 'Unknown'.tr
+                                      })),
+                                      if (oviDetails.selectedOviDam != null)
                                         Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            if (OviDetails
+                                            if (oviDetails
                                                     .selectedOviDam!.father !=
                                                 null)
-                                              Text(
-                                                  'Maternal Father: ${OviDetails.selectedOviDam!.father!.animalName}'),
-                                            if (OviDetails
+                                              Text('Maternal Father:'.trParams({
+                                                'father': oviDetails
+                                                    .selectedOviDam!
+                                                    .father!
+                                                    .animalName
+                                              })),
+                                            if (oviDetails
                                                     .selectedOviDam!.mother !=
                                                 null)
-                                              Text(
-                                                  'Maternal Mother: ${OviDetails.selectedOviDam!.mother!.animalName}'),
+                                              Text('Maternal Mother:'.trParams({
+                                                'mother': oviDetails
+                                                    .selectedOviDam!
+                                                    .mother!
+                                                    .animalName
+                                              }))
                                           ],
                                         ),
                                     ],
@@ -220,17 +231,17 @@ class _AnimalDamModalState extends ConsumerState<AnimalDamModal> {
                                       } else {
                                         // Use a default image (icon) if selectedOviImage is null
                                         final ImageProvider? oviImage =
-                                            OviDetails.selectedOviImage;
+                                            oviDetails.selectedOviImage;
                                         MainAnimalDam? mother =
-                                            OviDetails.selectedOviDam;
+                                            oviDetails.selectedOviDam;
 
                                         MainAnimalSire? father =
-                                            OviDetails.selectedOviSire;
+                                            oviDetails.selectedOviSire;
 
                                         selectedMother = MainAnimalDam(
-                                            OviDetails.animalName,
+                                            oviDetails.animalName,
                                             oviImage,
-                                            OviDetails.selectedOviGender,
+                                            oviDetails.selectedOviGender,
                                             mother: mother,
                                             father: father);
                                       }
@@ -267,25 +278,7 @@ class _AnimalDamModalState extends ConsumerState<AnimalDamModal> {
                       child: PrimaryButton(
                         text: 'Confirm'.tr,
                         minimumSize: const Size(0, 52),
-                        onPressed: () {
-                          Navigator.pop(context, selectedMother);
-                          // Append the selected children to the existing list
-                          // MainAnimalDam? existingSelectedDam = widget.ref.read(
-                          //     animalDamDetailsProvider);
-                          // existingSelectedDam = widget.selectedDam.last;
-                          // existingSelectedDam.addAll(widget.selectedMother);
-                          //
-                          // final List<MainAnimalSire>
-                          // existingSelectedSire =
-                          // widget.ref.read(animalSireDetailsProvider);
-                          // existingSelectedSire.addAll(widget.selectedFather);
-
-                          // for (MainAnimalDam dam in selectedDam) {
-                          //   if (dam.mother != null) {
-                          //     existingSelectedDam.add(dam.mother!);
-                          //   }
-                          // }
-                        },
+                        onPressed: () => Navigator.pop(context, selectedMother)
                       )),
                 ],
               ),

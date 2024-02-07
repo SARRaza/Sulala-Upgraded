@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -20,8 +21,8 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
 
   @override
   void initState() {
-    selectedTags = widget.selectedTags;
     super.initState();
+    selectedTags = widget.selectedTags;
   }
 
   @override
@@ -35,12 +36,12 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Tags',
+              'Tags'.tr,
               style: AppFonts.title2(color: AppColors.grayscale90),
             ),
             const SizedBox(height: 25),
             Text(
-              'Current State',
+              'Current State'.tr,
               style: AppFonts.headline3(color: AppColors.grayscale90),
             ),
             SizedBox(
@@ -51,7 +52,7 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
               runSpacing: 8.0,
               children: [
                 CustomTag(
-                  label: 'Borrowed',
+                  label: 'Borrowed'.tr,
                   selected: selectedTags.contains('Borrowed'),
                   onTap: () {
                     setState(() {
@@ -64,7 +65,7 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
                   },
                 ),
                 CustomTag(
-                  label: 'Adopted',
+                  label: 'Adopted'.tr,
                   selected: selectedTags.contains('Adopted'),
                   onTap: () {
                     setState(() {
@@ -77,7 +78,7 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
                   },
                 ),
                 CustomTag(
-                  label: 'Donated',
+                  label: 'Donated'.tr,
                   selected: selectedTags.contains('Donated'),
                   onTap: () {
                     setState(() {
@@ -90,7 +91,7 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
                   },
                 ),
                 CustomTag(
-                  label: 'Escaped',
+                  label: 'Escaped'.tr,
                   selected: selectedTags.contains('Escaped'),
                   onTap: () {
                     setState(() {
@@ -103,7 +104,7 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
                   },
                 ),
                 CustomTag(
-                  label: 'Stolen',
+                  label: 'Stolen'.tr,
                   selected: selectedTags.contains('Stolen'),
                   onTap: () {
                     setState(() {
@@ -116,14 +117,14 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
                   },
                 ),
                 CustomTag(
-                  label: 'Trasnferred',
-                  selected: selectedTags.contains('Trasnferred'),
+                  label: 'Transferred'.tr,
+                  selected: selectedTags.contains('Transferred'),
                   onTap: () {
                     setState(() {
-                      if (selectedTags.contains('Trasnferred')) {
-                        selectedTags.remove('Trasnferred');
+                      if (selectedTags.contains('Transferred')) {
+                        selectedTags.remove('Transferred');
                       } else {
-                        selectedTags.add('Trasnferred');
+                        selectedTags.add('Transferred');
                       }
                     });
                   },
@@ -136,7 +137,7 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
               height: SizeConfig.heightMultiplier(context) * 20,
             ),
             Text(
-              'Medical State',
+              'Medical State'.tr,
               style: AppFonts.headline3(color: AppColors.grayscale90),
             ),
             SizedBox(
@@ -147,7 +148,7 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
               runSpacing: 8.0,
               children: [
                 CustomTag(
-                  label: 'Injured',
+                  label: 'Injured'.tr,
                   selected: selectedTags.contains('Injured'),
                   onTap: () {
                     setState(() {
@@ -160,7 +161,7 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
                   },
                 ),
                 CustomTag(
-                  label: 'Sick',
+                  label: 'Sick'.tr,
                   selected: selectedTags.contains('Sick'),
                   onTap: () {
                     setState(() {
@@ -173,7 +174,7 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
                   },
                 ),
                 CustomTag(
-                  label: 'Quarantined',
+                  label: 'Quarantined'.tr,
                   selected: selectedTags.contains('Quarantined'),
                   onTap: () {
                     setState(() {
@@ -186,7 +187,7 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
                   },
                 ),
                 CustomTag(
-                  label: 'Medication',
+                  label: 'Medication'.tr,
                   selected: selectedTags.contains('Medication'),
                   onTap: () {
                     setState(() {
@@ -199,7 +200,7 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
                   },
                 ),
                 CustomTag(
-                  label: 'Testing',
+                  label: 'Testing'.tr,
                   selected: selectedTags.contains('Testing'),
                   onTap: () {
                     setState(() {
@@ -212,7 +213,7 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
                   },
                 ),
                 CustomTag(
-                  label: 'Pregnant',
+                  label: 'Pregnant'.tr,
                   selected: selectedTags.contains('Pregnant'),
                   onTap: () {
                     setState(() {
@@ -225,7 +226,7 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
                   },
                 ),
                 CustomTag(
-                  label: 'Lactating',
+                  label: 'Lactating'.tr,
                   selected: selectedTags.contains('Lactating'),
                   onTap: () {
                     setState(() {
@@ -244,9 +245,9 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
             SizedBox(
               height: SizeConfig.heightMultiplier(context) * 20,
             ),
-            const Text(
-              'Other',
-              style: TextStyle(
+            Text(
+              'Other'.tr,
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -259,7 +260,7 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
               runSpacing: 8.0,
               children: [
                 CustomTag(
-                  label: 'Sold',
+                  label: 'Sold'.tr,
                   selected: selectedTags.contains('Sold'),
                   onTap: () {
                     setState(() {
@@ -272,7 +273,7 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
                   },
                 ),
                 CustomTag(
-                  label: 'Dead',
+                  label: 'Dead'.tr,
                   selected: selectedTags.contains('Dead'),
                   onTap: () {
                     setState(() {
@@ -297,7 +298,7 @@ class _AnimalTagsModalState extends State<AnimalTagsModal> {
                       Navigator.of(context).pop(selectedTags);
                     },
                     status: PrimaryButtonStatus.idle,
-                    text: 'Save',
+                    text: 'Save'.tr,
                   ),
                 ),
               ]),

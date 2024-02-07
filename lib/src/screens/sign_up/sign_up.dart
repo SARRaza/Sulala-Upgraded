@@ -24,8 +24,8 @@ class SignUp extends ConsumerStatefulWidget {
 
 class _SignUpState extends ConsumerState<SignUp>
     with SingleTickerProviderStateMixin {
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _emailController = TextEditingController();
   PrimaryButtonStatus buttonStatus = PrimaryButtonStatus.idle;
   AppleButtonStatus appleButtonStatus = AppleButtonStatus.idle;
   GoogleButtonStatus googleButtonStatus = GoogleButtonStatus.idle;
@@ -35,22 +35,17 @@ class _SignUpState extends ConsumerState<SignUp>
 
   @override
   void dispose() {
-    phoneController.dispose();
-    emailController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
-  bool isValidEmail(String email) {
+  bool _isValidEmail(String email) {
     final emailRegExp = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
     return emailRegExp.hasMatch(email);
   }
 
-  bool isValidPhoneNumber(String phoneNumber) {
-    final phoneRegExp = RegExp(r'^[0-9]+$');
-    return phoneRegExp.hasMatch(phoneNumber);
-  }
-
-  void navigateToPhoneOTPPage(Map<String, dynamic> option) {
+  void _navigateToPhoneOTPPage(Map<String, dynamic> option) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -59,7 +54,7 @@ class _SignUpState extends ConsumerState<SignUp>
     );
   }
 
-  void navigateToEmailOTPPage(Map<String, dynamic> option) {
+  void _navigateToEmailOTPPage(Map<String, dynamic> option) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -178,7 +173,7 @@ class _SignUpState extends ConsumerState<SignUp>
                               ),
                               if (showEmailField)
                                 PrimaryTextField(
-                                  controller: emailController,
+                                  controller: _emailController,
                                   hintText: 'Enter Email'.tr,
                                   errorMessage: emailHasError == true
                                       ? 'Invalid email address'.tr
@@ -216,16 +211,16 @@ class _SignUpState extends ConsumerState<SignUp>
                                         } else {
                                           buttonStatus =
                                               PrimaryButtonStatus.loading;
-                                          navigateToPhoneOTPPage(
+                                          _navigateToPhoneOTPPage(
                                             {},
                                           );
                                         }
                                       } else {
-                                        if (isValidEmail(email) == true) {
+                                        if (_isValidEmail(email) == true) {
                                           emailHasError = false;
                                           buttonStatus =
                                               PrimaryButtonStatus.loading;
-                                          navigateToEmailOTPPage(
+                                          _navigateToEmailOTPPage(
                                             {},
                                           );
                                         } else {

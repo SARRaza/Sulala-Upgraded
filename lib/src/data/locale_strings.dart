@@ -22,7 +22,18 @@ class LocalStrings extends Translations {
           'animalsFamilyTree': "@name's Family Tree",
           'eventNumber': "Event number: @number",
           'editAnimal': "Edit animal: @name",
-          "ifYouJoin": "If you join @name, you won't be able to create your own farm."
+          "ifYouJoin": "If you join @name, you won't be able to create your own farm.",
+          '1dayAgo': '1 day ago',
+          'daysAgo': '%s days ago',
+          '1hourAgo': '1 hour ago',
+          'hoursAgo': '%s hours ago',
+          '1minuteAgo': '1 minute ago',
+          'minutesAgo': '%s minutes ago',
+          'sendNewCode': "Send new code in 00:@seconds",
+          'Gender:': 'Gender: @gender',
+          'Mother:': 'Mother: @mother',
+          'Maternal Father:': 'Maternal Father: @father',
+          'Maternal Mother:': 'Maternal Mother: @mother'
         },
         // Hindi Language
         'hi_IN': {

@@ -19,17 +19,14 @@ class CreatePassword extends ConsumerStatefulWidget {
   ConsumerState<CreatePassword> createState() => _CreatePasswordState();
 }
 
-String errorMessage = "";
-
-bool isPasswordValid = false;
-bool doesPasswordMatch = false;
-PrimaryButtonStatus buttonStatus = PrimaryButtonStatus.idle;
-
 class _CreatePasswordState extends ConsumerState<CreatePassword> {
+  String errorMessage = "";
+  bool isPasswordValid = false;
+  bool doesPasswordMatch = false;
+  PrimaryButtonStatus buttonStatus = PrimaryButtonStatus.idle;
+
   @override
   Widget build(BuildContext context) {
-    final enteredPassword = ref.watch(passwordProvider);
-    final enteredConfirmPassword = ref.watch(passwordConfirmProvider);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -64,9 +61,10 @@ class _CreatePasswordState extends ConsumerState<CreatePassword> {
               PasswordField(
                 hintText: 'Password'.tr,
                 errorMessage: doesPasswordMatch
-                    ? 'Passwords do not match'
+                    ? 'Passwords do not match'.tr
                     : isPasswordValid
                         ? 'Password should be at least 8 characters long and contain at least one number'
+                            .tr
                         : null,
                 onChanged: (value) {
                   ref.read(passwordProvider.notifier).update((state) => value);
@@ -109,51 +107,35 @@ class _CreatePasswordState extends ConsumerState<CreatePassword> {
           child: Column(
             children: [
               SizedBox(
-                height: SizeConfig.heightMultiplier(context) * 52,
-                width: SizeConfig.widthMultiplier(context) * 343,
-                child: PrimaryButton(
-                    text: "Confirm".tr,
-                    status: buttonStatus,
-                    onPressed: () {
-                      if (enteredPassword.isNotEmpty) {
-                        if (enteredPassword == enteredConfirmPassword) {
-                          isPasswordValid = false;
-                          // print("Passwords match");
-                          if (enteredPassword.length >= 8 &&
-                              enteredPassword.contains(RegExp(r'[0-9]'))) {
-                            doesPasswordMatch = false;
-                            // print("Password is valid");
-                            setState(() {
-                              buttonStatus = PrimaryButtonStatus.loading;
-                            });
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const AddPersonalInfoPage(),
-                                )).then((value) {
-                              setState(() {
-                                buttonStatus = PrimaryButtonStatus.idle;
-                              });
-                            });
-                          } else {
-                            setState(() {
-                              isPasswordValid = true;
-                            });
-                          }
-                        } else {
-                          setState(() {
-                            doesPasswordMatch = true;
-                          });
-                        }
-                      }
-                    }),
-              ),
+                  height: SizeConfig.heightMultiplier(context) * 52,
+                  width: SizeConfig.widthMultiplier(context) * 343,
+                  child: Consumer(
+                    builder: (context, ref, _) {
+                      final isPasswordValid =
+                          ref.watch(passwordValidationProvider);
+                      return PrimaryButton(
+                        text: "Confirm".tr,
+                        status: isPasswordValid
+                            ? PrimaryButtonStatus.idle
+                            : PrimaryButtonStatus.disabled,
+                        onPressed: () =>
+                            isPasswordValid ? _onConfirmPressed() : null,
+                      );
+                    },
+                  )),
             ],
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
+  }
+
+  void _onConfirmPressed() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const AddPersonalInfoPage(),
+        ));
   }
 }

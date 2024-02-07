@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -17,14 +18,13 @@ class EnterPassword extends StatefulWidget {
   State<EnterPassword> createState() => _EnterPasswordState();
 }
 
-String? enteredPassword;
-String? enteredConfirmPassword;
-bool isPasswordValid = false;
-bool doesPasswordMatch = false;
-PrimaryButtonStatus buttonStatus = PrimaryButtonStatus.idle;
-
 class _EnterPasswordState extends State<EnterPassword> {
-  void navigateToEmailOTPPage(Map<String, dynamic> option) {
+  String? enteredPassword;
+  String? enteredConfirmPassword;
+  PrimaryButtonStatus buttonStatus = PrimaryButtonStatus.idle;
+  final _formKey = GlobalKey<FormState>();
+
+  void _navigateToEmailOTPPage(Map<String, dynamic> option) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -63,47 +63,14 @@ class _EnterPasswordState extends State<EnterPassword> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Enter Password",
+                "Enter Password".tr,
                 style: AppFonts.title2(color: AppColors.grayscale90),
               ),
               SizedBox(
                 height: SizeConfig.heightMultiplier(context) * 40,
               ),
-              PasswordField(
-                hintText: 'Password',
-                errorMessage: doesPasswordMatch
-                    ? 'Passwords do not match'
-                    : isPasswordValid
-                        ? 'Password should be at least 8 characters long and contain at least one number'
-                        : null,
-                onChanged: (value) {
-                  setState(() {
-                    enteredPassword = value;
-                    isPasswordValid = false;
-                    doesPasswordMatch = false;
-                  });
-                },
-              ),
-              PasswordField(
-                hintText: 'Confirm Password',
-                errorMessage: doesPasswordMatch
-                    ? 'Passwords do not match'
-                    : isPasswordValid
-                        ? 'Password should be at least 8 characters long and contain at least one number'
-                        : null,
-                onChanged: (value) {
-                  setState(() {
-                    enteredConfirmPassword = value;
-                    isPasswordValid = false;
-                    doesPasswordMatch = false;
-                  });
-                },
-                onErrorChanged: (hasError) {
-                  setState(() {
-                    isPasswordValid = hasError; // Update the error state
-                  });
-                },
-              ),
+              _buildPasswordInputField(),
+              _buildConfirmPasswordInputField(),
             ],
           ),
         ),
@@ -115,36 +82,15 @@ class _EnterPasswordState extends State<EnterPassword> {
                 height: SizeConfig.heightMultiplier(context) * 52,
                 width: SizeConfig.widthMultiplier(context) * 343,
                 child: PrimaryButton(
-                    text: "Confirm",
+                    text: "Confirm".tr,
                     status: buttonStatus,
                     onPressed: () {
-                      if (enteredPassword != null) {
-                        if (enteredPassword == enteredConfirmPassword) {
-                          isPasswordValid = false;
-                          // print("Passwords match");
-                          if (enteredPassword!.length >= 8 &&
-                              enteredPassword!.contains(RegExp(r'[0-9]'))) {
-                            doesPasswordMatch = false;
-                            // print("Password is valid");
-                            setState(() {
-                              buttonStatus = PrimaryButtonStatus.loading;
-                            });
-                            // Navigator.pushNamed(context, '/');
-                            navigateToEmailOTPPage(
-                              {
-                                "emailAddress": widget.emailAddress,
-                              },
-                            );
-                          } else {
-                            setState(() {
-                              isPasswordValid = true;
-                            });
-                          }
-                        } else {
-                          setState(() {
-                            doesPasswordMatch = true;
-                          });
-                        }
+                      if (_validateForm()) {
+                        _navigateToEmailOTPPage(
+                          {
+                            "emailAddress": widget.emailAddress,
+                          },
+                        );
                       }
                     }),
               ),
@@ -153,6 +99,38 @@ class _EnterPasswordState extends State<EnterPassword> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
+    );
+  }
+
+  bool _validateForm() {
+    return _formKey.currentState?.validate() ?? false;
+  }
+
+  Widget _buildPasswordInputField() {
+    return PasswordField(
+      hintText: 'Password'.tr,
+      validator: (value) {
+        if (value == null || value.isEmpty || value.length < 8) {
+          return 'Password must be at least 8 characters long'.tr;
+        }
+        if (!RegExp(r'[0-9]').hasMatch(value)) {
+          return 'Password must contain at least one number'.tr;
+        }
+        return null;
+      },
+      onChanged: (value) => enteredPassword = value
+    );
+  }
+
+  Widget _buildConfirmPasswordInputField() {
+    return PasswordField(
+      hintText: 'Confirm Password'.tr,
+      validator: (value) {
+        if (value != enteredPassword) {
+          return 'Passwords do not match'.tr;
+        }
+        return null;
+      },
     );
   }
 }

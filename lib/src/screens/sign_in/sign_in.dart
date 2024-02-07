@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -21,52 +22,31 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _emailController = TextEditingController();
   PrimaryButtonStatus buttonStatus = PrimaryButtonStatus.idle;
   AppleButtonStatus appleButtonStatus = AppleButtonStatus.idle;
   GoogleButtonStatus googleButtonStatus = GoogleButtonStatus.idle;
   TextStatus textStatus = TextStatus.idle;
   bool showEmailField = false;
   bool emailHasError = false;
+  String? savedEmailAddress;
+  String? savedPhoneNumber;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
-    phoneController.dispose();
-    emailController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
-  String? savedEmailAddress;
-  String? savedPhoneNumber;
-
-  void saveEmailAddress(String emailAddress) {
-    if (isValidEmail(emailAddress)) {
-      setState(() {
-        savedEmailAddress = emailAddress;
-      });
-    }
-  }
-
-  void savePhoneNumber(String phoneNumber) {
-    if (isValidPhoneNumber(phoneNumber)) {
-      setState(() {
-        savedPhoneNumber = phoneNumber;
-      });
-    }
-  }
-
-  bool isValidEmail(String email) {
+  bool _isValidEmail(String email) {
     final emailRegExp = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
     return emailRegExp.hasMatch(email);
   }
 
-  bool isValidPhoneNumber(String phoneNumber) {
-    final phoneRegExp = RegExp(r'^[0-9]+$');
-    return phoneRegExp.hasMatch(phoneNumber);
-  }
-
-  void navigateToPhoneOTPPage(Map<String, dynamic> option) {
+  void _navigateToPhoneOTPPage(Map<String, dynamic> option) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -77,7 +57,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
     );
   }
 
-  void navigateToEnterPasswordPage(Map<String, dynamic> option) {
+  void _navigateToEnterPasswordPage(Map<String, dynamic> option) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -87,17 +67,6 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
       ),
     );
   }
-
-  // void navigateToEmailOTPPage(Map<String, dynamic> option) {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => OTPPage(
-  //         emailAddress: savedEmailAddress.toString(),
-  //       ),
-  //     ),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -174,143 +143,97 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                           SizedBox(
                               height:
                                   SizeConfig.heightMultiplier(context) * 41),
-                          Column(
-                            children: [
-                              Text(
-                                "Welcome to Sulala!",
-                                style: AppFonts.title2(
-                                  color: AppColors.grayscale90,
+                          Form(
+                            key: _formKey,
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Welcome to Sulala!".tr,
+                                  style: AppFonts.title2(
+                                    color: AppColors.grayscale90,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                  height: SizeConfig.heightMultiplier(context) *
-                                      41),
-                              if (showEmailField)
-                                PrimaryTextField(
-                                  controller: emailController,
-                                  hintText: 'Enter your username',
-                                  errorMessage: emailHasError == true
-                                      ? 'Invalid email address'
-                                      : null,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      savedEmailAddress = value;
-                                      emailHasError = false;
-                                    });
-                                  },
-                                  onErrorChanged: (hasError) {
-                                    setState(() {
-                                      emailHasError !=
-                                          hasError; // Update the error state
-                                    });
+                                SizedBox(
+                                    height:
+                                        SizeConfig.heightMultiplier(context) *
+                                            41),
+                                if (showEmailField)
+                                  _buildEmailFormField()
+                                else
+                                  PhoneNumberField(
+                                    onSave: (value) {
+                                      setState(() {
+                                        savedPhoneNumber = value;
+                                      });
+                                    },
+                                  ),
+                                SizedBox(
+                                    height:
+                                        SizeConfig.heightMultiplier(context) *
+                                            24),
+                                SizedBox(
+                                  height:
+                                      SizeConfig.heightMultiplier(context) * 52,
+                                  width: double.infinity,
+                                  child: PrimaryButton(
+                                      status: buttonStatus,
+                                      text: "Continue".tr,
+                                      onPressed: _trySubmitForm),
+                                ),
+                                SizedBox(
+                                    height:
+                                        SizeConfig.heightMultiplier(context) *
+                                            41),
+                                const Divider(
+                                  color: AppColors.grayscale20,
+                                  thickness: 1,
+                                ),
+                                SizedBox(
+                                    height:
+                                        SizeConfig.heightMultiplier(context) *
+                                            41),
+                                SizedBox(
+                                  height:
+                                      SizeConfig.heightMultiplier(context) * 52,
+                                  width: double.infinity,
+                                  child: AppleButton(
+                                    status: appleButtonStatus,
+                                    onPressed: () {},
+                                  ),
+                                ),
+                                SizedBox(
+                                    height:
+                                        SizeConfig.heightMultiplier(context) *
+                                            12),
+                                SizedBox(
+                                  height:
+                                      SizeConfig.heightMultiplier(context) * 52,
+                                  width: double.infinity,
+                                  child: GoogleButton(
+                                    status: googleButtonStatus,
+                                    onPressed: () {},
+                                  ),
+                                ),
+                                SizedBox(
+                                    height:
+                                        SizeConfig.heightMultiplier(context) *
+                                            12),
+                                PrimaryTextButton(
+                                  status: textStatus,
+                                  text: showEmailField == false
+                                      ? 'Use email address'.tr
+                                      : 'Use phone number'.tr,
+                                  onPressed: () {
+                                    setState(
+                                      () {
+                                        showEmailField =
+                                            !showEmailField; // Toggle the flag
+                                      },
+                                    );
                                   },
                                 )
-                              else
-                                PhoneNumberField(
-                                  onSave: (value) {
-                                    setState(() {
-                                      savedPhoneNumber = value;
-                                    });
-                                  },
-                                ),
-                              SizedBox(
-                                  height: SizeConfig.heightMultiplier(context) *
-                                      24),
-                              SizedBox(
-                                height:
-                                    SizeConfig.heightMultiplier(context) * 52,
-                                width: double.infinity,
-                                child: PrimaryButton(
-                                  status: buttonStatus,
-                                  text: "Continue",
-                                  onPressed: () {
-                                    setState(() {
-                                      if (showEmailField == false) {
-                                        if (savedPhoneNumber == null) {
-                                          PrimaryButtonStatus.idle;
-                                        } else {
-                                          buttonStatus =
-                                              PrimaryButtonStatus.loading;
-                                          navigateToPhoneOTPPage(
-                                            {
-                                              "phoneNumber": savedPhoneNumber,
-                                              "emailAddress": null,
-                                            },
-                                          );
-                                        }
-                                      } else {
-                                        if (isValidEmail(
-                                                savedEmailAddress.toString()) ==
-                                            true) {
-                                          emailHasError = false;
-                                          buttonStatus =
-                                              PrimaryButtonStatus.loading;
-
-                                          navigateToEnterPasswordPage(
-                                            {
-                                              "emailAddress": savedEmailAddress,
-                                              "phoneNumber": null,
-                                            },
-                                          );
-                                        } else {
-                                          emailHasError = true;
-                                          buttonStatus =
-                                              PrimaryButtonStatus.idle;
-                                        }
-                                      }
-                                    });
-                                  },
-                                ),
-                              ),
-                              SizedBox(
-                                  height: SizeConfig.heightMultiplier(context) *
-                                      41),
-                              const Divider(
-                                color: AppColors.grayscale20,
-                                thickness: 1,
-                              ),
-                              SizedBox(
-                                  height: SizeConfig.heightMultiplier(context) *
-                                      41),
-                              SizedBox(
-                                height:
-                                    SizeConfig.heightMultiplier(context) * 52,
-                                width: double.infinity,
-                                child: AppleButton(
-                                  status: appleButtonStatus,
-                                  onPressed: () {},
-                                ),
-                              ),
-                              SizedBox(
-                                  height: SizeConfig.heightMultiplier(context) *
-                                      12),
-                              SizedBox(
-                                height:
-                                    SizeConfig.heightMultiplier(context) * 52,
-                                width: double.infinity,
-                                child: GoogleButton(
-                                  status: googleButtonStatus,
-                                  onPressed: () {},
-                                ),
-                              ),
-                              SizedBox(
-                                  height: SizeConfig.heightMultiplier(context) *
-                                      12),
-                              PrimaryTextButton(
-                                status: textStatus,
-                                text: showEmailField == false
-                                    ? 'Use email address'
-                                    : 'Use phone number',
-                                onPressed: () {
-                                  setState(
-                                    () {
-                                      showEmailField =
-                                          !showEmailField; // Toggle the flag
-                                    },
-                                  );
-                                },
-                              )
-                            ],
+                              ],
+                            ),
                           )
                         ],
                       ),
@@ -325,6 +248,45 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
           ],
         ),
       ),
+    );
+  }
+
+  bool _trySubmitForm() {
+    final isValid = _formKey.currentState?.validate() ?? false;
+    if (isValid) {
+      _formKey.currentState?.save();
+      // Proceed with submission logic
+      buttonStatus = PrimaryButtonStatus.loading;
+      if (showEmailField == false) {
+        _navigateToPhoneOTPPage(
+          {
+            "phoneNumber": savedPhoneNumber,
+            "emailAddress": null,
+          },
+        );
+      } else {
+        _navigateToEnterPasswordPage(
+          {
+            "emailAddress": savedEmailAddress,
+            "phoneNumber": null,
+          },
+        );
+      }
+    }
+    return isValid;
+  }
+
+  Widget _buildEmailFormField() {
+    return PrimaryTextField(
+      controller: _emailController,
+      hintText: 'Enter your username'.tr,
+      keyboardType: TextInputType.emailAddress,
+      validator: (value) {
+        if (value == null || value.isEmpty || !_isValidEmail(value)) {
+          return 'Please enter a valid email address'.tr;
+        }
+        return null;
+      },
     );
   }
 }

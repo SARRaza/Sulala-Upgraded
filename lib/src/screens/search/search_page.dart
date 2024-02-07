@@ -1,6 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
-import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/icon_buttons/secondary_icon_button.dart';
@@ -60,55 +62,55 @@ class _SearchPageState extends State<SearchPage> {
     {
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Horse',
-      'geninfo':
+      'genInfo':
           'The horse is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Cow',
-      'geninfo':
+      'genInfo':
           'The cow is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Ox',
-      'geninfo':
+      'genInfo':
           'The ox is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Sheep',
-      'geninfo':
+      'genInfo':
           'The sheep is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Bull',
-      'geninfo':
+      'genInfo':
           'The bull is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Bull',
-      'geninfo':
+      'genInfo':
           'The bull is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Bull',
-      'geninfo':
+      'genInfo':
           'The bull is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Bull',
-      'geninfo':
+      'genInfo':
           'The bull is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Bull',
-      'geninfo':
+      'genInfo':
           'The bull is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     // Add more data here if needed
@@ -117,6 +119,7 @@ class _SearchPageState extends State<SearchPage> {
   List<Map<String, dynamic>> filteredOptions = [];
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> filteredAnimals = [];
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -126,7 +129,14 @@ class _SearchPageState extends State<SearchPage> {
     // Initialize filteredOptions with all options
   }
 
-  void filterOptions(String searchText) {
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _debounce?.cancel();
+    super.dispose();
+  }
+
+  void _filterOptions(String searchText) {
     setState(() {
       filteredOptions = farms
           .where((option) =>
@@ -139,7 +149,7 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
-  void navigateToUserDetailsPage(Map<String, dynamic> option) {
+  void _navigateToUserDetailsPage(Map<String, dynamic> option) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -154,14 +164,14 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  void navigateToAnimalDetailsPage(Map<String, dynamic> option) {
+  void _navigateToAnimalDetailsPage(Map<String, dynamic> option) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => AnimalDetails(
           imagePath: option['imagePath'],
           title: option['title'],
-          genInfo: option['geninfo'],
+          genInfo: option['genInfo'],
           animalType: option['type'],
           animalDiet: option['animalDiet'],
         ),
@@ -190,8 +200,8 @@ class _SearchPageState extends State<SearchPage> {
                       child: SizedBox(
                         height: SizeConfig.heightMultiplier(context) * 40,
                         child: PrimarySearchBar(
-                          onChange: filterOptions,
-                          hintText: "Search Staff",
+                          onChange: _onSearchChanged,
+                          hintText: "Search Staff".tr,
                           controller: _searchController,
                         ),
                       ),
@@ -207,7 +217,7 @@ class _SearchPageState extends State<SearchPage> {
                         onPressed: () {
                           setState(() {
                             _searchController.clear();
-                            filterOptions('');
+                            _filterOptions('');
                             Navigator.pop(context);
                           });
                         },
@@ -226,7 +236,7 @@ class _SearchPageState extends State<SearchPage> {
                     SizeConfig.widthMultiplier(context) * 4,
                   ),
                   child: Text(
-                    'Farms',
+                    'Farms'.tr,
                     style: AppFonts.caption1(color: AppColors.grayscale80),
                   ),
                 ),
@@ -246,7 +256,7 @@ class _SearchPageState extends State<SearchPage> {
                           textBody: option['subtitle'],
                           avatarRadius:
                               SizeConfig.widthMultiplier(context) * 24,
-                          onPressed: () => navigateToUserDetailsPage(option),
+                          onPressed: () => _navigateToUserDetailsPage(option),
                         ),
                       );
                     }),
@@ -260,7 +270,7 @@ class _SearchPageState extends State<SearchPage> {
                     SizeConfig.widthMultiplier(context) * 4,
                   ),
                   child: Text(
-                    'Animals',
+                    'Animals'.tr,
                     style: AppFonts.caption1(color: AppColors.grayscale80),
                   ),
                 ),
@@ -281,9 +291,9 @@ class _SearchPageState extends State<SearchPage> {
                                 SizeConfig.widthMultiplier(context) * 24,
                             imagePath: option['imagePath'],
                             textHead: option['title'],
-                            textBody: option['geninfo'],
+                            textBody: option['genInfo'],
                             onPressed: () {
-                              navigateToAnimalDetailsPage(option);
+                              _navigateToAnimalDetailsPage(option);
                             },
                           ),
                         );
@@ -294,5 +304,12 @@ class _SearchPageState extends State<SearchPage> {
         ),
       ),
     );
+  }
+
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      _filterOptions(query);
+    });
   }
 }

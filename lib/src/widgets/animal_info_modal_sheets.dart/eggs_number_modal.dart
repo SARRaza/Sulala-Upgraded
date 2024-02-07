@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../controls_and_buttons/buttons/sar_button_widget.dart';
 import '../inputs/text_fields/primary_text_field.dart';
@@ -18,9 +19,9 @@ class EggsNumberModal extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Add Number Of Eggs',
-              style: TextStyle(
+            Text(
+              'Add Number Of Eggs'.tr,
+              style: const TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
               ),
@@ -29,8 +30,8 @@ class EggsNumberModal extends StatelessWidget {
               height: 35,
             ),
             PrimaryTextField(
-              hintText: 'Enter Number Of Eggs',
-              labelText: 'Enter Number Of Eggs',
+              hintText: 'Enter Number Of Eggs'.tr,
+              labelText: 'Enter Number Of Eggs'.tr,
               controller: controller,
             ),
             SizedBox(height: SizeConfig.heightMultiplier(context) * 130),
@@ -38,7 +39,7 @@ class EggsNumberModal extends StatelessWidget {
               onPressed: () {
                 Navigator.pop(context, controller.text);
               },
-              buttonText: 'Confirm',
+              buttonText: 'Confirm'.tr,
             ),
             const SizedBox(
               height: 10,
@@ -58,7 +59,7 @@ class EggsNumberModal extends StatelessWidget {
                         borderRadius: BorderRadius.circular(50),
                       ),
                     ),
-                    child: const Text('Cancel'),
+                    child: Text('Cancel'.tr),
                   ),
                 ),
               ],

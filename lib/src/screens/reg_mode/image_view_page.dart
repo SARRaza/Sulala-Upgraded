@@ -19,7 +19,18 @@ class ImageViewPage extends StatelessWidget {
         minScale: PhotoViewComputedScale.contained * 0.8,
         maxScale: PhotoViewComputedScale.covered * 1.8,
         initialScale: PhotoViewComputedScale.contained,
+        backgroundDecoration: const BoxDecoration(
+          color: Colors.black,
+        ),
+        loadingBuilder: (context, event) => Center(
+          child: CircularProgressIndicator(
+            value: event == null
+                ? null
+                : event.cumulativeBytesLoaded / event.expectedTotalBytes!,
+          ),
+        ),
       ),
     );
   }
 }
+

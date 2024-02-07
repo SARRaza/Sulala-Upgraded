@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
@@ -12,7 +13,6 @@ import '../../widgets/lists/table_list/table_clickable_link.dart';
 import '../../widgets/other/custom_snack_bar.dart';
 import 'list_of_staff.dart';
 import 'manage_permissions.dart';
-import 'package:sulala_upgrade/src/data/globals.dart';
 
 class StaffDetailsPage extends ConsumerStatefulWidget {
   final int staffMemberId;
@@ -21,16 +21,17 @@ class StaffDetailsPage extends ConsumerStatefulWidget {
   final String subtitle;
   final String email;
   final String phoneNumber;
+  final String address;
 
-  const StaffDetailsPage({
-    super.key,
-    required this.staffMemberId,
-    required this.image,
-    required this.title,
-    required this.subtitle,
-    required this.email,
-    required this.phoneNumber,
-  });
+  const StaffDetailsPage(
+      {super.key,
+      required this.staffMemberId,
+      required this.image,
+      required this.title,
+      required this.subtitle,
+      required this.email,
+      required this.phoneNumber,
+      required this.address});
 
   @override
   ConsumerState<StaffDetailsPage> createState() => _StaffDetailsPageState();
@@ -44,7 +45,7 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
   bool isBreedingInfoSelected = false;
   bool isMedicalInfoSelected = false;
 
-  void updatePermissions({
+  void _updatePermissions({
     bool? isViewOnlySelected,
     bool? isCanEditSelected,
     bool? isWorkerSelected,
@@ -53,12 +54,15 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
     bool? isMedicalInfoSelected,
   }) {
     setState(() {
-      this.isViewOnlySelected = isViewOnlySelected!;
-      this.isCanEditSelected = isCanEditSelected!;
-      this.isWorkerSelected = isWorkerSelected!;
-      this.isGeneralInfoSelected = isGeneralInfoSelected!;
-      this.isBreedingInfoSelected = isBreedingInfoSelected!;
-      this.isMedicalInfoSelected = isMedicalInfoSelected!;
+      this.isViewOnlySelected = isViewOnlySelected ?? this.isViewOnlySelected;
+      this.isCanEditSelected = isCanEditSelected ?? this.isCanEditSelected;
+      this.isWorkerSelected = isWorkerSelected ?? this.isWorkerSelected;
+      this.isGeneralInfoSelected =
+          isGeneralInfoSelected ?? this.isGeneralInfoSelected;
+      this.isBreedingInfoSelected =
+          isBreedingInfoSelected ?? this.isBreedingInfoSelected;
+      this.isMedicalInfoSelected =
+          isMedicalInfoSelected ?? this.isMedicalInfoSelected;
     });
   }
 
@@ -72,7 +76,7 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
           backgroundColor: Colors.transparent,
           centerTitle: true,
           title: Text(
-            'Member Of Your Staff',
+            'Member Of Your Staff'.tr,
             style: AppFonts.headline3(color: AppColors.grayscale90),
           ),
           leading: IconButton(
@@ -116,7 +120,7 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
                     builder: (BuildContext context) {
                       return DrowupWidget(
                         heightFactor: 0.4,
-                        heading: 'Delete Member?',
+                        heading: 'Delete Member?'.tr,
                         content: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
@@ -125,7 +129,7 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
                               TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: 'Delete ',
+                                    text: 'Delete '.tr,
                                     style: AppFonts.body2(
                                         color: AppColors.grayscale90),
                                   ),
@@ -136,7 +140,8 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
                                   ),
                                   TextSpan(
                                     text:
-                                        ' from your staffs?\nThis action cannot be undone',
+                                        ' from your staffs?\nThis action cannot be undone'
+                                            .tr,
                                     style: AppFonts.body2(
                                         color: AppColors.grayscale90),
                                   ),
@@ -164,13 +169,13 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
                                   );
                                   CustomSnackBar.show(
                                     context,
-                                    'Member was Deleted',
+                                    'Member was Deleted'.tr,
                                     Icons.check_circle_rounded,
                                     24 * SizeConfig.heightMultiplier(context),
                                     color: AppColors.primary10,
                                   );
                                 },
-                                text: 'Delete',
+                                text: 'Delete'.tr,
                               ),
                             ),
                             SizedBox(
@@ -181,7 +186,7 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
                               height: 52 * SizeConfig.heightMultiplier(context),
                               child: SecondaryButton(
                                 onPressed: () => Navigator.pop(context),
-                                text: 'Cancel',
+                                text: 'Cancel'.tr,
                               ),
                             ),
                           ],
@@ -226,7 +231,7 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
                   height: 32 * SizeConfig.heightMultiplier(context),
                 ),
                 Text(
-                  'Member Permissions',
+                  'Member Permissions'.tr,
                   style: AppFonts.title5(color: AppColors.grayscale90),
                 ),
                 SizedBox(
@@ -238,7 +243,7 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Access level',
+                        'Access level'.tr,
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
                       Text(
@@ -252,7 +257,7 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
                   height: 32 * SizeConfig.heightMultiplier(context),
                 ),
                 Text(
-                  'Contact Details',
+                  'Contact Details'.tr,
                   style: AppFonts.title5(color: AppColors.grayscale90),
                 ),
                 SizedBox(
@@ -260,7 +265,7 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
                 ),
                 TableClickableText(
                   iconPath: 'assets/icons/frame/24px/Outlined_Phone.png',
-                  text1: 'Phone Number',
+                  text1: 'Phone Number'.tr,
                   url: "tel:${widget.phoneNumber}",
                   urlText: widget.phoneNumber,
                 ),
@@ -269,7 +274,7 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
                 ),
                 TableClickableText(
                   iconPath: 'assets/icons/frame/24px/16_Mail.png',
-                  text1: 'Email Address',
+                  text1: 'Email Address'.tr,
                   url: "mailto:${widget.email}",
                   urlText: widget.email,
                 ),
@@ -277,7 +282,7 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
                   height: 35 * SizeConfig.heightMultiplier(context),
                 ),
                 Text(
-                  'Address',
+                  'Address'.tr,
                   style: AppFonts.title5(color: AppColors.grayscale90),
                 ),
                 SizedBox(
@@ -286,11 +291,11 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
                 ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Text(
-                    'Address',
+                    'Address'.tr,
                     style: AppFonts.body2(color: AppColors.grayscale70),
                   ),
                   trailing: Text(
-                    'United Arab Emirates',
+                    widget.address,
                     style: AppFonts.body2(color: AppColors.grayscale90),
                   ),
                 )
@@ -308,12 +313,12 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
                   MaterialPageRoute(
                     builder: (context) => ManagePermissions(
                       staffMemberId: widget.staffMemberId,
-                      onPermissionsChanged: updatePermissions,
+                      onPermissionsChanged: _updatePermissions,
                     ),
                   ),
                 );
               },
-              text: 'Manage Permissions'),
+              text: 'Manage Permissions'.tr),
         ),
       ),
     );

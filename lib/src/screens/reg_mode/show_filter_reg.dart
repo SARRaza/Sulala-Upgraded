@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -6,7 +7,6 @@ import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/buttons/secondary_button.dart';
 import '../../widgets/controls_and_buttons/tags/tags.dart';
 import 'reg_home_page.dart';
-import 'package:sulala_upgrade/src/data/globals.dart';
 
 class ShowFilterReg extends StatefulWidget {
   final List<Tag> currentStateTags;
@@ -39,7 +39,7 @@ class _ShowFilterRegState extends State<ShowFilterReg> {
           height: SizeConfig.heightMultiplier(context) * 20,
         ),
         Text(
-          'Current State',
+          'Current State'.tr,
           style: AppFonts.headline3(color: AppColors.grayscale90),
         ),
         SizedBox(
@@ -57,30 +57,8 @@ class _ShowFilterRegState extends State<ShowFilterReg> {
                   widget.currentStateTags
                       .length); // Ensure end is within the list length
               final rowTags = widget.currentStateTags.sublist(start, end);
-              return Row(
-                children: rowTags.map((tag) {
-                  return Row(
-                    children: [
-                      Tags(
-                        status: tag.status,
-                        text: tag.name,
-                        onPress: () {
-                          setState(() {
-                            tag.status = tag.status == TagStatus.active
-                                ? TagStatus.notActive
-                                : TagStatus.active;
-                            widget.updatedCurrentTagStatus(
-                                tag.name, tag.status);
-                          });
-                        },
-                      ),
-                      SizedBox(
-                        width: SizeConfig.widthMultiplier(context) * 10,
-                      ),
-                    ],
-                  );
-                }).toList(),
-              );
+
+              return TagRow(tags: rowTags, onTagPressed: _onTagPressed);
             },
           ),
         ),
@@ -88,7 +66,7 @@ class _ShowFilterRegState extends State<ShowFilterReg> {
           height: SizeConfig.heightMultiplier(context) * 20,
         ),
         Text(
-          'Medical State',
+          'Medical State'.tr,
           style: AppFonts.headline3(color: AppColors.grayscale90),
         ),
         SizedBox(
@@ -106,30 +84,8 @@ class _ShowFilterRegState extends State<ShowFilterReg> {
                   widget.medicalStateTags
                       .length); // Ensure end is within the list length
               final rowTags = widget.medicalStateTags.sublist(start, end);
-              return Row(
-                children: rowTags.map((tag) {
-                  return Row(
-                    children: [
-                      Tags(
-                        status: tag.status,
-                        text: tag.name,
-                        onPress: () {
-                          setState(() {
-                            tag.status = tag.status == TagStatus.active
-                                ? TagStatus.notActive
-                                : TagStatus.active;
-                            widget.updatedCurrentTagStatus(
-                                tag.name, tag.status);
-                          });
-                        },
-                      ),
-                      SizedBox(
-                        width: SizeConfig.widthMultiplier(context) * 10,
-                      ),
-                    ],
-                  );
-                }).toList(),
-              );
+
+              return TagRow(tags: rowTags, onTagPressed: _onTagPressed);
             },
           ),
         ),
@@ -137,7 +93,7 @@ class _ShowFilterRegState extends State<ShowFilterReg> {
           height: SizeConfig.heightMultiplier(context) * 20,
         ),
         Text(
-          'Other',
+          'Other'.tr,
           style: AppFonts.headline3(color: AppColors.grayscale90),
         ),
         SizedBox(
@@ -155,30 +111,8 @@ class _ShowFilterRegState extends State<ShowFilterReg> {
                   widget.otherStateTags
                       .length); // Ensure end is within the list length
               final rowTags = widget.otherStateTags.sublist(start, end);
-              return Row(
-                children: rowTags.map((tag) {
-                  return Row(
-                    children: [
-                      Tags(
-                        status: tag.status,
-                        text: tag.name,
-                        onPress: () {
-                          setState(() {
-                            tag.status = tag.status == TagStatus.active
-                                ? TagStatus.notActive
-                                : TagStatus.active;
-                            widget.updatedCurrentTagStatus(
-                                tag.name, tag.status);
-                          });
-                        },
-                      ),
-                      SizedBox(
-                        width: SizeConfig.widthMultiplier(context) * 10,
-                      ),
-                    ],
-                  );
-                }).toList(),
-              );
+
+              return TagRow(tags: rowTags, onTagPressed: _onTagPressed);
             },
           ),
         ),
@@ -195,7 +129,7 @@ class _ShowFilterRegState extends State<ShowFilterReg> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                text: 'Clear All',
+                text: 'Clear All'.tr,
                 status: SecondaryButtonStatus.idle,
               ),
             ),
@@ -206,13 +140,47 @@ class _ShowFilterRegState extends State<ShowFilterReg> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                text: 'Apply',
+                text: 'Apply'.tr,
                 status: PrimaryButtonStatus.idle,
               ),
             ),
           ],
         ),
       ],
+    );
+  }
+
+  _onTagPressed(Tag tag) {
+    setState(() {
+      tag.status = tag.status == TagStatus.active
+          ? TagStatus.notActive
+          : TagStatus.active;
+      widget.updatedCurrentTagStatus(
+          tag.name, tag.status);
+    });
+  }
+}
+
+class TagRow extends StatelessWidget {
+  final List<Tag> tags;
+  final Function(Tag) onTagPressed;
+
+  const TagRow({
+    Key? key,
+    required this.tags,
+    required this.onTagPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: SizeConfig.widthMultiplier(context) * 10, // Horizontal space between tags
+      runSpacing: SizeConfig.heightMultiplier(context) * 10, // Vertical space between rows
+      children: tags.map((tag) => Tags(
+        status: tag.status,
+        text: tag.name.tr,
+        onPress: () => onTagPressed(tag),
+      )).toList(),
     );
   }
 }

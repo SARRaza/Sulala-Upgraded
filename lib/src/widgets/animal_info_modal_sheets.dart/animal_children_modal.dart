@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -10,7 +8,6 @@ import '../../data/classes/breeding_partner.dart';
 import '../../data/classes/main_animal_dam.dart';
 import '../../data/classes/main_animal_sire.dart';
 import '../../data/classes/ovi_variables.dart';
-import '../../data/riverpod_globals.dart';
 import '../controls_and_buttons/buttons/primary_button.dart';
 
 class AnimalChildrenModal extends ConsumerStatefulWidget {
@@ -37,12 +34,12 @@ class _AnimalChildrenModalState extends ConsumerState<AnimalChildrenModal> {
   String searchQuery = '';
   late List<BreedChildItem> selectedChildren;
   late List<OviVariables> animals;
-  late BreedingHelper _breedingHelper;
+  late final BreedingHelper _breedingHelper;
 
   @override
   void initState() {
-    selectedChildren = widget.selectedChildren;
     super.initState();
+    selectedChildren = widget.selectedChildren;
   }
 
   @override
@@ -128,11 +125,11 @@ class _AnimalChildrenModalState extends ConsumerState<AnimalChildrenModal> {
                                 searchQuery = value.toLowerCase();
                               });
                             },
-                            decoration: const InputDecoration(
-                                hintText: "Search By Name Or ID",
-                                prefixIcon: Icon(Icons.search),
+                            decoration: InputDecoration(
+                                hintText: "Search By Name Or ID".tr,
+                                prefixIcon: const Icon(Icons.search),
                                 border: InputBorder.none,
-                                hintStyle: TextStyle(
+                                hintStyle: const TextStyle(
                                   color: Color(0xFFA2A6AC),
                                   fontSize: 14,
                                   fontFamily: 'IBM Plex Sans',
@@ -149,16 +146,16 @@ class _AnimalChildrenModalState extends ConsumerState<AnimalChildrenModal> {
                             shrinkWrap: true,
                             itemCount: animals.length,
                             itemBuilder: (context, index) {
-                              final OviDetails = animals[index];
+                              final oviDetails = animals[index];
                               final bool isSelected = selectedChildren.any(
                                   (child) =>
                                       child.animalName ==
-                                      OviDetails.animalName);
+                                      oviDetails.animalName);
 
-                              if (!OviDetails.animalName
+                              if (!oviDetails.animalName
                                       .toLowerCase()
                                       .contains(searchQuery) &&
-                                  !OviDetails.selectedAnimalType
+                                  !oviDetails.selectedAnimalType
                                       .toLowerCase()
                                       .contains(searchQuery)) {
                                 return Container(); // Skip this item if it doesn't match the search query
@@ -180,8 +177,8 @@ class _AnimalChildrenModalState extends ConsumerState<AnimalChildrenModal> {
                                     radius: 25,
                                     backgroundColor: Colors.grey[100],
                                     backgroundImage:
-                                        OviDetails.selectedOviImage,
-                                    child: OviDetails.selectedOviImage == null
+                                        oviDetails.selectedOviImage,
+                                    child: oviDetails.selectedOviImage == null
                                         ? const Icon(
                                             Icons.camera_alt_outlined,
                                             size: 50,
@@ -189,29 +186,43 @@ class _AnimalChildrenModalState extends ConsumerState<AnimalChildrenModal> {
                                           )
                                         : null,
                                   ),
-                                  title: Text(OviDetails.animalName),
+                                  title: Text(oviDetails.animalName),
                                   subtitle: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                          'Gender: ${OviDetails.selectedOviGender}'),
-                                      Text(
-                                          'Mother: ${OviDetails.selectedOviDam != null ? OviDetails.selectedOviDam!.animalName : 'Unknown'.tr}'),
-                                      if (OviDetails.selectedOviDam != null &&
-                                          OviDetails.selectedOviDam!.father !=
+                                      Text('Gender:'.trParams({
+                                        'gender': oviDetails.selectedOviGender
+                                      })),
+                                      Text('Mother:'.trParams({
+                                        'mother':
+                                            oviDetails.selectedOviDam != null
+                                                ? oviDetails
+                                                    .selectedOviDam!.animalName
+                                                : 'Unknown'.tr
+                                      })),
+                                      if (oviDetails.selectedOviDam != null &&
+                                          oviDetails.selectedOviDam!.father !=
                                               null)
                                         Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(
-                                                'Maternal Father: ${OviDetails.selectedOviDam!.father!.animalName}'),
-                                            if (OviDetails
+                                            Text('Maternal Father:'.trParams({
+                                              'father': oviDetails
+                                                  .selectedOviDam!
+                                                  .father!
+                                                  .animalName
+                                            })),
+                                            if (oviDetails
                                                     .selectedOviDam!.mother !=
                                                 null)
-                                              Text(
-                                                  'Maternal Mother: ${OviDetails.selectedOviDam!.mother!.animalName}'),
+                                              Text('Maternal Mother:'.trParams({
+                                                'mother': oviDetails
+                                                    .selectedOviDam!
+                                                    .mother!
+                                                    .animalName
+                                              })),
                                           ],
                                         ),
                                     ],
@@ -222,22 +233,17 @@ class _AnimalChildrenModalState extends ConsumerState<AnimalChildrenModal> {
                                         selectedChildren.removeWhere(
                                           (child) =>
                                               child.animalName ==
-                                              OviDetails.animalName,
+                                              oviDetails.animalName,
                                         );
                                       } else {
                                         // Use a default image (icon) if selectedOviImage is null
                                         final ImageProvider? oviImage =
-                                            OviDetails.selectedOviImage;
-                                        MainAnimalDam? mother =
-                                            OviDetails.selectedOviDam;
-
-                                        MainAnimalSire? father =
-                                            OviDetails.selectedOviSire;
+                                            oviDetails.selectedOviImage;
 
                                         selectedChildren.add(BreedChildItem(
-                                            OviDetails.animalName,
+                                            oviDetails.animalName,
                                             oviImage,
-                                            OviDetails.selectedOviGender));
+                                            oviDetails.selectedOviGender));
                                       }
                                     });
                                   },
@@ -272,26 +278,7 @@ class _AnimalChildrenModalState extends ConsumerState<AnimalChildrenModal> {
                       child: PrimaryButton(
                         text: 'Confirm'.tr,
                         minimumSize: const Size(0, 52),
-                        onPressed: () {
-                          Navigator.pop(context, selectedChildren);
-                          // Append the selected children to the existing list
-                          // final List<MainAnimalDam>
-                          // existingSelectedDam =
-                          // ref.read(animalDamDetailsProvider);
-                          // existingSelectedDam.addAll(selectedDam);
-                          // existingSelectedDam.addAll(selectedMother);
-                          //
-                          // final List<MainAnimalSire>
-                          // existingSelectedSire =
-                          // ref.read(animalSireDetailsProvider);
-                          // existingSelectedSire.addAll(selectedFather);
-
-                          // for (MainAnimalDam dam in selectedDam) {
-                          //   if (dam.mother != null) {
-                          //     existingSelectedDam.add(dam.mother!);
-                          //   }
-                          // }
-                        },
+                        onPressed: () => Navigator.pop(context, selectedChildren)
                       )),
                 ],
               ),

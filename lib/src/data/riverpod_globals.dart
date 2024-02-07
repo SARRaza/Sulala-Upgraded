@@ -378,14 +378,16 @@ final staffProvider = StateProvider<List<StaffMember>>((ref) => [
           name: 'Paul Rivera',
           role: 'Viewer',
           email: 'paul@example.com',
-          phoneNumber: '+1 234 567 890'),
+          phoneNumber: '+1 234 567 890',
+          address: 'United Arab Emirates'),
       StaffMember(
           id: 2,
           image: const AssetImage('assets/avatars/120px/Staff2.png'),
           name: 'Rebecca Wilson',
           role: 'Helper',
           email: 'paul@example.com',
-          phoneNumber: '+1 234 567 890'),
+          phoneNumber: '+1 234 567 890',
+          address: 'United Arab Emirates'),
     ]);
 final totalStaffProvider = Provider<int>((ref) {
   return ref.watch(staffProvider).length;
@@ -398,19 +400,31 @@ final collaborationRequestsProvider =
               name: 'Patricia Williams',
               role: 'Viewer',
               email: 'paul@example.com',
-              phoneNumber: '+1 234 567 890'),
+              phoneNumber: '+1 234 567 890',
+              address: 'United Arab Emirates'),
           StaffMember(
               id: 4,
               image: const AssetImage('assets/avatars/120px/Staff1.png'),
               name: 'Scott Simmons',
               role: 'Viewer',
               email: 'paul@example.com',
-              phoneNumber: '+1 234 567 890'),
+              phoneNumber: '+1 234 567 890',
+              address: 'United Arab Emirates'),
           StaffMember(
               id: 5,
               image: const AssetImage('assets/avatars/120px/Staff2.png'),
               name: 'Lee Hall',
               role: 'Viewer',
               email: 'paul@example.com',
-              phoneNumber: '+1 234 567 890'),
+              phoneNumber: '+1 234 567 890',
+              address: 'United Arab Emirates'),
         ]);
+
+final passwordValidationProvider = Provider.autoDispose<bool>((ref) {
+  final password = ref.watch(passwordProvider);
+  final confirmPassword = ref.watch(passwordConfirmProvider);
+
+  return password == confirmPassword &&
+      password.length >= 8 &&
+      RegExp(r'[0-9]').hasMatch(password);
+});

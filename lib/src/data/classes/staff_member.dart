@@ -7,6 +7,7 @@ class StaffMember {
   final String role;
   final String email;
   final String phoneNumber;
+  final String address;
 
   StaffMember(
       {required this.id,
@@ -14,7 +15,8 @@ class StaffMember {
       required this.name,
       required this.role,
       required this.email,
-      required this.phoneNumber});
+      required this.phoneNumber,
+      required this.address});
 
   StaffMember copyWith({
     int? id,
@@ -23,6 +25,7 @@ class StaffMember {
     String? role,
     String? email,
     String? phoneNumber,
+    String? address
   }) {
     return StaffMember(
         id: id ?? this.id,
@@ -30,6 +33,7 @@ class StaffMember {
         name: name ?? this.name,
         role: role ?? this.role,
         email: email ?? this.email,
-        phoneNumber: phoneNumber ?? this.phoneNumber);
+        phoneNumber: phoneNumber ?? this.phoneNumber,
+        address: address ?? this.address);
   }
 }

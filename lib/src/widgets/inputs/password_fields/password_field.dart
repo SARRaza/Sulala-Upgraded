@@ -8,7 +8,8 @@ class PasswordField extends StatefulWidget {
   final String? labelText;
   final String? errorMessage;
   final ValueChanged<String>? onChanged;
-  final ValueChanged<bool>? onErrorChanged; // Add this line
+  final ValueChanged<bool>? onErrorChanged;
+  final String? Function(String?)? validator;
 
   const PasswordField({
     Key? key,
@@ -17,6 +18,7 @@ class PasswordField extends StatefulWidget {
     this.errorMessage,
     this.onChanged,
     this.onErrorChanged,
+    this.validator
   }) : super(key: key);
 
   @override
@@ -98,7 +100,8 @@ class _PasswordFieldState extends State<PasswordField> {
               width: 1.0,
             ),
           ),
-          child: TextField(
+          child: TextFormField(
+            validator: widget.validator,
             controller: _textEditingController,
             onChanged: _onChanged,
             focusNode: _focusNode,
@@ -132,7 +135,7 @@ class _PasswordFieldState extends State<PasswordField> {
             ),
             style: AppFonts.body2(
               color: AppColors.grayscale90,
-            ),
+            )
           ),
         ),
         if (widget.errorMessage != null)

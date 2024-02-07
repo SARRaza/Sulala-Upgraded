@@ -22,16 +22,15 @@ class _JoinNowState extends ConsumerState<JoinNow>
     with SingleTickerProviderStateMixin {
   bool hasError = false;
 
-  TextEditingController whoOwnTheFarmController = TextEditingController();
-  TextEditingController whatIsTheNameOfYourFarmController =
-      TextEditingController();
+  final _whoOwnTheFarmController = TextEditingController();
+  final _whatIsTheNameOfYourFarmController = TextEditingController();
 
   int _contentState = 0;
 
   @override
   void dispose() {
-    whoOwnTheFarmController.dispose();
-    whatIsTheNameOfYourFarmController.dispose();
+    _whoOwnTheFarmController.dispose();
+    _whatIsTheNameOfYourFarmController.dispose();
     super.dispose();
   }
 
@@ -127,7 +126,7 @@ class _JoinNowState extends ConsumerState<JoinNow>
                                     ),
                                     PrimaryTextField(
                                       controller:
-                                          whatIsTheNameOfYourFarmController,
+                                          _whatIsTheNameOfYourFarmController,
                                       hintText: 'Farm Name'.tr,
                                       errorMessage: hasError == true
                                           ? 'Field cannot be empty'.tr
@@ -161,7 +160,7 @@ class _JoinNowState extends ConsumerState<JoinNow>
                                                   whatIsTheNameOfYourFarmProvider)
                                               .isNotEmpty) {
                                             setState(() {
-                                              whatIsTheNameOfYourFarmController
+                                              _whatIsTheNameOfYourFarmController
                                                   .clear();
                                               _contentState = 1;
                                               hasError = false;
@@ -190,7 +189,7 @@ class _JoinNowState extends ConsumerState<JoinNow>
                                               41,
                                     ),
                                     PrimaryTextField(
-                                      controller: whoOwnTheFarmController,
+                                      controller: _whoOwnTheFarmController,
                                       hintText: 'Owner name'.tr,
                                       errorMessage: hasError == true
                                           ? 'Field cannot be empty'.tr

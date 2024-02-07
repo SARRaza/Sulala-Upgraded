@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart';
@@ -77,11 +78,11 @@ class _SplashScreenState extends State<SplashScreen> {
                       height: 125 * SizeConfig.heightMultiplier(context),
                     ),
                     Text(
-                      'Stay Connected',
+                      'Stay Connected'.tr,
                       style: AppFonts.title2(color: AppColors.grayscale90),
                     ),
                     Text(
-                      'to your beloved animals',
+                      'to your beloved animals'.tr,
                       style: AppFonts.headline1(color: AppColors.grayscale90),
                     ),
                   ],

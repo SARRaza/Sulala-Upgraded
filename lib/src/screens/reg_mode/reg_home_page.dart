@@ -8,10 +8,9 @@ import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/screens/create_animal/owned_animal_detail_reg_mode.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../data/classes/reminder_item.dart';
-import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
-import '../../theme/colors/piechart_colors.dart';
+import '../../theme/colors/pie_chart_colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/tags/tags.dart';
 import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
@@ -32,16 +31,16 @@ class HomeScreenRegMode extends ConsumerStatefulWidget {
 class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
   Future<void> _refreshData() async {
     setState(() {
-      _chartData = getChartData();
+      _chartData = _getChartData();
       sumOfNextTwoCards = _chartData[0].quan + _chartData[1].quan;
     });
     await Future.delayed(const Duration(seconds: 1));
   }
 
-  List<AnimalData> getFilteredChartData() {
+  List<AnimalData> _getFilteredChartData() {
     if (_selectedIndex == -1) {
       // Show data for 'ALL'
-      return getChartData();
+      return _getChartData();
     } else if (_selectedIndex == 0) {
       // Show data for 'Mammals'
       return _getSpeciesChartData(mammalSpeciesList);
@@ -94,24 +93,24 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
   }
 
   List<Tag> currentStateTags = [
-    Tag(name: 'Borrowed'.tr, status: TagStatus.notActive),
-    Tag(name: 'Adopted'.tr, status: TagStatus.notActive),
-    Tag(name: 'Donated'.tr, status: TagStatus.notActive),
-    Tag(name: 'Escaped'.tr, status: TagStatus.notActive),
-    Tag(name: 'Stolen'.tr, status: TagStatus.notActive),
-    Tag(name: 'Transferred'.tr, status: TagStatus.notActive),
+    Tag(name: 'Borrowed', status: TagStatus.notActive),
+    Tag(name: 'Adopted', status: TagStatus.notActive),
+    Tag(name: 'Donated', status: TagStatus.notActive),
+    Tag(name: 'Escaped', status: TagStatus.notActive),
+    Tag(name: 'Stolen', status: TagStatus.notActive),
+    Tag(name: 'Transferred', status: TagStatus.notActive),
   ];
   List<Tag> medicalStateTags = [
-    Tag(name: 'Injured'.tr, status: TagStatus.notActive),
-    Tag(name: 'Sick'.tr, status: TagStatus.notActive),
-    Tag(name: 'Quarantined'.tr, status: TagStatus.notActive),
-    Tag(name: 'Medication'.tr, status: TagStatus.notActive),
-    Tag(name: 'Testing'.tr, status: TagStatus.notActive),
+    Tag(name: 'Injured', status: TagStatus.notActive),
+    Tag(name: 'Sick', status: TagStatus.notActive),
+    Tag(name: 'Quarantined', status: TagStatus.notActive),
+    Tag(name: 'Medication', status: TagStatus.notActive),
+    Tag(name: 'Testing', status: TagStatus.notActive),
   ];
 
   List<Tag> otherStateTags = [
-    Tag(name: 'Sold'.tr, status: TagStatus.notActive),
-    Tag(name: 'Dead'.tr, status: TagStatus.notActive),
+    Tag(name: 'Sold', status: TagStatus.notActive),
+    Tag(name: 'Dead', status: TagStatus.notActive),
   ];
 
   Map<String, Color> tagColors = {
@@ -154,21 +153,21 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
   ];
   int _selectedIndex = -1;
 
-  void updateCurrentTagStatus(String tagName, TagStatus updatedStatus) {
+  void _updateCurrentTagStatus(String tagName, TagStatus updatedStatus) {
     final tagIndex = currentStateTags.indexWhere((tag) => tag.name == tagName);
     if (tagIndex != -1) {
       currentStateTags[tagIndex].status = updatedStatus;
     }
   }
 
-  void updateMedicalTagStatus(String tagName, TagStatus updatedStatus) {
+  void _updateMedicalTagStatus(String tagName, TagStatus updatedStatus) {
     final tagIndex = medicalStateTags.indexWhere((tag) => tag.name == tagName);
     if (tagIndex != -1) {
       medicalStateTags[tagIndex].status = updatedStatus;
     }
   }
 
-  void updateOtherTagStatus(String tagName, TagStatus updatedStatus) {
+  void _updateOtherTagStatus(String tagName, TagStatus updatedStatus) {
     final tagIndex = otherStateTags.indexWhere((tag) => tag.name == tagName);
     if (tagIndex != -1) {
       otherStateTags[tagIndex].status = updatedStatus;
@@ -177,10 +176,9 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
 
   @override
   void initState() {
-    _chartData = getChartData();
-    sumOfNextTwoCards = _chartData[0].quan + _chartData[1].quan;
-
     super.initState();
+    _chartData = _getChartData();
+    sumOfNextTwoCards = _chartData[0].quan + _chartData[1].quan;
   }
 
   void _updateChartData(int newQuan, String animalName) {
@@ -214,9 +212,9 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
               currentStateTags: currentStateTags,
               medicalStateTags: medicalStateTags,
               otherStateTags: otherStateTags,
-              updatedCurrentTagStatus: updateCurrentTagStatus,
-              updatedMedicalTagStatus: updateMedicalTagStatus,
-              updatedOtherTagStatus: updateOtherTagStatus,
+              updatedCurrentTagStatus: _updateCurrentTagStatus,
+              updatedMedicalTagStatus: _updateMedicalTagStatus,
+              updatedOtherTagStatus: _updateOtherTagStatus,
             ),
           ),
         );
@@ -340,13 +338,12 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                             "assets/icons/frame/24px/cow_chicken.png",
                             width: SizeConfig.widthMultiplier(context) * 48,
                           ),
-                          animalData: AnimalData(
-                              'ALL'.tr, sumOfNextTwoCards, _chartData[0].color),
-                          quan: sumOfNextTwoCards.toString(),
                           onPressed: () {
                             _updateChartData(sumOfNextTwoCards, 'ALL'.tr);
                           },
                           isSelected: _selectedIndex == -1,
+                          quantity: sumOfNextTwoCards.toString(),
+                          title: 'ALL'.tr,
                         ),
                       ),
                       SizedBox(
@@ -357,12 +354,12 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                             "assets/icons/frame/24px/cow_framed.png",
                             width: SizeConfig.widthMultiplier(context) * 48,
                           ),
-                          quan: _chartData[0].quan.toString(),
-                          animalData: _chartData[0],
                           onPressed: () {
                             _updateChartData(_chartData[0].quan, 'Mammals'.tr);
                           },
                           isSelected: _selectedIndex == 0,
+                          quantity: _chartData[0].quan.toString(),
+                          title: 'Mammals'.tr,
                         ),
                       ),
                       SizedBox(
@@ -373,13 +370,13 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                             "assets/icons/frame/24px/chicken_framed.png",
                             width: SizeConfig.widthMultiplier(context) * 48,
                           ),
-                          animalData: _chartData[1],
-                          quan: _chartData[1].quan.toString(),
                           onPressed: () {
                             _updateChartData(
                                 _chartData[1].quan, 'Oviparous'.tr);
                           },
                           isSelected: _selectedIndex == 1,
+                          quantity: _chartData[1].quan.toString(),
+                          title: 'Oviparous'.tr,
                         ),
                       ),
                     ],
@@ -417,7 +414,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                                 margin: const EdgeInsets.all(0),
                                 series: <CircularSeries>[
                                   DoughnutSeries<AnimalData, String>(
-                                    dataSource: getFilteredChartData(),
+                                    dataSource: _getFilteredChartData(),
                                     xValueMapper: (AnimalData data, _) =>
                                         data.animal,
                                     yValueMapper: (AnimalData data, _) =>
@@ -487,7 +484,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                           final ReminderItem dateItem = reminders[index];
 
                           return GestureDetector(
-                            onTap: () => navigateToAnimal(dateItem.animalNames),
+                            onTap: () => _navigateToAnimal(dateItem.animalNames),
                             child: ListTile(
                               contentPadding: EdgeInsets.zero,
                               title: Row(
@@ -566,7 +563,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
     );
   }
 
-  List<AnimalData> getChartData() {
+  List<AnimalData> _getChartData() {
     List<AnimalData> chartData = [];
     final currentStateFilterActive =
         currentStateTags.any((tag) => tag.status == TagStatus.active);
@@ -614,7 +611,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
 
   List<Widget> _buildLegendItems() {
     if (_selectedIndex == -1) {
-      final filteredData = getFilteredChartData();
+      final filteredData = _getFilteredChartData();
 
       return filteredData.map((data) {
         return Row(
@@ -694,7 +691,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
     }
   }
 
-  void navigateToAnimal(String animalName) {
+  void _navigateToAnimal(String animalName) {
     final animal = ref
         .read(oviAnimalsProvider)
         .firstWhere((animal) => animal.animalName == animalName);
@@ -707,7 +704,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                 title: '',
                 genInfo: '',
                 oviDetails: animal,
-                breedingEvents: [])));
+                breedingEvents: const [])));
   }
 }
 

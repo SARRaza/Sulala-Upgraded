@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -21,14 +22,13 @@ class ConfirmOTPPage extends StatefulWidget {
   State<ConfirmOTPPage> createState() => _ConfirmOTPPageState();
 }
 
-PrimaryButtonStatus buttonStatus = PrimaryButtonStatus.idle;
-TextStatus textStatus = TextStatus.idle;
-
 class _ConfirmOTPPageState extends State<ConfirmOTPPage> {
   late int _remainingSeconds;
   late Timer _timer;
   bool isResendButtonVisible = false;
   bool otpErrorState = false;
+  PrimaryButtonStatus buttonStatus = PrimaryButtonStatus.idle;
+  TextStatus textStatus = TextStatus.idle;
 
   @override
   void initState() {
@@ -37,7 +37,13 @@ class _ConfirmOTPPageState extends State<ConfirmOTPPage> {
     _startTimer();
   }
 
-  void onOTPFilled(String otp) {
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  void _onOTPFilled(String otp) {
     // Handle OTP filled logic
     _timer.cancel(); // Stop the timer
     setState(() {
@@ -45,7 +51,7 @@ class _ConfirmOTPPageState extends State<ConfirmOTPPage> {
     });
   }
 
-  bool isOTPError(String otp) {
+  bool _isOTPError(String otp) {
     // Dummy error check: Consider OTP "123456" as the correct OTP
     const correctOTP = '123456';
     return otp != correctOTP;
@@ -68,12 +74,6 @@ class _ConfirmOTPPageState extends State<ConfirmOTPPage> {
     _timer.cancel();
     _remainingSeconds = 10;
     _startTimer();
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
   }
 
   @override
@@ -127,7 +127,7 @@ class _ConfirmOTPPageState extends State<ConfirmOTPPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Confirm OTP",
+            "Confirm OTP".tr,
             style: AppFonts.title2(color: AppColors.grayscale90),
           ),
           SizedBox(
@@ -139,7 +139,9 @@ class _ConfirmOTPPageState extends State<ConfirmOTPPage> {
                 TextSpan(
                   text: widget.phoneNumber != null
                       ? "We sent a verification code on the following\nPhone number: "
-                      : "We sent a verification code on the following\nEmail address: ",
+                          .tr
+                      : "We sent a verification code on the following\nEmail address: "
+                          .tr,
                   style: AppFonts.body2(color: AppColors.grayscale70),
                 ),
                 TextSpan(
@@ -157,8 +159,8 @@ class _ConfirmOTPPageState extends State<ConfirmOTPPage> {
           SizedBox(
             width: SizeConfig.widthMultiplier(context) * 337,
             child: OTPField(
-              onFilled: onOTPFilled,
-              onError: isOTPError,
+              onFilled: _onOTPFilled,
+              onError: _isOTPError,
               onErrorChange: (error) {
                 setState(() {
                   otpErrorState = error;
@@ -174,11 +176,11 @@ class _ConfirmOTPPageState extends State<ConfirmOTPPage> {
               child: Column(
                 children: [
                   Text(
-                    "Invalid verification code.",
+                    "Invalid verification code.".tr,
                     style: AppFonts.caption2(color: AppColors.error100),
                   ),
                   Text(
-                    "Please, check the code or resend it again",
+                    "Please, check the code or resend it again".tr,
                     style: AppFonts.caption2(color: AppColors.error100),
                   ),
                 ],
@@ -192,14 +194,15 @@ class _ConfirmOTPPageState extends State<ConfirmOTPPage> {
   Widget _buildResendButton() {
     return PrimaryTextButton(
       onPressed: _onResendButtonPressed,
-      text: "Send new code",
+      text: "Send new code".tr,
       status: textStatus,
     );
   }
 
   Widget _buildCountdown() {
     return Text(
-      "Send new code in: 00:${_remainingSeconds.toString().padLeft(2, '0')}",
+      'sendNewCode'
+          .trParams({'seconds': _remainingSeconds.toString().padLeft(2, '0')}),
       style: AppFonts.body1(color: AppColors.grayscale90),
     );
   }
@@ -210,7 +213,7 @@ class _ConfirmOTPPageState extends State<ConfirmOTPPage> {
       height: SizeConfig.heightMultiplier(context) * 52,
       width: SizeConfig.widthMultiplier(context) * 343,
       child: PrimaryButton(
-        text: "Confirm",
+        text: "Confirm".tr,
         status: status,
         onPressed: onPressed,
       ),

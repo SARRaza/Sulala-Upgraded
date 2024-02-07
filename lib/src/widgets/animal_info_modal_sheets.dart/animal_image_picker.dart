@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
@@ -17,8 +18,8 @@ class AnimalImagePickerWidget extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          buildListTile(
-            title: 'Camera',
+          _buildListTile(
+            title: 'Camera'.tr,
             icon: Icons.camera_alt,
             onTap: () async {
               Navigator.pop(context);
@@ -29,9 +30,9 @@ class AnimalImagePickerWidget extends StatelessWidget {
               }
             },
           ),
-          buildDivider(),
-          buildListTile(
-            title: 'Gallery',
+          _buildDivider(),
+          _buildListTile(
+            title: 'Gallery'.tr,
             icon: Icons.photo,
             onTap: () async {
               Navigator.pop(context);
@@ -42,13 +43,13 @@ class AnimalImagePickerWidget extends StatelessWidget {
               }
             },
           ),
-          buildDivider(),
+          _buildDivider(),
         ],
       ),
     );
   }
 
-  Widget buildListTile(
+  Widget _buildListTile(
       {required String title,
       required IconData icon,
       required Function onTap}) {
@@ -62,7 +63,7 @@ class AnimalImagePickerWidget extends StatelessWidget {
     );
   }
 
-  Widget buildDivider() {
+  Widget _buildDivider() {
     return Container(
       height: 1,
       width: double.infinity,

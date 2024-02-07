@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:showcaseview/showcaseview.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -12,12 +13,11 @@ class RegHomeScreenTutorial extends StatefulWidget {
   const RegHomeScreenTutorial({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _RegHomeScreenTutorial createState() => _RegHomeScreenTutorial();
+  State<RegHomeScreenTutorial> createState() => _RegHomeScreenTutorial();
 }
 
 class _RegHomeScreenTutorial extends State<RegHomeScreenTutorial> {
-  final GlobalKey _animaloverview = GlobalKey();
+  final GlobalKey _animalOverview = GlobalKey();
   final GlobalKey _pieChart = GlobalKey();
   final GlobalKey _filter = GlobalKey();
   final GlobalKey _next2 = GlobalKey();
@@ -29,14 +29,15 @@ class _RegHomeScreenTutorial extends State<RegHomeScreenTutorial> {
     EventData(title: 'Horse Vaccination', subtitle: '09.01.2023'),
     EventData(title: 'Cow Health Checkup', subtitle: '01.09.2023'),
   ];
+
   @override
   void initState() {
-    _chartData = getChartData();
+    _chartData = _getChartData();
     sumOfNextTwoCards = _chartData[0].quan + _chartData[1].quan;
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ShowCaseWidget.of(myContext!)
-          .startShowCase([_animaloverview, _pieChart, _filter, _next2]);
+          .startShowCase([_animalOverview, _pieChart, _filter, _next2]);
     });
   }
 
@@ -48,9 +49,9 @@ class _RegHomeScreenTutorial extends State<RegHomeScreenTutorial> {
         return Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: false,
-            title: const Text(
-              'Overview',
-              style: TextStyle(
+            title: Text(
+              'Overview'.tr,
+              style: const TextStyle(
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
@@ -76,9 +77,9 @@ class _RegHomeScreenTutorial extends State<RegHomeScreenTutorial> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Animals',
-                        style: TextStyle(
+                      Text(
+                        'Animals'.tr,
+                        style: const TextStyle(
                           fontSize: 24,
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -87,15 +88,15 @@ class _RegHomeScreenTutorial extends State<RegHomeScreenTutorial> {
                       Showcase(
                         key: _filter,
                         description:
-                            'Use Filters To Create The Chart With More Inputs',
+                            'Use Filters To Create The Chart With More Inputs'
+                                .tr,
                         descTextStyle: const TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                         targetBorderRadius: const BorderRadius.all(
                           Radius.circular(50),
                         ),
-                        child: InkWell(
-                          // onTap: _showFilterModalSheet,
-                          child: const Padding(
+                        child: const InkWell(
+                          child: Padding(
                             padding: EdgeInsets.all(8.0),
                             child: Icon(Icons.filter_alt_outlined),
                           ),
@@ -105,15 +106,15 @@ class _RegHomeScreenTutorial extends State<RegHomeScreenTutorial> {
                   ),
                 ),
                 Showcase(
-                  key: _animaloverview,
+                  key: _animalOverview,
                   targetBorderRadius: const BorderRadius.all(
                     Radius.circular(30),
                   ),
-                  targetPadding: EdgeInsets.all(5),
+                  targetPadding: const EdgeInsets.all(5),
                   tooltipBackgroundColor:
                       const Color.fromARGB(235, 255, 248, 214),
                   description:
-                      'Here You Can Know The Number Of Animals In Your Farm',
+                      'Here You Can Know The Number Of Animals In Your Farm'.tr,
                   descTextStyle: const TextStyle(
                       fontSize: 18, fontWeight: FontWeight.bold),
                   child: Row(
@@ -126,8 +127,8 @@ class _RegHomeScreenTutorial extends State<RegHomeScreenTutorial> {
                           child: SmallCardWidget(
                             imageAsset:
                                 "assets/icons/frame/24px/cow_chicken.png",
-                            animalData: AnimalData(
-                                'ALL', sumOfNextTwoCards, _chartData[0].color),
+                            animalData: AnimalData('ALL'.tr, sumOfNextTwoCards,
+                                _chartData[0].color),
                             quan: sumOfNextTwoCards.toString(),
                             onPressed: () {},
                             color: const Color.fromARGB(235, 255, 248,
@@ -160,7 +161,7 @@ class _RegHomeScreenTutorial extends State<RegHomeScreenTutorial> {
                 Showcase(
                   key: _pieChart,
                   description:
-                      'This PieChart Will Help You Visualize Proportions',
+                      'This PieChart Will Help You Visualize Proportions'.tr,
                   targetBorderRadius: const BorderRadius.all(
                     Radius.circular(30),
                   ),
@@ -200,11 +201,11 @@ class _RegHomeScreenTutorial extends State<RegHomeScreenTutorial> {
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Upcoming Events',
-                    style: TextStyle(
+                    'Upcoming Events'.tr,
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -240,8 +241,8 @@ class _RegHomeScreenTutorial extends State<RegHomeScreenTutorial> {
                     Expanded(
                       child: CardWidget(
                         imagePath: 'assets/icons/frame/24px/Cow_Icon.png',
-                        text: 'Searching For Animals',
-                        buttonText: 'Find Animals',
+                        text: 'Searching For Animals'.tr,
+                        buttonText: 'Find Animals'.tr,
                         onPressed: () {
                           // Handle button 1 press
                         },
@@ -252,8 +253,8 @@ class _RegHomeScreenTutorial extends State<RegHomeScreenTutorial> {
                     Expanded(
                       child: CardWidget(
                         imagePath: 'assets/icons/frame/24px/Farm_house.png',
-                        text: 'Search For\nFarms',
-                        buttonText: 'Find Farms',
+                        text: 'Search For\nFarms'.tr,
+                        buttonText: 'Find Farms'.tr,
                         onPressed: () {
                           // Handle button 2 press
                         },
@@ -268,11 +269,11 @@ class _RegHomeScreenTutorial extends State<RegHomeScreenTutorial> {
           ),
           floatingActionButton: Showcase(
             key: _next2,
-            targetPadding: EdgeInsets.all(5),
+            targetPadding: const EdgeInsets.all(5),
             targetBorderRadius: const BorderRadius.all(
               Radius.circular(50),
             ),
-            description: 'Click Here To Go To Next Page Tutorial',
+            description: 'Click Here To Go To Next Page Tutorial'.tr,
             descTextStyle: const TextStyle(
                 fontSize: 18,
                 color: Color.fromARGB(255, 36, 86, 38),
@@ -281,12 +282,12 @@ class _RegHomeScreenTutorial extends State<RegHomeScreenTutorial> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) =>
-                      AnimalInfoTutorialPage(), // Replace with your desired page.
+                      const AnimalInfoTutorialPage(), // Replace with your desired page.
                 ),
               );
             },
             disposeOnTap: true,
-            child: Container(
+            child: SizedBox(
               height: 70,
               width: 100,
               child: FloatingActionButton(
@@ -294,7 +295,7 @@ class _RegHomeScreenTutorial extends State<RegHomeScreenTutorial> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) =>
-                          AnimalInfoTutorialPage(), // Replace with your desired page.
+                          const AnimalInfoTutorialPage(), // Replace with your desired page.
                     ),
                   );
                 },
@@ -315,15 +316,15 @@ class _RegHomeScreenTutorial extends State<RegHomeScreenTutorial> {
     ));
   }
 
-  List<AnimalData> getChartData() {
+  List<AnimalData> _getChartData() {
     final List<AnimalData> chartData = [
       AnimalData(
-        'Mammals',
+        'Mammals'.tr,
         12,
         const Color.fromARGB(255, 197, 219, 158),
       ),
       AnimalData(
-        'Oviparous',
+        'Oviparous'.tr,
         25,
         const Color.fromARGB(255, 254, 255, 168),
       ),
@@ -354,6 +355,7 @@ class SmallCardWidget extends StatefulWidget {
   final bool isSelected; // Added new isSelected property
 
   const SmallCardWidget({
+    super.key,
     required this.imageAsset, // Pass an image asset path
     required this.animalData,
     required this.quan,
@@ -363,7 +365,7 @@ class SmallCardWidget extends StatefulWidget {
   });
 
   @override
-  _SmallCardWidgetState createState() => _SmallCardWidgetState();
+  State<SmallCardWidget> createState() => _SmallCardWidgetState();
 }
 
 class _SmallCardWidgetState extends State<SmallCardWidget> {

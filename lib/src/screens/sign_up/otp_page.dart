@@ -11,27 +11,21 @@ import '../../widgets/controls_and_buttons/text_buttons/primary_text_button.dart
 import '../../widgets/inputs/otp_fields/otp_field.dart';
 
 class OTPPage extends ConsumerStatefulWidget {
-  // final String? phoneNumber;
-  // final String? emailAddress;
-
   const OTPPage({
     Key? key,
-    // this.phoneNumber,
-    // this.emailAddress,
   }) : super(key: key);
 
   @override
   ConsumerState<OTPPage> createState() => _OTPPageState();
 }
 
-PrimaryButtonStatus buttonStatus = PrimaryButtonStatus.idle;
-TextStatus textStatus = TextStatus.idle;
-
 class _OTPPageState extends ConsumerState<OTPPage> {
   late int _remainingSeconds;
   late Timer _timer;
   bool isResendButtonVisible = false;
   bool otpErrorState = false;
+  PrimaryButtonStatus buttonStatus = PrimaryButtonStatus.idle;
+  TextStatus textStatus = TextStatus.idle;
 
   @override
   void initState() {
@@ -40,7 +34,7 @@ class _OTPPageState extends ConsumerState<OTPPage> {
     _startTimer();
   }
 
-  void onOTPFilled(String otp) {
+  void _onOTPFilled(String otp) {
     // Handle OTP filled logic
     _timer.cancel(); // Stop the timer
     setState(() {
@@ -48,7 +42,7 @@ class _OTPPageState extends ConsumerState<OTPPage> {
     });
   }
 
-  bool isOTPError(String otp) {
+  bool _isOTPError(String otp) {
     // Dummy error check: Consider OTP "123456" as the correct OTP
     const correctOTP = '123456';
     return otp != correctOTP;
@@ -167,8 +161,8 @@ class _OTPPageState extends ConsumerState<OTPPage> {
           SizedBox(
             width: SizeConfig.widthMultiplier(context) * 337,
             child: OTPField(
-              onFilled: onOTPFilled,
-              onError: isOTPError,
+              onFilled: _onOTPFilled,
+              onError: _isOTPError,
               onErrorChange: (error) {
                 setState(() {
                   otpErrorState = error;

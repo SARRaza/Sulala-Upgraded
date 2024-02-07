@@ -1,22 +1,22 @@
-// ignore: depend_on_referenced_packages
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:showcaseview/showcaseview.dart';
 
 import '../../widgets/pages/main_widgets/navigation_bar_guest_mode.dart';
 
-// ignore: must_be_immutable
 class AnimalInfoTutorialPage extends StatefulWidget {
+  const AnimalInfoTutorialPage({super.key});
+
   @override
-  // ignore: library_private_types_in_public_api
-  _AnimalInfoTutorialPage createState() => _AnimalInfoTutorialPage();
+  State<AnimalInfoTutorialPage> createState() => _AnimalInfoTutorialPage();
 }
 
 class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
     with SingleTickerProviderStateMixin {
-  TextEditingController _medicalNeedsController = TextEditingController();
+  final TextEditingController _medicalNeedsController = TextEditingController();
 
-  late TabController _tabController;
+  late final TabController _tabController;
 
   final GlobalKey _generalOverview = GlobalKey();
   final GlobalKey _clickBreeding = GlobalKey();
@@ -24,9 +24,10 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
   final GlobalKey _breedingOverview = GlobalKey();
   final GlobalKey _medicalOverview = GlobalKey();
   final GlobalKey _addMedicalNeeds = GlobalKey();
-  final GlobalKey _editbutton = GlobalKey();
+  final GlobalKey _editButton = GlobalKey();
   final GlobalKey _gotoHomepage = GlobalKey();
   BuildContext? infoContext;
+
   @override
   void initState() {
     super.initState();
@@ -40,7 +41,7 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
         _clickMedical,
         _medicalOverview,
         _addMedicalNeeds,
-        _editbutton,
+        _editButton,
         _gotoHomepage
       ]);
     });
@@ -94,7 +95,7 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
               ),
               actions: [
                 Showcase(
-                  key: _editbutton,
+                  key: _editButton,
                   targetBorderRadius: const BorderRadius.all(
                     Radius.circular(50),
                   ),
@@ -104,7 +105,7 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                       fontSize: 18,
                       color: Colors.black,
                       fontWeight: FontWeight.bold),
-                  description: 'Add & Edit Information To Your Animal',
+                  description: 'Add & Edit Information To Your Animal'.tr,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
@@ -192,13 +193,13 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                               ),
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 8),
-                              child: const Row(
+                              child: Row(
                                 children: [
-                                  Icon(Icons.home, color: Colors.black),
-                                  SizedBox(width: 8),
+                                  const Icon(Icons.home, color: Colors.black),
+                                  const SizedBox(width: 8),
                                   Text(
-                                    'My Farm',
-                                    style: TextStyle(
+                                    'My Farm'.tr,
+                                    style: const TextStyle(
                                       fontSize: 14,
                                       color: Colors.black,
                                     ),
@@ -231,7 +232,7 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                               unselectedLabelColor: Colors.grey,
                               tabs: [
                                 Tab(
-                                  text: 'General',
+                                  text: 'General'.tr,
                                 ),
                                 Showcase(
                                   key: _clickBreeding,
@@ -244,12 +245,12 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                       fontSize: 18,
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),
-                                  description: 'Click Here',
-                                  child: Container(
+                                  description: 'Click Here'.tr,
+                                  child: SizedBox(
                                     width: double
                                         .infinity, // Make the container take the full width
                                     child: Tab(
-                                      text: 'Breeding',
+                                      text: 'Breeding'.tr,
                                     ),
                                   ),
                                 ),
@@ -264,20 +265,18 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                       fontSize: 18,
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),
-                                  description: 'Click Here',
-                                  child: Container(
+                                  description: 'Click Here'.tr,
+                                  child: SizedBox(
                                     width: double
                                         .infinity, // Make the container take the full width
                                     child: Tab(
-                                      text: 'Medical',
+                                      text: 'Medical'.tr,
                                     ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          // Tab Bar View
-                          // Tab Bar View
                           // Tab Bar View
                           SizedBox(
                             height: MediaQuery.of(context).size.height -
@@ -287,7 +286,7 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                             child: TabBarView(
                               controller: _tabController,
                               children: [
-                                // General Tabbar Starts
+                                // General Tab bar Starts
                                 SingleChildScrollView(
                                   child: Showcase(
                                     key: _generalOverview,
@@ -302,7 +301,8 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),
                                     description:
-                                        'Here You Can Find All The General Info About The Animals',
+                                        'Here You Can Find All The General Info About The Animals'
+                                            .tr,
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -321,23 +321,23 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                           ),
-                                          child: const Row(
+                                          child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceAround,
                                             children: [
                                               Column(
                                                 children: [
                                                   Text(
-                                                    'Mammal',
-                                                    style: TextStyle(
+                                                    'Mammal'.tr,
+                                                    style: const TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 14,
                                                     ),
                                                   ),
-                                                  SizedBox(height: 8),
+                                                  const SizedBox(height: 8),
                                                   Text(
-                                                    'Type',
-                                                    style: TextStyle(
+                                                    'Type'.tr,
+                                                    style: const TextStyle(
                                                       color: Colors.grey,
                                                       fontSize: 14,
                                                     ),
@@ -347,16 +347,16 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                               Column(
                                                 children: [
                                                   Text(
-                                                    'Horse',
-                                                    style: TextStyle(
+                                                    'Horse'.tr,
+                                                    style: const TextStyle(
                                                       fontSize: 14,
                                                       color: Colors.black,
                                                     ),
                                                   ),
-                                                  SizedBox(height: 8),
+                                                  const SizedBox(height: 8),
                                                   Text(
-                                                    'Species',
-                                                    style: TextStyle(
+                                                    'Species'.tr,
+                                                    style: const TextStyle(
                                                       color: Colors.grey,
                                                       fontSize: 14,
                                                     ),
@@ -366,16 +366,16 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                               Column(
                                                 children: [
                                                   Text(
-                                                    'Female',
-                                                    style: TextStyle(
+                                                    'Female'.tr,
+                                                    style: const TextStyle(
                                                       fontSize: 14,
                                                       color: Colors.black,
                                                     ),
                                                   ),
-                                                  SizedBox(height: 8),
+                                                  const SizedBox(height: 8),
                                                   Text(
-                                                    'Sex',
-                                                    style: TextStyle(
+                                                    'Sex'.tr,
+                                                    style: const TextStyle(
                                                       color: Colors.grey,
                                                       fontSize: 14,
                                                     ),
@@ -388,27 +388,27 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                         const SizedBox(
                                           height: 10,
                                         ),
-                                        const Padding(
-                                          padding: EdgeInsets.all(8.0),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
                                           child: Text(
-                                            'General Information',
-                                            style: TextStyle(
+                                            'General Information'.tr,
+                                            style: const TextStyle(
                                                 fontSize: 18,
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),
                                         const SizedBox(height: 13),
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
                                               horizontal: 16),
                                           child: Row(
                                             children: [
                                               Expanded(
                                                 flex: 2,
                                                 child: Text(
-                                                  'Age',
-                                                  style: TextStyle(
+                                                  'Age'.tr,
+                                                  style: const TextStyle(
                                                     fontSize: 14,
                                                     color: Colors.black,
                                                   ),
@@ -417,8 +417,8 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                               Expanded(
                                                 flex: 0,
                                                 child: Text(
-                                                  'ADD',
-                                                  style: TextStyle(
+                                                  'ADD'.tr,
+                                                  style: const TextStyle(
                                                       fontSize: 14,
                                                       color: Colors.black),
                                                 ),
@@ -427,16 +427,16 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                           ),
                                         ),
                                         const SizedBox(height: 12),
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
                                               horizontal: 16),
                                           child: Row(
                                             children: [
                                               Expanded(
                                                 flex: 2,
                                                 child: Text(
-                                                  'Breed',
-                                                  style: TextStyle(
+                                                  'Breed'.tr,
+                                                  style: const TextStyle(
                                                       fontSize: 14,
                                                       color: Colors.black),
                                                 ),
@@ -444,8 +444,8 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                               Expanded(
                                                 flex: 0,
                                                 child: Text(
-                                                  'African Horse',
-                                                  style: TextStyle(
+                                                  'African Horse'.tr,
+                                                  style: const TextStyle(
                                                       fontSize: 14,
                                                       color: Colors.black),
                                                 ),
@@ -454,16 +454,16 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                           ),
                                         ),
                                         const SizedBox(height: 12),
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
                                               horizontal: 16),
                                           child: Row(
                                             children: [
                                               Expanded(
                                                 flex: 2,
                                                 child: Text(
-                                                  'Date Of Hatching',
-                                                  style: TextStyle(
+                                                  'Date Of Hatching'.tr,
+                                                  style: const TextStyle(
                                                     fontSize: 14,
                                                     color: Colors.black,
                                                   ),
@@ -472,8 +472,8 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                               Expanded(
                                                 flex: 0,
                                                 child: Text(
-                                                  'ADD',
-                                                  style: TextStyle(
+                                                  'ADD'.tr,
+                                                  style: const TextStyle(
                                                     fontSize: 14,
                                                     color: Colors
                                                         .blue, // You can customize the button's color
@@ -484,16 +484,16 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                           ),
                                         ),
                                         const SizedBox(height: 12),
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
                                               horizontal: 16),
                                           child: Row(
                                             children: [
                                               Expanded(
                                                 flex: 2,
                                                 child: Text(
-                                                  'Date Of Death',
-                                                  style: TextStyle(
+                                                  'Date Of Death'.tr,
+                                                  style: const TextStyle(
                                                     fontSize: 14,
                                                     color: Colors.black,
                                                   ),
@@ -502,8 +502,8 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                               Expanded(
                                                 flex: 0,
                                                 child: Text(
-                                                  'ADD',
-                                                  style: TextStyle(
+                                                  'ADD'.tr,
+                                                  style: const TextStyle(
                                                     fontSize: 14,
                                                     color: Colors
                                                         .blue, // You can customize the button's color
@@ -514,16 +514,16 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                           ),
                                         ),
                                         const SizedBox(height: 12),
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
                                               horizontal: 16),
                                           child: Row(
                                             children: [
                                               Expanded(
                                                 flex: 2,
                                                 child: Text(
-                                                  'Date Of Sale',
-                                                  style: TextStyle(
+                                                  'Date Of Sale'.tr,
+                                                  style: const TextStyle(
                                                     fontSize: 14,
                                                     color: Colors.black,
                                                   ),
@@ -532,8 +532,8 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                               Expanded(
                                                 flex: 0,
                                                 child: Text(
-                                                  'ADD',
-                                                  style: TextStyle(
+                                                  'ADD'.tr,
+                                                  style: const TextStyle(
                                                     fontSize: 14,
                                                     color: Colors
                                                         .blue, // You can customize the button's color
@@ -544,11 +544,11 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                           ),
                                         ),
                                         const SizedBox(height: 12),
-                                        const Padding(
-                                          padding: EdgeInsets.all(8.0),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
                                           child: Text(
-                                            'Additonal Notes',
-                                            style: TextStyle(
+                                            'Additional Notes'.tr,
+                                            style: const TextStyle(
                                                 fontSize: 18,
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.bold),
@@ -556,23 +556,23 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                         ),
 
                                         const SizedBox(height: 12),
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
                                               horizontal: 16),
                                           child: Text(
-                                            'Notes',
-                                            style: TextStyle(
+                                            'Notes'.tr,
+                                            style: const TextStyle(
                                               fontSize: 14,
                                               color: Colors.black,
                                             ),
                                           ),
                                         ),
                                         const SizedBox(height: 20),
-                                        const Padding(
-                                          padding: EdgeInsets.all(8.0),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
                                           child: Text(
-                                            'Uploaded Files To Be Here',
-                                            style: TextStyle(
+                                            'Uploaded Files To Be Here'.tr,
+                                            style: const TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.bold),
@@ -582,8 +582,8 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                     ),
                                   ),
                                 ),
-                                // General Tabbar Ends
-                                //Breeding Tabbbar View Starts
+                                // General Tab bar Ends
+                                //Breeding Tab bar View Starts
                                 SingleChildScrollView(
                                   child: Showcase(
                                     key: _breedingOverview,
@@ -598,51 +598,49 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),
                                     description:
-                                        'Here You Can Find All The Breeding Details Of The Animals',
+                                        'Here You Can Find All The Breeding Details Of The Animals'
+                                            .tr,
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
                                         const SizedBox(height: 15),
                                         // Add spacing between the boxes
-                                        Visibility(
-                                          visible: 'Female' == 'Female',
-                                          child: Container(
-                                            width: double.infinity,
-                                            padding: const EdgeInsets.all(8),
-                                            margin: const EdgeInsets.symmetric(
-                                                horizontal: 16, vertical: 10),
-                                            decoration: BoxDecoration(
-                                              color: const Color.fromARGB(
-                                                  255, 251, 247, 206),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: const Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: [
-                                                Column(
-                                                  children: [
-                                                    Text(
-                                                      'Pregnant',
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 14,
-                                                      ),
+                                        Container(
+                                          width: double.infinity,
+                                          padding: const EdgeInsets.all(8),
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 10),
+                                          decoration: BoxDecoration(
+                                            color: const Color.fromARGB(
+                                                255, 251, 247, 206),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  Text(
+                                                    'Pregnant'.tr,
+                                                    style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 14,
                                                     ),
-                                                    SizedBox(height: 8),
-                                                    Text(
-                                                      'Current Status',
-                                                      style: TextStyle(
-                                                        color: Colors.grey,
-                                                        fontSize: 14,
-                                                      ),
+                                                  ),
+                                                  const SizedBox(height: 8),
+                                                  Text(
+                                                    'Current Status'.tr,
+                                                    style: const TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 14,
                                                     ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
                                         ),
                                         Container(
@@ -656,25 +654,23 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                           ),
-                                          child: const Row(
+                                          child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceAround,
                                             children: [
                                               Column(
                                                 children: [
-                                                  Text(
+                                                  const Text(
                                                     '12.02.2023',
                                                     style: TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 14,
                                                     ),
                                                   ),
-                                                  SizedBox(height: 8),
+                                                  const SizedBox(height: 8),
                                                   Text(
-                                                    '' == 'Male'
-                                                        ? 'Date Of Mating'
-                                                        : 'Last Hatching Date',
-                                                    style: TextStyle(
+                                                    'Last Hatching Date'.tr,
+                                                    style: const TextStyle(
                                                       color: Colors.grey,
                                                       fontSize: 14,
                                                     ),
@@ -683,19 +679,18 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                               ),
                                               Column(
                                                 children: [
-                                                  Text(
+                                                  const Text(
                                                     '12.02.2023',
                                                     style: TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 14,
                                                     ),
                                                   ),
-                                                  SizedBox(height: 8),
+                                                  const SizedBox(height: 8),
                                                   Text(
-                                                    '' == 'Male'
-                                                        ? 'Next Date Of Mating'
-                                                        : 'Frequency Of Laying Eggs',
-                                                    style: TextStyle(
+                                                    'Frequency Of Laying Eggs'
+                                                        .tr,
+                                                    style: const TextStyle(
                                                       color: Colors.grey,
                                                       fontSize: 14,
                                                     ),
@@ -714,7 +709,7 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                             child: Icon(Icons.history,
                                                 color: Colors.white),
                                           ),
-                                          title: const Text('Breeding History'),
+                                          title: Text('Breeding History'.tr),
                                           trailing: IconButton(
                                             icon: const Icon(Icons.arrow_right),
                                             onPressed: () {},
@@ -727,7 +722,7 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                             child: Icon(Icons.bedroom_parent,
                                                 color: Colors.white),
                                           ),
-                                          title: const Text('Parents'),
+                                          title: Text('Parents'.tr),
                                           trailing: IconButton(
                                             icon: const Icon(Icons.arrow_right),
                                             onPressed: () {},
@@ -740,7 +735,7 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                             child: Icon(Icons.route,
                                                 color: Colors.white),
                                           ),
-                                          title: const Text('Family Tree'),
+                                          title: Text('Family Tree'.tr),
                                           trailing: IconButton(
                                             icon: const Icon(Icons.arrow_right),
                                             onPressed: () {},
@@ -753,7 +748,7 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                             child: Icon(Icons.man_outlined,
                                                 color: Colors.white),
                                           ),
-                                          title: const Text('Male Mates'),
+                                          title: Text('Male Mates'.tr),
                                           trailing: IconButton(
                                             icon: const Icon(Icons.arrow_right),
                                             onPressed: () {},
@@ -766,7 +761,7 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                             child: Icon(Icons.child_friendly,
                                                 color: Colors.white),
                                           ),
-                                          title: const Text('Children'),
+                                          title: Text('Children'.tr),
                                           trailing: IconButton(
                                             icon: const Icon(Icons.arrow_right),
                                             onPressed: () {},
@@ -776,9 +771,9 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                     ),
                                   ),
                                 ),
-                                //Breeding Tabbbar View Ends
+                                //Breeding Tab bar View Ends
 
-                                // Medical Tabbar View Starts
+                                // Medical Tab bar View Starts
                                 SingleChildScrollView(
                                   child: Showcase(
                                     key: _medicalOverview,
@@ -793,7 +788,8 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),
                                     description:
-                                        'Here You Can Find All The Medical Details Of The Animals',
+                                        'Here You Can Find All The Medical Details Of The Animals'
+                                            .tr,
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -810,23 +806,23 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                           ),
-                                          child: const Row(
+                                          child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceAround,
                                             children: [
                                               Column(
                                                 children: [
-                                                  Text(
+                                                  const Text(
                                                     '01.01.2023',
                                                     style: TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 14,
                                                     ),
                                                   ),
-                                                  SizedBox(height: 8),
+                                                  const SizedBox(height: 8),
                                                   Text(
-                                                    'Next Vaccination',
-                                                    style: TextStyle(
+                                                    'Next Vaccination'.tr,
+                                                    style: const TextStyle(
                                                       color: Colors.grey,
                                                       fontSize: 14,
                                                     ),
@@ -847,23 +843,23 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                           ),
-                                          child: const Row(
+                                          child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceAround,
                                             children: [
                                               Column(
                                                 children: [
-                                                  Text(
+                                                  const Text(
                                                     '12.02.2023',
                                                     style: TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 14,
                                                     ),
                                                   ),
-                                                  SizedBox(height: 8),
+                                                  const SizedBox(height: 8),
                                                   Text(
-                                                    'Last Check Up',
-                                                    style: TextStyle(
+                                                    'Last Check Up'.tr,
+                                                    style: const TextStyle(
                                                       color: Colors.grey,
                                                       fontSize: 14,
                                                     ),
@@ -872,17 +868,17 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                               ),
                                               Column(
                                                 children: [
-                                                  Text(
+                                                  const Text(
                                                     '02.08.2023',
                                                     style: TextStyle(
                                                       fontSize: 14,
                                                       color: Colors.black,
                                                     ),
                                                   ),
-                                                  SizedBox(height: 8),
+                                                  const SizedBox(height: 8),
                                                   Text(
-                                                    'Next Check Up',
-                                                    style: TextStyle(
+                                                    'Next Check Up'.tr,
+                                                    style: const TextStyle(
                                                       color: Colors.grey,
                                                       fontSize: 14,
                                                     ),
@@ -900,9 +896,9 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              const Text(
-                                                'Medical Needs',
-                                                style: TextStyle(
+                                              Text(
+                                                'Medical Needs'.tr,
+                                                style: const TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 25,
                                                 ),
@@ -922,7 +918,8 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                                     fontWeight:
                                                         FontWeight.bold),
                                                 description:
-                                                    'Add Medical Recommendations To The Custom Field',
+                                                    'Add Medical Recommendations To The Custom Field'
+                                                        .tr,
                                                 child: IconButton(
                                                   icon: const Icon(
                                                     Icons.edit_square,
@@ -941,10 +938,10 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                                           child: TextFormField(
                                             maxLines:
                                                 6, // Set the maximum number of lines
-
                                             decoration: InputDecoration(
                                               hintText:
-                                                  'Add Additional Information If Needed', // Add your hint text here
+                                                  'Add Additional Information If Needed'
+                                                      .tr, // Add your hint text here
                                               border: OutlineInputBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(15.0),
@@ -969,7 +966,6 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                         ],
                       ),
                     ),
-                    Container()
                   ],
                 ),
               ),
@@ -978,11 +974,11 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
             ),
             floatingActionButton: Showcase(
               key: _gotoHomepage,
-              targetPadding: EdgeInsets.all(5),
+              targetPadding: const EdgeInsets.all(5),
               targetBorderRadius: const BorderRadius.all(
                 Radius.circular(50),
               ),
-              description: 'Click Here To Go To HomePage',
+              description: 'Click Here To Go To HomePage'.tr,
               descTextStyle: const TextStyle(
                   fontSize: 18,
                   color: Color.fromARGB(255, 36, 86, 38),
@@ -996,7 +992,7 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
                 );
               },
               disposeOnTap: true,
-              child: Container(
+              child: SizedBox(
                 height: 70,
                 width: 100,
                 child: FloatingActionButton(
