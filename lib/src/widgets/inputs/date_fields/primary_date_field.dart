@@ -125,7 +125,7 @@ class _PrimaryDateFieldState extends ConsumerState<PrimaryDateField> {
     return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year.toString()}";
   }
 
-  Color getBorderColor() {
+  Color _getBorderColor() {
     if (widget.errorMessage != null) {
       return AppColors.error100;
     } else if (isFocused || _selectedDate != null) {
@@ -135,7 +135,7 @@ class _PrimaryDateFieldState extends ConsumerState<PrimaryDateField> {
     }
   }
 
-  Color getBackgroundColor() {
+  Color _getBackgroundColor() {
     if (widget.errorMessage != null) {
       return AppColors.error10;
     } else if (isFocused) {
@@ -145,7 +145,7 @@ class _PrimaryDateFieldState extends ConsumerState<PrimaryDateField> {
     }
   }
 
-  void clearDate() {
+  void _clearDate() {
     setState(() {
       _selectedDate = null;
       _textEditingController.text = widget.hintText;
@@ -159,8 +159,8 @@ class _PrimaryDateFieldState extends ConsumerState<PrimaryDateField> {
     final Color hintTextColor =
         isDateSelected ? AppColors.grayscale90 : AppColors.grayscale50;
 
-    final Color borderColor = getBorderColor();
-    final Color backgroundColor = getBackgroundColor();
+    final Color borderColor = _getBorderColor();
+    final Color backgroundColor = _getBackgroundColor();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -216,7 +216,7 @@ class _PrimaryDateFieldState extends ConsumerState<PrimaryDateField> {
                       right: SizeConfig.widthMultiplier(context) * 10),
                   onPressed: () {
                     if (_selectedDate != null) {
-                      clearDate();
+                      _clearDate();
                     } else {
                       _selectDate(context);
                     }
@@ -275,11 +275,3 @@ class _PrimaryDateFieldState extends ConsumerState<PrimaryDateField> {
 //   ),
 // ),
 
-// Text(
-//   'Entered Text: ${_selectedDate != null ? _formatDate(_selectedDate!) : ""}',
-//   style: const TextStyle(fontSize: 16),
-// ),
-
-//           String _formatDate(DateTime date) {
-//   return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year.toString()}";
-// }

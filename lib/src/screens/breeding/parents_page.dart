@@ -151,7 +151,7 @@ class _ParentsPageState extends ConsumerState<ParentsPage> {
                                 age: '1 year'.trPlural('numYears', father!.age,
                                     [father!.age.toString()]),
                                 imageFile: father!.selectedOviImage,
-                                OviDetails: widget.oviDetails,
+                                oviDetails: widget.oviDetails,
                                 onTap: () => Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -174,7 +174,7 @@ class _ParentsPageState extends ConsumerState<ParentsPage> {
                             age: '1 year'.trPlural('numYears', mother!.age,
                                 [mother!.age.toString()]),
                             imageFile: mother!.selectedOviImage,
-                            OviDetails: widget.oviDetails,
+                            oviDetails: widget.oviDetails,
                             onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(

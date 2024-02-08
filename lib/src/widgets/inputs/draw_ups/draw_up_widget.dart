@@ -5,14 +5,14 @@ import '../../../theme/fonts/fonts.dart';
 import '../../controls_and_buttons/buttons/primary_button.dart';
 import '../../controls_and_buttons/text_buttons/primary_text_button.dart';
 
-class DrowupWidget extends StatefulWidget {
+class DrawUpWidget extends StatefulWidget {
   final Widget content;
   final String? heading;
   final double? heightFactor;
   final PrimaryTextButton? primaryTextButton;
   final PrimaryButton? primaryButton;
 
-  const DrowupWidget(
+  const DrawUpWidget(
       {Key? key,
       required this.content,
       this.heading,
@@ -22,10 +22,10 @@ class DrowupWidget extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<DrowupWidget> createState() => _DrowupWidgetState();
+  State<DrawUpWidget> createState() => _DrawUpWidgetState();
 }
 
-class _DrowupWidgetState extends State<DrowupWidget> {
+class _DrawUpWidgetState extends State<DrawUpWidget> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
@@ -99,7 +99,7 @@ class _DrowupWidgetState extends State<DrowupWidget> {
 //     builder: (BuildContext context) {
 //       return Container(
 //         color: Colors.transparent,
-//         child: DrowupWidget(
+//         child: DrawUpWidget(
 //           // heading: 'Filter',
 //           content: Column(
 //             children: [

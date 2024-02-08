@@ -224,7 +224,7 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
       builder: (BuildContext context) {
         return Container(
           color: Colors.transparent,
-          child: DrowupWidget(
+          child: DrawUpWidget(
             heading: 'Filter'.tr,
             content: Column(
               children: [

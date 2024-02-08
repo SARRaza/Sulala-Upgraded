@@ -21,7 +21,7 @@ class TableTextButton extends StatefulWidget {
 }
 
 class _TableTextButtonState extends State<TableTextButton> {
-  String truncateTextWithEllipsis(String text, int maxLength) {
+  String _truncateTextWithEllipsis(String text, int maxLength) {
     if (text.length <= maxLength) {
       return text;
     } else {
@@ -37,7 +37,7 @@ class _TableTextButtonState extends State<TableTextButton> {
         Row(
           children: [
             Text(
-              truncateTextWithEllipsis(widget.textHead, 25),
+              _truncateTextWithEllipsis(widget.textHead, 25),
               style: AppFonts.body2(
                 color: AppColors.grayscale70,
               ),
@@ -55,13 +55,3 @@ class _TableTextButtonState extends State<TableTextButton> {
     );
   }
 }
-
-// Exapmle of use:
-
-// TextButtonTextWidget(
-//                     textHead: 'Text Button',
-//                     textButton: 'Button',
-//                     onPressed: () {
-//                       print('Text Button Pressed');
-//                     },
-//                   ),

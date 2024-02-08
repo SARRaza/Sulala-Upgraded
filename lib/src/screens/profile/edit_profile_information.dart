@@ -268,7 +268,7 @@ class _EditProfileInformation extends ConsumerState<EditProfileInformation> {
       isScrollControlled: true,
       isDismissible: true,
       builder: (BuildContext context) {
-        return DrowupWidget(
+        return DrawUpWidget(
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

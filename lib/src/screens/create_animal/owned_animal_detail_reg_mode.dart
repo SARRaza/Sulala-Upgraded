@@ -275,7 +275,7 @@ class _OwnedAnimalDetailsRegModeState
             age: "3 years",
             type: "Mammal",
             sex: "Female",
-            OviDetails: oviDetails,
+            oviDetails: oviDetails,
             breed: '',
             fieldName: '',
             fieldContent: '',
@@ -283,7 +283,7 @@ class _OwnedAnimalDetailsRegModeState
 
           // Content for the 'Breeding' tab
           BreedingInfo(
-            OviDetails: oviDetails,
+            oviDetails: oviDetails,
             breedingEvents: widget.breedingEvents,
           ),
 

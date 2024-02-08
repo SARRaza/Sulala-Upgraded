@@ -64,7 +64,7 @@ class _CustomerSupportState extends State<CustomerSupport> {
       isScrollControlled: true,
       isDismissible: true,
       builder: (BuildContext context) {
-        return DrowupWidget(
+        return DrawUpWidget(
           heightFactor: 0.475,
           heading: 'Contact Us'.tr,
           content: Column(

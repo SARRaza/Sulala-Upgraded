@@ -29,7 +29,8 @@ class CustomField extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 10),
-        TextField(
+        TextFormField(
+          initialValue: fieldContent,
           decoration: InputDecoration(
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(50.0),
@@ -43,7 +44,6 @@ class CustomField extends StatelessWidget {
               horizontal: 16.0,
             ),
           ),
-          controller: TextEditingController(text: fieldContent),
         ),
         const SizedBox(height: 15),
       ],

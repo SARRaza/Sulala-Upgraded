@@ -79,10 +79,3 @@ class TwoInformationBlock extends StatelessWidget {
     );
   }
 }
-
-// Example of use:
-
-// InformationBlock(
-//                     head1: "Head 1",
-//                     head2: "Head 2",
-//                   ),

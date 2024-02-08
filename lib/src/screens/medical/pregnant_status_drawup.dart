@@ -27,7 +27,7 @@ class _PregnantStatusWidgetState extends State<PregnantStatusWidget> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.transparent,
-      child: DrowupWidget(
+      child: DrawUpWidget(
         heightFactor: 0.45,
         heading: 'Pregnancy Status'.tr,
         content: Column(

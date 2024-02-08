@@ -118,7 +118,7 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
                     isScrollControlled: true,
                     isDismissible: true,
                     builder: (BuildContext context) {
-                      return DrowupWidget(
+                      return DrawUpWidget(
                         heightFactor: 0.4,
                         heading: 'Delete Member?'.tr,
                         content: Column(

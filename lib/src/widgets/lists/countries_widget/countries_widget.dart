@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 
 import '../../../data/countries_data.dart';
@@ -41,7 +42,7 @@ class _CountriesWidgetState extends ConsumerState<CountriesWidget> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: PrimarySearchBar(
-            hintText: 'Search for a country',
+            hintText: 'Search for a country'.tr,
             onChange: _filterCountries,
           ),
         ),
@@ -49,7 +50,7 @@ class _CountriesWidgetState extends ConsumerState<CountriesWidget> {
           Container(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "Country not found!",
+              "Country not found!".tr,
               style: AppFonts.headline2(color: AppColors.grayscale90),
             ),
           ),

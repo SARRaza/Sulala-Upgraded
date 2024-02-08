@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sulala_upgrade/src/screens/splash_screen.dart/splash_screen.dart';
 import 'src/data/locale_strings.dart';
@@ -36,7 +35,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const SplashScreen(),
         '/create_password': (context) => const CreatePassword(),
         '/reg_home_page': (context) => const HomeScreenRegMode(),
-        '/notifications': (context) => NotificationList(),
+        '/notifications': (context) => const NotificationList(),
       },
       debugShowCheckedModeBanner: false,
     );

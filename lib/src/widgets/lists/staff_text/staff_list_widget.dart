@@ -19,7 +19,7 @@ class StaffListWidget extends StatelessWidget {
     required this.onPressed,
   }) : super(key: key);
 
-  String truncateTextWithEllipsis(String text, int maxLength) {
+  String _truncateTextWithEllipsis(String text, int maxLength) {
     if (text.length <= maxLength) {
       return text;
     } else {
@@ -50,13 +50,13 @@ class StaffListWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                truncateTextWithEllipsis(textHead, 15),
+                _truncateTextWithEllipsis(textHead, 15),
                 style: AppFonts.headline3(
                   color: AppColors.grayscale90,
                 ),
               ),
               Text(
-                truncateTextWithEllipsis(textBody, 20),
+                _truncateTextWithEllipsis(textBody, 20),
                 style: AppFonts.body2(
                   color: AppColors.grayscale70,
                 ),

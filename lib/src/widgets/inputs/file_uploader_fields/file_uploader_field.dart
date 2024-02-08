@@ -102,6 +102,7 @@ class _FileUploaderFieldState extends ConsumerState<FileUploaderField> {
 
   @override
   void initState() {
+    super.initState();
     ref.read(uploadedFilesProvider).clear();
     if (widget.uploadedFiles != null) {
       ref
@@ -110,7 +111,6 @@ class _FileUploaderFieldState extends ConsumerState<FileUploaderField> {
     }
 
     uploadedFiles = widget.uploadedFiles ?? [];
-    super.initState();
   }
 
   @override
@@ -120,7 +120,7 @@ class _FileUploaderFieldState extends ConsumerState<FileUploaderField> {
 
     final fileWidgets = uploadedFiles.map((filePath) {
       return GestureDetector(
-        onTap: () => showFile(filePath),
+        onTap: () => _showFile(filePath),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Row(
@@ -231,7 +231,7 @@ class _FileUploaderFieldState extends ConsumerState<FileUploaderField> {
     );
   }
 
-  void showFile(String filePath) {
+  void _showFile(String filePath) {
     final index = uploadedFiles.indexOf(filePath);
     Navigator.push(
         context,

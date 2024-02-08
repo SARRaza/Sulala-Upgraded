@@ -1,9 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
-
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:sulala_upgrade/src/screens/create_animal/owned_animal_detail_reg_mode.dart';
 import '../../data/classes/ovi_variables.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -15,14 +10,14 @@ class ParentsItem extends StatelessWidget {
   final String sex;
   final String id;
   final String age;
-  final OviVariables OviDetails;
+  final OviVariables oviDetails;
   final void Function()? onTap;
 
   const ParentsItem(
       {Key? key, // Add 'Key?' type to the key parameter
       this.imageFile,
       required this.name,
-      required this.OviDetails,
+      required this.oviDetails,
       required this.sex,
       required this.age,
       required this.id,
@@ -83,13 +78,3 @@ class ParentsItem extends StatelessWidget {
     );
   }
 }
-
-// Example of use:
-
-// const FamilyTreeItem(
-//                     id: "12345",
-//                     name: "Harry",
-//                     sex: "Male",
-//                     tag: "Borrower",
-//                     imageUrl: null,
-//                   ),

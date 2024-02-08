@@ -317,7 +317,7 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
       isScrollControlled: true,
       isDismissible: true,
       builder: (BuildContext context) {
-        return DrowupWidget(
+        return DrawUpWidget(
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,

@@ -212,7 +212,7 @@ class _SearchDetails extends State<UserDetails> {
       builder: (BuildContext context) {
         return Container(
           color: Colors.transparent,
-          child: DrowupWidget(
+          child: DrawUpWidget(
             content: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,

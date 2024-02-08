@@ -69,11 +69,3 @@ class _ToggleActiveState extends State<ToggleActive> {
     });
   }
 }
-
-//Example of use:
-// CustomSwitchActive(
-//             value: true, // or false depending on the initial state
-//             onChanged: (bool value) {
-//               // Handle the value change here
-//             },
-//           ),

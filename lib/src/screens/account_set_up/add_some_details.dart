@@ -39,7 +39,7 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
       builder: (BuildContext context) {
         return Container(
           color: Colors.transparent,
-          child: DrowupWidget(
+          child: DrawUpWidget(
             heightFactor: 0.22,
             content: Column(
               children: [

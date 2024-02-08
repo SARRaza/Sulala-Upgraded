@@ -439,7 +439,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         isScrollControlled: true,
                         isDismissible: true,
                         builder: (BuildContext context) {
-                          return DrowupWidget(
+                          return DrawUpWidget(
                             heightFactor: 0.33,
                             content: Column(
                               mainAxisSize: MainAxisSize.min,

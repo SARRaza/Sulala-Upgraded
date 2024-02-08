@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:get/get.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
@@ -17,27 +17,6 @@ class ThreeInformationBlock extends StatelessWidget {
     required this.head3,
     Key? key,
   }) : super(key: key);
-  String calculateAge(DateTime? selectedDate) {
-    if (selectedDate == null) {
-      return 'Not Selected'; // Handle the case when the date is not selected
-    }
-
-    final currentDate = DateTime.now();
-    final ageInYears = currentDate.year - selectedDate.year;
-    return '$ageInYears Years';
-  }
-
-  DateTime? parseSelectedDate(String? selectedDate) {
-    if (selectedDate == null) {
-      return null; // Return null if the date is not selected
-    }
-
-    try {
-      return DateFormat('dd.MM.yyyy').parse(selectedDate);
-    } catch (e) {
-      return null; // Return null if there is an error parsing the date
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +38,7 @@ class ThreeInformationBlock extends StatelessWidget {
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
                 Text(
-                  "Type",
+                  "Type".tr,
                   style: AppFonts.caption2(color: AppColors.grayscale70),
                 ),
               ],
@@ -80,7 +59,7 @@ class ThreeInformationBlock extends StatelessWidget {
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
                 Text(
-                  "Species",
+                  "Species".tr,
                   style: AppFonts.caption2(color: AppColors.grayscale70),
                 ),
               ],
@@ -101,7 +80,7 @@ class ThreeInformationBlock extends StatelessWidget {
                   style: AppFonts.body2(color: AppColors.grayscale90),
                 ),
                 Text(
-                  "Sex",
+                  "Sex".tr,
                   style: AppFonts.caption2(color: AppColors.grayscale70),
                 ),
               ],
@@ -112,11 +91,3 @@ class ThreeInformationBlock extends StatelessWidget {
     );
   }
 }
-
-// Example of use:
-
-// InformationBlock(
-//                     head1: "Head 1",
-//                     head2: "Head 2",
-//                     head3: "Head 3",
-//                   ),

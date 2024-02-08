@@ -24,7 +24,7 @@ class TableClickableText extends StatefulWidget {
 }
 
 class _TableClickableTextState extends State<TableClickableText> {
-  String truncateTextWithEllipsis(String text, int maxLength) {
+  String _truncateTextWithEllipsis(String text, int maxLength) {
     if (text.length <= maxLength) {
       return text;
     } else {
@@ -46,7 +46,7 @@ class _TableClickableTextState extends State<TableClickableText> {
         Row(
           children: [
             Text(
-              truncateTextWithEllipsis(widget.text1, 25),
+              _truncateTextWithEllipsis(widget.text1, 25),
               style: AppFonts.body2(
                 color: AppColors.grayscale70,
               ),
@@ -79,7 +79,7 @@ class _TableClickableTextState extends State<TableClickableText> {
   }
 }
 
-// Exapmle of use:
+// Example of use:
 
 // const TableClickableText(
 //                     text1: 'Clickable Text',

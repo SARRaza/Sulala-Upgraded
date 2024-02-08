@@ -38,7 +38,7 @@ class _DrawUpAnimalSpeciesState extends ConsumerState<DrawUpAnimalSpecies> {
 
   @override
   Widget build(BuildContext context) {
-    return DrowupWidget(
+    return DrawUpWidget(
       heading: 'Animal Species'.tr,
       heightFactor: 0.9,
       content: SizedBox(

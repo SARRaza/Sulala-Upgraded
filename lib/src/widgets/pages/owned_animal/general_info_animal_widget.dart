@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sulala_upgrade/src/screens/reg_mode/image_view_page.dart';
 import 'package:sulala_upgrade/src/widgets/styled_dismissible.dart';
 import '../../../data/classes/ovi_variables.dart';
@@ -14,7 +12,7 @@ import '../../../screens/pdf/pdf_view_page.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 import '../../dialogs/confirm_delete_dialog.dart';
-import '../../lists/table_list/table_textbutton.dart';
+import '../../lists/table_list/table_text_button.dart';
 import '../../other/three_information_block.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
 
@@ -31,8 +29,7 @@ class GeneralInfoAnimalWidget extends ConsumerStatefulWidget {
   final String breed;
   final String fieldName;
   final String fieldContent;
-  // ignore: non_constant_identifier_names
-  final OviVariables OviDetails;
+  final OviVariables oviDetails;
 
   const GeneralInfoAnimalWidget({
     Key? key,
@@ -48,8 +45,7 @@ class GeneralInfoAnimalWidget extends ConsumerStatefulWidget {
     required this.breed,
     required this.fieldName,
     required this.fieldContent,
-    // ignore: non_constant_identifier_names
-    required this.OviDetails,
+    required this.oviDetails,
   }) : super(key: key);
 
   @override
@@ -57,40 +53,18 @@ class GeneralInfoAnimalWidget extends ConsumerStatefulWidget {
       _GeneralInfoAnimalWidgetState();
 }
 
-String calculateAge(DateTime? selectedDate) {
-  if (selectedDate == null) {
-    return 'Not Selected'; // Handle the case when the date is not selected
-  }
-
-  final currentDate = DateTime.now();
-  final ageInYears = currentDate.year - selectedDate.year;
-  return '$ageInYears Years';
-}
-
-DateTime? parseSelectedDate(String? selectedDate) {
-  if (selectedDate == null) {
-    return null; // Return null if the date is not selected
-  }
-
-  try {
-    return DateFormat('dd/MM/yyyy').parse(selectedDate);
-  } catch (e) {
-    return null; // Return null if there is an error parsing the date
-  }
-}
-
-const bool _loading = false;
-double _uploadProgress = 0.0;
-
 class _GeneralInfoAnimalWidgetState
     extends ConsumerState<GeneralInfoAnimalWidget> {
+  bool loading = false;
+  double uploadProgress = 0.0;
+  
   @override
   Widget build(BuildContext context) {
-    final selectedDate = widget.OviDetails.dateOfBirth;
+    final selectedDate = widget.oviDetails.dateOfBirth;
 
     final animalDetails = ref
         .watch(oviAnimalsProvider)
-        .firstWhere((animal) => animal.id == widget.OviDetails.id);
+        .firstWhere((animal) => animal.id == widget.oviDetails.id);
     final List<String> uploadedFiles =
         animalDetails.files?.map((file) => file.path).toList() ?? [];
 
@@ -100,18 +74,18 @@ class _GeneralInfoAnimalWidgetState
         SizedBox(
           width: SizeConfig.widthMultiplier(context) * 343,
           child: ThreeInformationBlock(
-            head1: widget.OviDetails.selectedAnimalType,
-            head2: widget.OviDetails.selectedAnimalSpecies,
-            head3: widget.OviDetails.selectedOviGender.isNotEmpty
-                ? widget.OviDetails.selectedOviGender
-                : 'Not Selected',
+            head1: widget.oviDetails.selectedAnimalType,
+            head2: widget.oviDetails.selectedAnimalSpecies,
+            head3: widget.oviDetails.selectedOviGender.isNotEmpty
+                ? widget.oviDetails.selectedOviGender
+                : 'Not Selected'.tr,
           ),
         ),
         SizedBox(
           height: SizeConfig.heightMultiplier(context) * 24,
         ),
         Text(
-          "General Information",
+          "General Information".tr,
           style: AppFonts.title5(color: AppColors.grayscale90),
         ),
         Expanded(
@@ -121,104 +95,104 @@ class _GeneralInfoAnimalWidgetState
               children: [
                 TableTextButton(
                   onPressed: widget.onDateOfBirthPressed,
-                  textButton: calculateAge(selectedDate),
-                  textHead: "Age",
+                  textButton: _calculateAge(selectedDate),
+                  textHead: "Age".tr,
                 ),
                 Visibility(
-                  visible: widget.OviDetails.dateOfBirth != null,
+                  visible: widget.oviDetails.dateOfBirth != null,
                   child: TableTextButton(
                     onPressed: widget.onDateOfBirthPressed,
                     textButton: DateFormat('dd/MM/yyyy').format(
-                        widget.OviDetails.dateOfBirth ?? DateTime.now()),
-                    textHead: "Date of Birth",
+                        widget.oviDetails.dateOfBirth ?? DateTime.now()),
+                    textHead: "Date of Birth".tr,
                   ),
                 ),
                 TableTextButton(
                   onPressed: () {},
-                  textButton: widget.OviDetails.selectedAnimalBreed,
-                  textHead: "Breed",
+                  textButton: widget.oviDetails.selectedAnimalBreed,
+                  textHead: "Breed".tr,
                 ),
                 Visibility(
-                  visible: widget.OviDetails.selectedOviGender == 'Female' &&
-                      widget.OviDetails.selectedAnimalType == 'Mammal',
+                  visible: widget.oviDetails.selectedOviGender == 'Female' &&
+                      widget.oviDetails.selectedAnimalType == 'Mammal',
                   child: TableTextButton(
                     onPressed: widget.onDateOfWeaningPressed,
-                    textButton: widget.OviDetails.selectedOviDates
+                    textButton: widget.oviDetails.selectedOviDates
                                 .containsKey('Date Of Weaning') &&
-                            widget.OviDetails
+                            widget.oviDetails
                                     .selectedOviDates['Date Of Weaning'] !=
                                 null
                         ? DateFormat('dd/MM/yyyy').format(
-                            widget.OviDetails
+                            widget.oviDetails
                                 .selectedOviDates['Date Of Weaning']!,
                           )
-                        : 'Add',
-                    textHead: "Date of Weaning",
+                        : 'Add'.tr,
+                    textHead: "Date of Weaning".tr,
                   ),
                 ),
                 Visibility(
-                  visible: widget.OviDetails.selectedOviGender == 'Female' &&
-                      widget.OviDetails.selectedAnimalType == 'Oviparous',
+                  visible: widget.oviDetails.selectedOviGender == 'Female' &&
+                      widget.oviDetails.selectedAnimalType == 'Oviparous',
                   child: TableTextButton(
                     onPressed: widget.onDateOfHatchingPressed,
-                    textButton: widget.OviDetails.selectedOviDates
+                    textButton: widget.oviDetails.selectedOviDates
                                 .containsKey('Date Of Hatching') &&
-                            widget.OviDetails
+                            widget.oviDetails
                                     .selectedOviDates['Date Of Hatching'] !=
                                 null
                         ? DateFormat('dd/MM/yyyy').format(
-                            widget.OviDetails
+                            widget.oviDetails
                                 .selectedOviDates['Date Of Hatching']!,
                           )
-                        : 'Add',
-                    textHead: "Date of Hatching",
+                        : 'Add'.tr,
+                    textHead: "Date of Hatching".tr,
                   ),
                 ),
                 TableTextButton(
                   onPressed: widget.onDateOfMatingPressed,
-                  textButton: widget.OviDetails.selectedOviDates
+                  textButton: widget.oviDetails.selectedOviDates
                               .containsKey('Date Of Mating') &&
-                          widget.OviDetails
+                          widget.oviDetails
                                   .selectedOviDates['Date Of Mating'] !=
                               null
                       ? DateFormat('dd/MM/yyyy').format(
-                          widget.OviDetails.selectedOviDates['Date Of Mating']!,
+                          widget.oviDetails.selectedOviDates['Date Of Mating']!,
                         )
-                      : 'Add',
-                  textHead: "Date of Mating",
+                      : 'Add'.tr,
+                  textHead: "Date of Mating".tr,
                 ),
                 TableTextButton(
                   onPressed: widget.onDateOfDeathPressed,
-                  textButton: widget.OviDetails.selectedOviDates
+                  textButton: widget.oviDetails.selectedOviDates
                               .containsKey('Date Of Death') &&
-                          widget.OviDetails.selectedOviDates['Date Of Death'] !=
+                          widget.oviDetails.selectedOviDates['Date Of Death'] !=
                               null
                       ? DateFormat('dd/MM/yyyy').format(
-                          widget.OviDetails.selectedOviDates['Date Of Death']!,
+                          widget.oviDetails.selectedOviDates['Date Of Death']!,
                         )
-                      : 'Add',
-                  textHead: "Date of Death",
+                      : 'Add'.tr,
+                  textHead: "Date of Death".tr,
                 ),
                 TableTextButton(
                   onPressed: widget.onDateOfSalePressed,
-                  textButton: widget.OviDetails.selectedOviDates
+                  textButton: widget.oviDetails.selectedOviDates
                               .containsKey('Date Of Sale') &&
-                          widget.OviDetails.selectedOviDates['Date Of Sale'] !=
+                          widget.oviDetails.selectedOviDates['Date Of Sale'] !=
                               null
                       ? DateFormat('dd/MM/yyyy').format(
-                          widget.OviDetails.selectedOviDates['Date Of Sale']!,
+                          widget.oviDetails.selectedOviDates['Date Of Sale']!,
                         )
-                      : 'Add',
-                  textHead: "Date of Sale",
+                      : 'Add'.tr,
+                  textHead: "Date of Sale".tr,
                 ),
                 Visibility(
-                  visible: widget.OviDetails.customFields != null,
+                  visible: widget.oviDetails.customFields != null,
                   child: Column(
-                    children: widget.OviDetails.customFields!.keys
+                    children: widget.oviDetails.customFields!.keys
                         .map((fieldName) => TableTextButton(
                             onPressed: () {},
                             textButton:
-                                widget.OviDetails.customFields![fieldName]!,
+                                widget.oviDetails.customFields![fieldName]!,
                             textHead: fieldName))
                         .toList(),
                   ),
@@ -226,18 +200,18 @@ class _GeneralInfoAnimalWidgetState
                 SizedBox(
                   height: SizeConfig.heightMultiplier(context) * 24,
                 ),
-                if (widget.OviDetails.notes.isNotEmpty)
+                if (widget.oviDetails.notes.isNotEmpty)
                   Column(
                     children: [
                       Text(
-                        "Additional Notes",
+                        "Additional Notes".tr,
                         style: AppFonts.title5(color: AppColors.grayscale90),
                       ),
                       SizedBox(
                         height: SizeConfig.heightMultiplier(context) * 14,
                       ),
                       Text(
-                        widget.OviDetails.notes,
+                        widget.oviDetails.notes,
                         style: AppFonts.body1(color: AppColors.grayscale90),
                       ),
                     ],
@@ -253,7 +227,7 @@ class _GeneralInfoAnimalWidgetState
                       confirmDismiss: _confirmFileDeletion,
                       onDismissed: (direction) => _deleteFile(filePath),
                       child: GestureDetector(
-                        onTap: () => showFile(filePath),
+                        onTap: () => _showFile(filePath),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Row(
@@ -273,10 +247,10 @@ class _GeneralInfoAnimalWidgetState
                                 ),
                               ),
                               const SizedBox(width: 8),
-                              if (_loading)
+                              if (loading)
                                 Expanded(
                                   child: LinearProgressIndicator(
-                                    value: _uploadProgress,
+                                    value: uploadProgress,
                                     valueColor:
                                         const AlwaysStoppedAnimation<Color>(
                                       AppColors.primary30,
@@ -302,7 +276,7 @@ class _GeneralInfoAnimalWidgetState
     );
   }
 
-  void showFile(String filePath) {
+  void _showFile(String filePath) {
     final file = File(filePath);
     if (mounted) {
       if (filePath.endsWith('.pdf')) {
@@ -336,7 +310,7 @@ class _GeneralInfoAnimalWidgetState
     File(filePath).delete();
     ref.read(oviAnimalsProvider.notifier).update((state) {
       final animalIndex =
-          state.indexWhere((animal) => animal.id == widget.OviDetails.id);
+          state.indexWhere((animal) => animal.id == widget.oviDetails.id);
       state[animalIndex] = state[animalIndex].copyWith(
           files: state[animalIndex]
               .files!
@@ -345,5 +319,15 @@ class _GeneralInfoAnimalWidgetState
 
       return state;
     });
+  }
+
+  String _calculateAge(DateTime? selectedDate) {
+    if (selectedDate == null) {
+      return 'Not Selected'.tr; // Handle the case when the date is not selected
+    }
+
+    final currentDate = DateTime.now();
+    final ageInYears = currentDate.year - selectedDate.year;
+    return '1 year'.trPlural('numYears', ageInYears);
   }
 }

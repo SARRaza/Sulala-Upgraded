@@ -27,7 +27,6 @@ import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/paragraph_text_fields/medical_needs_paragraph.dart';
 import '../../widgets/other/one_information_block.dart';
 import '../../widgets/other/two_information_block.dart';
-import 'package:sulala_upgrade/src/data/globals.dart';
 import '../pdf/pdf_view_page.dart';
 import 'add_medical_checkup.dart';
 import 'add_surgeries.dart';
@@ -211,16 +210,9 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
             DateFormat('dd/MM/yyyy').format(widget.OviDetails.dateOfSonar!);
       }
 
-      DateTime? expectedDeliveryDate;
-      final isPregnant = animalDetails.pregnant ?? false;
       if (widget.OviDetails.selectedOviGender == 'Female' &&
           widget.OviDetails.selectedAnimalType == 'Mammal' &&
           lastBreedingEvent != null) {
-        // final gestationPeriod =
-        //     gestationPeriods[animalDetails.selectedAnimalSpecies];
-        // expectedDeliveryDate =
-        //     calculateExpectedDeliveryDate(matingDate!, gestationPeriod!);
-
         expDlvDateController = TextEditingController();
         if (lastBreedingEvent!.deliveryDate != null) {
           expDlvDateController.text =
@@ -1624,10 +1616,6 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
     }
   }
 
-  DateTime _calculateExpectedDeliveryDate(
-      DateTime matingDate, int gestationPeriod) {
-    return matingDate.add(Duration(days: gestationPeriod));
-  }
 
   _showFiles(List<File> files) {
     Navigator.push(context,
@@ -1644,7 +1632,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
         builder: (context) {
           return Container(
             color: Colors.transparent,
-            child: DrowupWidget(
+            child: DrawUpWidget(
               heightFactor: 0.5,
               heading: 'Pregnancies count',
               content: Form(

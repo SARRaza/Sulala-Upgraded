@@ -40,13 +40,6 @@ class _MedicalNeedsParagraphTextField
     _focusNode.addListener(_onFocusChange);
   }
 
-  // @override
-  // void dispose() {
-  //   _textEditingController.dispose();
-  //   _focusNode.dispose();
-  //   super.dispose();
-  // }
-
   void _onFocusChange() {
     setState(() {
       isFocused = _focusNode.hasFocus;
@@ -159,28 +152,3 @@ class _MedicalNeedsParagraphTextField
     );
   }
 }
-
-// Example of use:
-
-// SizedBox(
-//               width: 300,
-//               child: ParagraphTextField(
-//                 hintText: 'Text label',
-//                 labelText: 'Text',
-//                 maxLines: 5,
-//                 errorMessage:
-//                     _hasError ? 'Text should not contain numbers' : null,
-//                 onChanged: (value) {
-//                   setState(() {
-//                     _enteredText = value;
-//                     _hasError =
-//                         value.contains(RegExp(r'[0-9]')); // Set the error state
-//                   });
-//                 },
-//                 onErrorChanged: (hasError) {
-//                   setState(() {
-//                     _hasError = hasError; // Update the error state
-//                   });
-//                 },
-//               ),
-//             ),

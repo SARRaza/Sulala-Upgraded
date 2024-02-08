@@ -22,14 +22,6 @@ class DefaultTextWidget extends StatefulWidget {
 class _DefaultTextWidgetState extends State<DefaultTextWidget> {
   bool _isChecked = false;
 
-  String truncateTextWithEllipsis(String text, int maxLength) {
-    if (text.length <= maxLength) {
-      return text;
-    } else {
-      return '${text.substring(0, maxLength)}...';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -48,10 +40,13 @@ class _DefaultTextWidgetState extends State<DefaultTextWidget> {
               SizedBox(
                 width: SizeConfig.widthMultiplier(context) * 15,
               ),
-              Text(
-                truncateTextWithEllipsis(widget.textHead, 25),
-                style: AppFonts.body2(
-                  color: AppColors.grayscale90,
+              Expanded(
+                child: Text(
+                  widget.textHead,
+                  style: AppFonts.body2(
+                    color: AppColors.grayscale90,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               const Spacer(),
@@ -69,31 +64,3 @@ class _DefaultTextWidgetState extends State<DefaultTextWidget> {
     );
   }
 }
-
-// Exapmle of use:
-
-// bool _isRowChecked = false;
-
-// SizedBox(
-//               width: MediaQuery.of(context).size.width,
-//               height: MediaQuery.of(context).size.height * 0.055,
-//               child: SizedBox(
-//                 width: MediaQuery.of(context).size.width * 0.9,
-//                 height: MediaQuery.of(context).size.height * 0.09,
-//                 child: DefaultTextListWidget(
-//                   textHead: 'Hello',
-//                   onPressed: (isChecked) {
-//                     setState(() {
-//                       _isRowChecked = isChecked;
-//                     });
-//                     if (_isRowChecked) {
-//                       // Do something when the row is checked
-//                       print("Checked");
-//                     } else {
-//                       // Do something else when the row is unchecked
-//                       print("Unchecked");
-//                     }
-//                   },
-//                 ),
-//               ),
-//             ),

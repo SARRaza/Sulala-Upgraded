@@ -24,16 +24,16 @@ class _OTPFieldState extends State<OTPField> {
   String enteredOTP = '';
   bool hasError = false; // Track the error state
   bool isCompleted = false; // Track if all fields have been completed
-  TextEditingController controller = TextEditingController();
+  final _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return PinCodeTextField(
       appContext: context,
       length: 6,
-      controller: controller,
+      controller: _controller,
       onTap: () {
-        controller.clear();
+        _controller.clear();
       },
       onEditingComplete: () {
         FocusScope.of(context).unfocus();
