@@ -36,13 +36,6 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
   @override
   void initState() {
     super.initState();
-    animals = ref.read(oviAnimalsProvider);
-
-    _selectedAnimal =
-        animals.firstWhere((member) => member.id == widget.selectedAnimalId);
-
-    root =
-        _createTree(_selectedAnimal, attachParents: true, attachChildren: true);
   }
 
   FamilyTreeNode _createTree(OviVariables? nodeAnimal,
@@ -184,42 +177,56 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
   }
 
   Widget _buildTree() {
-    return SingleChildScrollView(
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Stack(
-          key: stackKey,
-          children: [
-            Positioned.fill(
-              child: CustomPaint(
-                painter: GraphPainter(root, stackKey),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 23, horizontal: 20),
-              constraints:
-                  BoxConstraints(minWidth: MediaQuery.of(context).size.width),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+    return ref.watch(animalListProvider).when(
+        data: (animals) {
+          _selectedAnimal =
+              animals.firstWhere((member) => member.id == widget.selectedAnimalId);
+
+          root =
+              _createTree(_selectedAnimal, attachParents: true, attachChildren: true);
+
+          return SingleChildScrollView(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Stack(
+                key: stackKey,
                 children: [
-                  if (root.parents.isNotEmpty)
-                    _buildParentsBranch(root.parents,
-                        itemMargin: const EdgeInsets.symmetric(horizontal: 52)),
-                  FamilyTreeItem(
-                    node: root,
-                    selected: true,
-                    showGender: true,
-                    key: root.key,
+                  Positioned.fill(
+                    child: CustomPaint(
+                      painter: GraphPainter(root, stackKey),
+                    ),
                   ),
-                  if (root.children.isNotEmpty)
-                    _buildChildrenBranch(root.children)
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 23, horizontal: 20),
+                    constraints:
+                    BoxConstraints(minWidth: MediaQuery.of(context).size.width),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (root.parents.isNotEmpty)
+                          _buildParentsBranch(root.parents,
+                              itemMargin: const EdgeInsets.symmetric(horizontal: 52)),
+                        FamilyTreeItem(
+                          node: root,
+                          selected: true,
+                          showGender: true,
+                          key: root.key,
+                        ),
+                        if (root.children.isNotEmpty)
+                          _buildChildrenBranch(root.children)
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
+          );
+        },
+        error: (error, stackTrace) => Text(error.toString()),
+        loading: () => const CircularProgressIndicator()
     );
+
+
   }
 
   Widget _buildParentsBranch(List<FamilyTreeNode> nodes,
@@ -312,25 +319,22 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
   }
 
   Future<void> _addParent(String gender) async {
-    final selectedAnimal = ref
-        .read(oviAnimalsProvider)
-        .firstWhere((animal) => animal.id == _selectedAnimal.id);
+    final animals = ref.read(animalListProvider).value!;
 
-    final selectedPersonIndex =
-        animals.indexWhere((person) => person.id == _selectedAnimal.id);
+    final selectedPersonIndex = _selectedAnimal.id;
 
-    final fatherDetails = ref.read(oviAnimalsProvider).firstWhereOrNull(
+    final fatherDetails = animals.firstWhereOrNull(
         (animal) =>
-            selectedAnimal.selectedOviSire != null &&
-            animal.id == selectedAnimal.selectedOviSire!.id);
+            _selectedAnimal.selectedOviSire != null &&
+            animal.id == _selectedAnimal.selectedOviSire!.id);
     var selectedFather = fatherDetails != null
         ? MainAnimalSire(
             fatherDetails.animalName, fatherDetails.selectedOviImage, 'Male')
         : null;
-    final motherDetails = ref.read(oviAnimalsProvider).firstWhereOrNull(
+    final motherDetails = animals.firstWhereOrNull(
         (animal) =>
-            selectedAnimal.selectedOviDam != null &&
-            animal.id == selectedAnimal.selectedOviDam!.id);
+            _selectedAnimal.selectedOviDam != null &&
+            animal.id == _selectedAnimal.selectedOviDam!.id);
     var selectedMother = motherDetails != null
         ? MainAnimalDam(
             motherDetails.animalName, motherDetails.selectedOviImage, 'Female')
@@ -352,7 +356,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
         isScrollControlled: true,
         builder: (BuildContext context) {
           return AnimalSireModal(
-            selectedAnimal: selectedAnimal,
+            selectedAnimal: _selectedAnimal,
             selectedFather: selectedFather,
             selectedMother: selectedMother,
             selectedChildren: selectedChildren,
@@ -360,8 +364,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
         },
       );
       if (selectedFather != null) {
-        selectedAnimal.copyWith(selectedOviSire: selectedFather);
-        animals[selectedPersonIndex] = animals[selectedPersonIndex]
+        _selectedAnimal = animals[selectedPersonIndex]
             .copyWith(selectedOviSire: selectedFather);
       }
     } else if (gender == 'Female') {
@@ -374,41 +377,25 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
           return AnimalDamModal(
             selectedFather: selectedFather,
             selectedMother: selectedMother,
-            selectedAnimal: selectedAnimal,
+            selectedAnimal: _selectedAnimal,
             selectedChildren: selectedChildren,
           );
         },
       );
 
       if (selectedMother != null) {
-        selectedAnimal.copyWith(selectedOviDam: selectedMother);
-        animals[selectedPersonIndex] = animals[selectedPersonIndex]
+        _selectedAnimal = animals[selectedPersonIndex]
             .copyWith(selectedOviDam: selectedMother);
       }
     }
-
-    ref.read(oviAnimalsProvider.notifier).update((state) {
-      final index = state.indexWhere(
-          (animal) => animal.animalName == selectedAnimal.animalName);
-      state[index] = selectedAnimal;
-      return state;
-    });
-    setState(() {
-      root = _createTree(_selectedAnimal,
-          attachParents: true, attachChildren: true);
-    });
+    ref.read(animalListProvider.notifier).updateAnimal(_selectedAnimal);
   }
 
-  Future<void> _addChildren() async {
-    await Navigator.push(
+  void _addChildren() {
+    Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => CreateBreedingEvents(
                 oviDetails: _selectedAnimal, breedingEvents: const [])));
-    setState(() {
-      animals = ref.read(oviAnimalsProvider);
-      root = _createTree(_selectedAnimal,
-          attachParents: true, attachChildren: true);
-    });
   }
 }

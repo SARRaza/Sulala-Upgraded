@@ -148,42 +148,24 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                                       .map((path) => File(path))
                                       .toList());
 
-                          // Update the vaccineDetailsList for the selected animal
-                          final animalIndex =
-                              ref.read(oviAnimalsProvider).indexWhere(
-                                    (animal) =>
-                                        animal.animalName ==
-                                        widget.oviDetails.animalName,
-                                  );
+                          // Replace the existing vaccine with the updated one
+                          final List<MedicalCheckupDetails> currentList =
+                              widget.oviDetails.checkUpDetails[
+                                      widget.oviDetails.animalName] ??
+                                  [];
 
-                          if (animalIndex != -1) {
-                            // Replace the existing vaccine with the updated one
-                            final List<MedicalCheckupDetails> currentList = ref
-                                        .read(oviAnimalsProvider)[animalIndex]
-                                        .checkUpDetails[
-                                    widget.oviDetails.animalName] ??
-                                [];
+                          final List<MedicalCheckupDetails> updatedList =
+                              List<MedicalCheckupDetails>.from(currentList);
+                          final int indexToUpdate = updatedList.indexWhere(
+                              (checkup) => checkup == widget.selectedCheckup);
 
-                            final List<MedicalCheckupDetails> updatedList =
-                                List<MedicalCheckupDetails>.from(currentList);
-                            final int indexToUpdate = updatedList.indexWhere(
-                                (checkup) => checkup == widget.selectedCheckup);
+                          final checkupDetails = widget.oviDetails.checkUpDetails;
+                          checkupDetails[widget.oviDetails.animalName]![indexToUpdate] = updatedCheckUp;
 
-                            if (indexToUpdate != -1) {
-                              ref
-                                  .read(oviAnimalsProvider.notifier)
-                                  .update((state) {
-                                final newState = List<OviVariables>.from(state);
-                                final checkupDetails =
-                                    state[animalIndex].checkUpDetails;
-                                checkupDetails[state[animalIndex].animalName]![
-                                    indexToUpdate] = updatedCheckUp;
-                                newState[animalIndex] = state[animalIndex]
-                                    .copyWith(checkUpDetails: checkupDetails);
-                                return newState;
-                              });
-                            }
-                          }
+                          ref.read(animalListProvider.notifier).updateAnimal(
+                            widget.oviDetails.copyWith(
+                                checkUpDetails: checkupDetails)
+                          );
 
                           // Close the EditVaccination page
                           Navigator.pop(context);
@@ -220,19 +202,11 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                 content: "Are you sure you want to delete the checkup".tr))
         .then((confirm) {
       if (confirm) {
-        final animalIndex = ref.read(oviAnimalsProvider).indexWhere(
-              (animal) => animal.animalName == widget.oviDetails.animalName,
-            );
-
-        ref.read(oviAnimalsProvider.notifier).update((state) {
-          final newState = List<OviVariables>.from(state);
-          newState[animalIndex]
-              .checkUpDetails[widget.oviDetails.animalName]!
-              .removeWhere((checkup) =>
-                  checkup.checkupName == widget.selectedCheckup!.checkupName);
-
-          return newState;
-        });
+        final animalDetails = widget.oviDetails.copyWith();
+        animalDetails.checkUpDetails[animalDetails.animalName]!.removeWhere((
+            checkup) => checkup.checkupName == widget.selectedCheckup!
+            .checkupName);
+        ref.read(animalListProvider.notifier).updateAnimal(animalDetails);
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("The checkup has been deleted".tr)));
         Navigator.pop(context);

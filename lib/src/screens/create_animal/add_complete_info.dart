@@ -507,7 +507,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
     final animalChildren = ref.watch(breedingChildrenDetailsProvider);
     final chips = ref.watch(selectedOviChipsProvider);
     final customFields = ref.watch(customOviTextFieldsProvider);
-    final oviAnimals = ref.watch(oviAnimalsProvider);
+    final oviAnimals = ref.watch(animalListProvider);
     selectedAnimalSpecies = ref.read(selectedAnimalSpeciesProvider);
     if (selectedAnimalImage == null &&
         speciesImages[selectedAnimalSpecies] != null) {
@@ -679,8 +679,10 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                                   AppFonts.body2(color: AppColors.grayscale70),
                             ),
                             const Spacer(),
-                            oviAnimals.isNotEmpty
-                                ? PrimaryTextButton(
+                            oviAnimals.when(
+                                data: (animals) {
+                                  return animals.isNotEmpty
+                                      ? PrimaryTextButton(
                                     onPressed: () {
                                       _showMainAnimalSireSelectionSheet(
                                           context);
@@ -691,7 +693,12 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                                         : 'Add'.tr,
                                     position: TextButtonPosition.right,
                                   )
-                                : Text('No Animals'.tr),
+                                      : Text('No Animals'.tr);
+                                },
+                                error: (error, stackTrace) => Text(error.toString()),
+                                loading: () => const CircularProgressIndicator()
+                            ),
+
                           ],
                         ),
                         SizedBox(
@@ -704,8 +711,10 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                                   AppFonts.body2(color: AppColors.grayscale70),
                             ),
                             const Spacer(),
-                            oviAnimals.isNotEmpty
-                                ? PrimaryTextButton(
+                            oviAnimals.when(
+                                data: (animals) {
+                                  return animals.isNotEmpty
+                                      ? PrimaryTextButton(
                                     onPressed: () {
                                       _showMainAnimalDamSelectionSheet(context);
                                     },
@@ -715,7 +724,12 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
                                         : 'Add'.tr,
                                     position: TextButtonPosition.right,
                                   )
-                                : Text('No Animals'.tr),
+                                      : Text('No Animals'.tr);
+                                },
+                                error: (error, stackTrace) => Text(error.toString()),
+                                loading: () => const CircularProgressIndicator()
+                            ),
+
                           ],
                         ),
                       ],

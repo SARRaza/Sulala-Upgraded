@@ -147,34 +147,21 @@ class _EditSurgeriesRecordsState extends ConsumerState<EditSurgeriesRecords> {
                                       .map((path) => File(path))
                                       .toList());
 
-                          // Update the vaccineDetailsList for the selected animal
-                          final animalIndex =
-                              ref.read(oviAnimalsProvider).indexWhere(
-                                    (animal) =>
-                                        animal.animalName ==
-                                        widget.oviDetails.animalName,
-                                  );
+                          final List<SurgeryDetails> currentList = widget.oviDetails.surgeryDetails[
+                          widget.oviDetails.animalName] ??
+                              [];
 
-                          if (animalIndex != -1) {
-                            // Replace the existing vaccine with the updated one
-                            final List<SurgeryDetails> currentList = ref
-                                        .read(oviAnimalsProvider)[animalIndex]
-                                        .surgeryDetails[
-                                    widget.oviDetails.animalName] ??
-                                [];
+                          final List<SurgeryDetails> updatedList =
+                          List<SurgeryDetails>.from(currentList);
+                          final int indexToUpdate = updatedList.indexWhere(
+                                  (surgery) => surgery == widget.selectedSurgery);
 
-                            final List<SurgeryDetails> updatedList =
-                                List<SurgeryDetails>.from(currentList);
-                            final int indexToUpdate = updatedList.indexWhere(
-                                (surgery) => surgery == widget.selectedSurgery);
-
-                            if (indexToUpdate != -1) {
-                              updatedList[indexToUpdate] = updatedSurgery;
-                              ref
-                                      .read(oviAnimalsProvider)[animalIndex]
-                                      .surgeryDetails[
-                                  widget.oviDetails.animalName] = updatedList;
-                            }
+                          if (indexToUpdate != -1) {
+                            updatedList[indexToUpdate] = updatedSurgery;
+                            ref.read(animalListProvider.notifier).updateAnimal(
+                              widget.oviDetails.copyWith(surgeryDetails: {
+                                widget.oviDetails.animalName: updatedList})
+                            );
                           }
 
                           // Close the EditVaccination page
@@ -211,16 +198,12 @@ class _EditSurgeriesRecordsState extends ConsumerState<EditSurgeriesRecords> {
                 content: "Are you sure you want to delete the surgery?".tr))
         .then((confirm) {
       if (confirm) {
-        ref.read(oviAnimalsProvider.notifier).update((state) {
-          final newState = List<OviVariables>.from(state);
-          final animalIndex = newState
-              .indexWhere((animal) => animal.id == widget.oviDetails.id);
-          newState[animalIndex]
-              .surgeryDetails[widget.oviDetails.animalName]!
-              .removeWhere((surgery) =>
-                  surgery.surgeryName == widget.selectedSurgery!.surgeryName);
-          return newState;
-        });
+        final animalDetails = widget.oviDetails.copyWith();
+        animalDetails.surgeryDetails[animalDetails.animalName]!.removeWhere((
+            surgery) => surgery.surgeryName == widget.selectedSurgery!
+            .surgeryName);
+        ref.read(animalListProvider.notifier).updateAnimal(animalDetails);
+
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('The surgery has been deleted'.tr)));
         Navigator.pop(context);

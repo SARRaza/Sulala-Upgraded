@@ -11,7 +11,7 @@ class BreedingHelper {
   List<OviVariables> allAnimals = [];
 
   List<OviVariables> getPossibleFathers(OviVariables selectedAnimal) {
-    allAnimals = ref.read(oviAnimalsProvider);
+    allAnimals = ref.read(animalListProvider).value?? [];
     final ancestors = _getAncestors(selectedAnimal);
     final descendants = _getDescendants(selectedAnimal);
     return allAnimals
@@ -26,7 +26,7 @@ class BreedingHelper {
   }
 
   List<OviVariables> getPossibleMothers(OviVariables selectedAnimal) {
-    allAnimals = ref.read(oviAnimalsProvider);
+    allAnimals = ref.read(animalListProvider).value?? [];
     final ancestors = _getAncestors(selectedAnimal);
     final descendants = _getDescendants(selectedAnimal);
     return allAnimals
@@ -41,7 +41,7 @@ class BreedingHelper {
   }
 
   List<OviVariables> getPossibleChildren(OviVariables selectedAnimal) {
-    allAnimals = ref.read(oviAnimalsProvider);
+    allAnimals = ref.read(animalListProvider).value?? [];
     final ancestors = _getAncestors(selectedAnimal);
     final descendants = _getDescendants(selectedAnimal);
     return allAnimals
@@ -59,7 +59,7 @@ class BreedingHelper {
   }
 
   List<OviVariables> getPossiblePartners(OviVariables selectedAnimal) {
-    allAnimals = ref.read(oviAnimalsProvider);
+    allAnimals = ref.read(animalListProvider).value?? [];
     final ancestors = _getAncestors(selectedAnimal);
     final descendants = _getDescendants(selectedAnimal);
     return allAnimals

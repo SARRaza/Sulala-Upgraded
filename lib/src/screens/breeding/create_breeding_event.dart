@@ -341,7 +341,6 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
     final numOffEggs = _eggsNumberController.text;
     final partner = selectedBreedPartner;
     final children = selectedChildren;
-    final oviAnimals = ref.read(oviAnimalsProvider);
 
     MainAnimalSire? sire;
     MainAnimalDam? dam;
@@ -365,12 +364,12 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
           widget.oviDetails.selectedOviGender);
     }
 
+    final oviAnimals = ref.read(animalListProvider).value!;
     for (var child in children) {
       final childIndex =
           oviAnimals.indexWhere((animal) => animal.id == child.id);
-      ref.read(oviAnimalsProvider)[childIndex] = ref
-          .read(oviAnimalsProvider)[childIndex]
-          .copyWith(selectedOviSire: sire, selectedOviDam: dam);
+      ref.read(animalListProvider.notifier).updateAnimal(oviAnimals[childIndex]
+          .copyWith(selectedOviSire: sire, selectedOviDam: dam));
     }
 
     final breedingEvent = BreedingEventVariables(

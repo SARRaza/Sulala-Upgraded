@@ -139,8 +139,7 @@ class OviVariables {
       Map<String, String>? customFields,
       bool? pregnant,
       int? pregnanciesCount,
-      // ignore: non_constant_identifier_names
-      BreedingDetails? BreedingDetails}) {
+      BreedingDetails? breedingDetails}) {
     return OviVariables(
         selectedFilters: selectedFilters ?? this.selectedFilters,
         animalName: animalName ?? this.animalName,

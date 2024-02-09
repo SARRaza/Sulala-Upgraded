@@ -104,802 +104,807 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
   late Map<String, String>? customFields;
   late Map<String, DateTime?> selectedOviDates;
 
-  @override
-  void initState() {
-    super.initState();
 
-    final animalProvider = ref.read(oviAnimalsProvider);
-    final animalIndex =
-        animalProvider.indexWhere((animal) => animal.id == widget.animalId);
-    final animalDetails = animalProvider[animalIndex];
-
-    // Initialize controllers with appropriate values
-    _animalNameController =
-        TextEditingController(text: animalDetails.animalName);
-    _notesController = TextEditingController(text: animalDetails.notes);
-    _birthDayController = TextEditingController();
-    if (animalDetails.dateOfBirth != null) {
-      _birthDayController.text =
-          DateFormat('dd/MM/yyyy').format(animalDetails.dateOfBirth!);
-    }
-    _layingFrequencyController =
-        TextEditingController(text: animalDetails.layingFrequency);
-    _eggsNumberController =
-        TextEditingController(text: animalDetails.eggsPerMonth);
-
-    // Initialize other variables directly
-    uploadedFiles = animalDetails.files;
-    selectedOviImage = animalDetails.selectedOviImage;
-    selectedAnimalType = animalDetails.selectedAnimalType;
-    selectedAnimalSpecies = animalDetails.selectedAnimalSpecies;
-    selectedAnimalBreed = animalDetails.selectedAnimalBreed;
-    selectedOviGender = animalDetails.selectedOviGender;
-    selectedBreedingStage = animalDetails.selectedBreedingStage;
-    selectedOviChips = animalDetails.selectedOviChips;
-    customFields = animalDetails.customFields;
-    selectedOviDates = animalDetails.selectedOviDates;
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              constraints: const BoxConstraints(maxWidth: 130),
-              child: Text(
-                'editAnimal'.trParams({'name': _animalNameController.text}),
-                style: AppFonts.headline3(color: AppColors.grayscale90),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-        leading: IconButton(
-          padding: EdgeInsets.zero,
-          icon: Container(
-            width: MediaQuery.of(context).size.width * 0.1,
-            height: MediaQuery.of(context).size.width * 0.1,
-            decoration: BoxDecoration(
-              color: AppColors.grayscale10,
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: const Icon(Icons.arrow_back, color: Colors.black),
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          IconButton(
-            padding: EdgeInsets.zero,
-            icon: Container(
-              width: MediaQuery.of(context).size.width * 0.1,
-              height: MediaQuery.of(context).size.width * 0.1,
-              decoration: BoxDecoration(
-                color: AppColors.grayscale10,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: const Icon(Icons.close_rounded, color: Colors.black),
-            ),
-            onPressed: () {
-              // Handle close button press
-              Navigator.pop(context);
-            },
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.only(
-              left: SizeConfig.widthMultiplier(context) * 16,
-              right: SizeConfig.widthMultiplier(context) * 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: CircleAvatar(
-                  radius: 70,
-                  backgroundColor: Colors.grey[100],
-                  backgroundImage: selectedOviImage,
-                  child: selectedOviImage == null
-                      ? const Icon(
-                          Icons.camera_alt_outlined,
-                          size: 50,
-                          color: Colors.grey,
-                        )
-                      : null,
-                ),
-              ),
-              Center(
-                child: TextButton(
-                  onPressed: () {
-                    _showAnimalImagePicker(context);
-                  },
+    return ref.watch(animalListProvider).when(
+      error: (error, stackTrace) => Text(error.toString()),
+      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator(),),),
+      data: (animals) {
+        final animalDetails = animals.firstWhereOrNull((animal) => animal.id ==
+            widget.animalId);
+
+        if(animalDetails == null) {
+          return Scaffold(body: Center(child: Text('Animal not found'.tr),),);
+        }
+
+        // Initialize controllers with appropriate values
+        _animalNameController =
+            TextEditingController(text: animalDetails.animalName);
+        _notesController = TextEditingController(text: animalDetails.notes);
+        _birthDayController = TextEditingController();
+        if (animalDetails.dateOfBirth != null) {
+          _birthDayController.text =
+              DateFormat('dd/MM/yyyy').format(animalDetails.dateOfBirth!);
+        }
+        _layingFrequencyController =
+            TextEditingController(text: animalDetails.layingFrequency);
+        _eggsNumberController =
+            TextEditingController(text: animalDetails.eggsPerMonth);
+
+        // Initialize other variables directly
+        uploadedFiles = animalDetails.files;
+        selectedOviImage = animalDetails.selectedOviImage;
+        selectedAnimalType = animalDetails.selectedAnimalType;
+        selectedAnimalSpecies = animalDetails.selectedAnimalSpecies;
+        selectedAnimalBreed = animalDetails.selectedAnimalBreed;
+        selectedOviGender = animalDetails.selectedOviGender;
+        selectedBreedingStage = animalDetails.selectedBreedingStage;
+        selectedOviChips = animalDetails.selectedOviChips;
+        customFields = animalDetails.customFields;
+        selectedOviDates = animalDetails.selectedOviDates;
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  constraints: const BoxConstraints(maxWidth: 130),
                   child: Text(
-                    'Change Photo'.tr,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 36, 86, 38),
-                    ),
+                    'editAnimal'.trParams({'name': _animalNameController.text}),
+                    style: AppFonts.headline3(color: AppColors.grayscale90),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
+              ],
+            ),
+            leading: IconButton(
+              padding: EdgeInsets.zero,
+              icon: Container(
+                width: MediaQuery.of(context).size.width * 0.1,
+                height: MediaQuery.of(context).size.width * 0.1,
+                decoration: BoxDecoration(
+                  color: AppColors.grayscale10,
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: const Icon(Icons.arrow_back, color: Colors.black),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.020),
-              PrimaryTextField(
-                  labelText: 'Name'.tr,
-                  hintText: 'Enter Name'.tr,
-                  controller: _animalNameController),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.029),
-              GestureDetector(
-                onTap: () {
-                  _editAnimalType(context);
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            actions: [
+              IconButton(
+                padding: EdgeInsets.zero,
+                icon: Container(
+                  width: MediaQuery.of(context).size.width * 0.1,
+                  height: MediaQuery.of(context).size.width * 0.1,
+                  decoration: BoxDecoration(
+                    color: AppColors.grayscale10,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: const Icon(Icons.close_rounded, color: Colors.black),
+                ),
+                onPressed: () {
+                  // Handle close button press
+                  Navigator.pop(context);
                 },
-                child: Row(
-                  children: [
-                    Text(
-                      'Animal Type'.tr,
-                      style: AppFonts.body2(color: AppColors.grayscale70),
-                    ),
-                    const Spacer(),
-                    Text(
-                      selectedAnimalType,
-                      style: AppFonts.body2(color: AppColors.grayscale90),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.widthMultiplier(context) * 8,
-                    ),
-                    Icon(Icons.arrow_forward_ios_rounded,
-                        color: AppColors.primary40,
-                        size: SizeConfig.widthMultiplier(context) * 12.75),
-                  ],
-                ),
               ),
-              SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
-              GestureDetector(
-                onTap: () {
-                  if (selectedAnimalType == 'Mammal') {
-                    _editAnimalSpecies(
-                        'species', context, modalMammalSpeciesList);
-                  } else {
-                    _editAnimalSpecies('species', context, modalOviSpeciesList);
-                  }
-                },
-                child: Row(
-                  children: [
-                    Text(
-                      'Animal Species'.tr,
-                      style: AppFonts.body2(color: AppColors.grayscale70),
-                    ),
-                    const Spacer(),
-                    Text(
-                      selectedAnimalSpecies,
-                      style: AppFonts.body2(color: AppColors.grayscale90),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.widthMultiplier(context) * 8,
-                    ),
-                    Icon(Icons.arrow_forward_ios_rounded,
-                        color: AppColors.primary40,
-                        size: SizeConfig.widthMultiplier(context) * 12.75),
-                  ],
-                ),
-              ),
-              SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
-              InkWell(
-                onTap: () {
-                  _editAnimalBreed('breeds', context);
-                },
-                child: Row(
-                  children: [
-                    Text(
-                      'Animal Breed'.tr,
-                      style: AppFonts.body2(color: AppColors.grayscale70),
-                    ),
-                    const Spacer(),
-                    Text(
-                      selectedAnimalBreed,
-                      style: AppFonts.body2(color: AppColors.grayscale90),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.widthMultiplier(context) * 8,
-                    ),
-                    Icon(Icons.arrow_forward_ios_rounded,
-                        color: AppColors.primary40,
-                        size: SizeConfig.widthMultiplier(context) * 12.75),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: SizeConfig.heightMultiplier(context) * 16,
-              ),
-              const Divider(
-                color: AppColors.grayscale20,
-              ),
-              SizedBox(
-                height: SizeConfig.heightMultiplier(context) * 16,
-              ),
-              Text(
-                "Animal Sex".tr,
-                style: AppFonts.headline2(color: AppColors.grayscale90),
-              ),
-              SizedBox(
-                height: SizeConfig.heightMultiplier(context) * 16,
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  top: SizeConfig.heightMultiplier(context) * 12,
-                  bottom: SizeConfig.heightMultiplier(context) * 12,
-                ),
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedOviGender = 'Unknown';
-
-                      showAdditionalFields = false;
-                    });
-                  },
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'Unknown'.tr,
-                          style: AppFonts.body2(color: AppColors.grayscale90),
-                        ),
-                      ),
-                      Container(
-                        width: SizeConfig.widthMultiplier(context) * 24,
-                        height: SizeConfig.widthMultiplier(context) * 24,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: selectedOviGender == 'Unknown'
-                                ? AppColors.primary20
-                                : AppColors.grayscale30,
-                            width: selectedOviGender == 'Unknown' ? 6.0 : 1.0,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                    top: SizeConfig.heightMultiplier(context) * 12,
-                    bottom: SizeConfig.heightMultiplier(context) * 12),
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedOviGender = 'Male';
-
-                      showAdditionalFields = false;
-                    });
-                  },
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'Male'.tr,
-                          style: AppFonts.body2(color: AppColors.grayscale90),
-                        ),
-                      ),
-                      Container(
-                        width: SizeConfig.widthMultiplier(context) * 24,
-                        height: SizeConfig.widthMultiplier(context) * 24,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: selectedOviGender == 'Male'
-                                ? AppColors.primary20
-                                : AppColors.grayscale30,
-                            width: selectedOviGender == 'Male' ? 6.0 : 1.0,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                    top: SizeConfig.heightMultiplier(context) * 12,
-                    bottom: SizeConfig.heightMultiplier(context) * 12),
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedOviGender = 'Female';
-                    });
-                  },
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'Female'.tr,
-                          style: AppFonts.body2(color: AppColors.grayscale90),
-                        ),
-                      ),
-                      Container(
-                        width: SizeConfig.widthMultiplier(context) * 24,
-                        height: SizeConfig.widthMultiplier(context) * 24,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: selectedOviGender == 'Female'
-                                ? AppColors.primary20
-                                : AppColors.grayscale30,
-                            width: selectedOviGender == 'Female' ? 6.0 : 1.0,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: SizeConfig.heightMultiplier(context) * 16,
-              ),
-              const Divider(
-                color: AppColors.grayscale20,
-              ),
-              SizedBox(
-                height: SizeConfig.heightMultiplier(context) * 16,
-              ),
-              Visibility(
-                visible: selectedAnimalType == 'Oviparous' &&
-                    selectedOviGender == "Female",
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Frequency Of Laying Eggs/Month'.tr,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: _layingFrequencyController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter Frequency'.tr, // Add your hint text here
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(50.0),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 12.0, horizontal: 16.0),
-                      ),
-                      textInputAction:
-                          TextInputAction.done, // Change the keyboard action
-                    ),
-                    // Your first additional text field widget here
-                    const SizedBox(height: 10),
-                    Text(
-                      'Number Of Eggs/Month'.tr,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: _eggsNumberController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter The Number'.tr, // Add your hint text here
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(50.0),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 12.0, horizontal: 16.0),
-                      ),
-                      textInputAction:
-                          TextInputAction.done, // Change the keyboard action
-                    ),
-                    const SizedBox(height: 15),
-                    const Divider(),
-                    // Your second additional text field widget here
-                  ],
-                ),
-              ),
-              if (selectedOviGender == "Female")
-                Visibility(
-                  visible: selectedAnimalType == 'Mammal' &&
-                      selectedOviGender == "Female",
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: SizeConfig.heightMultiplier(context) * 16,
-                      ),
-                      Text(
-                        "Breeding Stage".tr,
-                        style: AppFonts.headline2(color: AppColors.grayscale90),
-                      ),
-                      SizedBox(
-                        height: SizeConfig.heightMultiplier(context) * 16,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: SizeConfig.heightMultiplier(context) * 12,
-                          bottom: SizeConfig.heightMultiplier(context) * 12,
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedBreedingStage = 'Ready For Breeding';
-                            });
-                          },
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  'Ready For Breeding'.tr,
-                                  style: AppFonts.body2(
-                                      color: AppColors.grayscale90),
-                                ),
-                              ),
-                              Container(
-                                width: SizeConfig.widthMultiplier(context) * 24,
-                                height:
-                                    SizeConfig.widthMultiplier(context) * 24,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: selectedBreedingStage ==
-                                            'Ready For Breeding'
-                                        ? AppColors.primary20
-                                        : AppColors.grayscale30,
-                                    width: selectedBreedingStage ==
-                                            'Ready For Breeding'
-                                        ? 6.0
-                                        : 1.0,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: SizeConfig.heightMultiplier(context) * 12,
-                          bottom: SizeConfig.heightMultiplier(context) * 12,
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedBreedingStage = 'Pregnant';
-                            });
-                          },
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  'Pregnant'.tr,
-                                  style: AppFonts.body2(
-                                      color: AppColors.grayscale90),
-                                ),
-                              ),
-                              Container(
-                                width: SizeConfig.widthMultiplier(context) * 24,
-                                height:
-                                    SizeConfig.widthMultiplier(context) * 24,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: selectedBreedingStage == 'Pregnant'
-                                        ? AppColors.primary20
-                                        : AppColors.grayscale30,
-                                    width: selectedBreedingStage == 'Pregnant'
-                                        ? 6.0
-                                        : 1.0,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: SizeConfig.heightMultiplier(context) * 12,
-                          bottom: SizeConfig.heightMultiplier(context) * 12,
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedBreedingStage = 'Lactating';
-                            });
-                          },
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  'Lactating'.tr,
-                                  style: AppFonts.body2(
-                                      color: AppColors.grayscale90),
-                                ),
-                              ),
-                              Container(
-                                width: SizeConfig.widthMultiplier(context) * 24,
-                                height:
-                                    SizeConfig.widthMultiplier(context) * 24,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: selectedBreedingStage == 'Lactating'
-                                        ? AppColors.primary20
-                                        : AppColors.grayscale30,
-                                    width: selectedBreedingStage == 'Lactating'
-                                        ? 6.0
-                                        : 1.0,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.019),
-                      const Divider(),
-                    ],
-                  ),
-                ),
-              Text(
-                "Dates".tr,
-                style: AppFonts.headline2(color: AppColors.grayscale90),
-              ),
-              SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Date Of Birth'.tr,
-                    style: AppFonts.caption2(
-                      color: AppColors.grayscale90,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.grayscale00,
-                            borderRadius: BorderRadius.circular(50.0),
-                            border: Border.all(
-                              color: AppColors.primary30,
-                              width: 1.0,
-                            ),
-                          ),
-                          child: GestureDetector(
-                            onTap: () {
-                              _showDOBPicker(context);
-                            },
-                            child: TextFormField(
-                              enabled: false,
-                              style:
-                                  AppFonts.body2(color: AppColors.grayscale90),
-                              decoration: InputDecoration(
-                                hintText: 'DD/MM/YYYY',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(50.0),
-                                  borderSide: const BorderSide(
-                                    width: 0.2,
-                                  ),
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 12.0, horizontal: 16.0),
-                                suffixIcon: GestureDetector(
-                                  onTap: () {
-                                    _showDOBPicker(context);
-                                  },
-                                  child: const Icon(
-                                    Icons.calendar_today_outlined,
-                                    color: Color.fromARGB(255, 36, 86, 38),
-                                  ),
-                                ),
-                              ),
-                              readOnly: true,
-                              controller: _birthDayController,
-                            ),
-                            // child: Text(fieldName),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                ],
-              ),
-              _buildDateFields(),
-              Row(
-                children: [
-                  PrimaryTextButton(
-                    onPressed: () {
-                      _showDateSelectionSheet(context, selectedAnimalType);
-                    },
-                    status: TextStatus.idle,
-                    text: 'Add Date'.tr,
-                  ),
-                  const Icon(Icons.add_rounded,
-                      color: AppColors.primary40, size: 20),
-                ],
-              ),
-              SizedBox(
-                height: SizeConfig.heightMultiplier(context) * 16,
-              ),
-              const Divider(
-                color: AppColors.grayscale20,
-              ),
-              SizedBox(
-                height: SizeConfig.heightMultiplier(context) * 16,
-              ),
-              Text(
-                "Add Tag".tr,
-                style: AppFonts.headline2(color: AppColors.grayscale90),
-              ),
-              SizedBox(
-                height: SizeConfig.heightMultiplier(context) * 16,
-              ),
-              Wrap(
-                spacing: 8.0,
-                runSpacing: 8.0,
-                children: selectedOviChips.map((chip) {
-                  return CustomTag(
-                    label: chip,
-                    selected: true, // Since these are selected chips
-                    onTap: () {},
-                  );
-                }).toList(),
-              ),
-              SizedBox(
-                height: SizeConfig.heightMultiplier(context) * 16,
-              ),
-              InkWell(
-                onTap: () {
-                  _animalTagsModalSheet();
-                },
-                child: Text(
-                  'Add Tags +'.tr,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 36, 86, 38),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: SizeConfig.heightMultiplier(context) * 16,
-              ),
-              const Divider(
-                color: AppColors.grayscale20,
-              ),
-              SizedBox(
-                height: SizeConfig.heightMultiplier(context) * 16,
-              ),
-              Text(
-                "Custom fields".tr,
-                style: AppFonts.headline2(color: AppColors.grayscale90),
-              ),
-              Text(
-                "Add Custom Fields If Needed".tr,
-                style: AppFonts.body2(color: AppColors.grayscale60),
-              ),
-              SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
-              Column(
-                children: customFields == null
-                    ? []
-                    : customFields!.keys
-                        .map(
-                          (fieldName) => Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(fieldName,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold)),
-                                  IconButton(
-                                      icon: const Icon(Icons.delete,
-                                          color: Colors.red),
-                                      onPressed: () =>
-                                          _removeCustomField(fieldName)),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                              TextField(
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(50.0),
-                                    borderSide: const BorderSide(
-                                      color: Colors.grey,
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 12.0,
-                                    horizontal: 16.0,
-                                  ),
-                                ),
-                                controller: TextEditingController(
-                                    text: customFields![fieldName]),
-                              ),
-                              const SizedBox(height: 15),
-                            ],
-                          ),
-                        )
-                        .toList(),
-              ),
-              Row(
-                children: [
-                  PrimaryTextButton(
-                    onPressed: () {
-                      _showOviFieldNameModal(context);
-                    },
-                    status: TextStatus.idle,
-                    text: 'Add Custom Fields'.tr,
-                  ),
-                  SizedBox(width: SizeConfig.widthMultiplier(context) * 8),
-                  const Icon(Icons.add_rounded,
-                      color: AppColors.primary40, size: 20),
-                ],
-              ),
-              SizedBox(
-                height: SizeConfig.heightMultiplier(context) * 16,
-              ),
-              const Divider(
-                color: AppColors.grayscale20,
-              ),
-              SizedBox(
-                height: SizeConfig.heightMultiplier(context) * 16,
-              ),
-              Text(
-                "Additional Notes".tr,
-                style: AppFonts.headline2(color: AppColors.grayscale90),
-              ),
-              SizedBox(
-                height: SizeConfig.heightMultiplier(context) * 16,
-              ),
-              EditParagraphTextField(
-                hintText: 'Add Any Additional Notes if Needed'.tr,
-                maxLines: 8,
-                notesController: _notesController,
-              ),
-              SizedBox(
-                height: SizeConfig.heightMultiplier(context) * 16,
-              ),
-              FileUploaderField(
-                uploadedFiles: uploadedFiles?.map((file) => file.path).toList(),
-              )
             ],
           ),
-        ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.only(
-            left: 16,
-            top: 16,
-            right: 16,
-            bottom: 16 + MediaQuery.of(context).viewInsets.bottom),
-        child: ElevatedButton(
-          onPressed: _saveChanges,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 36, 86, 38),
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: SizeConfig.widthMultiplier(context) * 16,
+                  right: SizeConfig.widthMultiplier(context) * 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: CircleAvatar(
+                      radius: 70,
+                      backgroundColor: Colors.grey[100],
+                      backgroundImage: selectedOviImage,
+                      child: selectedOviImage == null
+                          ? const Icon(
+                              Icons.camera_alt_outlined,
+                              size: 50,
+                              color: Colors.grey,
+                            )
+                          : null,
+                    ),
+                  ),
+                  Center(
+                    child: TextButton(
+                      onPressed: () {
+                        _showAnimalImagePicker(context);
+                      },
+                      child: Text(
+                        'Change Photo'.tr,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 36, 86, 38),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.020),
+                  PrimaryTextField(
+                      labelText: 'Name'.tr,
+                      hintText: 'Enter Name'.tr,
+                      controller: _animalNameController),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.029),
+                  GestureDetector(
+                    onTap: () {
+                      _editAnimalType(context);
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          'Animal Type'.tr,
+                          style: AppFonts.body2(color: AppColors.grayscale70),
+                        ),
+                        const Spacer(),
+                        Text(
+                          selectedAnimalType,
+                          style: AppFonts.body2(color: AppColors.grayscale90),
+                        ),
+                        SizedBox(
+                          width: SizeConfig.widthMultiplier(context) * 8,
+                        ),
+                        Icon(Icons.arrow_forward_ios_rounded,
+                            color: AppColors.primary40,
+                            size: SizeConfig.widthMultiplier(context) * 12.75),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
+                  GestureDetector(
+                    onTap: () {
+                      if (selectedAnimalType == 'Mammal') {
+                        _editAnimalSpecies(
+                            'species', context, modalMammalSpeciesList);
+                      } else {
+                        _editAnimalSpecies('species', context, modalOviSpeciesList);
+                      }
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          'Animal Species'.tr,
+                          style: AppFonts.body2(color: AppColors.grayscale70),
+                        ),
+                        const Spacer(),
+                        Text(
+                          selectedAnimalSpecies,
+                          style: AppFonts.body2(color: AppColors.grayscale90),
+                        ),
+                        SizedBox(
+                          width: SizeConfig.widthMultiplier(context) * 8,
+                        ),
+                        Icon(Icons.arrow_forward_ios_rounded,
+                            color: AppColors.primary40,
+                            size: SizeConfig.widthMultiplier(context) * 12.75),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
+                  InkWell(
+                    onTap: () {
+                      _editAnimalBreed('breeds', context);
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          'Animal Breed'.tr,
+                          style: AppFonts.body2(color: AppColors.grayscale70),
+                        ),
+                        const Spacer(),
+                        Text(
+                          selectedAnimalBreed,
+                          style: AppFonts.body2(color: AppColors.grayscale90),
+                        ),
+                        SizedBox(
+                          width: SizeConfig.widthMultiplier(context) * 8,
+                        ),
+                        Icon(Icons.arrow_forward_ios_rounded,
+                            color: AppColors.primary40,
+                            size: SizeConfig.widthMultiplier(context) * 12.75),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.heightMultiplier(context) * 16,
+                  ),
+                  const Divider(
+                    color: AppColors.grayscale20,
+                  ),
+                  SizedBox(
+                    height: SizeConfig.heightMultiplier(context) * 16,
+                  ),
+                  Text(
+                    "Animal Sex".tr,
+                    style: AppFonts.headline2(color: AppColors.grayscale90),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.heightMultiplier(context) * 16,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: SizeConfig.heightMultiplier(context) * 12,
+                      bottom: SizeConfig.heightMultiplier(context) * 12,
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedOviGender = 'Unknown';
+
+                          showAdditionalFields = false;
+                        });
+                      },
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Unknown'.tr,
+                              style: AppFonts.body2(color: AppColors.grayscale90),
+                            ),
+                          ),
+                          Container(
+                            width: SizeConfig.widthMultiplier(context) * 24,
+                            height: SizeConfig.widthMultiplier(context) * 24,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: selectedOviGender == 'Unknown'
+                                    ? AppColors.primary20
+                                    : AppColors.grayscale30,
+                                width: selectedOviGender == 'Unknown' ? 6.0 : 1.0,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        top: SizeConfig.heightMultiplier(context) * 12,
+                        bottom: SizeConfig.heightMultiplier(context) * 12),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedOviGender = 'Male';
+
+                          showAdditionalFields = false;
+                        });
+                      },
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Male'.tr,
+                              style: AppFonts.body2(color: AppColors.grayscale90),
+                            ),
+                          ),
+                          Container(
+                            width: SizeConfig.widthMultiplier(context) * 24,
+                            height: SizeConfig.widthMultiplier(context) * 24,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: selectedOviGender == 'Male'
+                                    ? AppColors.primary20
+                                    : AppColors.grayscale30,
+                                width: selectedOviGender == 'Male' ? 6.0 : 1.0,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        top: SizeConfig.heightMultiplier(context) * 12,
+                        bottom: SizeConfig.heightMultiplier(context) * 12),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedOviGender = 'Female';
+                        });
+                      },
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Female'.tr,
+                              style: AppFonts.body2(color: AppColors.grayscale90),
+                            ),
+                          ),
+                          Container(
+                            width: SizeConfig.widthMultiplier(context) * 24,
+                            height: SizeConfig.widthMultiplier(context) * 24,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: selectedOviGender == 'Female'
+                                    ? AppColors.primary20
+                                    : AppColors.grayscale30,
+                                width: selectedOviGender == 'Female' ? 6.0 : 1.0,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.heightMultiplier(context) * 16,
+                  ),
+                  const Divider(
+                    color: AppColors.grayscale20,
+                  ),
+                  SizedBox(
+                    height: SizeConfig.heightMultiplier(context) * 16,
+                  ),
+                  Visibility(
+                    visible: selectedAnimalType == 'Oviparous' &&
+                        selectedOviGender == "Female",
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Frequency Of Laying Eggs/Month'.tr,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _layingFrequencyController,
+                          decoration: InputDecoration(
+                            hintText: 'Enter Frequency'.tr, // Add your hint text here
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(50.0),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 12.0, horizontal: 16.0),
+                          ),
+                          textInputAction:
+                              TextInputAction.done, // Change the keyboard action
+                        ),
+                        // Your first additional text field widget here
+                        const SizedBox(height: 10),
+                        Text(
+                          'Number Of Eggs/Month'.tr,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _eggsNumberController,
+                          decoration: InputDecoration(
+                            hintText: 'Enter The Number'.tr, // Add your hint text here
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(50.0),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 12.0, horizontal: 16.0),
+                          ),
+                          textInputAction:
+                              TextInputAction.done, // Change the keyboard action
+                        ),
+                        const SizedBox(height: 15),
+                        const Divider(),
+                        // Your second additional text field widget here
+                      ],
+                    ),
+                  ),
+                  if (selectedOviGender == "Female")
+                    Visibility(
+                      visible: selectedAnimalType == 'Mammal' &&
+                          selectedOviGender == "Female",
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: SizeConfig.heightMultiplier(context) * 16,
+                          ),
+                          Text(
+                            "Breeding Stage".tr,
+                            style: AppFonts.headline2(color: AppColors.grayscale90),
+                          ),
+                          SizedBox(
+                            height: SizeConfig.heightMultiplier(context) * 16,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: SizeConfig.heightMultiplier(context) * 12,
+                              bottom: SizeConfig.heightMultiplier(context) * 12,
+                            ),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedBreedingStage = 'Ready For Breeding';
+                                });
+                              },
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      'Ready For Breeding'.tr,
+                                      style: AppFonts.body2(
+                                          color: AppColors.grayscale90),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: SizeConfig.widthMultiplier(context) * 24,
+                                    height:
+                                        SizeConfig.widthMultiplier(context) * 24,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: selectedBreedingStage ==
+                                                'Ready For Breeding'
+                                            ? AppColors.primary20
+                                            : AppColors.grayscale30,
+                                        width: selectedBreedingStage ==
+                                                'Ready For Breeding'
+                                            ? 6.0
+                                            : 1.0,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: SizeConfig.heightMultiplier(context) * 12,
+                              bottom: SizeConfig.heightMultiplier(context) * 12,
+                            ),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedBreedingStage = 'Pregnant';
+                                });
+                              },
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      'Pregnant'.tr,
+                                      style: AppFonts.body2(
+                                          color: AppColors.grayscale90),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: SizeConfig.widthMultiplier(context) * 24,
+                                    height:
+                                        SizeConfig.widthMultiplier(context) * 24,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: selectedBreedingStage == 'Pregnant'
+                                            ? AppColors.primary20
+                                            : AppColors.grayscale30,
+                                        width: selectedBreedingStage == 'Pregnant'
+                                            ? 6.0
+                                            : 1.0,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: SizeConfig.heightMultiplier(context) * 12,
+                              bottom: SizeConfig.heightMultiplier(context) * 12,
+                            ),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedBreedingStage = 'Lactating';
+                                });
+                              },
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      'Lactating'.tr,
+                                      style: AppFonts.body2(
+                                          color: AppColors.grayscale90),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: SizeConfig.widthMultiplier(context) * 24,
+                                    height:
+                                        SizeConfig.widthMultiplier(context) * 24,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: selectedBreedingStage == 'Lactating'
+                                            ? AppColors.primary20
+                                            : AppColors.grayscale30,
+                                        width: selectedBreedingStage == 'Lactating'
+                                            ? 6.0
+                                            : 1.0,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.019),
+                          const Divider(),
+                        ],
+                      ),
+                    ),
+                  Text(
+                    "Dates".tr,
+                    style: AppFonts.headline2(color: AppColors.grayscale90),
+                  ),
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Date Of Birth'.tr,
+                        style: AppFonts.caption2(
+                          color: AppColors.grayscale90,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.grayscale00,
+                                borderRadius: BorderRadius.circular(50.0),
+                                border: Border.all(
+                                  color: AppColors.primary30,
+                                  width: 1.0,
+                                ),
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  _showDOBPicker(context);
+                                },
+                                child: TextFormField(
+                                  enabled: false,
+                                  style:
+                                      AppFonts.body2(color: AppColors.grayscale90),
+                                  decoration: InputDecoration(
+                                    hintText: 'DD/MM/YYYY',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(50.0),
+                                      borderSide: const BorderSide(
+                                        width: 0.2,
+                                      ),
+                                    ),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 12.0, horizontal: 16.0),
+                                    suffixIcon: GestureDetector(
+                                      onTap: () {
+                                        _showDOBPicker(context);
+                                      },
+                                      child: const Icon(
+                                        Icons.calendar_today_outlined,
+                                        color: Color.fromARGB(255, 36, 86, 38),
+                                      ),
+                                    ),
+                                  ),
+                                  readOnly: true,
+                                  controller: _birthDayController,
+                                ),
+                                // child: Text(fieldName),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  ),
+                  _buildDateFields(),
+                  Row(
+                    children: [
+                      PrimaryTextButton(
+                        onPressed: () {
+                          _showDateSelectionSheet(context, selectedAnimalType);
+                        },
+                        status: TextStatus.idle,
+                        text: 'Add Date'.tr,
+                      ),
+                      const Icon(Icons.add_rounded,
+                          color: AppColors.primary40, size: 20),
+                    ],
+                  ),
+                  SizedBox(
+                    height: SizeConfig.heightMultiplier(context) * 16,
+                  ),
+                  const Divider(
+                    color: AppColors.grayscale20,
+                  ),
+                  SizedBox(
+                    height: SizeConfig.heightMultiplier(context) * 16,
+                  ),
+                  Text(
+                    "Add Tag".tr,
+                    style: AppFonts.headline2(color: AppColors.grayscale90),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.heightMultiplier(context) * 16,
+                  ),
+                  Wrap(
+                    spacing: 8.0,
+                    runSpacing: 8.0,
+                    children: selectedOviChips.map((chip) {
+                      return CustomTag(
+                        label: chip,
+                        selected: true, // Since these are selected chips
+                        onTap: () {},
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.heightMultiplier(context) * 16,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      _animalTagsModalSheet();
+                    },
+                    child: Text(
+                      'Add Tags +'.tr,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 36, 86, 38),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.heightMultiplier(context) * 16,
+                  ),
+                  const Divider(
+                    color: AppColors.grayscale20,
+                  ),
+                  SizedBox(
+                    height: SizeConfig.heightMultiplier(context) * 16,
+                  ),
+                  Text(
+                    "Custom fields".tr,
+                    style: AppFonts.headline2(color: AppColors.grayscale90),
+                  ),
+                  Text(
+                    "Add Custom Fields If Needed".tr,
+                    style: AppFonts.body2(color: AppColors.grayscale60),
+                  ),
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
+                  Column(
+                    children: customFields == null
+                        ? []
+                        : customFields!.keys
+                            .map(
+                              (fieldName) => Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(fieldName,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      IconButton(
+                                          icon: const Icon(Icons.delete,
+                                              color: Colors.red),
+                                          onPressed: () =>
+                                              _removeCustomField(fieldName)),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  TextField(
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50.0),
+                                        borderSide: const BorderSide(
+                                          color: Colors.grey,
+                                          width: 2.0,
+                                        ),
+                                      ),
+                                      contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 12.0,
+                                        horizontal: 16.0,
+                                      ),
+                                    ),
+                                    controller: TextEditingController(
+                                        text: customFields![fieldName]),
+                                  ),
+                                  const SizedBox(height: 15),
+                                ],
+                              ),
+                            )
+                            .toList(),
+                  ),
+                  Row(
+                    children: [
+                      PrimaryTextButton(
+                        onPressed: () {
+                          _showOviFieldNameModal(context);
+                        },
+                        status: TextStatus.idle,
+                        text: 'Add Custom Fields'.tr,
+                      ),
+                      SizedBox(width: SizeConfig.widthMultiplier(context) * 8),
+                      const Icon(Icons.add_rounded,
+                          color: AppColors.primary40, size: 20),
+                    ],
+                  ),
+                  SizedBox(
+                    height: SizeConfig.heightMultiplier(context) * 16,
+                  ),
+                  const Divider(
+                    color: AppColors.grayscale20,
+                  ),
+                  SizedBox(
+                    height: SizeConfig.heightMultiplier(context) * 16,
+                  ),
+                  Text(
+                    "Additional Notes".tr,
+                    style: AppFonts.headline2(color: AppColors.grayscale90),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.heightMultiplier(context) * 16,
+                  ),
+                  EditParagraphTextField(
+                    hintText: 'Add Any Additional Notes if Needed'.tr,
+                    maxLines: 8,
+                    notesController: _notesController,
+                  ),
+                  SizedBox(
+                    height: SizeConfig.heightMultiplier(context) * 16,
+                  ),
+                  FileUploaderField(
+                    uploadedFiles: uploadedFiles?.map((file) => file.path).toList(),
+                  )
+                ],
+              ),
             ),
           ),
-          child: Text(
-            'Save Changes'.tr,
-            style: const TextStyle(color: Colors.white),
+          bottomNavigationBar: Padding(
+            padding: EdgeInsets.only(
+                left: 16,
+                top: 16,
+                right: 16,
+                bottom: 16 + MediaQuery.of(context).viewInsets.bottom),
+            child: ElevatedButton(
+              onPressed: () => _saveChanges(animalDetails),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 36, 86, 38),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+              ),
+              child: Text(
+                'Save Changes'.tr,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      }
     );
   }
 
@@ -1533,32 +1538,26 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
     });
   }
 
-  void _saveChanges() {
-    final animalProvider = ref.read(oviAnimalsProvider);
-    final animalIndex =
-        animalProvider.indexWhere((animal) => animal.id == widget.animalId);
-    ref.read(oviAnimalsProvider.notifier).update((state) {
-      final newState = List<OviVariables>.from(state);
-      newState[animalIndex] = state[animalIndex].copyWith(
-          animalName: _animalNameController.text,
-          notes: _notesController.text,
-          dateOfBirth: _birthDayController.text.isNotEmpty
-              ? DateFormat('dd/MM/yyyy').parse(_birthDayController.text)
-              : null,
-          files: uploadedFiles,
-          selectedOviImage: selectedOviImage,
-          selectedAnimalType: selectedAnimalType,
-          selectedAnimalSpecies: selectedAnimalSpecies,
-          selectedAnimalBreed: selectedAnimalBreed,
-          selectedOviGender: selectedOviGender,
-          layingFrequency: _layingFrequencyController.text,
-          eggsPerMonth: _eggsNumberController.text,
-          selectedBreedingStage: selectedBreedingStage,
-          selectedOviChips: selectedOviChips,
-          customFields: customFields,
-          selectedOviDates: selectedOviDates);
-      return newState;
-    });
+  void _saveChanges(OviVariables animalDetails) {
+    ref.read(animalListProvider.notifier).updateAnimal(animalDetails.copyWith(
+        animalName: _animalNameController.text,
+        notes: _notesController.text,
+        dateOfBirth: _birthDayController.text.isNotEmpty
+            ? DateFormat('dd/MM/yyyy').parse(_birthDayController.text)
+            : null,
+        files: uploadedFiles,
+        selectedOviImage: selectedOviImage,
+        selectedAnimalType: selectedAnimalType,
+        selectedAnimalSpecies: selectedAnimalSpecies,
+        selectedAnimalBreed: selectedAnimalBreed,
+        selectedOviGender: selectedOviGender,
+        layingFrequency: _layingFrequencyController.text,
+        eggsPerMonth: _eggsNumberController.text,
+        selectedBreedingStage: selectedBreedingStage,
+        selectedOviChips: selectedOviChips,
+        customFields: customFields,
+        selectedOviDates: selectedOviDates
+    ));
 
     Navigator.pop(context);
   }

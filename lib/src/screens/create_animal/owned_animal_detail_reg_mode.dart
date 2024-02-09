@@ -6,7 +6,6 @@ import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import 'package:sulala_upgrade/src/screens/reg_mode/image_view_page.dart';
 
-import '../../data/classes/breeding_event_variables.dart';
 import '../../data/classes/ovi_variables.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -20,19 +19,11 @@ import '../medical/mammals_medical.dart';
 import 'edit_animal_details/edit_page.dart';
 
 class OwnedAnimalDetailsRegMode extends ConsumerStatefulWidget {
-  final String imagePath;
-  final String title;
-  final String genInfo;
-  final OviVariables oviDetails;
-  final List<BreedingEventVariables> breedingEvents;
+  final int animalId;
 
   const OwnedAnimalDetailsRegMode(
       {Key? key,
-      required this.imagePath,
-      required this.title,
-      required this.genInfo,
-      required this.oviDetails,
-      required this.breedingEvents})
+      required this.animalId})
       : super(key: key);
 
   @override
@@ -45,13 +36,11 @@ class _OwnedAnimalDetailsRegModeState
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
   bool editMode = false;
-  late OviVariables oviDetails;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    oviDetails = widget.oviDetails.copyWith();
   }
 
   @override
@@ -65,189 +54,201 @@ class _OwnedAnimalDetailsRegModeState
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: [
-            Align(
-              alignment: Alignment.topCenter,
-              child: SizedBox(
-                width: SizeConfig.widthMultiplier(context) * 375,
-                child: Image.asset(
-                  "assets/graphic/Animal_p.png",
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            Positioned(
-              top: 8.0,
-              left: 8.0,
-              child: Container(
-                decoration: const BoxDecoration(
-                    color: AppColors.grayscale10, shape: BoxShape.circle),
-                child: IconButton(
-                  padding: EdgeInsets.zero,
-                  icon: Icon(
-                    Icons.arrow_back_rounded,
-                    color: Colors.black,
-                    size: SizeConfig.widthMultiplier(context) * 24,
-                  ),
-                  onPressed: () {
-                    // Handle close button press
-                    Navigator.pop(context);
-                  },
-                ),
-              ),
-            ),
-            Positioned(
-              top: 8.0,
-              right: 8.0,
-              child: Container(
-                width: SizeConfig.widthMultiplier(context) * 40,
-                decoration: const BoxDecoration(
-                    color: AppColors.grayscale10, shape: BoxShape.circle),
-                child: IconButton(
-                  padding: EdgeInsets.zero,
-                  icon: Image.asset(
-                      'assets/icons/frame/24px/edit_icon_button.png'),
-                  onPressed: () {
-                    // Handle close button press
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => EditAnimalGenInfo(
-                          animalId: oviDetails.id,
-                          breedingEvents: widget.breedingEvents,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-            Positioned(
-              top: SizeConfig.heightMultiplier(context) * 185,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(
-                      SizeConfig.heightMultiplier(context) * 32,
+        body: ref.watch(animalListProvider).when(
+          data: (animals) {
+            final oviDetails = animals.firstWhere((animal) => animal.id == widget
+                .animalId);
+
+            return Stack(
+              children: [
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: SizedBox(
+                    width: SizeConfig.widthMultiplier(context) * 375,
+                    child: Image.asset(
+                      "assets/graphic/Animal_p.png",
+                      fit: BoxFit.fill,
                     ),
-                    topRight: Radius.circular(
-                        SizeConfig.widthMultiplier(context) * 32),
                   ),
                 ),
-                child: const SizedBox(), // Add your content here
-              ),
-            ),
-            Center(
-              child: FractionalTranslation(
-                translation:
-                    Offset(0, SizeConfig.heightMultiplier(context) * 0.15),
-                child: Expanded(
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        onTap: _viewImage,
-                        child: CircleAvatar(
-                          radius: MediaQuery.of(context).size.width * 0.16,
-                          backgroundColor: Colors.grey[100],
-                          backgroundImage: oviDetails.selectedOviImage,
-                          child: oviDetails.selectedOviImage == null
-                              ? const Icon(
-                                  Icons.camera_alt_outlined,
-                                  size: 50,
-                                  color: Colors.grey,
-                                )
-                              : null,
-                        ),
+                Positioned(
+                  top: 8.0,
+                  left: 8.0,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                        color: AppColors.grayscale10, shape: BoxShape.circle),
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      icon: Icon(
+                        Icons.arrow_back_rounded,
+                        color: Colors.black,
+                        size: SizeConfig.widthMultiplier(context) * 24,
                       ),
-                      SizedBox(
-                        height: SizeConfig.heightMultiplier(context) * 16,
-                      ),
-                      if (editMode == true)
-                        Row(
-                          children: [
-                            Text(
-                              oviDetails.animalName,
-                              style:
-                                  AppFonts.title4(color: AppColors.grayscale90),
-                            ),
-                          ],
-                        ),
-                      Text(
-                        oviDetails.animalName,
-                        style: AppFonts.title4(color: AppColors.grayscale90),
-                      ),
-                      Text(
-                        "ID #${oviDetails.id}",
-                        style: AppFonts.body2(color: AppColors.grayscale70),
-                      ),
-                      SizedBox(
-                        height: SizeConfig.heightMultiplier(context) * 16,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: SizeConfig.widthMultiplier(context) * 16,
-                            right: SizeConfig.widthMultiplier(context) * 16),
-                        child: Column(
-                          children: [
-                            Wrap(
-                              alignment: WrapAlignment.center,
-                              spacing: 8.0,
-                              runSpacing: 8.0,
-                              children: oviDetails.selectedOviChips.isEmpty
-                                  ? [
-                                      CustomTag(
-                                        label: 'Add+'.tr,
-                                        selected:
-                                            true, // Since these are selected chips
-                                        onTap: _showAnimalTagsModalSheet,
-                                      )
-                                    ]
-                                  : oviDetails.selectedOviChips
-                                      .take(2)
-                                      .map((chip) {
-                                      return CustomTag(
-                                        label: chip,
-                                        selected:
-                                            true, // Since these are selected chips
-                                        onTap: _showAnimalTagsModalSheet,
-                                      );
-                                    }).toList(),
-                            ),
-                            if (oviDetails.selectedOviChips.length > 2)
-                              TextButton(
-                                  onPressed: _showAnimalTagsModalSheet,
-                                  child: Text(
-                                    'See more'.tr,
-                                    style: const TextStyle(
-                                        color: AppColors.primary50),
-                                  )),
-                            SizedBox(
-                              height: SizeConfig.heightMultiplier(context) * 32,
-                            ),
-                            _buildTabBar(),
-                            SizedBox(
-                              height: SizeConfig.heightMultiplier(context) * 24,
-                            ),
-                            _buildTabBarView(context),
-                          ],
-                        ),
-                      ),
-                    ],
+                      onPressed: () {
+                        // Handle close button press
+                        Navigator.pop(context);
+                      },
+                    ),
                   ),
                 ),
-              ),
-            ),
-          ],
+                Positioned(
+                  top: 8.0,
+                  right: 8.0,
+                  child: Container(
+                    width: SizeConfig.widthMultiplier(context) * 40,
+                    decoration: const BoxDecoration(
+                        color: AppColors.grayscale10, shape: BoxShape.circle),
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      icon: Image.asset(
+                          'assets/icons/frame/24px/edit_icon_button.png'),
+                      onPressed: () {
+                        // Handle close button press
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => EditAnimalGenInfo(
+                              animalId: oviDetails.id,
+                              breedingEvents: const [],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: SizeConfig.heightMultiplier(context) * 185,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(
+                          SizeConfig.heightMultiplier(context) * 32,
+                        ),
+                        topRight: Radius.circular(
+                            SizeConfig.widthMultiplier(context) * 32),
+                      ),
+                    ),
+                    child: const SizedBox(), // Add your content here
+                  ),
+                ),
+                Center(
+                  child: FractionalTranslation(
+                    translation:
+                        Offset(0, SizeConfig.heightMultiplier(context) * 0.15),
+                    child: Expanded(
+                      child: Column(
+                        children: [
+                          GestureDetector(
+                            onTap: () => _viewImage(oviDetails.selectedOviImage),
+                            child: CircleAvatar(
+                              radius: MediaQuery.of(context).size.width * 0.16,
+                              backgroundColor: Colors.grey[100],
+                              backgroundImage: oviDetails.selectedOviImage,
+                              child: oviDetails.selectedOviImage == null
+                                  ? const Icon(
+                                      Icons.camera_alt_outlined,
+                                      size: 50,
+                                      color: Colors.grey,
+                                    )
+                                  : null,
+                            ),
+                          ),
+                          SizedBox(
+                            height: SizeConfig.heightMultiplier(context) * 16,
+                          ),
+                          if (editMode == true)
+                            Row(
+                              children: [
+                                Text(
+                                  oviDetails.animalName,
+                                  style:
+                                      AppFonts.title4(color: AppColors.grayscale90),
+                                ),
+                              ],
+                            ),
+                          Text(
+                            oviDetails.animalName,
+                            style: AppFonts.title4(color: AppColors.grayscale90),
+                          ),
+                          Text(
+                            "ID #${oviDetails.id}",
+                            style: AppFonts.body2(color: AppColors.grayscale70),
+                          ),
+                          SizedBox(
+                            height: SizeConfig.heightMultiplier(context) * 16,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: SizeConfig.widthMultiplier(context) * 16,
+                                right: SizeConfig.widthMultiplier(context) * 16),
+                            child: Column(
+                              children: [
+                                Wrap(
+                                  alignment: WrapAlignment.center,
+                                  spacing: 8.0,
+                                  runSpacing: 8.0,
+                                  children: oviDetails.selectedOviChips.isEmpty
+                                      ? [
+                                          CustomTag(
+                                            label: 'Add+'.tr,
+                                            selected:
+                                                true, // Since these are selected chips
+                                            onTap: () =>
+                                                _showAnimalTagsModalSheet(
+                                                    oviDetails),
+                                          )
+                                        ]
+                                      : oviDetails.selectedOviChips
+                                          .take(2)
+                                          .map((chip) {
+                                          return CustomTag(
+                                            label: chip,
+                                            selected:
+                                                true, // Since these are selected chips
+                                            onTap: () =>
+                                                _showAnimalTagsModalSheet(oviDetails),
+                                          );
+                                        }).toList(),
+                                ),
+                                if (oviDetails.selectedOviChips.length > 2)
+                                  TextButton(
+                                      onPressed: () =>
+                                          _showAnimalTagsModalSheet(oviDetails),
+                                      child: Text(
+                                        'See more'.tr,
+                                        style: const TextStyle(
+                                            color: AppColors.primary50),
+                                      )),
+                                SizedBox(
+                                  height: SizeConfig.heightMultiplier(context) * 32,
+                                ),
+                                _buildTabBar(),
+                                SizedBox(
+                                  height: SizeConfig.heightMultiplier(context) * 24,
+                                ),
+                                _buildTabBarView(context, oviDetails),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }, error: (Object error, StackTrace stackTrace) => Text(error.toString()),
+            loading: () => const Center(child: CircularProgressIndicator(),)
         ),
       ),
     );
   }
 
-  SizedBox _buildTabBarView(BuildContext context) {
+  SizedBox _buildTabBarView(BuildContext context, OviVariables oviDetails) {
     return SizedBox(
       height: SizeConfig.heightMultiplier(context) * 325,
       width: SizeConfig.widthMultiplier(context) * 341,
@@ -258,19 +259,19 @@ class _OwnedAnimalDetailsRegModeState
           GeneralInfoAnimalWidget(
             onDateOfBirthPressed: () {},
             onDateOfDeathPressed: () {
-              _updateDateField('Date Of Death');
+              _updateDateField('Date Of Death', oviDetails);
             },
             onDateOfMatingPressed: () {
-              _updateDateField('Date Of Mating');
+              _updateDateField('Date Of Mating', oviDetails);
             },
             onDateOfSalePressed: () {
-              _updateDateField('Date Of Sale');
+              _updateDateField('Date Of Sale', oviDetails);
             },
             onDateOfWeaningPressed: () {
-              _updateDateField('Date Of Weaning');
+              _updateDateField('Date Of Weaning', oviDetails);
             },
             onDateOfHatchingPressed: () {
-              _updateDateField('Date Of Hatching');
+              _updateDateField('Date Of Hatching', oviDetails);
             },
             age: "3 years",
             type: "Mammal",
@@ -284,7 +285,7 @@ class _OwnedAnimalDetailsRegModeState
           // Content for the 'Breeding' tab
           BreedingInfo(
             oviDetails: oviDetails,
-            breedingEvents: widget.breedingEvents,
+            breedingEvents: const [],
           ),
 
           // Content for the 'Medical' tab
@@ -329,7 +330,7 @@ class _OwnedAnimalDetailsRegModeState
     );
   }
 
-  Future<void> _updateDateField(dateType) async {
+  Future<void> _updateDateField(dateType, oviDetails) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: oviDetails.selectedOviDates[dateType] ?? DateTime.now(),
@@ -351,25 +352,18 @@ class _OwnedAnimalDetailsRegModeState
       },
     );
     if (pickedDate != null) {
-      setState(() {
-        oviDetails.selectedOviDates[dateType] = pickedDate;
-      });
-      ref.read(oviAnimalsProvider.notifier).update((state) {
-        final index = state
-            .indexWhere((animal) => animal.animalName == oviDetails.animalName);
-        state[index] = oviDetails;
-        return state;
-      });
+      oviDetails.selectedOviDates[dateType] = pickedDate;
+      ref.read(animalListProvider.notifier).updateAnimal(oviDetails);
     }
   }
 
-  void _viewImage() {
+  void _viewImage(selectedOviImage) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) =>
-            ImageViewPage(imageProvider: oviDetails.selectedOviImage!)));
+            ImageViewPage(imageProvider: selectedOviImage!)));
   }
 
-  void _showAnimalTagsModalSheet() async {
+  void _showAnimalTagsModalSheet(OviVariables oviDetails) async {
     final result = await showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
@@ -381,15 +375,9 @@ class _OwnedAnimalDetailsRegModeState
     );
 
     if (result != null) {
-      setState(() {
-        oviDetails = oviDetails.copyWith(selectedOviChips: result);
-        ref.read(oviAnimalsProvider.notifier).update((state) {
-          final animalIndex =
-              state.indexWhere((animal) => animal.id == oviDetails.id);
-          state[animalIndex] = oviDetails;
-          return state;
-        });
-      });
+      ref.read(animalListProvider.notifier).updateAnimal(oviDetails.copyWith(
+        selectedOviChips: result
+      ));
     }
   }
 }

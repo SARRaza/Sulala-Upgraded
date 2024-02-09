@@ -221,21 +221,13 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                   itemCount: breedingEvent.partner != null ? 1 : 0,
                   itemBuilder: (context, index) {
                     final partner = breedingEvent.partner;
-                    final partnerOviDetails = ref
-                        .read(oviAnimalsProvider)
-                        .firstWhere((animal) =>
-                            animal.animalName == partner!.animalName);
 
                     return ListTile(
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                               builder: (context) => OwnedAnimalDetailsRegMode(
-                                  imagePath: '',
-                                  title: '',
-                                  genInfo: '',
-                                  oviDetails: partnerOviDetails,
-                                  breedingEvents: const [])),
+                                animalId: widget.oviDetails.id,)),
                         );
                       },
                       contentPadding: EdgeInsets.zero,
@@ -260,7 +252,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
                       trailing: Text(
-                        'ID#${partnerOviDetails.id}',
+                        'ID#${partner.id}',
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
                     );
@@ -294,10 +286,6 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                         itemCount: breedingEvent.children.length,
                         itemBuilder: (context, index) {
                           final child = breedingEvent.children[index];
-                          final childOviDetails = ref
-                              .read(oviAnimalsProvider)
-                              .firstWhere((animal) =>
-                                  animal.animalName == child.animalName);
 
                           return ListTile(
                             onTap: () {
@@ -305,11 +293,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         OwnedAnimalDetailsRegMode(
-                                            imagePath: '',
-                                            title: '',
-                                            genInfo: '',
-                                            oviDetails: childOviDetails,
-                                            breedingEvents: const [])),
+                                          animalId: widget.oviDetails.id,)),
                               );
                             },
                             contentPadding: EdgeInsets.zero,
@@ -336,7 +320,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                                   AppFonts.body2(color: AppColors.grayscale70),
                             ),
                             trailing: Text(
-                              'ID#${childOviDetails.id}',
+                              'ID#${child.id}',
                               style:
                                   AppFonts.body2(color: AppColors.grayscale70),
                             ),

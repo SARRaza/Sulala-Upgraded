@@ -176,9 +176,10 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
 
   @override
   void initState() {
-    super.initState();
     _chartData = _getChartData();
     sumOfNextTwoCards = _chartData[0].quan + _chartData[1].quan;
+
+    super.initState();
   }
 
   void _updateChartData(int newQuan, String animalName) {
@@ -338,12 +339,13 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                             "assets/icons/frame/24px/cow_chicken.png",
                             width: SizeConfig.widthMultiplier(context) * 48,
                           ),
+                          animalData: AnimalData(
+                              'ALL'.tr, sumOfNextTwoCards, _chartData[0].color),
+                          quan: sumOfNextTwoCards.toString(),
                           onPressed: () {
                             _updateChartData(sumOfNextTwoCards, 'ALL'.tr);
                           },
                           isSelected: _selectedIndex == -1,
-                          quantity: sumOfNextTwoCards.toString(),
-                          title: 'ALL'.tr,
                         ),
                       ),
                       SizedBox(
@@ -354,12 +356,12 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                             "assets/icons/frame/24px/cow_framed.png",
                             width: SizeConfig.widthMultiplier(context) * 48,
                           ),
+                          quan: _chartData[0].quan.toString(),
+                          animalData: _chartData[0],
                           onPressed: () {
                             _updateChartData(_chartData[0].quan, 'Mammals'.tr);
                           },
                           isSelected: _selectedIndex == 0,
-                          quantity: _chartData[0].quan.toString(),
-                          title: 'Mammals'.tr,
                         ),
                       ),
                       SizedBox(
@@ -370,13 +372,13 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                             "assets/icons/frame/24px/chicken_framed.png",
                             width: SizeConfig.widthMultiplier(context) * 48,
                           ),
+                          animalData: _chartData[1],
+                          quan: _chartData[1].quan.toString(),
                           onPressed: () {
                             _updateChartData(
                                 _chartData[1].quan, 'Oviparous'.tr);
                           },
                           isSelected: _selectedIndex == 1,
-                          quantity: _chartData[1].quan.toString(),
-                          title: 'Oviparous'.tr,
                         ),
                       ),
                     ],
@@ -484,7 +486,8 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
                           final ReminderItem dateItem = reminders[index];
 
                           return GestureDetector(
-                            onTap: () => _navigateToAnimal(dateItem.animalNames),
+                            onTap: () =>
+                                _navigateToAnimal(dateItem.animalNames),
                             child: ListTile(
                               contentPadding: EdgeInsets.zero,
                               title: Row(
@@ -699,12 +702,8 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => OwnedAnimalDetailsRegMode(
-                imagePath: '',
-                title: '',
-                genInfo: '',
-                oviDetails: animal,
-                breedingEvents: const [])));
+            builder: (context) => OwnedAnimalDetailsRegMode(animalId: animal.id)
+        ));
   }
 }
 

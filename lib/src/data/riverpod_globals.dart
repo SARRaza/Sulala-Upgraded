@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -84,6 +85,41 @@ final deliveryDateProvider = StateProvider<DateTime?>((ref) => null);
 final breedingNotesProvider = StateProvider<String>((ref) => '');
 final shouldAddEventProvider = StateProvider<bool>((ref) => false);
 final oviAnimalsProvider = StateProvider<List<OviVariables>>((ref) => []);
+
+final animalListProvider =
+    AsyncNotifierProvider<AnimalList, List<OviVariables>>(AnimalList.new);
+
+class AnimalList extends AsyncNotifier<List<OviVariables>> {
+  @override
+  FutureOr<List<OviVariables>> build() {
+    return [];
+  }
+
+  Future<void> addAnimal(OviVariables animal) async {
+    final newAnimals = List<OviVariables>.from(state.value ?? []);
+    if (newAnimals.isEmpty) {
+      newAnimals.add(animal);
+    } else {
+      newAnimals.insert(0, animal);
+    }
+    state = AsyncData(newAnimals);
+  }
+
+  Future<void> updateAnimal(OviVariables updatedAnimal) async {
+    final newAnimals = List<OviVariables>.from(state.value!);
+    final animalIndex =
+        newAnimals.indexWhere((animal) => animal.id == updatedAnimal.id);
+    newAnimals[animalIndex] = updatedAnimal;
+    state = AsyncData(newAnimals);
+  }
+
+  Future<void> removeAnimal(int id) async {
+    final newAnimals = List<OviVariables>.from(state.value!);
+    newAnimals.removeWhere((animal) => animal.id == id);
+    state = AsyncData(newAnimals);
+  }
+}
+
 final breedingEventsProvider =
     StateProvider<List<BreedingEventVariables>>((ref) => []);
 final vaccineDetailsListProvider =
@@ -100,20 +136,18 @@ final animalDamDetailsProvider = StateProvider<MainAnimalDam?>((ref) => null);
 
 // Reg Home Page Pie Chart Global Variables
 final mammalCountProvider = Provider<int>((ref) {
-  return ref
-      .watch(oviAnimalsProvider)
+  return (ref.watch(animalListProvider).value ?? [])
       .where((animal) => animal.selectedAnimalType.toLowerCase() == 'mammal')
       .length;
 });
 final oviparousCountProvider = Provider<int>((ref) {
-  return ref
-      .watch(oviAnimalsProvider)
+  return (ref.watch(animalListProvider).value ?? [])
       .where((animal) => animal.selectedAnimalType.toLowerCase() == 'oviparous')
       .length;
 });
 
 final totalAnimalsCountProvider = Provider<int>((ref) {
-  return ref.watch(oviAnimalsProvider).length;
+  return (ref.watch(animalListProvider).value ?? []).length;
 });
 
 List<String> mammalSpeciesList = [
@@ -317,8 +351,7 @@ Map<String, int> incubationPeriods = {
 };
 
 final mammalSpeciesCountProvider = Provider<Map<String, int>>((ref) {
-  final mammals = ref
-      .watch(oviAnimalsProvider)
+  final mammals = (ref.watch(animalListProvider).value ?? [])
       .where((animal) => animal.selectedAnimalType.toLowerCase() == 'mammal')
       .toList();
 
@@ -335,8 +368,7 @@ final mammalSpeciesCountProvider = Provider<Map<String, int>>((ref) {
 });
 
 final oviparousSpeciesCountProvider = Provider<Map<String, int>>((ref) {
-  final oviparous = ref
-      .watch(oviAnimalsProvider)
+  final oviparous = (ref.watch(animalListProvider).value ?? [])
       .where((animal) => animal.selectedAnimalType.toLowerCase() == 'oviparous')
       .toList();
 

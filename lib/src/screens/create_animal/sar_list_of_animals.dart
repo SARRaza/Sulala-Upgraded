@@ -37,7 +37,7 @@ class UserListOfAnimals extends ConsumerStatefulWidget {
 class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
   String filterQuery = '';
   Timer? _debounce;
-  
+
   Future<void> _refreshOviAnimals() async {
     // Add your logic to refresh the list here
     // For example, you can fetch new data or update existing data
@@ -108,33 +108,23 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
         files:
             ref.read(uploadedFilesProvider).map((path) => File(path)).toList());
 
-    final oviAnimals = ref.read(oviAnimalsProvider);
+    final oviAnimals = ref.read(animalListProvider).value!;
     final breedingChildrenDetails = ref.read(breedingChildrenDetailsProvider);
     for (var child in breedingChildrenDetails) {
       final childIndex =
           oviAnimals.indexWhere((animal) => animal.id == child.id);
-
-      ref.read(oviAnimalsProvider.notifier).update((state) {
-        if (oviDetails.selectedOviGender == 'Male') {
-          state[childIndex].copyWith(
-              selectedOviSire: MainAnimalSire(oviDetails.animalName,
-                  oviDetails.selectedOviImage, oviDetails.selectedOviGender));
-        } else {
-          state[childIndex].copyWith(
-              selectedOviDam: MainAnimalDam(oviDetails.animalName,
-                  oviDetails.selectedOviImage, oviDetails.selectedOviGender));
-        }
-        return state;
-      });
-    }
-
-    setState(() {
-      if (ref.read(oviAnimalsProvider).isEmpty) {
-        ref.read(oviAnimalsProvider).add(oviDetails);
+      final animal = oviAnimals[childIndex];
+      if (oviDetails.selectedOviGender == 'Male') {
+        ref.read(animalListProvider.notifier).updateAnimal(animal.copyWith(
+            selectedOviSire: MainAnimalSire(oviDetails.animalName,
+                oviDetails.selectedOviImage, oviDetails.selectedOviGender)));
       } else {
-        ref.read(oviAnimalsProvider).insert(0, oviDetails);
+        ref.read(animalListProvider.notifier).updateAnimal(animal.copyWith(
+            selectedOviDam: MainAnimalDam(oviDetails.animalName,
+                oviDetails.selectedOviImage, oviDetails.selectedOviGender)));
       }
-    });
+    }
+    ref.read(animalListProvider.notifier).addAnimal(oviDetails);
   }
 
   void _filterMammals(String query) {
@@ -157,36 +147,6 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
   Widget build(
     BuildContext context,
   ) {
-    // Filter the OviAnimals list based on the filterQuery
-    final filteredOviAnimals = ref.watch(oviAnimalsProvider).where((animal) {
-      final filters = ref.read(selectedFiltersProvider);
-      final animalType = filters.firstWhereOrNull((filter) =>
-          AnimalFilters.filterItems['Animal Type']!.contains(filter));
-      final animalSpecies = filters.firstWhereOrNull((filter) =>
-          AnimalFilters.filterItems['Animal Species']!.contains(filter));
-      final animalBreed = filters.firstWhereOrNull((filter) =>
-          AnimalFilters.filterItems['Animal Breed']!.contains(filter));
-      final animalSex = filters.firstWhereOrNull((filter) =>
-          AnimalFilters.filterItems['Animal Sex']!.contains(filter));
-      final breedingStage = filters.firstWhereOrNull((filter) =>
-          AnimalFilters.filterItems['Breeding Stage']!.contains(filter));
-      final tags = filters.firstWhereOrNull(
-          (filter) => AnimalFilters.filterItems['Tags']!.contains(filter));
-
-      return (animalType == null || animal.selectedAnimalType == animalType) &&
-          (animalSpecies == null ||
-              animal.selectedAnimalSpecies == animalSpecies) &&
-          (animalBreed == null || animal.selectedAnimalBreed == animalBreed) &&
-          (animalSex == null || animal.selectedOviGender == animalSex) &&
-          (breedingStage == null ||
-              animal.selectedBreedingStage == breedingStage) &&
-          (tags == null || animal.selectedOviChips.contains(tags)) &&
-          (filterQuery.isEmpty ||
-              animal.animalName
-                  .toLowerCase()
-                  .contains(filterQuery.toLowerCase()));
-    }).toList();
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -333,137 +293,184 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                       }).toList(),
                     ),
                   ),
-                  filteredOviAnimals.isNotEmpty
-                      ? ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: filteredOviAnimals.length,
-                          itemBuilder: (context, index) {
-                            final oviDetails = filteredOviAnimals[index];
-                            return StyledDismissible(
-                                onDismissed: (direction) {
-                                  // Handle item dismissal here
-                                  setState(() {
-                                    final removedAnimal =
-                                        filteredOviAnimals.removeAt(index);
-                                    ref
-                                        .read(oviAnimalsProvider)
-                                        .remove(removedAnimal);
-                                    // You may want to update your data source (e.g., oviAnimalsProvider) here too
-                                  });
-                                },
-                                child: ListTile(
-                                  contentPadding: EdgeInsets.zero,
-                                  leading: GestureDetector(
-                                    onTap: () {
-                                    },
-                                    child: CircleAvatar(
-                                      radius:
-                                          SizeConfig.widthMultiplier(context) *
-                                              24,
-                                      backgroundColor: Colors.transparent,
-                                      backgroundImage:
-                                          oviDetails.selectedOviImage,
-                                      child: oviDetails.selectedOviImage == null
-                                          ? const Icon(
-                                              Icons.camera_alt_outlined,
-                                              size: 50,
-                                              color: Colors.grey,
-                                            )
-                                          : null,
-                                    ),
-                                  ),
-                                  title: Text(oviDetails.animalName),
-                                  subtitle: Text(oviDetails.selectedAnimalType),
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            OwnedAnimalDetailsRegMode(
-                                          oviDetails: oviDetails,
-                                          imagePath: '',
-                                          title: '',
-                                          genInfo: '',
-                                          breedingEvents: widget.breedingEvents,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ));
-                          },
-                        )
-                      : SingleChildScrollView(
-                          child: Center(
-                            heightFactor: 2,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  'assets/illustrations/cow_search.png',
-                                ),
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                ),
-                                Text(
-                                  'No Animals Found'.tr,
-                                  style: AppFonts.headline3(
-                                      color: AppColors.grayscale90),
-                                ),
-                                Text(
-                                  'Try adjusting the filters'.tr,
-                                  style: AppFonts.body2(
-                                      color: AppColors.grayscale70),
-                                ),
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.03,
-                                ),
-                                SizedBox(
-                                  height:
-                                      52 * SizeConfig.heightMultiplier(context),
-                                  child: PrimaryButton(
-                                    onPressed: () {
-                                      ref
-                                          .read(selectedAnimalTypeProvider
-                                              .notifier)
-                                          .update((state) => '');
-                                      ref
-                                          .read(selectedAnimalSpeciesProvider
-                                              .notifier)
-                                          .update((state) => '');
-                                      ref
-                                          .read(selectedAnimalBreedsProvider
-                                              .notifier)
-                                          .update((state) => '');
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              CreateAnimalPage(
-                                            breedingEvents:
-                                                widget.breedingEvents,
+                  ref.watch(animalListProvider).when(
+                      data: (animals) {
+                        final filteredOviAnimals = animals.where((animal) {
+                          final filters = ref.read(selectedFiltersProvider);
+                          final animalType = filters.firstWhereOrNull(
+                              (filter) => AnimalFilters
+                                  .filterItems['Animal Type']!
+                                  .contains(filter));
+                          final animalSpecies = filters.firstWhereOrNull(
+                              (filter) => AnimalFilters
+                                  .filterItems['Animal Species']!
+                                  .contains(filter));
+                          final animalBreed = filters.firstWhereOrNull(
+                              (filter) => AnimalFilters
+                                  .filterItems['Animal Breed']!
+                                  .contains(filter));
+                          final animalSex = filters.firstWhereOrNull((filter) =>
+                              AnimalFilters.filterItems['Animal Sex']!
+                                  .contains(filter));
+                          final breedingStage = filters.firstWhereOrNull(
+                              (filter) => AnimalFilters
+                                  .filterItems['Breeding Stage']!
+                                  .contains(filter));
+                          final tags = filters.firstWhereOrNull((filter) =>
+                              AnimalFilters.filterItems['Tags']!
+                                  .contains(filter));
+
+                          return (animalType == null ||
+                                  animal.selectedAnimalType == animalType) &&
+                              (animalSpecies == null ||
+                                  animal.selectedAnimalSpecies ==
+                                      animalSpecies) &&
+                              (animalBreed == null ||
+                                  animal.selectedAnimalBreed == animalBreed) &&
+                              (animalSex == null ||
+                                  animal.selectedOviGender == animalSex) &&
+                              (breedingStage == null ||
+                                  animal.selectedBreedingStage ==
+                                      breedingStage) &&
+                              (tags == null ||
+                                  animal.selectedOviChips.contains(tags)) &&
+                              (filterQuery.isEmpty ||
+                                  animal.animalName
+                                      .toLowerCase()
+                                      .contains(filterQuery.toLowerCase()));
+                        }).toList();
+
+                        return filteredOviAnimals.isNotEmpty
+                            ? ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: filteredOviAnimals.length,
+                                itemBuilder: (context, index) {
+                                  final oviDetails = filteredOviAnimals[index];
+                                  return StyledDismissible(
+                                      onDismissed: (direction) {
+                                        // Handle item dismissal here
+                                        ref
+                                            .read(animalListProvider.notifier)
+                                            .removeAnimal(oviDetails.id);
+                                      },
+                                      child: ListTile(
+                                        contentPadding: EdgeInsets.zero,
+                                        leading: GestureDetector(
+                                          onTap: () {},
+                                          child: CircleAvatar(
+                                            radius: SizeConfig.widthMultiplier(
+                                                    context) *
+                                                24,
+                                            backgroundColor: Colors.transparent,
+                                            backgroundImage:
+                                                oviDetails.selectedOviImage,
+                                            child: oviDetails
+                                                        .selectedOviImage ==
+                                                    null
+                                                ? const Icon(
+                                                    Icons.camera_alt_outlined,
+                                                    size: 50,
+                                                    color: Colors.grey,
+                                                  )
+                                                : null,
                                           ),
                                         ),
-                                      ).then((_) {
-                                        // When returning from CreateBreedingEvents, add the new event
-                                        if (ref
-                                            .read(animalNameProvider)
-                                            .isNotEmpty) {
-                                          _addOviAnimal(
-                                            ref.read(animalNameProvider),
-                                            ref.read(
-                                                breedingEventNumberProvider),
+                                        title: Text(oviDetails.animalName),
+                                        subtitle:
+                                            Text(oviDetails.selectedAnimalType),
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  OwnedAnimalDetailsRegMode(
+                                                    animalId: oviDetails.id,),
+                                            ),
                                           );
-                                        }
-                                      });
-                                    }, // Call the addAnimal function when the button is pressed
-                                    text: 'Add Animal'.tr,
+                                        },
+                                      ));
+                                },
+                              )
+                            : SingleChildScrollView(
+                                child: Center(
+                                  heightFactor: 2,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        'assets/illustrations/cow_search.png',
+                                      ),
+                                      SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.04,
+                                      ),
+                                      Text(
+                                        'No Animals Found'.tr,
+                                        style: AppFonts.headline3(
+                                            color: AppColors.grayscale90),
+                                      ),
+                                      Text(
+                                        'Try adjusting the filters'.tr,
+                                        style: AppFonts.body2(
+                                            color: AppColors.grayscale70),
+                                      ),
+                                      SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.03,
+                                      ),
+                                      SizedBox(
+                                        height: 52 *
+                                            SizeConfig.heightMultiplier(
+                                                context),
+                                        child: PrimaryButton(
+                                          onPressed: () {
+                                            ref
+                                                .read(selectedAnimalTypeProvider
+                                                    .notifier)
+                                                .update((state) => '');
+                                            ref
+                                                .read(
+                                                    selectedAnimalSpeciesProvider
+                                                        .notifier)
+                                                .update((state) => '');
+                                            ref
+                                                .read(
+                                                    selectedAnimalBreedsProvider
+                                                        .notifier)
+                                                .update((state) => '');
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CreateAnimalPage(
+                                                  breedingEvents:
+                                                      widget.breedingEvents,
+                                                ),
+                                              ),
+                                            ).then((_) {
+                                              // When returning from CreateBreedingEvents, add the new event
+                                              if (ref
+                                                  .read(animalNameProvider)
+                                                  .isNotEmpty) {
+                                                _addOviAnimal(
+                                                  ref.read(animalNameProvider),
+                                                  ref.read(
+                                                      breedingEventNumberProvider),
+                                                );
+                                              }
+                                            });
+                                          }, // Call the addAnimal function when the button is pressed
+                                          text: 'Add Animal'.tr,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
+                              );
+                      },
+                      error: (error, stackTrace) => Text(error.toString()),
+                      loading: () => const CircularProgressIndicator()),
                 ],
               ),
             ),

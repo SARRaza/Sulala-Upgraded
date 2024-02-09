@@ -26,16 +26,6 @@ class _BreedingEventChildrenListState
     extends ConsumerState<BreedingEventChildrenList> {
   @override
   Widget build(BuildContext context) {
-    final animalIndex = ref.read(oviAnimalsProvider).indexWhere(
-        (animal) => animal.animalName == widget.oviDetails.animalName);
-
-    if (animalIndex == -1) {
-      // Animal not found, you can show an error message or handle it accordingly
-      return Center(
-        child: Text('Animal not found.'.tr),
-      );
-    }
-    final selectedAnimal = ref.read(oviAnimalsProvider)[animalIndex];
     final breedingEvents = ref
         .read(breedingEventsProvider)
         .where((event) =>
@@ -43,23 +33,12 @@ class _BreedingEventChildrenListState
             event.dam?.id == widget.oviDetails.id)
         .toList();
 
-    final otherChildren = ref
-        .read(oviAnimalsProvider)
-        .where((animal) =>
-            (animal.selectedOviSire?.id == selectedAnimal.id ||
-                animal.selectedOviDam?.id == selectedAnimal.id) &&
-            !breedingEvents.any((event) =>
-                event.children
-                    .firstWhereOrNull((child) => child.id == animal.id) !=
-                null))
-        .toList();
-
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
         centerTitle: true,
         title: Text(
-          selectedAnimal.animalName,
+          widget.oviDetails.animalName,
           style: AppFonts.headline3(color: AppColors.grayscale90),
         ),
         backgroundColor: Colors.transparent,
@@ -188,73 +167,93 @@ class _BreedingEventChildrenListState
                   );
                 },
               ),
-            if (otherChildren.isNotEmpty)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Children without breeding events:'.tr,
-                        style: AppFonts.caption1(color: AppColors.grayscale80),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 8 * SizeConfig.heightMultiplier(context),
-                  ),
-                  // Display the list of children
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: otherChildren.length,
-                    itemBuilder: (context, index) {
-                      final child = otherChildren[index];
+            ref.watch(animalListProvider).when(
+                error: (error, trace) => Text(error.toString()),
+                loading: () => const CircularProgressIndicator(),
+                data: (animals) {
+                  final otherChildren = animals
+                      .where((animal) =>
+                          (animal.selectedOviSire?.id == widget.oviDetails.id ||
+                              animal.selectedOviDam?.id ==
+                                  widget.oviDetails.id) &&
+                          !breedingEvents.any((event) =>
+                              event.children.firstWhereOrNull(
+                                  (child) => child.id == animal.id) !=
+                              null))
+                      .toList();
+                  return otherChildren.isNotEmpty
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Children without breeding events:'.tr,
+                                  style: AppFonts.caption1(
+                                      color: AppColors.grayscale80),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 8 * SizeConfig.heightMultiplier(context),
+                            ),
+                            // Display the list of children
+                            ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: otherChildren.length,
+                              itemBuilder: (context, index) {
+                                final child = otherChildren[index];
 
-                      return ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: CircleAvatar(
-                          radius: 24 * SizeConfig.widthMultiplier(context),
-                          backgroundColor: Colors.transparent,
-                          backgroundImage: child.selectedOviImage,
-                          child: child.selectedOviImage == null
-                              ? const Icon(
-                                  Icons.camera_alt_outlined,
-                                  size: 50,
-                                  color: Colors.grey,
-                                )
-                              : null,
-                        ),
-                        title: Text(
-                          child.animalName,
-                          style:
-                              AppFonts.headline3(color: AppColors.grayscale90),
-                        ),
-                        // ignore: unnecessary_null_comparison
-                        subtitle: child.selectedOviGender.isEmpty
-                            ? Text(
-                                'Gender Not Selected'.tr,
-                                style: AppFonts.body2(
-                                    color: AppColors.grayscale70),
-                              )
-                            : Text(
-                                child.selectedOviGender,
-                                style: AppFonts.body2(
-                                    color: AppColors.grayscale70),
-                              ),
-                        trailing: Text(
-                          'ID #${child.id}',
-                          style: AppFonts.body2(color: AppColors.grayscale90),
-                        ),
-                      );
-                    },
-                  ),
-                  SizedBox(
-                    height: 16 * SizeConfig.heightMultiplier(context),
-                  ),
-                ],
-              ),
-            if (breedingEvents.isEmpty && otherChildren.isEmpty)
+                                return ListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  leading: CircleAvatar(
+                                    radius: 24 *
+                                        SizeConfig.widthMultiplier(context),
+                                    backgroundColor: Colors.transparent,
+                                    backgroundImage: child.selectedOviImage,
+                                    child: child.selectedOviImage == null
+                                        ? const Icon(
+                                            Icons.camera_alt_outlined,
+                                            size: 50,
+                                            color: Colors.grey,
+                                          )
+                                        : null,
+                                  ),
+                                  title: Text(
+                                    child.animalName,
+                                    style: AppFonts.headline3(
+                                        color: AppColors.grayscale90),
+                                  ),
+                                  // ignore: unnecessary_null_comparison
+                                  subtitle: child.selectedOviGender.isEmpty
+                                      ? Text(
+                                          'Gender Not Selected'.tr,
+                                          style: AppFonts.body2(
+                                              color: AppColors.grayscale70),
+                                        )
+                                      : Text(
+                                          child.selectedOviGender,
+                                          style: AppFonts.body2(
+                                              color: AppColors.grayscale70),
+                                        ),
+                                  trailing: Text(
+                                    'ID #${child.id}',
+                                    style: AppFonts.body2(
+                                        color: AppColors.grayscale90),
+                                  ),
+                                );
+                              },
+                            ),
+                            SizedBox(
+                              height: 16 * SizeConfig.heightMultiplier(context),
+                            ),
+                          ],
+                        )
+                      : Container();
+                }),
+            if (breedingEvents.isEmpty &&
+                (ref.watch(animalListProvider).value ?? []).isEmpty)
               Center(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,

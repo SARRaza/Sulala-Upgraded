@@ -34,15 +34,6 @@ class _ListOfBreedingEvents extends ConsumerState<ListOfBreedingEvents> {
 
   @override
   Widget build(BuildContext context) {
-    final animalIndex = ref.read(oviAnimalsProvider).indexWhere(
-        (animal) => animal.animalName == widget.oviDetails.animalName);
-
-    if (animalIndex == -1) {
-      // Animal not found, you can show an error message or handle it accordingly
-      return Center(
-        child: Text('Animal not found.'.tr),
-      );
-    }
     final breedingEvents = ref
         .read(breedingEventsProvider)
         .where((event) =>
