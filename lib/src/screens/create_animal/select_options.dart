@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import '../../data/classes/breeding_event_variables.dart';
 import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
@@ -11,9 +10,8 @@ import '../../widgets/option_row.dart';
 import 'add_complete_info.dart';
 
 class SelectedOptionsPage extends ConsumerStatefulWidget {
-  final List<BreedingEventVariables> breedingEvents;
 
-  const SelectedOptionsPage({super.key, required this.breedingEvents});
+  const SelectedOptionsPage({super.key});
 
   @override
   ConsumerState<SelectedOptionsPage> createState() =>
@@ -51,7 +49,7 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
                 size: SizeConfig.widthMultiplier(context) * 24,
               ),
               onPressed: () {
-                // Handle close button press
+                // Handle back button press
                 Navigator.pop(context);
               },
             ),
@@ -74,7 +72,7 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
                 ),
                 onPressed: () {
                   // Handle close button press
-                  Navigator.pop(context);
+                  Navigator.pop(context, true);
                 },
               ),
             ),
@@ -128,7 +126,7 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
         width: SizeConfig.widthMultiplier(context) * 343,
         height: SizeConfig.heightMultiplier(context) * 52,
         child: PrimaryButton(
-            onPressed: () {
+            onPressed: () async {
               ref
                   .read(selectedAnimalImageProvider.notifier)
                   .update((state) => null);
@@ -147,14 +145,15 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
               ref.read(fieldNameProvider.notifier).update((state) => '');
               ref.read(fieldContentProvider.notifier).update((state) => '');
               ref.read(additionalNotesProvider.notifier).update((state) => '');
-              Navigator.push(
+              final close = await Navigator.push<bool?>(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AddCompleteInfo(
-                    breedingEvents: widget.breedingEvents,
-                  ),
+                  builder: (context) => const AddCompleteInfo(),
                 ),
               );
+              if(close == true && mounted) {
+                Navigator.pop(context);
+              }
             },
             text: 'Create Animal'.tr),
       ),

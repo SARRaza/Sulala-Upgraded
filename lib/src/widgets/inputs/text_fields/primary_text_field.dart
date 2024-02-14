@@ -23,7 +23,8 @@ class PrimaryTextField extends ConsumerStatefulWidget {
       required this.controller,
       this.labelText,
       this.keyboardType,
-      this.validator})
+      this.validator,
+      })
       : super(key: key);
 
   @override

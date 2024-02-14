@@ -11,6 +11,7 @@ class ParagraphTextField extends StatefulWidget {
   final ValueChanged<bool>? onErrorChanged;
   final int maxLines; // Add maxLines property
   final TextEditingController? controller;
+  final String? initialValue;
 
   const ParagraphTextField(
       {Key? key,
@@ -20,7 +21,8 @@ class ParagraphTextField extends StatefulWidget {
       this.onChanged,
       this.onErrorChanged,
       this.maxLines = 1, // Default to a single line
-      this.controller})
+      this.controller,
+      this.initialValue})
       : super(key: key);
 
   @override
@@ -112,7 +114,8 @@ class _ParagraphTextFieldState extends State<ParagraphTextField> {
           ),
           child: Stack(
             children: [
-              TextField(
+              TextFormField(
+                initialValue: widget.initialValue,
                 controller: _textEditingController,
                 onChanged: _onChanged,
                 focusNode: _focusNode,

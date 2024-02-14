@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,10 +8,7 @@ import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/screens/create_animal/sar_animal_filters.dart';
 import 'package:sulala_upgrade/src/widgets/pages/main_widgets/navigation_bar_reg_mode.dart';
 import 'package:sulala_upgrade/src/widgets/styled_dismissible.dart';
-import '../../data/classes/breeding_event_variables.dart';
-import '../../data/classes/main_animal_dam.dart';
-import '../../data/classes/main_animal_sire.dart';
-import '../../data/classes/ovi_variables.dart';
+import '../../data/providers/animal_list_provider.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -24,11 +20,7 @@ import 'create_animal.dart';
 import 'owned_animal_detail_reg_mode.dart';
 
 class UserListOfAnimals extends ConsumerStatefulWidget {
-  final bool shouldAddAnimal;
-  final List<BreedingEventVariables> breedingEvents;
-
-  const UserListOfAnimals(
-      {super.key, required this.shouldAddAnimal, required this.breedingEvents});
+  const UserListOfAnimals({super.key});
 
   @override
   ConsumerState<UserListOfAnimals> createState() => _UserListOfAnimals();
@@ -51,80 +43,12 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
   void initState() {
     super.initState();
     _updateFilteredOviAnimals();
-
-    // Add the initial breeding event to the list only if shouldAddAnimal is true
-    if (widget.shouldAddAnimal) {
-      _addOviAnimal(
-        ref.read(animalNameProvider),
-        ref.read(breedingEventNumberProvider),
-      );
-    }
   }
 
   @override
   void dispose() {
     _debounce?.cancel();
     super.dispose();
-  }
-
-  void _addOviAnimal(String animalName, String breedingEventNumber) {
-    final oviDetails = OviVariables(
-        animalName: animalName,
-        breedingEventNumber: breedingEventNumber,
-        medicalNeeds: ref.read(medicalNeedsProvider),
-        shouldAddAnimal: ref.read(shouldAddAnimalProvider),
-        selectedBreedingStage: ref.read(selectedBreedingStageProvider),
-        layingFrequency: ref.read(layingFrequencyProvider),
-        eggsPerMonth: ref.read(eggsPerMonthProvider),
-        selectedOviSire: ref.read(animalSireDetailsProvider),
-        selectedOviDam: ref.read(animalDamDetailsProvider),
-        dateOfBirth: ref.read(dateOfBirthProvider),
-        keptInOval: ref.read(keptInOvalProvider),
-        dateOfLayingEggs: ref.read(dateOfLayingEggsProvider),
-        dateOfSonar: ref.read(dateOfSonarProvider),
-        expDlvDate: ref.read(expDeliveryDateProvider),
-        incubationDate: ref.read(incubationDateProvider),
-        customFields: ref.read(customOviTextFieldsProvider),
-        notes: ref.read(additionalNotesProvider),
-        selectedOviGender: ref.read(selectedOviGenderProvider),
-        selectedOviDates: ref.read(selectedOviDatesProvider),
-        selectedAnimalBreed: ref.read(selectedAnimalBreedsProvider),
-        selectedAnimalSpecies: ref.read(selectedAnimalSpeciesProvider),
-        selectedAnimalType: ref.read(selectedAnimalTypeProvider),
-        selectedOviChips: ref.read(selectedOviChipsProvider),
-        selectedOviImage: ref.read(selectedAnimalImageProvider),
-        selectedFilters: ref.read(selectedFiltersProvider),
-        breedSire: ref.read(breedingSireDetailsProvider) ?? '',
-        breedDam: ref.read(breedingDamDetailsProvider) ?? '',
-        breedPartner: ref.read(breedingPartnerProvider),
-        breedChildren: ref.read(breedingChildrenDetailsProvider),
-        breedingDate: ref.read(breedingDateProvider),
-        breedDeliveryDate: ref.read(deliveryDateProvider),
-        breedingNotes: ref.read(breedingNotesProvider),
-        shouldAddEvent: ref.read(shouldAddEventProvider),
-        vaccineDetails: {animalName: []},
-        checkUpDetails: {animalName: []},
-        surgeryDetails: {animalName: []},
-        files:
-            ref.read(uploadedFilesProvider).map((path) => File(path)).toList());
-
-    final oviAnimals = ref.read(animalListProvider).value!;
-    final breedingChildrenDetails = ref.read(breedingChildrenDetailsProvider);
-    for (var child in breedingChildrenDetails) {
-      final childIndex =
-          oviAnimals.indexWhere((animal) => animal.id == child.id);
-      final animal = oviAnimals[childIndex];
-      if (oviDetails.selectedOviGender == 'Male') {
-        ref.read(animalListProvider.notifier).updateAnimal(animal.copyWith(
-            selectedOviSire: MainAnimalSire(oviDetails.animalName,
-                oviDetails.selectedOviImage, oviDetails.selectedOviGender)));
-      } else {
-        ref.read(animalListProvider.notifier).updateAnimal(animal.copyWith(
-            selectedOviDam: MainAnimalDam(oviDetails.animalName,
-                oviDetails.selectedOviImage, oviDetails.selectedOviGender)));
-      }
-    }
-    ref.read(animalListProvider.notifier).addAnimal(oviDetails);
   }
 
   void _filterMammals(String query) {
@@ -214,19 +138,9 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CreateAnimalPage(
-                      breedingEvents: widget.breedingEvents,
-                    ),
+                    builder: (context) => const CreateAnimalPage(),
                   ),
-                ).then((_) {
-                  // When returning from CreateBreedingEvents, add the new event
-                  if (ref.read(animalNameProvider).isNotEmpty) {
-                    _addOviAnimal(
-                      ref.read(animalNameProvider),
-                      ref.read(breedingEventNumberProvider),
-                    );
-                  }
-                });
+                );
               }, // Call the addAnimal function when the button is pressed
             ),
           ],
@@ -254,25 +168,22 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                     hintText: "Search by name or ID".tr,
                     icon: Icons.filter_alt_outlined,
                     // controller: _searchController,
-                    onIconPressed: () async {
-                      await Navigator.push(
+                    onIconPressed: () {
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => SarAnimalFilters(
-                                  breedingEvents: widget.breedingEvents,
-                                )),
+                            builder: (context) => const SarAnimalFilters()),
                       );
-                      setState(() {});
                     },
                   ),
                   SizedBox(
                     height: SizeConfig.heightMultiplier(context) * 20,
                   ),
                   Visibility(
-                    visible: ref.read(selectedFiltersProvider).isNotEmpty,
+                    visible: ref.watch(selectedFiltersProvider).isNotEmpty,
                     child: Wrap(
                       spacing: MediaQuery.of(context).size.width * 0.02,
-                      children: ref.read(selectedFiltersProvider).map((filter) {
+                      children: ref.watch(selectedFiltersProvider).map((filter) {
                         return Chip(
                           deleteIcon: Icon(
                             Icons.close_rounded,
@@ -296,7 +207,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                   ref.watch(animalListProvider).when(
                       data: (animals) {
                         final filteredOviAnimals = animals.where((animal) {
-                          final filters = ref.read(selectedFiltersProvider);
+                          final filters = ref.watch(selectedFiltersProvider);
                           final animalType = filters.firstWhereOrNull(
                               (filter) => AnimalFilters
                                   .filterItems['Animal Type']!
@@ -351,7 +262,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                                         // Handle item dismissal here
                                         ref
                                             .read(animalListProvider.notifier)
-                                            .removeAnimal(oviDetails.id);
+                                            .removeAnimal(oviDetails.id!);
                                       },
                                       child: ListTile(
                                         contentPadding: EdgeInsets.zero,
@@ -383,7 +294,8 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   OwnedAnimalDetailsRegMode(
-                                                    animalId: oviDetails.id,),
+                                                animalId: oviDetails.id!,
+                                              ),
                                             ),
                                           );
                                         },
@@ -443,23 +355,9 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    CreateAnimalPage(
-                                                  breedingEvents:
-                                                      widget.breedingEvents,
-                                                ),
+                                                    const CreateAnimalPage(),
                                               ),
-                                            ).then((_) {
-                                              // When returning from CreateBreedingEvents, add the new event
-                                              if (ref
-                                                  .read(animalNameProvider)
-                                                  .isNotEmpty) {
-                                                _addOviAnimal(
-                                                  ref.read(animalNameProvider),
-                                                  ref.read(
-                                                      breedingEventNumberProvider),
-                                                );
-                                              }
-                                            });
+                                            );
                                           }, // Call the addAnimal function when the button is pressed
                                           text: 'Add Animal'.tr,
                                         ),

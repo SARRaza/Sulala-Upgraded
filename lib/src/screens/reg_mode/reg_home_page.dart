@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
+import 'package:sulala_upgrade/src/data/providers/animal_list_provider.dart';
 import 'package:sulala_upgrade/src/screens/create_animal/owned_animal_detail_reg_mode.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../data/classes/reminder_item.dart';
@@ -69,7 +70,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
       for (var tag in tags) {
         if (tag.status == TagStatus.active) {
           final count = ref
-              .read(oviAnimalsProvider)
+              .read(animalListProvider).requireValue
               .where((animal) =>
                   animal.selectedAnimalType.toLowerCase() == animalType &&
                   animal.selectedOviChips.contains(tag.name))
@@ -584,7 +585,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
       for (var tag in tags) {
         if (tag.status == TagStatus.active) {
           final count = ref
-              .read(oviAnimalsProvider)
+              .read(animalListProvider).requireValue
               .where((animal) => animal.selectedOviChips.contains(tag.name))
               .toList()
               .length;
@@ -648,7 +649,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
         for (var tag in tags) {
           if (tag.status == TagStatus.active) {
             final count = ref
-                .read(oviAnimalsProvider)
+                .read(animalListProvider).requireValue
                 .where((animal) =>
                     animal.selectedAnimalType.toLowerCase() == animalType &&
                     animal.selectedOviChips.contains(tag.name))
@@ -694,15 +695,12 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
     }
   }
 
-  void _navigateToAnimal(String animalName) {
-    final animal = ref
-        .read(oviAnimalsProvider)
-        .firstWhere((animal) => animal.animalName == animalName);
+  void _navigateToAnimal(String animalId) {
 
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => OwnedAnimalDetailsRegMode(animalId: animal.id)
+            builder: (context) => OwnedAnimalDetailsRegMode(animalId: animalId)
         ));
   }
 }

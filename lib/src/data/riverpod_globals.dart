@@ -1,18 +1,14 @@
-import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sulala_upgrade/src/data/providers/animal_list_provider.dart';
 import 'classes/breed_child_item.dart';
-import 'classes/breeding_event_variables.dart';
 import 'classes/breeding_partner.dart';
 import 'classes/main_animal_dam.dart';
 import 'classes/main_animal_sire.dart';
-import 'classes/medical_checkup_details.dart';
-import 'classes/ovi_variables.dart';
 import 'classes/reminder_item.dart';
 import 'classes/staff_member.dart';
-import 'classes/surgery_details.dart';
-import 'classes/vaccine_details.dart';
 
 // Join Now Global Variables
 final whoOwnTheFarmProvider = StateProvider<String>((ref) => '');
@@ -84,52 +80,7 @@ final breedingDateProvider = StateProvider<DateTime?>((ref) => null);
 final deliveryDateProvider = StateProvider<DateTime?>((ref) => null);
 final breedingNotesProvider = StateProvider<String>((ref) => '');
 final shouldAddEventProvider = StateProvider<bool>((ref) => false);
-final oviAnimalsProvider = StateProvider<List<OviVariables>>((ref) => []);
 
-final animalListProvider =
-    AsyncNotifierProvider<AnimalList, List<OviVariables>>(AnimalList.new);
-
-class AnimalList extends AsyncNotifier<List<OviVariables>> {
-  @override
-  FutureOr<List<OviVariables>> build() {
-    return [];
-  }
-
-  Future<void> addAnimal(OviVariables animal) async {
-    final newAnimals = List<OviVariables>.from(state.value ?? []);
-    if (newAnimals.isEmpty) {
-      newAnimals.add(animal);
-    } else {
-      newAnimals.insert(0, animal);
-    }
-    state = AsyncData(newAnimals);
-  }
-
-  Future<void> updateAnimal(OviVariables updatedAnimal) async {
-    final newAnimals = List<OviVariables>.from(state.value!);
-    final animalIndex =
-        newAnimals.indexWhere((animal) => animal.id == updatedAnimal.id);
-    newAnimals[animalIndex] = updatedAnimal;
-    state = AsyncData(newAnimals);
-  }
-
-  Future<void> removeAnimal(int id) async {
-    final newAnimals = List<OviVariables>.from(state.value!);
-    newAnimals.removeWhere((animal) => animal.id == id);
-    state = AsyncData(newAnimals);
-  }
-}
-
-final breedingEventsProvider =
-    StateProvider<List<BreedingEventVariables>>((ref) => []);
-final vaccineDetailsListProvider =
-    StateProvider<List<VaccineDetails>>((ref) => []);
-final medicalCheckupDetailsProvider =
-    StateProvider<List<MedicalCheckupDetails>>((ref) => []);
-final surgeryDetailsProvider = StateProvider<List<SurgeryDetails>>((ref) => []);
-
-// final grandfatherNamesProvider = StateProvider<String>((ref) => 'Add');
-// final grandmotherNamesProvider = StateProvider<String>((ref) => 'Add');
 
 final animalSireDetailsProvider = StateProvider<MainAnimalSire?>((ref) => null);
 final animalDamDetailsProvider = StateProvider<MainAnimalDam?>((ref) => null);
@@ -385,7 +336,6 @@ final oviparousSpeciesCountProvider = Provider<Map<String, int>>((ref) {
 });
 
 // Breeding Events Global Variable
-final listOfBreedingEventsProvider = Provider<List<String>>((ref) => []);
 final dateOfHatchingProvider = StateProvider<DateTime?>((ref) => null);
 final dateOfDeathProvider = StateProvider<DateTime?>((ref) => null);
 final dateOfSaleProvider = StateProvider<DateTime?>((ref) => null);
@@ -405,7 +355,7 @@ final breedingPartnerProvider = StateProvider<BreedingPartner?>((ref) => null);
 
 final staffProvider = StateProvider<List<StaffMember>>((ref) => [
       StaffMember(
-          id: 1,
+          id: '1',
           image: const AssetImage('assets/avatars/120px/Staff1.png'),
           name: 'Paul Rivera',
           role: 'Viewer',
@@ -413,7 +363,7 @@ final staffProvider = StateProvider<List<StaffMember>>((ref) => [
           phoneNumber: '+1 234 567 890',
           address: 'United Arab Emirates'),
       StaffMember(
-          id: 2,
+          id: '2',
           image: const AssetImage('assets/avatars/120px/Staff2.png'),
           name: 'Rebecca Wilson',
           role: 'Helper',
@@ -427,7 +377,7 @@ final totalStaffProvider = Provider<int>((ref) {
 final collaborationRequestsProvider =
     StateProvider<List<StaffMember>>((ref) => [
           StaffMember(
-              id: 3,
+              id: '3',
               image: const AssetImage('assets/avatars/120px/Staff3.png'),
               name: 'Patricia Williams',
               role: 'Viewer',
@@ -435,7 +385,7 @@ final collaborationRequestsProvider =
               phoneNumber: '+1 234 567 890',
               address: 'United Arab Emirates'),
           StaffMember(
-              id: 4,
+              id: '4',
               image: const AssetImage('assets/avatars/120px/Staff1.png'),
               name: 'Scott Simmons',
               role: 'Viewer',
@@ -443,7 +393,7 @@ final collaborationRequestsProvider =
               phoneNumber: '+1 234 567 890',
               address: 'United Arab Emirates'),
           StaffMember(
-              id: 5,
+              id: '5',
               image: const AssetImage('assets/avatars/120px/Staff2.png'),
               name: 'Lee Hall',
               role: 'Viewer',
@@ -460,3 +410,11 @@ final passwordValidationProvider = Provider.autoDispose<bool>((ref) {
       password.length >= 8 &&
       RegExp(r'[0-9]').hasMatch(password);
 });
+
+String generateRandomId(int length) {
+  const String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  Random rnd = Random();
+
+  return String.fromCharCodes(Iterable.generate(
+      length, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))));
+}

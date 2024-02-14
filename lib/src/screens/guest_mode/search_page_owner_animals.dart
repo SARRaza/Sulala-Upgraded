@@ -142,10 +142,9 @@ class _SearchPageOwnerAnimalsState
   void initState() {
     super.initState();
     filteredAnimals = animals;
-    // Initialize filteredOptions with all options
   }
 
-  void filterOptions(String searchText) {
+  void _searchAnimals(String searchText) {
     setState(() {
       filteredAnimals = animals
           .where(
@@ -157,7 +156,7 @@ class _SearchPageOwnerAnimalsState
     });
   }
 
-  void navigateToAnimalDetailsPage(Map<String, dynamic> option) {
+  void _navigateToAnimalDetailsPage(Map<String, dynamic> option) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -174,6 +173,8 @@ class _SearchPageOwnerAnimalsState
 
   @override
   Widget build(BuildContext context) {
+    _applyFilters();
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -199,19 +200,16 @@ class _SearchPageOwnerAnimalsState
               Text("Animals".tr,
                   style: AppFonts.title3(color: AppColors.grayscale90)),
               ButtonSearchBar(
-                onChange: filterOptions,
+                onChange: _searchAnimals,
                 hintText: "Search by name or ID".tr,
                 icon: Icons.filter_alt_outlined,
                 controller: _searchController,
-                onIconPressed: () async {
-                  await Navigator.push(
+                onIconPressed: () {
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const SarAnimalFilters(
-                              breedingEvents: [],
-                            )),
+                        builder: (context) => const SarAnimalFilters()),
                   );
-                  _applyFilters();
                 },
               ),
               SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
@@ -289,7 +287,7 @@ class _SearchPageOwnerAnimalsState
                             textHead: option['title'],
                             textBody: option['genInfo'],
                             onPressed: () {
-                              navigateToAnimalDetailsPage(option);
+                              _navigateToAnimalDetailsPage(option);
                             },
                           ),
                         );
@@ -333,7 +331,7 @@ class _SearchPageOwnerAnimalsState
   }
 
   void _applyFilters() {
-    final selectedFilters = ref.read(selectedFiltersProvider);
+    final selectedFilters = ref.watch(selectedFiltersProvider);
     test(element) => selectedFilters.contains(element);
     final type =
         AnimalFilters.filterItems['Animal Type']!.firstWhereOrNull(test);
@@ -347,32 +345,30 @@ class _SearchPageOwnerAnimalsState
     final tags = AnimalFilters.filterItems['Tags']!.firstWhereOrNull(test);
     filteredAnimals = animals;
 
-    setState(() {
-      filteredAnimals = filteredAnimals
-          .where((animal) =>
-              (type == null || animal['type'] == type.toLowerCase()) &&
-              (species == null || animal['species'] == species.toLowerCase()) &&
-              (breed == null || animal['breed'] == breed.toLowerCase()) &&
-              (sex == null || animal['sex'] == sex.toLowerCase()) &&
-              (breedingStage == null ||
-                  animal['breeding_stage'] == breedingStage.toLowerCase()) &&
-              (tags == null || animal['tags'] == tags.toLowerCase()))
-          .toList();
+    filteredAnimals = filteredAnimals
+        .where((animal) =>
+            (type == null || animal['type'] == type.toLowerCase()) &&
+            (species == null || animal['species'] == species.toLowerCase()) &&
+            (breed == null || animal['breed'] == breed.toLowerCase()) &&
+            (sex == null || animal['sex'] == sex.toLowerCase()) &&
+            (breedingStage == null ||
+                animal['breeding_stage'] == breedingStage.toLowerCase()) &&
+            (tags == null || animal['tags'] == tags.toLowerCase()))
+        .toList();
 
-      if (_searchController.text.isNotEmpty) {
-        filteredAnimals = filteredAnimals
-            .where(
-              (option) => option['title']
-                  .toLowerCase()
-                  .contains(_searchController.text.toLowerCase()),
-            )
-            .toList();
-      }
-    });
+    if (_searchController.text.isNotEmpty) {
+      filteredAnimals = filteredAnimals
+          .where(
+            (option) => option['title']
+                .toLowerCase()
+                .contains(_searchController.text.toLowerCase()),
+          )
+          .toList();
+    }
   }
 
-  void _removeSelectedFilter(String filter) {
-    ref.read(selectedFiltersProvider).remove(filter);
-    _applyFilters();
+  void _removeSelectedFilter(String selectedFilter) {
+    ref.read(selectedFiltersProvider.notifier).update(
+        (state) => state.where((filter) => filter != selectedFilter).toList());
   }
 }

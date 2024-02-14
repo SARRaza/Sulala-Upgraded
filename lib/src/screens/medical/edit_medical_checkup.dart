@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:sulala_upgrade/src/data/providers/medical_checkup_list_provider.dart';
 import 'package:sulala_upgrade/src/widgets/dialogs/confirm_delete_dialog.dart';
-import '../../data/classes/breeding_event_variables.dart';
 import '../../data/classes/medical_checkup_details.dart';
-import '../../data/classes/ovi_variables.dart';
 import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
@@ -19,37 +18,20 @@ import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 
 class EditMedicalCheckUp extends ConsumerStatefulWidget {
-  final OviVariables oviDetails;
-  final List<BreedingEventVariables> breedingEvents;
-  final MedicalCheckupDetails? selectedCheckup;
+  final String checkUpId;
+  final String animalId;
 
-  const EditMedicalCheckUp(
-      {super.key,
-      required this.breedingEvents,
-      this.selectedCheckup,
-      required this.oviDetails});
+  const EditMedicalCheckUp({super.key, required this.checkUpId, required this
+      .animalId});
   @override
   ConsumerState<EditMedicalCheckUp> createState() => _EditMedicalCheckUpState();
 }
 
 class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
-  final _checkUpNameController = TextEditingController();
-  DateTime? firstCheckUp;
-  DateTime? secondCheckUp;
-  List<MedicalCheckupDetails> checkupDetailsList = [];
+  TextEditingController? _checkUpNameController;
+  TextEditingController? _firstCheckUpController;
+  TextEditingController? _secondCheckUpController;
   final _formKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-
-    if (widget.selectedCheckup != null) {
-      // Initialize text controller and date variables with selected vaccine details
-      _checkUpNameController.text = widget.selectedCheckup!.checkupName;
-      firstCheckUp = widget.selectedCheckup!.firstCheckUp;
-      secondCheckUp = widget.selectedCheckup!.secondCheckUp;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,112 +65,120 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
             padding: EdgeInsets.only(
                 left: 16 * SizeConfig.widthMultiplier(context),
                 right: 16 * SizeConfig.widthMultiplier(context)),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Edit Medical Checkup".tr,
-                    style: AppFonts.title3(color: AppColors.grayscale90),
-                  ),
-                  SizedBox(
-                    height: 32 * SizeConfig.heightMultiplier(context),
-                  ),
-                  PrimaryTextField(
-                    hintText: 'Checkup Name'.tr,
-                    controller: _checkUpNameController,
-                    labelText: 'Checkup Name'.tr,
-                    validator: (value) => value == null || value.isEmpty
-                        ? 'Please enter some text'.tr
-                        : null,
-                  ),
-                  SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
-                  PrimaryDateField(
-                    hintText: firstCheckUp != null
-                        ? DateFormat('yyyy-MM-dd').format(firstCheckUp!)
-                        : 'dd/MM/yyyy',
-                    labelText: 'Date Of Checkup'.tr,
-                    onChanged: (value) => setState(() => firstCheckUp = value),
-                  ),
-                  SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
-                  PrimaryDateField(
-                    hintText: secondCheckUp != null
-                        ? DateFormat('yyyy-MM-dd').format(secondCheckUp!)
-                        : 'dd/MM/yyyy',
-                    labelText: 'Date Of Next Checkup'.tr,
-                    onChanged: (value) => setState(() => secondCheckUp = value),
-                  ),
-                  SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
-                  Focus(
-                    onFocusChange:
-                        (hasFocus) {}, // Dummy onFocusChange callback
-                    child: FileUploaderField(
-                      uploadedFiles: widget.selectedCheckup!.files!
-                          .map((file) => file.path)
-                          .toList(),
+            child: ref.watch(medicalCheckupListProvider(widget.animalId)).when(
+                error: (error, trace) => Text('Error: $error'),
+                loading: () => const Center(
+                      child: CircularProgressIndicator(),
                     ),
-                  ),
-                  SizedBox(
-                    height: 16 * SizeConfig.heightMultiplier(context),
-                  ),
-                  SizedBox(
-                    height: 52 * SizeConfig.heightMultiplier(context),
-                    width: 343 * SizeConfig.widthMultiplier(context),
-                    child: PrimaryButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          MedicalCheckupDetails updatedCheckUp =
-                              widget.selectedCheckup!.copyWith(
-                                  checkupName: _checkUpNameController.text,
-                                  firstCheckUp: firstCheckUp,
-                                  secondCheckUp: secondCheckUp,
-                                  files: ref
-                                      .read(uploadedFilesProvider)
-                                      .map((path) => File(path))
-                                      .toList());
+                data: (checkups) {
+                  final selectedCheckup = checkups.firstWhereOrNull(
+                      (checkup) => checkup.id == widget.checkUpId);
+                  if (selectedCheckup == null) {
+                    return Text('Checkup not found'.tr);
+                  }
+                  _checkUpNameController ??=
+                      TextEditingController(text: selectedCheckup.checkupName);
+                  _firstCheckUpController ??= TextEditingController(
+                      text: selectedCheckup.firstCheckUp != null
+                          ? DateFormat('dd/MM/yyyy')
+                              .format(selectedCheckup.firstCheckUp!)
+                          : '');
+                  _secondCheckUpController ??= TextEditingController(
+                      text: selectedCheckup.secondCheckUp != null
+                          ? DateFormat('dd/MM/yyyy')
+                              .format(selectedCheckup.secondCheckUp!)
+                          : '');
 
-                          // Replace the existing vaccine with the updated one
-                          final List<MedicalCheckupDetails> currentList =
-                              widget.oviDetails.checkUpDetails[
-                                      widget.oviDetails.animalName] ??
-                                  [];
-
-                          final List<MedicalCheckupDetails> updatedList =
-                              List<MedicalCheckupDetails>.from(currentList);
-                          final int indexToUpdate = updatedList.indexWhere(
-                              (checkup) => checkup == widget.selectedCheckup);
-
-                          final checkupDetails = widget.oviDetails.checkUpDetails;
-                          checkupDetails[widget.oviDetails.animalName]![indexToUpdate] = updatedCheckUp;
-
-                          ref.read(animalListProvider.notifier).updateAnimal(
-                            widget.oviDetails.copyWith(
-                                checkUpDetails: checkupDetails)
-                          );
-
-                          // Close the EditVaccination page
-                          Navigator.pop(context);
-                        }
-                        // Update details using copyWith method
-                      },
-                      text: 'Save'.tr,
+                  return Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "Edit Medical Checkup".tr,
+                          style: AppFonts.title3(color: AppColors.grayscale90),
+                        ),
+                        SizedBox(
+                          height: 32 * SizeConfig.heightMultiplier(context),
+                        ),
+                        PrimaryTextField(
+                          hintText: 'Checkup Name'.tr,
+                          controller: _checkUpNameController!,
+                          labelText: 'Checkup Name'.tr,
+                          validator: (value) => value == null || value.isEmpty
+                              ? 'Please enter some text'.tr
+                              : null,
+                        ),
+                        SizedBox(
+                            height: 24 * SizeConfig.heightMultiplier(context)),
+                        PrimaryDateField(
+                          controller: _firstCheckUpController!,
+                          hintText: 'dd/MM/yyyy',
+                          labelText: 'Date Of Checkup'.tr,
+                        ),
+                        SizedBox(
+                            height: 24 * SizeConfig.heightMultiplier(context)),
+                        PrimaryDateField(
+                          controller: _secondCheckUpController!,
+                          hintText: 'dd/MM/yyyy',
+                          labelText: 'Date Of Next Checkup'.tr,
+                        ),
+                        SizedBox(
+                            height: 24 * SizeConfig.heightMultiplier(context)),
+                        Focus(
+                          onFocusChange:
+                              (hasFocus) {}, // Dummy onFocusChange callback
+                          child: FileUploaderField(
+                            uploadedFiles: selectedCheckup.files!
+                                .map((file) => file.path)
+                                .toList(),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 16 * SizeConfig.heightMultiplier(context),
+                        ),
+                        SizedBox(
+                          height: 52 * SizeConfig.heightMultiplier(context),
+                          width: 343 * SizeConfig.widthMultiplier(context),
+                          child: PrimaryButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                MedicalCheckupDetails updatedCheckUp =
+                                    selectedCheckup.copyWith(
+                                        checkupName:
+                                            _checkUpNameController!.text,
+                                        firstCheckUp: DateFormat('dd/MM/yyyy').parse(_firstCheckUpController!.text),
+                                        secondCheckUp: DateFormat('dd/MM/yyyy').parse(_secondCheckUpController!.text),
+                                        files: ref
+                                            .read(uploadedFilesProvider)
+                                            .map((path) => File(path))
+                                            .toList());
+                                ref.read(medicalCheckupListProvider(widget
+                                    .animalId).notifier).updateCheckup(
+                                    updatedCheckUp);
+                                // Close the EditVaccination page
+                                Navigator.pop(context);
+                              }
+                              // Update details using copyWith method
+                            },
+                            text: 'Save'.tr,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 8 * SizeConfig.heightMultiplier(context),
+                        ),
+                        SizedBox(
+                          height: 52 * SizeConfig.heightMultiplier(context),
+                          width: 343 * SizeConfig.widthMultiplier(context),
+                          child: NavigateButton(
+                            onPressed: _deleteCheckup,
+                            text: 'Delete'.tr,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  SizedBox(
-                    height: 8 * SizeConfig.heightMultiplier(context),
-                  ),
-                  SizedBox(
-                    height: 52 * SizeConfig.heightMultiplier(context),
-                    width: 343 * SizeConfig.widthMultiplier(context),
-                    child: NavigateButton(
-                      onPressed: _deleteCheckup,
-                      text: 'Delete'.tr,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                  );
+                }),
           ),
         ),
       ),
@@ -202,11 +192,8 @@ class _EditMedicalCheckUpState extends ConsumerState<EditMedicalCheckUp> {
                 content: "Are you sure you want to delete the checkup".tr))
         .then((confirm) {
       if (confirm) {
-        final animalDetails = widget.oviDetails.copyWith();
-        animalDetails.checkUpDetails[animalDetails.animalName]!.removeWhere((
-            checkup) => checkup.checkupName == widget.selectedCheckup!
-            .checkupName);
-        ref.read(animalListProvider.notifier).updateAnimal(animalDetails);
+        ref.read(medicalCheckupListProvider(widget.animalId).notifier).removeCheckup(
+            widget.checkUpId);
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("The checkup has been deleted".tr)));
         Navigator.pop(context);

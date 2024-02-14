@@ -102,7 +102,7 @@ class _AnimalPartnerModalState extends ConsumerState<AnimalPartnerModal> {
                 itemCount: animals.length,
                 itemBuilder: (context, index) {
                   final oviDetails = animals[index];
-                  final isSelected = oviDetails.id == selectedPartner?.id;
+                  final isSelected = oviDetails.id == selectedPartner?.animalId;
                   // Apply the filter here
                   if (!oviDetails.animalName
                           .toLowerCase()
@@ -138,9 +138,10 @@ class _AnimalPartnerModalState extends ConsumerState<AnimalPartnerModal> {
                     onTap: () {
                       setState(() {
                         selectedPartner = BreedingPartner(
-                            oviDetails.animalName,
-                            oviDetails.selectedOviImage,
-                            oviDetails.selectedOviGender);
+                            animalId: oviDetails.id!,
+                            animalName: oviDetails.animalName,
+                            selectedOviImage: oviDetails.selectedOviImage,
+                            selectedOviGender: oviDetails.selectedOviGender);
                       });
                     },
                   );

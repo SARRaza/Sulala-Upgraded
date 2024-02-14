@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
-import '../../data/classes/breeding_event_variables.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -12,9 +11,8 @@ import 'draw_up_animal_species.dart';
 import 'select_options.dart';
 
 class CreateAnimalPage extends ConsumerStatefulWidget {
-  final List<BreedingEventVariables> breedingEvents;
 
-  const CreateAnimalPage({super.key, required this.breedingEvents});
+  const CreateAnimalPage({super.key});
 
   @override
   ConsumerState<CreateAnimalPage> createState() => _CreateAnimalPageState();
@@ -221,20 +219,21 @@ class _CreateAnimalPageState extends ConsumerState<CreateAnimalPage> {
           bottomNavigationBar: Padding(
             padding: const EdgeInsets.all(16),
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 setState(() {
                   showAnimalSpeciesSection = selectedAnimalType.isNotEmpty;
                   showAnimalBreedsSection = selectedAnimalSpecies.isNotEmpty;
                 });
                 if (areAllOptionsSelected()) {
-                  Navigator.push(
+                  final close = await Navigator.push<bool?>(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SelectedOptionsPage(
-                        breedingEvents: widget.breedingEvents,
-                      ),
+                      builder: (context) => const SelectedOptionsPage(),
                     ),
                   );
+                  if(close == true && mounted) {
+                    Navigator.pop(context);
+                  }
                 }
                 // Handle "Continue" button press
               },

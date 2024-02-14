@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
 import '../data/classes/ovi_variables.dart';
-import '../data/riverpod_globals.dart';
+import '../data/providers/animal_list_provider.dart';
 
 class BreedingHelper {
   BreedingHelper(this.ref);
@@ -19,7 +19,7 @@ class BreedingHelper {
             animal.id != selectedAnimal.id &&
             animal.selectedAnimalSpecies ==
                 selectedAnimal.selectedAnimalSpecies &&
-            (animal.id == selectedAnimal.selectedOviSire?.id ||
+            (animal.id == selectedAnimal.selectedOviSire?.animalId ||
                 !ancestors.contains(animal.id)) &&
             !descendants.contains(animal.id))
         .toList();
@@ -34,7 +34,7 @@ class BreedingHelper {
             animal.id != selectedAnimal.id &&
             animal.selectedAnimalSpecies ==
                 selectedAnimal.selectedAnimalSpecies &&
-            (animal.id == selectedAnimal.selectedOviDam?.id ||
+            (animal.id == selectedAnimal.selectedOviDam?.animalId ||
                 !ancestors.contains(animal.id)) &&
             !descendants.contains(animal.id))
         .toList();
@@ -51,10 +51,10 @@ class BreedingHelper {
                 selectedAnimal.selectedAnimalSpecies &&
             !ancestors.contains(animal.id) &&
             (selectedAnimal.breedChildren
-                    .any((child) => child.id == animal.id) ||
+                    .any((child) => child.animalId == animal.id) ||
                 !descendants.contains(animal.id)) &&
             (selectedAnimal.breedPartner == null ||
-                animal.id != selectedAnimal.breedPartner!.id))
+                animal.id != selectedAnimal.breedPartner!.animalId))
         .toList();
   }
 
@@ -72,23 +72,23 @@ class BreedingHelper {
         .toList();
   }
 
-  Set<int> _getAncestors(OviVariables selectedAnimal,
-      {Set<int> prevAncestors = const {}}) {
-    final ancestors = Set<int>.from(prevAncestors);
+  Set<String> _getAncestors(OviVariables selectedAnimal,
+      {Set<String> prevAncestors = const {}}) {
+    final ancestors = Set<String>.from(prevAncestors);
     if (selectedAnimal.selectedOviSire != null &&
-        !ancestors.contains(selectedAnimal.selectedOviSire!.id)) {
-      ancestors.add(selectedAnimal.selectedOviSire!.id);
+        !ancestors.contains(selectedAnimal.selectedOviSire!.animalId)) {
+      ancestors.add(selectedAnimal.selectedOviSire!.animalId);
       final father = allAnimals.firstWhereOrNull(
-          (animal) => animal.id == selectedAnimal.selectedOviSire!.id);
+          (animal) => animal.id == selectedAnimal.selectedOviSire!.animalId);
       if (father != null) {
         ancestors.addAll(_getAncestors(father, prevAncestors: ancestors));
       }
     }
     if (selectedAnimal.selectedOviDam != null &&
-        !ancestors.contains(selectedAnimal.selectedOviDam!.id)) {
-      ancestors.add(selectedAnimal.selectedOviDam!.id);
+        !ancestors.contains(selectedAnimal.selectedOviDam!.animalId)) {
+      ancestors.add(selectedAnimal.selectedOviDam!.animalId);
       final mother = allAnimals.firstWhereOrNull(
-          (animal) => animal.id == selectedAnimal.selectedOviDam!.id);
+          (animal) => animal.id == selectedAnimal.selectedOviDam!.animalId);
       if (mother != null) {
         ancestors.addAll(_getAncestors(mother, prevAncestors: ancestors));
       }
@@ -97,22 +97,22 @@ class BreedingHelper {
     return ancestors;
   }
 
-  Set<int> _getDescendants(OviVariables selectedAnimal,
-      {Set<int> prevDescendants = const {}}) {
-    final descendants = Set<int>.from(prevDescendants);
+  Set<String> _getDescendants(OviVariables selectedAnimal,
+      {Set<String> prevDescendants = const {}}) {
+    final descendants = Set<String>.from(prevDescendants);
     var children = [];
     if (descendants.isEmpty && selectedAnimal.breedChildren.isNotEmpty) {
       children = allAnimals
           .where((animal) => selectedAnimal.breedChildren
-              .any((child) => child.id == animal.id))
+              .any((child) => child.animalId == animal.id))
           .toList();
     } else {
       children = allAnimals
           .where((animal) =>
               (animal.selectedOviSire != null &&
-                  animal.selectedOviSire!.id == selectedAnimal.id) ||
+                  animal.selectedOviSire!.animalId == selectedAnimal.id) ||
               (animal.selectedOviDam != null &&
-                  animal.selectedOviDam!.id == selectedAnimal.id))
+                  animal.selectedOviDam!.animalId == selectedAnimal.id))
           .toList();
     }
 

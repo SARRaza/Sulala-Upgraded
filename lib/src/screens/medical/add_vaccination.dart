@@ -1,5 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:sulala_upgrade/src/data/classes/vaccine_details.dart';
+import 'package:sulala_upgrade/src/data/providers/vaccination_list_provider.dart';
+import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -8,16 +14,15 @@ import '../../widgets/inputs/date_fields/primary_date_field.dart';
 import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 
-class AddVaccination extends StatefulWidget {
-  final Function(String, DateTime?, DateTime?) onSave;
-
-  const AddVaccination({super.key, required this.onSave});
+class AddVaccination extends ConsumerStatefulWidget {
+  final String animalId;
+  const AddVaccination({super.key, required this.animalId});
 
   @override
-  State<AddVaccination> createState() => _AddVaccinationState();
+  ConsumerState<AddVaccination> createState() => _AddVaccinationState();
 }
 
-class _AddVaccinationState extends State<AddVaccination> {
+class _AddVaccinationState extends ConsumerState<AddVaccination> {
   final _vaccineNameController = TextEditingController();
   DateTime? firstDoseDate;
   DateTime? secondDoseDate;
@@ -30,9 +35,16 @@ class _AddVaccinationState extends State<AddVaccination> {
   }
 
   void _saveDataAndNavigateBack() {
-    String newVaccineName = _vaccineNameController.text;
-    widget.onSave(newVaccineName, firstDoseDate, secondDoseDate);
-
+    ref.read(vaccinationListProvider(widget.animalId).notifier).addVaccination(
+        VaccineDetails(
+            animalId: widget.animalId,
+            vaccineName: _vaccineNameController.text,
+            firstDoseDate: firstDoseDate,
+            secondDoseDate: secondDoseDate,
+            files: ref
+                .read(uploadedFilesProvider)
+                .map((path) => File(path))
+                .toList()));
     Navigator.pop(context);
   }
 
@@ -128,7 +140,6 @@ class _AddVaccinationState extends State<AddVaccination> {
               if (_formKey.currentState!.validate()) {
                 _saveDataAndNavigateBack();
               }
-              // Navigator.pop(context);
             },
             text: 'Save'.tr,
           ),

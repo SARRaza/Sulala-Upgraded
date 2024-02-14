@@ -1,18 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:sulala_upgrade/src/data/classes/surgery_details.dart';
-import 'package:sulala_upgrade/src/data/classes/vaccine_details.dart';
 
 import 'breed_child_item.dart';
-import 'breeding_details.dart';
 import 'breeding_partner.dart';
-import 'id_helper.dart';
 import 'main_animal_dam.dart';
 import 'main_animal_sire.dart';
-import 'medical_checkup_details.dart';
 
 class OviVariables {
+  final String? id;
   final List<String> selectedFilters;
   late final String animalName;
   final MainAnimalSire? selectedOviSire;
@@ -46,18 +42,14 @@ class OviVariables {
   final DateTime? breedDeliveryDate;
   final String breedingNotes;
   final bool shouldAddEvent;
-  final BreedingDetails? breedingDetails;
-  final Map<String, List<VaccineDetails>> vaccineDetails;
-  final Map<String, List<MedicalCheckupDetails>> checkUpDetails;
-  final Map<String, List<SurgeryDetails>> surgeryDetails;
   final List<File>? files;
   final int? pregnanciesCount;
   final bool? pregnant;
   int? _age;
-  int? _id;
 
   OviVariables(
-      {required this.selectedFilters,
+      {this.id,
+        required this.selectedFilters,
       required this.animalName,
       required this.selectedOviSire,
       required this.selectedOviDam,
@@ -89,16 +81,14 @@ class OviVariables {
       required this.breedDeliveryDate,
       required this.breedingNotes,
       required this.shouldAddEvent,
-      this.breedingDetails,
-      required this.vaccineDetails,
       required this.dateOfLayingEggs,
-      required this.checkUpDetails,
-      required this.surgeryDetails,
       this.pregnant,
       this.files,
       this.pregnanciesCount});
+
   OviVariables copyWith(
-      {List<String>? selectedFilters,
+      {String? id,
+        List<String>? selectedFilters,
       String? animalName,
       MainAnimalSire? selectedOviSire,
       MainAnimalDam? selectedOviDam,
@@ -133,14 +123,11 @@ class OviVariables {
       String? breedingNotes,
       bool? shouldAddEvent,
       List<File>? files,
-      Map<String, List<VaccineDetails>>? vaccineDetails,
-      Map<String, List<MedicalCheckupDetails>>? checkUpDetails,
-      Map<String, List<SurgeryDetails>>? surgeryDetails,
       Map<String, String>? customFields,
       bool? pregnant,
-      int? pregnanciesCount,
-      BreedingDetails? breedingDetails}) {
+      int? pregnanciesCount}) {
     return OviVariables(
+        id: id ?? this.id,
         selectedFilters: selectedFilters ?? this.selectedFilters,
         animalName: animalName ?? this.animalName,
         selectedOviSire: selectedOviSire ?? this.selectedOviSire,
@@ -176,10 +163,6 @@ class OviVariables {
         breedingNotes: breedingNotes ?? this.breedingNotes,
         breedPartner: breedPartner,
         shouldAddEvent: shouldAddEvent ?? this.shouldAddEvent,
-        breedingDetails: breedingDetails,
-        vaccineDetails: vaccineDetails ?? this.vaccineDetails,
-        checkUpDetails: checkUpDetails ?? this.checkUpDetails,
-        surgeryDetails: surgeryDetails ?? this.surgeryDetails,
         files: files ?? this.files,
         pregnant: pregnant ?? this.pregnant,
         pregnanciesCount: pregnanciesCount ?? this.pregnanciesCount);
@@ -203,8 +186,4 @@ class OviVariables {
     return _age!;
   }
 
-  int get id {
-    _id ??= IdHelper.lettersToIndex(animalName);
-    return _id!;
-  }
 }

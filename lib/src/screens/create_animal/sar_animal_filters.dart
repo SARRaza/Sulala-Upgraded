@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
 import '../../data/animal_filters.dart';
-import '../../data/classes/breeding_event_variables.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -18,9 +17,8 @@ import 'draw_up_animal_breed.dart';
 import 'draw_up_animal_species.dart';
 
 class SarAnimalFilters extends ConsumerStatefulWidget {
-  final List<BreedingEventVariables> breedingEvents;
 
-  const SarAnimalFilters({super.key, required this.breedingEvents});
+  const SarAnimalFilters({super.key});
 
   @override
   ConsumerState<SarAnimalFilters> createState() => _SarAnimalFilters();

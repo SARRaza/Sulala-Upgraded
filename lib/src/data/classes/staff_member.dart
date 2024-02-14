@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class StaffMember {
-  final int id;
+  final String? id;
   final ImageProvider image;
   final String name;
   final String role;
@@ -10,7 +10,7 @@ class StaffMember {
   final String address;
 
   StaffMember(
-      {required this.id,
+      {this.id,
       required this.image,
       required this.name,
       required this.role,
@@ -19,7 +19,7 @@ class StaffMember {
       required this.address});
 
   StaffMember copyWith({
-    int? id,
+    String? id,
     ImageProvider? image,
     String? name,
     String? role,

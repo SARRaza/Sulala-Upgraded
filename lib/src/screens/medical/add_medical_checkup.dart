@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:sulala_upgrade/src/data/classes/medical_checkup_details.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
+import 'package:sulala_upgrade/src/data/providers/medical_checkup_list_provider.dart';
+import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
@@ -8,32 +14,24 @@ import '../../widgets/inputs/date_fields/primary_date_field.dart';
 import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 
-class AddMedicalCheckUp extends StatefulWidget {
-  final Function(String, DateTime?, DateTime?) onSave;
-
-  const AddMedicalCheckUp({super.key, required this.onSave});
+class AddMedicalCheckUp extends ConsumerStatefulWidget {
+  final String animalId;
+  const AddMedicalCheckUp({super.key, required this.animalId});
 
   @override
-  State<AddMedicalCheckUp> createState() => _AddMedicalCheckUpState();
+  ConsumerState<AddMedicalCheckUp> createState() => _AddMedicalCheckUpState();
 }
 
-class _AddMedicalCheckUpState extends State<AddMedicalCheckUp> {
+class _AddMedicalCheckUpState extends ConsumerState<AddMedicalCheckUp> {
   final _checkupNameController = TextEditingController();
-  DateTime? firstDoseDate;
-  DateTime? secondDoseDate;
+  DateTime? firstCheckup;
+  DateTime? secondCheckup;
   final _formKey = GlobalKey<FormState>();
+
   @override
   void dispose() {
     _checkupNameController.dispose();
     super.dispose();
-  }
-
-  void _saveDataAndNavigateBack() {
-    String newCheckUpName = _checkupNameController.text;
-    widget.onSave(newCheckUpName, firstDoseDate, secondDoseDate);
-
-    // Close the modal sheet and return to MyPage
-    Navigator.pop(context);
   }
 
   @override
@@ -96,14 +94,13 @@ class _AddMedicalCheckUpState extends State<AddMedicalCheckUp> {
                   PrimaryDateField(
                     hintText: 'Date Of Checkup'.tr,
                     labelText: 'Date Of Checkup'.tr,
-                    onChanged: (value) => setState(() => firstDoseDate = value),
+                    onChanged: (value) => setState(() => firstCheckup = value),
                   ),
                   SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                   PrimaryDateField(
                     hintText: 'Date Of Next Checkup'.tr,
                     labelText: 'Date Of Next Checkup'.tr,
-                    onChanged: (value) =>
-                        setState(() => secondDoseDate = value),
+                    onChanged: (value) => setState(() => secondCheckup = value),
                   ),
                   SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
                   Focus(
@@ -130,5 +127,19 @@ class _AddMedicalCheckUpState extends State<AddMedicalCheckUp> {
         ),
       ),
     );
+  }
+
+  void _saveDataAndNavigateBack() {
+    ref.read(medicalCheckupListProvider(widget.animalId).notifier).addCheckup(
+        MedicalCheckupDetails(
+            animalId: widget.animalId,
+            checkupName: _checkupNameController.text,
+            firstCheckUp: firstCheckup,
+            secondCheckUp: secondCheckup,
+            files: ref
+                .read(uploadedFilesProvider)
+                .map((path) => File(path))
+                .toList()));
+    Navigator.pop(context);
   }
 }

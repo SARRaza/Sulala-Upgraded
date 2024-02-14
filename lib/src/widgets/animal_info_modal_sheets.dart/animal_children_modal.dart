@@ -241,9 +241,11 @@ class _AnimalChildrenModalState extends ConsumerState<AnimalChildrenModal> {
                                             oviDetails.selectedOviImage;
 
                                         selectedChildren.add(BreedChildItem(
-                                            oviDetails.animalName,
-                                            oviImage,
-                                            oviDetails.selectedOviGender));
+                                            animalId: oviDetails.id!,
+                                            animalName: oviDetails.animalName,
+                                            selectedOviImage: oviImage,
+                                            selectedOviGender: oviDetails
+                                                .selectedOviGender));
                                       }
                                     });
                                   },

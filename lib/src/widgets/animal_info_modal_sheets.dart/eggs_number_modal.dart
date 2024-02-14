@@ -6,12 +6,12 @@ import '../inputs/text_fields/primary_text_field.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
 
 class EggsNumberModal extends StatelessWidget {
-  const EggsNumberModal({super.key, required this.controller});
-
-  final TextEditingController controller;
+  final int eggsNumber;
+  const EggsNumberModal({super.key, required this.eggsNumber});
 
   @override
   Widget build(BuildContext context) {
+    final controller = TextEditingController(text: eggsNumber.toString());
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: SizedBox(

@@ -3,10 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:sulala_upgrade/src/data/providers/surgery_list_provider.dart';
 import 'package:sulala_upgrade/src/widgets/dialogs/confirm_delete_dialog.dart';
-import '../../data/classes/breeding_event_variables.dart';
-import '../../data/classes/ovi_variables.dart';
 import '../../data/classes/surgery_details.dart';
 import '../../data/globals.dart';
 import '../../data/riverpod_globals.dart';
@@ -19,38 +17,22 @@ import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 
 class EditSurgeriesRecords extends ConsumerStatefulWidget {
-  final OviVariables oviDetails;
-  final List<BreedingEventVariables> breedingEvents;
-  final SurgeryDetails? selectedSurgery;
+  final String surgeryId;
+  final String animalId;
 
   const EditSurgeriesRecords(
       {super.key,
-      required this.breedingEvents,
-      this.selectedSurgery,
-      required this.oviDetails});
+      required this.surgeryId, required this.animalId});
   @override
   ConsumerState<EditSurgeriesRecords> createState() =>
       _EditSurgeriesRecordsState();
 }
 
 class _EditSurgeriesRecordsState extends ConsumerState<EditSurgeriesRecords> {
-  final _surgeryNameController = TextEditingController();
+  TextEditingController? _surgeryNameController;
   DateTime? firstSurgery;
   DateTime? secondSurgery;
-  List<SurgeryDetails> surgeryDetails = [];
   final _formKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-
-    if (widget.selectedSurgery != null) {
-      // Initialize text controller and date variables with selected vaccine details
-      _surgeryNameController.text = widget.selectedSurgery!.surgeryName;
-      firstSurgery = widget.selectedSurgery!.firstSurgery;
-      secondSurgery = widget.selectedSurgery!.secondSurgery;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,105 +67,100 @@ class _EditSurgeriesRecordsState extends ConsumerState<EditSurgeriesRecords> {
                 left: 16 * SizeConfig.widthMultiplier(context),
                 right: 16 * SizeConfig.widthMultiplier(context),
                 bottom: 52 * SizeConfig.heightMultiplier(context) + 10),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Edit Surgeries Records".tr,
-                    style: AppFonts.title3(color: AppColors.grayscale90),
-                  ),
-                  SizedBox(
-                    height: 16 * SizeConfig.heightMultiplier(context),
-                  ),
-                  PrimaryTextField(
-                    hintText: 'Surgery Name'.tr,
-                    controller: _surgeryNameController,
-                    labelText: 'Surgery Name'.tr,
-                    validator: (value) => value == null || value.isEmpty
-                        ? 'Please enter some text'.tr
-                        : null,
-                  ),
-                  SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
-                  PrimaryDateField(
-                    hintText: firstSurgery != null
-                        ? DateFormat('yyyy-MM-dd').format(firstSurgery!)
-                        : 'dd/MM/yyyy',
-                    labelText: 'Date Of Surgery'.tr,
-                    onChanged: (value) => setState(() => firstSurgery = value),
-                  ),
-                  SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
-                  PrimaryDateField(
-                    hintText: secondSurgery != null
-                        ? DateFormat('yyyy-MM-dd').format(secondSurgery!)
-                        : 'dd/MM/yyyy',
-                    labelText: 'Date Of Next Surgery'.tr,
-                    onChanged: (value) => setState(() => secondSurgery = value),
-                  ),
-                  SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
-                  Focus(
-                    onFocusChange:
-                        (hasFocus) {}, // Dummy onFocusChange callback
-                    child: const FileUploaderField(),
-                  ),
-                  SizedBox(
-                    height: 16 * SizeConfig.heightMultiplier(context),
-                  ),
-                  SizedBox(
-                    height: 52 * SizeConfig.heightMultiplier(context),
-                    width: 343 * SizeConfig.widthMultiplier(context),
-                    child: PrimaryButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          // Update details using copyWith method
-                          SurgeryDetails updatedSurgery =
-                              widget.selectedSurgery!.copyWith(
-                                  surgeryName: _surgeryNameController.text,
-                                  firstSurgery: firstSurgery,
-                                  secondSurgery: secondSurgery,
-                                  files: ref
-                                      .read(uploadedFilesProvider)
-                                      .map((path) => File(path))
-                                      .toList());
+            child: ref.watch(surgeryListProvider(widget.animalId)).when(
+              error: (error, trace) => Text('Error: $error'),
+              loading: () => const Center(child: CircularProgressIndicator(),),
+              data: (surgeries) {
+                final selectedSurgery = surgeries.firstWhereOrNull((surgery) => surgery.id == widget.surgeryId);
+                if(selectedSurgery == null) {
+                  return Text('Surgery not found'.tr);
+                }
+                _surgeryNameController ??= TextEditingController(text: selectedSurgery.surgeryName);
+                firstSurgery ??= selectedSurgery.firstSurgery;
+                secondSurgery ??= selectedSurgery.secondSurgery;
 
-                          final List<SurgeryDetails> currentList = widget.oviDetails.surgeryDetails[
-                          widget.oviDetails.animalName] ??
-                              [];
+                return Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Edit Surgeries Records".tr,
+                        style: AppFonts.title3(color: AppColors.grayscale90),
+                      ),
+                      SizedBox(
+                        height: 16 * SizeConfig.heightMultiplier(context),
+                      ),
+                      PrimaryTextField(
+                        hintText: 'Surgery Name'.tr,
+                        controller: _surgeryNameController!,
+                        labelText: 'Surgery Name'.tr,
+                        validator: (value) => value == null || value.isEmpty
+                            ? 'Please enter some text'.tr
+                            : null,
+                      ),
+                      SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
+                      PrimaryDateField(
+                        hintText: 'dd/MM/yyyy',
+                        labelText: 'Date Of Surgery'.tr,
+                        onChanged: (value) => firstSurgery = value,
+                      ),
+                      SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
+                      PrimaryDateField(
+                        hintText: 'dd/MM/yyyy',
+                        labelText: 'Date Of Next Surgery'.tr,
+                        onChanged: (value) => secondSurgery = value,
+                      ),
+                      SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
+                      Focus(
+                        onFocusChange:
+                            (hasFocus) {}, // Dummy onFocusChange callback
+                        child: FileUploaderField(uploadedFiles: selectedSurgery.files?.map((file) => file.path).toList(),),
+                      ),
+                      SizedBox(
+                        height: 16 * SizeConfig.heightMultiplier(context),
+                      ),
+                      SizedBox(
+                        height: 52 * SizeConfig.heightMultiplier(context),
+                        width: 343 * SizeConfig.widthMultiplier(context),
+                        child: PrimaryButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              // Update details using copyWith method
+                              SurgeryDetails updatedSurgery =
+                                  selectedSurgery.copyWith(
+                                      surgeryName: _surgeryNameController!.text,
+                                      firstSurgery: firstSurgery,
+                                      secondSurgery: secondSurgery,
+                                      files: ref
+                                          .read(uploadedFilesProvider)
+                                          .map((path) => File(path))
+                                          .toList());
+                              ref.read(surgeryListProvider(widget.animalId)
+                                  .notifier).updateSurgery(updatedSurgery);
 
-                          final List<SurgeryDetails> updatedList =
-                          List<SurgeryDetails>.from(currentList);
-                          final int indexToUpdate = updatedList.indexWhere(
-                                  (surgery) => surgery == widget.selectedSurgery);
-
-                          if (indexToUpdate != -1) {
-                            updatedList[indexToUpdate] = updatedSurgery;
-                            ref.read(animalListProvider.notifier).updateAnimal(
-                              widget.oviDetails.copyWith(surgeryDetails: {
-                                widget.oviDetails.animalName: updatedList})
-                            );
-                          }
-
-                          // Close the EditVaccination page
-                          Navigator.pop(context);
-                        }
-                      },
-                      text: 'Save'.tr,
-                    ),
+                              // Close the EditVaccination page
+                              Navigator.pop(context);
+                            }
+                          },
+                          text: 'Save'.tr,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8 * SizeConfig.heightMultiplier(context),
+                      ),
+                      SizedBox(
+                        height: 52 * SizeConfig.heightMultiplier(context),
+                        width: 343 * SizeConfig.widthMultiplier(context),
+                        child: NavigateButton(
+                          onPressed: _deleteSurgery,
+                          text: 'Delete'.tr,
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    height: 8 * SizeConfig.heightMultiplier(context),
-                  ),
-                  SizedBox(
-                    height: 52 * SizeConfig.heightMultiplier(context),
-                    width: 343 * SizeConfig.widthMultiplier(context),
-                    child: NavigateButton(
-                      onPressed: _deleteSurgery,
-                      text: 'Delete'.tr,
-                    ),
-                  ),
-                ],
-              ),
+                );
+              }
             ),
           ),
         ),
@@ -198,11 +175,8 @@ class _EditSurgeriesRecordsState extends ConsumerState<EditSurgeriesRecords> {
                 content: "Are you sure you want to delete the surgery?".tr))
         .then((confirm) {
       if (confirm) {
-        final animalDetails = widget.oviDetails.copyWith();
-        animalDetails.surgeryDetails[animalDetails.animalName]!.removeWhere((
-            surgery) => surgery.surgeryName == widget.selectedSurgery!
-            .surgeryName);
-        ref.read(animalListProvider.notifier).updateAnimal(animalDetails);
+        ref.read(surgeryListProvider(widget.animalId).notifier).removeSurgery(
+            widget.surgeryId);
 
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('The surgery has been deleted'.tr)));

@@ -15,7 +15,7 @@ import 'list_of_staff.dart';
 import 'manage_permissions.dart';
 
 class StaffDetailsPage extends ConsumerStatefulWidget {
-  final int staffMemberId;
+  final String staffMemberId;
   final ImageProvider image;
   final String title;
   final String subtitle;

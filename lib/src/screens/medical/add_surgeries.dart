@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:sulala_upgrade/src/data/classes/surgery_details.dart';
+import 'package:sulala_upgrade/src/data/providers/surgery_list_provider.dart';
 import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -8,20 +11,22 @@ import '../../widgets/inputs/date_fields/primary_date_field.dart';
 import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 
-class AddSurgeriesRecords extends StatefulWidget {
-  final Function(String, DateTime?, DateTime?) onSave;
+class AddSurgeriesRecords extends ConsumerStatefulWidget {
+  final String animalId;
 
-  const AddSurgeriesRecords({super.key, required this.onSave});
+  const AddSurgeriesRecords({super.key, required this.animalId});
 
   @override
-  State<AddSurgeriesRecords> createState() => _AddSurgeriesRecordsState();
+  ConsumerState<AddSurgeriesRecords> createState() =>
+      _AddSurgeriesRecordsState();
 }
 
-class _AddSurgeriesRecordsState extends State<AddSurgeriesRecords> {
+class _AddSurgeriesRecordsState extends ConsumerState<AddSurgeriesRecords> {
   final _surgeryNameController = TextEditingController();
   DateTime? firstDoseDate;
   DateTime? secondDoseDate;
   final _formKey = GlobalKey<FormState>();
+
   @override
   void dispose() {
     _surgeryNameController.dispose();
@@ -29,9 +34,12 @@ class _AddSurgeriesRecordsState extends State<AddSurgeriesRecords> {
   }
 
   void _saveDataAndNavigateBack() {
-    String newSurgeryName = _surgeryNameController.text;
-    widget.onSave(newSurgeryName, firstDoseDate, secondDoseDate);
-
+    ref.read(surgeryListProvider(widget.animalId).notifier).addSurgery(
+        SurgeryDetails(
+            surgeryName: _surgeryNameController.text,
+            firstSurgery: firstDoseDate,
+            secondSurgery: secondDoseDate,
+            animalId: widget.animalId));
     Navigator.pop(context);
   }
 

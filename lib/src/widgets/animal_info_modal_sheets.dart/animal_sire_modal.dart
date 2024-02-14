@@ -143,7 +143,7 @@ class _AnimalSireModalState extends ConsumerState<AnimalSireModal> {
                             itemBuilder: (context, index) {
                               final oviDetails = animals[index];
                               final bool isSelected = selectedFather != null &&
-                                  selectedFather!.id == oviDetails.id;
+                                  selectedFather!.animalId == oviDetails.id;
 
                               if (!oviDetails.animalName
                                       .toLowerCase()
@@ -236,9 +236,11 @@ class _AnimalSireModalState extends ConsumerState<AnimalSireModal> {
                                             oviDetails.selectedOviSire;
 
                                         selectedFather = MainAnimalSire(
-                                            oviDetails.animalName,
-                                            oviImage,
-                                            oviDetails.selectedOviGender,
+                                            animalId: oviDetails.id!,
+                                            animalName: oviDetails.animalName,
+                                            selectedOviImage: oviImage,
+                                            selectedOviGender: oviDetails
+                                                .selectedOviGender,
                                             mother: mother,
                                             father: father);
                                       }

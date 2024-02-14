@@ -1,25 +1,34 @@
 import 'dart:io';
 
 class MedicalCheckupDetails {
+  final String? id;
   final String checkupName;
   final DateTime? firstCheckUp;
   final DateTime? secondCheckUp;
   final List<File>? files;
+  final String animalId;
 
   MedicalCheckupDetails(
-      {required this.checkupName,
+      {this.id,
+      required this.checkupName,
       required this.firstCheckUp,
       required this.secondCheckUp,
+      required this.animalId,
       this.files});
+
   MedicalCheckupDetails copyWith(
-      {String? checkupName,
+      {String? id,
+      String? checkupName,
       DateTime? firstCheckUp,
       DateTime? secondCheckUp,
-      List<File>? files}) {
+      List<File>? files,
+      String? animalId}) {
     return MedicalCheckupDetails(
+        id: id ?? this.id,
         checkupName: checkupName ?? this.checkupName,
         firstCheckUp: firstCheckUp ?? this.firstCheckUp,
         secondCheckUp: secondCheckUp ?? this.secondCheckUp,
-        files: files ?? this.files);
+        files: files ?? this.files,
+        animalId: animalId ?? this.animalId);
   }
 }

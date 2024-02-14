@@ -19,10 +19,7 @@ class _NavigationBarRegModeState extends State<NavigationBarRegMode> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
     const HomeScreenRegMode(),
-    const UserListOfAnimals(
-      shouldAddAnimal: false,
-      breedingEvents: [],
-    ),
+    const UserListOfAnimals(),
     const ProfilePage(
       showEditIcon: true,
     ),

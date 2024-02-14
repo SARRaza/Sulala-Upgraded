@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart';
-import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import 'package:sulala_upgrade/src/screens/reg_mode/image_view_page.dart';
 
 import '../../data/classes/ovi_variables.dart';
+import '../../data/providers/animal_list_provider.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/animal_info_modal_sheets.dart/animal_tags_modal.dart';
@@ -19,7 +19,7 @@ import '../medical/mammals_medical.dart';
 import 'edit_animal_details/edit_page.dart';
 
 class OwnedAnimalDetailsRegMode extends ConsumerStatefulWidget {
-  final int animalId;
+  final String animalId;
 
   const OwnedAnimalDetailsRegMode(
       {Key? key,
@@ -107,7 +107,7 @@ class _OwnedAnimalDetailsRegModeState
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => EditAnimalGenInfo(
-                              animalId: oviDetails.id,
+                              animalId: widget.animalId,
                               breedingEvents: const [],
                             ),
                           ),
@@ -285,17 +285,11 @@ class _OwnedAnimalDetailsRegModeState
           // Content for the 'Breeding' tab
           BreedingInfo(
             oviDetails: oviDetails,
-            breedingEvents: const [],
           ),
 
           // Content for the 'Medical' tab
           MammalsMedical(
-            OviDetails: oviDetails,
-            pregnancyStatusUpdated: (status) {
-              setState(() {
-                oviDetails.copyWith(pregnant: status);
-              });
-            },
+            animal: oviDetails,
           ),
         ],
       ),

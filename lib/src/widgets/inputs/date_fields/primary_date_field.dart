@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
@@ -14,6 +15,7 @@ class PrimaryDateField extends ConsumerStatefulWidget {
   final ValueChanged<DateTime>? onChanged;
   final ValueChanged<bool>? onErrorChanged;
   final TextEditingController? controller;
+  final DateTime? initialValue;
 
   const PrimaryDateField(
       {Key? key,
@@ -22,7 +24,8 @@ class PrimaryDateField extends ConsumerStatefulWidget {
       this.errorMessage,
       this.onChanged,
       this.onErrorChanged,
-      this.controller})
+      this.controller,
+      this.initialValue})
       : super(key: key);
 
   @override
@@ -41,7 +44,11 @@ class _PrimaryDateFieldState extends ConsumerState<PrimaryDateField> {
     super.initState();
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
-    _textEditingController = widget.controller ?? TextEditingController();
+    _textEditingController = widget.controller ??
+        TextEditingController(
+            text: widget.initialValue != null
+                ? DateFormat('dd/MM/yyyy').format(widget.initialValue!)
+                : '');
     _textEditingController.addListener(() {
       if (!_textEditingController.text.startsWith('D')) {
         setState(() {
@@ -274,4 +281,3 @@ class _PrimaryDateFieldState extends ConsumerState<PrimaryDateField> {
 //     },
 //   ),
 // ),
-

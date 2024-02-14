@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:sulala_upgrade/src/data/providers/animal_list_provider.dart';
 import 'package:sulala_upgrade/src/screens/reg_mode/image_view_page.dart';
 import 'package:sulala_upgrade/src/widgets/styled_dismissible.dart';
 import '../../../data/classes/ovi_variables.dart';
-import '../../../data/riverpod_globals.dart';
 import '../../../screens/pdf/pdf_view_page.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
@@ -60,14 +60,6 @@ class _GeneralInfoAnimalWidgetState
   
   @override
   Widget build(BuildContext context) {
-    final selectedDate = widget.oviDetails.dateOfBirth;
-
-    final animalDetails = ref
-        .watch(oviAnimalsProvider)
-        .firstWhere((animal) => animal.id == widget.oviDetails.id);
-    final List<String> uploadedFiles =
-        animalDetails.files?.map((file) => file.path).toList() ?? [];
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -95,7 +87,7 @@ class _GeneralInfoAnimalWidgetState
               children: [
                 TableTextButton(
                   onPressed: widget.onDateOfBirthPressed,
-                  textButton: _calculateAge(selectedDate),
+                  textButton: _calculateAge(widget.oviDetails.dateOfBirth),
                   textHead: "Age".tr,
                 ),
                 Visibility(
@@ -219,9 +211,9 @@ class _GeneralInfoAnimalWidgetState
                 ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: uploadedFiles.length,
+                  itemCount: widget.oviDetails.files?.length,
                   itemBuilder: (context, index) {
-                    final filePath = uploadedFiles[index];
+                    final filePath = widget.oviDetails.files![index].path;
 
                     return StyledDismissible(
                       confirmDismiss: _confirmFileDeletion,
@@ -308,17 +300,9 @@ class _GeneralInfoAnimalWidgetState
 
   _deleteFile(String filePath) {
     File(filePath).delete();
-    ref.read(oviAnimalsProvider.notifier).update((state) {
-      final animalIndex =
-          state.indexWhere((animal) => animal.id == widget.oviDetails.id);
-      state[animalIndex] = state[animalIndex].copyWith(
-          files: state[animalIndex]
-              .files!
-              .where((file) => file.path != filePath)
-              .toList());
-
-      return state;
-    });
+    ref.read(animalListProvider.notifier).updateAnimal(widget.oviDetails
+        .copyWith(files: widget.oviDetails.files!.where((file) => file.path !=
+        filePath).toList()));
   }
 
   String _calculateAge(DateTime? selectedDate) {
