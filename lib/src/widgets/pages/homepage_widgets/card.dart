@@ -30,8 +30,8 @@ class CardWidget extends StatelessWidget {
       ),
       color: color,
       child: Container(
-        width: SizeConfig.widthMultiplier(context) * 165,
-        height: SizeConfig.heightMultiplier(context) * 203,
+        width: 165,
+        height: 208,
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,14 +59,10 @@ class CardWidget extends StatelessWidget {
               ),
             ),
             Center(
-              child: SizedBox(
-                width: SizeConfig.widthMultiplier(context) * 133,
-                height: SizeConfig.heightMultiplier(context) * 40,
-                child: PrimaryButton(
-                  status: PrimaryButtonStatus.idle,
-                  text: buttonText,
-                  onPressed: onPressed,
-                ),
+              child: PrimaryButton(
+                status: PrimaryButtonStatus.idle,
+                text: buttonText,
+                onPressed: onPressed,
               ),
             ),
           ],

@@ -83,37 +83,34 @@ class _HomeScreenGuestModeState extends State<HomeScreenGuestMode> {
           elevation: 0, // Remove the appbar shadow
         ),
         body: SingleChildScrollView(
-          child: SizedBox(
-            height: SizeConfig.heightMultiplier(context) * 704.004,
-            child: Stack(
-              children: [
-                // Background Image (Bottom Sheet)
-                _isLoading == false
-                    ? Positioned(
-                        bottom: SizeConfig.heightMultiplier(context) * 110,
-                        left: SizeConfig.widthMultiplier(context) * 225,
-                        right: SizeConfig.widthMultiplier(context) * 18.75,
-                        child: Image.asset(
-                          'assets/illustrations/cow_eating.png',
-                          fit: BoxFit.fill,
-                        ),
-                      )
-                    : Container(),
+          child: Stack(
+            children: [
+              // Background Image (Bottom Sheet)
+              _isLoading == false
+                  ? Positioned(
+                      bottom: SizeConfig.heightMultiplier(context) * 110,
+                      left: SizeConfig.widthMultiplier(context) * 225,
+                      right: SizeConfig.widthMultiplier(context) * 18.75,
+                      child: Image.asset(
+                        'assets/illustrations/cow_eating.png',
+                        fit: BoxFit.fill,
+                      ),
+                    )
+                  : Container(),
 
-                // Content
-                Padding(
-                  padding:
-                      EdgeInsets.all(SizeConfig.widthMultiplier(context) * 16),
-                  child: Column(
-                    children: _isLoading
-                        ? [
-                            const ShimmerHomePageWidget()
-                          ] // Shimmer placeholders
-                        : _buildActualContent(), // Actual content
-                  ),
+              // Content
+              Padding(
+                padding:
+                    EdgeInsets.all(SizeConfig.widthMultiplier(context) * 16),
+                child: Column(
+                  children: _isLoading
+                      ? [
+                          const ShimmerHomePageWidget()
+                        ] // Shimmer placeholders
+                      : _buildActualContent(), // Actual content
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -160,20 +157,16 @@ class _HomeScreenGuestModeState extends State<HomeScreenGuestMode> {
       SizedBox(height: SizeConfig.heightMultiplier(context) * 110),
       TitleText(text: 'Want to start your farm\nright now and join?'.tr),
       SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
-      SizedBox(
-        height: SizeConfig.heightMultiplier(context) * 48,
-        width: SizeConfig.widthMultiplier(context) * 108,
-        child: PrimaryButton(
-          text: 'Join Now'.tr,
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const JoinNow(),
-              ),
-            );
-          },
-          status: PrimaryButtonStatus.idle,
-        ),
+      PrimaryButton(
+        text: 'Join Now'.tr,
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const JoinNow(),
+            ),
+          );
+        },
+        status: PrimaryButtonStatus.idle,
       ),
       SizedBox(height: SizeConfig.heightMultiplier(context) * 8),
       PrimaryTextButton(

@@ -37,7 +37,10 @@ class PrimaryButton extends StatelessWidget {
             borderRadius:
                 BorderRadius.circular(SizeConfig.widthMultiplier(context) * 30),
           ),
-          minimumSize: minimumSize),
+          minimumSize: minimumSize,
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          padding: const EdgeInsets.symmetric(horizontal: 20)
+      ),
       child: _buildButtonContent(),
     );
   }

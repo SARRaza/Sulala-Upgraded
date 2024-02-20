@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 
 class SizeConfig {
   static double heightMultiplier(BuildContext context) {
-    return MediaQuery.of(context).size.height / 812;
+    final size = MediaQuery.of(context).size;
+    final height = size.height > size.width ? size.height : size.width;
+    return height / 812;
   }
 
   static double widthMultiplier(BuildContext context) {
-    return MediaQuery.of(context).size.width / 375;
+    final size = MediaQuery.of(context).size;
+    final width = size.height > size.width ? size.width : size.height;
+    return width / 375;
   }
 }

@@ -481,7 +481,7 @@ class CardWidget extends StatelessWidget {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 36, 86,
-                        38), // Set the background color of the button
+                        38),
                   ),
                   onPressed: onPressed,
                   child: Text(
