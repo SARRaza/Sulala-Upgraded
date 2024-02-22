@@ -5,12 +5,12 @@ import 'package:sulala_upgrade/src/data/classes/medical_checkup_details.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 
 final medicalCheckupListProvider =
-    AsyncNotifierProvider.family<MedicalCheckupList, List<MedicalCheckupDetails>, String>(
+    AsyncNotifierProvider.family<MedicalCheckupList, List<MedicalCheckupDetails>, int>(
         MedicalCheckupList.new);
 
-class MedicalCheckupList extends FamilyAsyncNotifier<List<MedicalCheckupDetails>, String> {
+class MedicalCheckupList extends FamilyAsyncNotifier<List<MedicalCheckupDetails>, int> {
   @override
-  FutureOr<List<MedicalCheckupDetails>> build(String arg) {
+  FutureOr<List<MedicalCheckupDetails>> build(int arg) {
     return [];
   }
 
@@ -29,7 +29,7 @@ class MedicalCheckupList extends FamilyAsyncNotifier<List<MedicalCheckupDetails>
     state = AsyncData(checkups);
   }
 
-  Future<void> removeCheckup(String id) async {
+  Future<void> removeCheckup(int id) async {
     final checkups = List<MedicalCheckupDetails>.from(state.value!);
     checkups.removeWhere((checkup) => checkup.id == id);
     state = AsyncData(checkups);

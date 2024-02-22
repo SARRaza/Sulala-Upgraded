@@ -1,12 +1,12 @@
 import 'dart:io';
 
 class VaccineDetails {
-  final String? id;
+  final int? id;
   final String vaccineName;
   final DateTime? firstDoseDate;
   final DateTime? secondDoseDate;
   final List<File>? files;
-  final String animalId;
+  final int animalId;
 
   VaccineDetails(
       {this.id,
@@ -17,12 +17,12 @@ class VaccineDetails {
       required this.animalId});
 
   VaccineDetails copyWith(
-      {String? id,
+      {int? id,
       String? vaccineName,
       DateTime? firstDoseDate,
       DateTime? secondDoseDate,
       List<File>? files,
-      String? animalId}) {
+      int? animalId}) {
     return VaccineDetails(
         id: id ?? this.id,
         vaccineName: vaccineName ?? this.vaccineName,

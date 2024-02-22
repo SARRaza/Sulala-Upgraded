@@ -29,7 +29,7 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
 
   final ImagePicker _picker = ImagePicker();
 
-  void _showFilterModalSheet(BuildContext context) async {
+  void _showPhotoModalSheet(BuildContext context) async {
     showModalBottomSheet(
       showDragHandle: true,
       backgroundColor: Colors.transparent,
@@ -57,7 +57,6 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
                       ref
                           .read(profilePictureProvider.notifier)
                           .update((state) => File(pickedImage.path));
-                      setState(() {});
                     }
                   },
                 ),
@@ -80,7 +79,6 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
                       ref
                           .read(profilePictureProvider.notifier)
                           .update((state) => File(pickedImage.path));
-                      setState(() {});
                     }
                   },
                 ),
@@ -170,7 +168,7 @@ class _AddSomeDetailsPageState extends ConsumerState<AddSomeDetailsPage> {
                 Center(
                   child: PrimaryTextButton(
                     onPressed: () {
-                      _showFilterModalSheet(context);
+                      _showPhotoModalSheet(context);
                     },
                     status: TextStatus.idle,
                     text: 'Add Photo'.tr,

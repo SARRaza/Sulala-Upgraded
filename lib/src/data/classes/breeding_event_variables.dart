@@ -6,7 +6,7 @@ import 'main_animal_dam.dart';
 import 'main_animal_sire.dart';
 
 class BreedingEventVariables {
-  final String? id;
+  final int? id;
   final String eventNumber;
   final MainAnimalSire? sire;
   final MainAnimalDam? dam;
@@ -39,7 +39,7 @@ class BreedingEventVariables {
       this.incubationDate,
       this.hatchingDate});
   BreedingEventVariables copyWith(
-      {String? id,
+      {int? id,
       String? eventNumber,
       MainAnimalSire? sire,
       MainAnimalDam? dam,

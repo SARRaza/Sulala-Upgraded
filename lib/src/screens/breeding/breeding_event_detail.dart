@@ -12,8 +12,8 @@ import '../../theme/fonts/fonts.dart';
 import 'edit_breeding_event_detail.dart';
 
 class BreedingEventDetails extends ConsumerStatefulWidget {
-  final String animalId;
-  final String eventId;
+  final int animalId;
+  final int eventId;
 
   const BreedingEventDetails({
     super.key,
@@ -89,8 +89,6 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                             result['eventDeleted'] != null &&
                             result['eventDeleted'] == true) {
                           Navigator.pop(context);
-                        } else {
-                          setState(() {});
                         }
                       });
                     },
@@ -172,7 +170,7 @@ class _BreedingEventDetailsState extends ConsumerState<BreedingEventDetails> {
                                           color: AppColors.grayscale70),
                                     ),
                                     Text(
-                                      breedingEvent.id!,
+                                      breedingEvent.id?.toString() ?? '',
                                       style: AppFonts.body2(
                                           color: AppColors.grayscale90),
                                     ),

@@ -33,6 +33,7 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
   bool emailHasError = false;
   bool phoneHasError = false;
   PrimaryButtonStatus buttonStatus = PrimaryButtonStatus.idle;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -44,14 +45,16 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
     _emailController.text = ref.read(emailAddressProvider);
   }
 
-  bool _isValidEmail(String email) {
+  String? _isValidEmail(String? email) {
     final emailRegExp = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
-    return emailRegExp.hasMatch(email);
+    return email == null || email.isEmpty || emailRegExp.hasMatch(email) ? null
+        : 'Invalid email address'.tr;
   }
 
-  bool _isValidPhoneNumber(String phoneNumber) {
+  String? _isValidPhoneNumber(String? phoneNumber) {
     final phoneRegExp = RegExp(r'^[0-9]+$');
-    return phoneRegExp.hasMatch(phoneNumber);
+    return phoneNumber == null || phoneNumber.isEmpty || phoneRegExp.hasMatch(
+        phoneNumber) ? null : "Phone numbers can't have text".tr;
   }
 
   @override
@@ -102,135 +105,116 @@ class _AddPersonalInfoPageState extends ConsumerState<AddPersonalInfoPage> {
               left: SizeConfig.widthMultiplier(context) * 16,
               right: SizeConfig.widthMultiplier(context) * 16,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Add Personal Information'.tr,
-                  style: AppFonts.title3(color: AppColors.grayscale90),
-                ),
-                SizedBox(height: SizeConfig.heightMultiplier(context) * 40),
-                Text("What's your name?".tr,
-                    style: AppFonts.headline3(color: AppColors.grayscale90)),
-                SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
-                PrimaryTextField(
-                  controller: _nameController,
-                  hintText: "Enter First Name".tr,
-                  onChanged: (value) {
-                    ref
-                        .read(firstNameProvider.notifier)
-                        .update((state) => value);
-                  },
-                ),
-                SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
-                PrimaryTextField(
-                  controller: _lastNameController,
-                  hintText: "Enter Last Name".tr,
-                  onChanged: (value) {
-                    ref
-                        .read(lastNameProvider.notifier)
-                        .update((state) => value);
-                  },
-                ),
-                SizedBox(height: SizeConfig.heightMultiplier(context) * 40),
-                Text('What Is The Name Of Your Farm?'.tr,
-                    style: AppFonts.headline3(color: AppColors.grayscale90)),
-                SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
-                PrimaryTextField(
-                  controller: _farmNameController,
-                  hintText: 'Farm Name'.tr,
-                  onChanged: (value) {
-                    ref
-                        .read(whatIsTheNameOfYourFarmProvider.notifier)
-                        .update((state) => value);
-                  },
-                ),
-                SizedBox(height: SizeConfig.heightMultiplier(context) * 40),
-                Text("Who owns the farm?".tr,
-                    style: AppFonts.headline3(color: AppColors.grayscale90)),
-                SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
-                PrimaryTextField(
-                  controller: _ownerNameController,
-                  hintText: "Owner name".tr,
-                  onChanged: (value) {
-                    ref
-                        .read(whoOwnTheFarmProvider.notifier)
-                        .update((state) => value);
-                  },
-                ),
-                SizedBox(height: SizeConfig.heightMultiplier(context) * 40),
-                Text('Contacts'.tr,
-                    style: AppFonts.headline3(color: AppColors.grayscale90)),
-                SizedBox(height: SizeConfig.heightMultiplier(context) * 8),
-                Text(
-                    'Add contact details to help other people contact you for collaboration'
-                        .tr,
-                    style: AppFonts.body2(color: AppColors.grayscale70)),
-                SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
-                PhoneNumberField(
-                  controller: _phoneController,
-                ),
-                SizedBox(height: SizeConfig.heightMultiplier(context) * 20),
-                const SizedBox(height: 8),
-                PrimaryTextField(
-                  keyboardType: TextInputType.emailAddress,
-                  hintText: 'Enter Email'.tr,
-                  controller: _emailController,
-                  errorMessage:
-                      emailHasError == true ? 'Invalid email address'.tr : null,
-                  onChanged: (value) {
-                    ref
-                        .read(emailAddressProvider.notifier)
-                        .update((state) => value);
-                  },
-                  onErrorChanged: (hasError) {
-                    setState(() {
-                      emailHasError = hasError; // Update the error state
-                    });
-                  },
-                ),
-                SizedBox(height: SizeConfig.heightMultiplier(context) * 40),
-                SizedBox(
-                  width: double.infinity,
-                  height: SizeConfig.heightMultiplier(context) * 52,
-                  child: PrimaryButton(
-                    status: buttonStatus,
-                    text: 'Continue'.tr,
-                    onPressed: () {
-                      if (_emailController.text.isNotEmpty &&
-                          !_isValidEmail(_emailController.text)) {
-                        setState(() {
-                          emailHasError = true;
-                        });
-                      } else {
-                        emailHasError = false;
-                      }
-                      if (_phoneController.text.isNotEmpty &&
-                          !_isValidPhoneNumber(_phoneController.text)) {
-                        setState(() {
-                          phoneHasError = true;
-                        });
-                      } else {
-                        phoneHasError = false;
-                      }
-
-                      if (!emailHasError && !phoneHasError) {
-                        buttonStatus = PrimaryButtonStatus.loading;
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const AddSomeDetailsPage()),
-                        ).then((value) {
-                          setState(() {
-                            buttonStatus = PrimaryButtonStatus.idle;
-                          });
-                        });
-                      }
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Add Personal Information'.tr,
+                    style: AppFonts.title3(color: AppColors.grayscale90),
+                  ),
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 40),
+                  Text("What's your name?".tr,
+                      style: AppFonts.headline3(color: AppColors.grayscale90)),
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
+                  PrimaryTextField(
+                    controller: _nameController,
+                    hintText: "Enter First Name".tr,
+                    onChanged: (value) {
+                      ref
+                          .read(firstNameProvider.notifier)
+                          .update((state) => value);
                     },
                   ),
-                ),
-                SizedBox(height: SizeConfig.heightMultiplier(context) * 20),
-              ],
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 16),
+                  PrimaryTextField(
+                    controller: _lastNameController,
+                    hintText: "Enter Last Name".tr,
+                    onChanged: (value) {
+                      ref
+                          .read(lastNameProvider.notifier)
+                          .update((state) => value);
+                    },
+                  ),
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 40),
+                  Text('What Is The Name Of Your Farm?'.tr,
+                      style: AppFonts.headline3(color: AppColors.grayscale90)),
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
+                  PrimaryTextField(
+                    controller: _farmNameController,
+                    hintText: 'Farm Name'.tr,
+                    onChanged: (value) {
+                      ref
+                          .read(whatIsTheNameOfYourFarmProvider.notifier)
+                          .update((state) => value);
+                    },
+                  ),
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 40),
+                  Text("Who owns the farm?".tr,
+                      style: AppFonts.headline3(color: AppColors.grayscale90)),
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
+                  PrimaryTextField(
+                    controller: _ownerNameController,
+                    hintText: "Owner name".tr,
+                    onChanged: (value) {
+                      ref
+                          .read(whoOwnTheFarmProvider.notifier)
+                          .update((state) => value);
+                    },
+                  ),
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 40),
+                  Text('Contacts'.tr,
+                      style: AppFonts.headline3(color: AppColors.grayscale90)),
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 8),
+                  Text(
+                      'Add contact details to help other people contact you for collaboration'
+                          .tr,
+                      style: AppFonts.body2(color: AppColors.grayscale70)),
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 24),
+                  PhoneNumberField(
+                    controller: _phoneController,
+                    validator: _isValidPhoneNumber,
+                  ),
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 20),
+                  const SizedBox(height: 8),
+                  PrimaryTextField(
+                    keyboardType: TextInputType.emailAddress,
+                    hintText: 'Enter Email'.tr,
+                    controller: _emailController,
+                    validator: _isValidEmail,
+                    onChanged: (value) {
+                      ref
+                          .read(emailAddressProvider.notifier)
+                          .update((state) => value);
+                    },
+                  ),
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 40),
+                  SizedBox(
+                    width: double.infinity,
+                    height: SizeConfig.heightMultiplier(context) * 52,
+                    child: PrimaryButton(
+                      status: buttonStatus,
+                      text: 'Continue'.tr,
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          buttonStatus = PrimaryButtonStatus.loading;
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const AddSomeDetailsPage()),
+                          ).then((value) {
+                            setState(() {
+                              buttonStatus = PrimaryButtonStatus.idle;
+                            });
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(height: SizeConfig.heightMultiplier(context) * 20),
+                ],
+              ),
             ),
           ),
         ),

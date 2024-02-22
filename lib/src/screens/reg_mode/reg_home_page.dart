@@ -488,7 +488,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
 
                           return GestureDetector(
                             onTap: () =>
-                                _navigateToAnimal(dateItem.animalNames),
+                                _navigateToAnimal(dateItem.animalId),
                             child: ListTile(
                               contentPadding: EdgeInsets.zero,
                               title: Row(
@@ -695,7 +695,7 @@ class _RegHomePage extends ConsumerState<HomeScreenRegMode> {
     }
   }
 
-  void _navigateToAnimal(String animalId) {
+  void _navigateToAnimal(int animalId) {
 
     Navigator.push(
         context,

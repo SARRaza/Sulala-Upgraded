@@ -94,7 +94,7 @@ class _CreateOviCumMammal extends ConsumerState<AddCompleteInfo> {
   @override
   Widget build(BuildContext context) {
     final selectedAnimalType = ref.watch(selectedAnimalTypeProvider);
-    var selectedAnimalImage = ref.read(selectedAnimalImageProvider);
+    var selectedAnimalImage = ref.watch(selectedAnimalImageProvider);
     final animalDam = ref.watch(animalDamDetailsProvider);
     final animalSire = ref.watch(animalSireDetailsProvider);
     final animalChildren = ref.watch(breedingChildrenDetailsProvider);

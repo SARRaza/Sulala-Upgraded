@@ -40,11 +40,11 @@ class _AnimalChildrenModalState extends ConsumerState<AnimalChildrenModal> {
   void initState() {
     super.initState();
     selectedChildren = widget.selectedChildren;
+    _breedingHelper = BreedingHelper(ref);
   }
 
   @override
   Widget build(BuildContext context) {
-    _breedingHelper = BreedingHelper(ref);
     animals = _breedingHelper.getPossibleChildren(widget.selectedAnimal
         .copyWith(
             selectedOviSire: widget.selectedFather,

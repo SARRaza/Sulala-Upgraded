@@ -20,7 +20,7 @@ typedef PermissionsCallback = void Function({
 });
 
 class ManagePermissions extends ConsumerStatefulWidget {
-  final String staffMemberId;
+  final int staffMemberId;
   final PermissionsCallback onPermissionsChanged;
   const ManagePermissions({
     super.key,

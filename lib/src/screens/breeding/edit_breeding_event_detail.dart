@@ -21,8 +21,8 @@ import '../../widgets/inputs/paragraph_text_fields/paragraph_text_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 
 class EditBreedingEventDetails extends ConsumerStatefulWidget {
-  final String animalId;
-  final String eventId;
+  final int animalId;
+  final int eventId;
   const EditBreedingEventDetails(
       {super.key, required this.animalId, required this.eventId});
 
@@ -195,7 +195,7 @@ class _EditBreedingEventDetailsState
                                           color: AppColors.grayscale70),
                                     ),
                                     Text(
-                                      breedingEvent.id!,
+                                      breedingEvent.id?.toString() ?? '',
                                       style: AppFonts.body2(
                                           color: AppColors.grayscale90),
                                     ),
@@ -446,7 +446,6 @@ class _EditBreedingEventDetailsState
                                       16 * SizeConfig.heightMultiplier(context),
                                 ),
                                 ParagraphTextField(
-                                  initialValue: breedingEvent.notes,
                                   controller: _breedingEventNotesController,
                                   hintText: 'Add Notes'.tr,
                                   maxLines: 6,

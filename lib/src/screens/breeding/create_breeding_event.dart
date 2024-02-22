@@ -22,12 +22,9 @@ import '../../widgets/inputs/paragraph_text_fields/paragraph_text_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 
 class CreateBreedingEvents extends ConsumerStatefulWidget {
-  final String animalId;
+  final int animalId;
 
-  const CreateBreedingEvents({
-    super.key,
-    required this.animalId
-  });
+  const CreateBreedingEvents({super.key, required this.animalId});
 
   @override
   ConsumerState<CreateBreedingEvents> createState() => _CreateBreedingEvents();
@@ -57,229 +54,244 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: ref.watch(animalListProvider).when(
-        error: (error, trace) => Scaffold(body: Text('Error: $error')),
-        loading: () => const Scaffold(body: Center(
-          child: CircularProgressIndicator(),),),
-        data: (animals) {
-          final animal = animals.firstWhereOrNull((animal) => animal.id ==
-              widget.animalId);
-          if(animal == null) {
-            return Scaffold(body: Text('Animal not found'.tr),);
-          }
-          return Scaffold(
-            appBar: AppBar(
-              scrolledUnderElevation: 0.0,
-              centerTitle: true,
-              title: Text(
-                animal.animalName,
-                style: AppFonts.headline3(color: AppColors.grayscale90),
+          error: (error, trace) => Scaffold(body: Text('Error: $error')),
+          loading: () => const Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
               ),
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              leading: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.grayscale10,
-                  ),
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: Colors.black,
+          data: (animals) {
+            final animal = animals
+                .firstWhereOrNull((animal) => animal.id == widget.animalId);
+            if (animal == null) {
+              return Scaffold(
+                body: Text('Animal not found'.tr),
+              );
+            }
+            return Scaffold(
+              appBar: AppBar(
+                scrolledUnderElevation: 0.0,
+                centerTitle: true,
+                title: Text(
+                  animal.animalName,
+                  style: AppFonts.headline3(color: AppColors.grayscale90),
+                ),
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                leading: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.grayscale10,
                     ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.black,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
                   ),
                 ),
               ),
-            ),
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.only(
-                    left: 16.0 * SizeConfig.widthMultiplier(context),
-                    right: 16.0 * SizeConfig.widthMultiplier(context)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Create Event'.tr,
-                      style: AppFonts.title3(color: AppColors.grayscale90),
-                    ),
-                    SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
-                    PrimaryTextField(
-                      keyboardType: TextInputType.number,
-                      onChanged: (value) {
-                        ref
-                            .read(breedingEventNumberProvider.notifier)
-                            .update((state) => value);
-                      },
-                      controller: _breedingEventNumberController,
-                      hintText: 'Enter Breeding Number'.tr,
-                      labelText: 'Breeding Number'.tr,
-                    ),
-                    SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
-                    SizedBox(
-                      height: 10 * SizeConfig.heightMultiplier(context),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Breeding Partner'.tr,
-                          style: AppFonts.body2(color: AppColors.grayscale70),
-                        ),
-                        PrimaryTextButton(
-                          status: TextStatus.idle,
-                          text: selectedBreedPartner == null
-                              ? 'Add'.tr
-                              : "${selectedBreedPartner!.animalName} (ID: ${selectedBreedPartner!.animalId})",
-                          onPressed: () {
-                            _showBreedPartnerSelectionSheet(context, animal);
-                          },
-                          position: TextButtonPosition.right,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10 * SizeConfig.heightMultiplier(context)),
-                    PrimaryDateField(
-                      labelText: 'Breeding Date'.tr,
-                      hintText: 'DD/MM/YYYY',
-                      controller: _breedingDateController,
-                      onChanged: (breedingDate) {
-                        if (animal.selectedAnimalType == 'Mammal') {
-                          _fillDeliveryDate(breedingDate,
-                              animal.selectedAnimalSpecies);
-                        } else if (animal.selectedAnimalType ==
-                            'Oviparous') {
-                          _fillDates(breedingDate,
-                              animal.selectedAnimalSpecies);
-                        }
-                      },
-                    ),
-                    SizedBox(height: 20 * SizeConfig.heightMultiplier(context)),
-                    if (animal.selectedAnimalType == 'Mammal')
-                      PrimaryDateField(
-                        labelText: 'Delivery Date'.tr,
-                        hintText: 'DD/MM/YYYY',
-                        controller: _deliveryDateController,
+              body: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: 16.0 * SizeConfig.widthMultiplier(context),
+                      right: 16.0 * SizeConfig.widthMultiplier(context)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Create Event'.tr,
+                        style: AppFonts.title3(color: AppColors.grayscale90),
                       ),
-                    if (animal.selectedAnimalType == 'Oviparous')
-                      Column(
-                        children: [
-                          PrimaryDateField(
-                            controller: _layingEggsDateController,
-                            labelText: 'Date of laying eggs'.tr,
-                            hintText: 'DD/MM/YYYY',
-                          ),
-                          PrimaryTextField(
-                            controller: _eggsNumberController,
-                            keyboardType: TextInputType.number,
-                            labelText: 'Number of eggs'.tr,
-                            hintText: '0',
-                          ),
-                          PrimaryDateField(
-                            controller: _incubationDateController,
-                            labelText: 'Incubation date'.tr,
-                            hintText: 'DD/MM/YYYY',
-                          ),
-                          PrimaryDateField(
-                            controller: _hatchingDateController,
-                            labelText: 'Hatching date'.tr,
-                            hintText: 'DD/MM/YYYY',
-                          ),
-                        ],
+                      SizedBox(
+                          height: 24 * SizeConfig.heightMultiplier(context)),
+                      PrimaryTextField(
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) {
+                          ref
+                              .read(breedingEventNumberProvider.notifier)
+                              .update((state) => value);
+                        },
+                        controller: _breedingEventNumberController,
+                        hintText: 'Enter Breeding Number'.tr,
+                        labelText: 'Breeding Number'.tr,
                       ),
-                    SizedBox(height: 34 * SizeConfig.heightMultiplier(context)),
-                    Text(
-                      "Children".tr,
-                      style: AppFonts.title5(color: AppColors.grayscale90),
-                    ),
-                    SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
-                    ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: selectedChildren.length,
-                      itemBuilder: (context, index) {
-                        final BreedChildItem child = selectedChildren[index];
-                        return ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          leading: CircleAvatar(
-                            radius: SizeConfig.widthMultiplier(context) * 24,
-                            backgroundColor: Colors.transparent,
-                            backgroundImage: child.selectedOviImage,
-                            child: child.selectedOviImage == null
-                                ? const Icon(
-                                    Icons.camera_alt_outlined,
-                                    size: 50,
-                                    color: Colors.grey,
-                                  )
-                                : null,
-                          ),
-                          title: Text(
-                            child.animalName,
-                            style: AppFonts.headline4(color: AppColors.grayscale90),
-                          ),
-                          subtitle: Text(
-                            child.selectedOviGender,
-                            style: AppFonts.body2(color: AppColors.grayscale70),
-                          ),
-                          trailing: Text(
-                            'ID#${child.animalId}',
-                            style: AppFonts.body2(color: AppColors.grayscale70),
-                          ),
-                        );
-                      },
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        _showBreedChildrenSelectionSheet(context, animal);
-                      },
-                      child: Row(
+                      SizedBox(
+                          height: 16 * SizeConfig.heightMultiplier(context)),
+                      SizedBox(
+                        height: 10 * SizeConfig.heightMultiplier(context),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Add Children".tr,
-                            style: AppFonts.body1(color: AppColors.primary40),
+                            'Breeding Partner'.tr,
+                            style: AppFonts.body2(color: AppColors.grayscale70),
                           ),
-                          const Icon(Icons.add, color: AppColors.primary40),
+                          PrimaryTextButton(
+                            status: TextStatus.idle,
+                            text: selectedBreedPartner == null
+                                ? 'Add'.tr
+                                : "${selectedBreedPartner!.animalName} (ID: ${selectedBreedPartner!.animalId})",
+                            onPressed: () {
+                              _showBreedPartnerSelectionSheet(context, animal);
+                            },
+                            position: TextButtonPosition.right,
+                          ),
                         ],
                       ),
-                    ),
-                    SizedBox(height: 24 * SizeConfig.heightMultiplier(context)),
-                    Text(
-                      "Notes".tr,
-                      style: AppFonts.title5(color: AppColors.grayscale90),
-                    ),
-                    SizedBox(height: 20 * SizeConfig.heightMultiplier(context)),
-                    ParagraphTextField(
-                      hintText: 'Add Notes'.tr,
-                      maxLines: 6,
-                      onChanged: (value) {
-                        ref
-                            .read(breedingNotesProvider.notifier)
-                            .update((state) => value);
-                      },
-                    ),
-                    SizedBox(height: 85 * SizeConfig.heightMultiplier(context)),
-                  ],
+                      SizedBox(
+                          height: 10 * SizeConfig.heightMultiplier(context)),
+                      PrimaryDateField(
+                        labelText: 'Breeding Date'.tr,
+                        hintText: 'DD/MM/YYYY',
+                        controller: _breedingDateController,
+                        onChanged: (breedingDate) {
+                          if (animal.selectedAnimalType == 'Mammal') {
+                            _fillDeliveryDate(
+                                breedingDate, animal.selectedAnimalSpecies);
+                          } else if (animal.selectedAnimalType == 'Oviparous') {
+                            _fillDates(
+                                breedingDate, animal.selectedAnimalSpecies);
+                          }
+                        },
+                      ),
+                      SizedBox(
+                          height: 20 * SizeConfig.heightMultiplier(context)),
+                      if (animal.selectedAnimalType == 'Mammal')
+                        PrimaryDateField(
+                          labelText: 'Delivery Date'.tr,
+                          hintText: 'DD/MM/YYYY',
+                          controller: _deliveryDateController,
+                        ),
+                      if (animal.selectedAnimalType == 'Oviparous')
+                        Column(
+                          children: [
+                            PrimaryDateField(
+                              controller: _layingEggsDateController,
+                              labelText: 'Date of laying eggs'.tr,
+                              hintText: 'DD/MM/YYYY',
+                            ),
+                            PrimaryTextField(
+                              controller: _eggsNumberController,
+                              keyboardType: TextInputType.number,
+                              labelText: 'Number of eggs'.tr,
+                              hintText: '0',
+                            ),
+                            PrimaryDateField(
+                              controller: _incubationDateController,
+                              labelText: 'Incubation date'.tr,
+                              hintText: 'DD/MM/YYYY',
+                            ),
+                            PrimaryDateField(
+                              controller: _hatchingDateController,
+                              labelText: 'Hatching date'.tr,
+                              hintText: 'DD/MM/YYYY',
+                            ),
+                          ],
+                        ),
+                      SizedBox(
+                          height: 34 * SizeConfig.heightMultiplier(context)),
+                      Text(
+                        "Children".tr,
+                        style: AppFonts.title5(color: AppColors.grayscale90),
+                      ),
+                      SizedBox(
+                          height: 16 * SizeConfig.heightMultiplier(context)),
+                      ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: selectedChildren.length,
+                        itemBuilder: (context, index) {
+                          final BreedChildItem child = selectedChildren[index];
+                          return ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: CircleAvatar(
+                              radius: SizeConfig.widthMultiplier(context) * 24,
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: child.selectedOviImage,
+                              child: child.selectedOviImage == null
+                                  ? const Icon(
+                                      Icons.camera_alt_outlined,
+                                      size: 50,
+                                      color: Colors.grey,
+                                    )
+                                  : null,
+                            ),
+                            title: Text(
+                              child.animalName,
+                              style: AppFonts.headline4(
+                                  color: AppColors.grayscale90),
+                            ),
+                            subtitle: Text(
+                              child.selectedOviGender,
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale70),
+                            ),
+                            trailing: Text(
+                              'ID#${child.animalId}',
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale70),
+                            ),
+                          );
+                        },
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          _showBreedChildrenSelectionSheet(context, animal);
+                        },
+                        child: Row(
+                          children: [
+                            Text(
+                              "Add Children".tr,
+                              style: AppFonts.body1(color: AppColors.primary40),
+                            ),
+                            const Icon(Icons.add, color: AppColors.primary40),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                          height: 24 * SizeConfig.heightMultiplier(context)),
+                      Text(
+                        "Notes".tr,
+                        style: AppFonts.title5(color: AppColors.grayscale90),
+                      ),
+                      SizedBox(
+                          height: 20 * SizeConfig.heightMultiplier(context)),
+                      ParagraphTextField(
+                        hintText: 'Add Notes'.tr,
+                        maxLines: 6,
+                        onChanged: (value) {
+                          ref
+                              .read(breedingNotesProvider.notifier)
+                              .update((state) => value);
+                        },
+                      ),
+                      SizedBox(
+                          height: 85 * SizeConfig.heightMultiplier(context)),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            floatingActionButton: SizedBox(
-              height: 52 * SizeConfig.heightMultiplier(context),
-              width: 343 * SizeConfig.widthMultiplier(context),
-              child: PrimaryButton(
-                onPressed: () {
-                  _createBreedingEvent(animal);
-                  Navigator.pop(context);
-                },
-                text: 'Create Event'.tr,
+              floatingActionButton: SizedBox(
+                height: 52 * SizeConfig.heightMultiplier(context),
+                width: 343 * SizeConfig.widthMultiplier(context),
+                child: PrimaryButton(
+                  onPressed: () {
+                    _createBreedingEvent(animal);
+                    Navigator.pop(context);
+                  },
+                  text: 'Create Event'.tr,
+                ),
               ),
-            ),
-          );
-        }
-      ),
+            );
+          }),
     );
   }
 
@@ -378,21 +390,28 @@ class _CreateBreedingEvents extends ConsumerState<CreateBreedingEvents> {
         dam: dam,
         partner: partner,
         children: children,
-        breedingDate:
-            DateFormat('dd/MM/yyyy').parse(_breedingDateController.text),
-        deliveryDate:
-            DateFormat('dd/MM/yyyy').parse(_deliveryDateController.text),
-        layingEggsDate:
-            DateFormat('dd/MM/yyyy').parse(_layingEggsDateController.text),
+        breedingDate: _breedingDateController.text.isNotEmpty
+            ? DateFormat('dd/MM/yyyy').parse(_breedingDateController.text)
+            : null,
+        deliveryDate: _deliveryDateController.text.isNotEmpty
+            ? DateFormat('dd/MM/yyyy').parse(_deliveryDateController.text)
+            : null,
+        layingEggsDate: _layingEggsDateController.text.isNotEmpty
+            ? DateFormat('dd/MM/yyyy').parse(_layingEggsDateController.text)
+            : null,
         eggsNumber: numOffEggs.isNotEmpty ? int.parse(numOffEggs) : 0,
-        incubationDate:
-            DateFormat('dd/MM/yyyy').parse(_incubationDateController.text),
-        hatchingDate:
-            DateFormat('dd/MM/yyyy').parse(_hatchingDateController.text),
+        incubationDate: _incubationDateController.text.isNotEmpty
+            ? DateFormat('dd/MM/yyyy').parse(_incubationDateController.text)
+            : null,
+        hatchingDate: _hatchingDateController.text.isNotEmpty
+            ? DateFormat('dd/MM/yyyy').parse(_hatchingDateController.text)
+            : null,
         notes: _notesController.text,
         shouldAddEvent: true);
 
-    ref.read(breedingEventListProvider(widget.animalId).notifier).addEvent(breedingEvent);
+    ref
+        .read(breedingEventListProvider(widget.animalId).notifier)
+        .addEvent(breedingEvent);
   }
 
   void _fillDeliveryDate(DateTime breedingDate, String animalSpecies) {

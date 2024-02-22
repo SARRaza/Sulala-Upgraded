@@ -152,7 +152,7 @@ class _SelectedOptionsPageState extends ConsumerState<SelectedOptionsPage> {
                 ),
               );
               if(close == true && mounted) {
-                Navigator.pop(context);
+                Navigator.pop(context, true);
               }
             },
             text: 'Create Animal'.tr),

@@ -830,11 +830,6 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                 'Surgeries Records',
                 style: AppFonts.title5(color: AppColors.grayscale90),
               ),
-              // PrimaryTextButton(
-              //   onPressed: () {},
-              //   status: TextStatus.idle,
-              //   text: 'View More',
-              // ),
             ],
           ),
           SizedBox(

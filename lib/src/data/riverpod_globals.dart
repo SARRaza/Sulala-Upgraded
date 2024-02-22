@@ -355,7 +355,7 @@ final breedingPartnerProvider = StateProvider<BreedingPartner?>((ref) => null);
 
 final staffProvider = StateProvider<List<StaffMember>>((ref) => [
       StaffMember(
-          id: '1',
+          id: 1,
           image: const AssetImage('assets/avatars/120px/Staff1.png'),
           name: 'Paul Rivera',
           role: 'Viewer',
@@ -363,7 +363,7 @@ final staffProvider = StateProvider<List<StaffMember>>((ref) => [
           phoneNumber: '+1 234 567 890',
           address: 'United Arab Emirates'),
       StaffMember(
-          id: '2',
+          id: 2,
           image: const AssetImage('assets/avatars/120px/Staff2.png'),
           name: 'Rebecca Wilson',
           role: 'Helper',
@@ -377,7 +377,7 @@ final totalStaffProvider = Provider<int>((ref) {
 final collaborationRequestsProvider =
     StateProvider<List<StaffMember>>((ref) => [
           StaffMember(
-              id: '3',
+              id: 3,
               image: const AssetImage('assets/avatars/120px/Staff3.png'),
               name: 'Patricia Williams',
               role: 'Viewer',
@@ -385,7 +385,7 @@ final collaborationRequestsProvider =
               phoneNumber: '+1 234 567 890',
               address: 'United Arab Emirates'),
           StaffMember(
-              id: '4',
+              id: 4,
               image: const AssetImage('assets/avatars/120px/Staff1.png'),
               name: 'Scott Simmons',
               role: 'Viewer',
@@ -393,7 +393,7 @@ final collaborationRequestsProvider =
               phoneNumber: '+1 234 567 890',
               address: 'United Arab Emirates'),
           StaffMember(
-              id: '5',
+              id: 5,
               image: const AssetImage('assets/avatars/120px/Staff2.png'),
               name: 'Lee Hall',
               role: 'Viewer',
@@ -411,10 +411,8 @@ final passwordValidationProvider = Provider.autoDispose<bool>((ref) {
       RegExp(r'[0-9]').hasMatch(password);
 });
 
-String generateRandomId(int length) {
-  const String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+int generateRandomId(int length) {
   Random rnd = Random();
 
-  return String.fromCharCodes(Iterable.generate(
-      length, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))));
+  return rnd.nextInt((pow(10, length) as int) - 1);
 }

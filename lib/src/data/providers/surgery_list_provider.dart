@@ -5,12 +5,12 @@ import 'package:sulala_upgrade/src/data/classes/surgery_details.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 
 final surgeryListProvider =
-    AsyncNotifierProvider.family<SurgeryList, List<SurgeryDetails>, String>(
+    AsyncNotifierProvider.family<SurgeryList, List<SurgeryDetails>, int>(
         SurgeryList.new);
 
-class SurgeryList extends FamilyAsyncNotifier<List<SurgeryDetails>, String> {
+class SurgeryList extends FamilyAsyncNotifier<List<SurgeryDetails>, int> {
   @override
-  FutureOr<List<SurgeryDetails>> build(String arg) {
+  FutureOr<List<SurgeryDetails>> build(int arg) {
     return [];
   }
 
@@ -18,6 +18,7 @@ class SurgeryList extends FamilyAsyncNotifier<List<SurgeryDetails>, String> {
     final surgeries = List<SurgeryDetails>.from(state.value ?? []);
     final newSurgery = surgeryDetails.copyWith(id: generateRandomId(6));
     surgeries.add(newSurgery);
+    state = AsyncData(surgeries);
   }
 
   Future<void> updateSurgery(SurgeryDetails surgeryDetails) async {
@@ -28,7 +29,7 @@ class SurgeryList extends FamilyAsyncNotifier<List<SurgeryDetails>, String> {
     state = AsyncData(surgeries);
   }
 
-  Future<void> removeSurgery(String id) async {
+  Future<void> removeSurgery(int id) async {
     final surgeries = List<SurgeryDetails>.from(state.value!);
     surgeries.removeWhere((surgery) => surgery.id == id);
     state = AsyncData(surgeries);

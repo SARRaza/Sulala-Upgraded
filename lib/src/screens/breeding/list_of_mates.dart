@@ -12,7 +12,7 @@ import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import 'breeding_event_detail.dart';
 
 class ListOfBreedingMates extends ConsumerStatefulWidget {
-  final String animalId;
+  final int animalId;
 
   const ListOfBreedingMates({
     super.key,

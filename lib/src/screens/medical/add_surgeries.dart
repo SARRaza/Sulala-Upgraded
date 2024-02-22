@@ -12,7 +12,7 @@ import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 
 class AddSurgeriesRecords extends ConsumerStatefulWidget {
-  final String animalId;
+  final int animalId;
 
   const AddSurgeriesRecords({super.key, required this.animalId});
 

@@ -65,6 +65,7 @@ class _GuestModeUserListOfAnimals extends State<GuestModeUserListOfAnimals> {
 
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(

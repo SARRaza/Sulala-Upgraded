@@ -6,13 +6,13 @@ import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../classes/vaccine_details.dart';
 
 final vaccinationListProvider =
-    AsyncNotifierProvider.family<VaccinationList, List<VaccineDetails>, String>(
+    AsyncNotifierProvider.family<VaccinationList, List<VaccineDetails>, int>(
         VaccinationList.new);
 
 class VaccinationList
-    extends FamilyAsyncNotifier<List<VaccineDetails>, String> {
+    extends FamilyAsyncNotifier<List<VaccineDetails>, int> {
   @override
-  FutureOr<List<VaccineDetails>> build(String arg) {
+  FutureOr<List<VaccineDetails>> build(int arg) {
     return [];
   }
 
@@ -31,7 +31,7 @@ class VaccinationList
     state = AsyncData(vaccinations);
   }
 
-  Future<void> removeVaccination(String id) async {
+  Future<void> removeVaccination(int id) async {
     final vaccinations = List<VaccineDetails>.from(state.value!);
     vaccinations.removeWhere((vaccination) => vaccination.id == id);
     state = AsyncData(vaccinations);

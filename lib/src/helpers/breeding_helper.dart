@@ -72,9 +72,9 @@ class BreedingHelper {
         .toList();
   }
 
-  Set<String> _getAncestors(OviVariables selectedAnimal,
-      {Set<String> prevAncestors = const {}}) {
-    final ancestors = Set<String>.from(prevAncestors);
+  Set<int> _getAncestors(OviVariables selectedAnimal,
+      {Set<int> prevAncestors = const {}}) {
+    final ancestors = Set<int>.from(prevAncestors);
     if (selectedAnimal.selectedOviSire != null &&
         !ancestors.contains(selectedAnimal.selectedOviSire!.animalId)) {
       ancestors.add(selectedAnimal.selectedOviSire!.animalId);
@@ -97,9 +97,9 @@ class BreedingHelper {
     return ancestors;
   }
 
-  Set<String> _getDescendants(OviVariables selectedAnimal,
-      {Set<String> prevDescendants = const {}}) {
-    final descendants = Set<String>.from(prevDescendants);
+  Set<int> _getDescendants(OviVariables selectedAnimal,
+      {Set<int> prevDescendants = const {}}) {
+    final descendants = Set<int>.from(prevDescendants);
     var children = [];
     if (descendants.isEmpty && selectedAnimal.breedChildren.isNotEmpty) {
       children = allAnimals

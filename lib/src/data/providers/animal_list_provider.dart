@@ -84,7 +84,7 @@ class AnimalList extends AsyncNotifier<List<OviVariables>> {
     state = AsyncData(newAnimals);
   }
 
-  Future<void> removeAnimal(String id) async {
+  Future<void> removeAnimal(int id) async {
     final animals = List<OviVariables>.from(state.value!);
     animals.removeWhere((animal) => animal.id == id);
     state = AsyncData(animals);

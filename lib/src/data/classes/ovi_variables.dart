@@ -8,7 +8,7 @@ import 'main_animal_dam.dart';
 import 'main_animal_sire.dart';
 
 class OviVariables {
-  final String? id;
+  final int? id;
   final List<String> selectedFilters;
   late final String animalName;
   final MainAnimalSire? selectedOviSire;
@@ -87,7 +87,7 @@ class OviVariables {
       this.pregnanciesCount});
 
   OviVariables copyWith(
-      {String? id,
+      {int? id,
         List<String>? selectedFilters,
       String? animalName,
       MainAnimalSire? selectedOviSire,

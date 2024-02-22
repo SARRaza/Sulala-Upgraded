@@ -42,10 +42,7 @@ class _AnimalSireModalState extends ConsumerState<AnimalSireModal> {
   @override
   Widget build(BuildContext context) {
     _breedingHelper = BreedingHelper(ref);
-    animals = _breedingHelper.getPossibleFathers(widget.selectedAnimal.copyWith(
-        selectedOviSire: selectedFather,
-        selectedOviDam: widget.selectedMother,
-        breedChildren: widget.selectedChildren));
+    animals = _breedingHelper.getPossibleFathers(widget.selectedAnimal);
 
     return Column(
       mainAxisSize: MainAxisSize.min,

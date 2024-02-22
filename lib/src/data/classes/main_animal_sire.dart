@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'main_animal_dam.dart';
 
 class MainAnimalSire {
-  final String animalId;
+  final int animalId;
   final String animalName;
   final ImageProvider? selectedOviImage;
   final String selectedOviGender;

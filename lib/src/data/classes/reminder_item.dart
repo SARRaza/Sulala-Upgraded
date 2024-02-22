@@ -1,6 +1,6 @@
 class ReminderItem {
-  final String? id;
-  final String animalId;
+  final int? id;
+  final int animalId;
   final String animalNames;
   final String dateInfo;
   final String dateType;

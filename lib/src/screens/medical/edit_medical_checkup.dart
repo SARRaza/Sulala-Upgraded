@@ -18,8 +18,8 @@ import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 
 class EditMedicalCheckUp extends ConsumerStatefulWidget {
-  final String checkUpId;
-  final String animalId;
+  final int checkUpId;
+  final int animalId;
 
   const EditMedicalCheckUp({super.key, required this.checkUpId, required this
       .animalId});

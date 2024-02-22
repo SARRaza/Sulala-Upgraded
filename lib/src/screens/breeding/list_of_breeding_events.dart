@@ -15,7 +15,7 @@ import 'breeding_event_detail.dart';
 import 'create_breeding_event.dart';
 
 class ListOfBreedingEvents extends ConsumerStatefulWidget {
-  final String animalId;
+  final int animalId;
 
   const ListOfBreedingEvents({super.key, required this.animalId});
 

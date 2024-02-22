@@ -22,7 +22,7 @@ import '../draw_up_animal_breed.dart';
 import '../draw_up_animal_species.dart';
 
 class EditAnimalGenInfo extends ConsumerStatefulWidget {
-  final String animalId;
+  final int animalId;
   final List<BreedingEventVariables> breedingEvents;
 
   const EditAnimalGenInfo(
@@ -89,21 +89,21 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
   final _fieldNameController = TextEditingController();
   final _fieldContentController = TextEditingController();
 
-  late final TextEditingController _animalNameController;
-  late final TextEditingController _notesController;
-  late final TextEditingController _birthDayController;
-  late List<File>? uploadedFiles;
-  late ImageProvider? selectedOviImage;
-  late String selectedAnimalType;
-  late String selectedAnimalSpecies;
-  late String selectedAnimalBreed;
-  late String selectedOviGender;
-  late final TextEditingController _layingFrequencyController;
-  late final TextEditingController _eggsNumberController;
-  late String selectedBreedingStage;
-  late List<String> selectedOviChips;
-  late Map<String, String>? customFields;
-  late Map<String, DateTime?> selectedOviDates;
+  TextEditingController? _animalNameController;
+  TextEditingController? _notesController;
+  TextEditingController? _birthDayController;
+  List<File>? uploadedFiles;
+  ImageProvider? selectedOviImage;
+  String? selectedAnimalType;
+  String? selectedAnimalSpecies;
+  String? selectedAnimalBreed;
+  String? selectedOviGender;
+  TextEditingController? _layingFrequencyController;
+  TextEditingController? _eggsNumberController;
+  String? selectedBreedingStage;
+  List<String>? selectedOviChips;
+  Map<String, String>? customFields;
+  Map<String, DateTime?>? selectedOviDates;
 
 
 
@@ -121,30 +121,28 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
         }
 
         // Initialize controllers with appropriate values
-        _animalNameController =
+        _animalNameController ??=
             TextEditingController(text: animalDetails.animalName);
-        _notesController = TextEditingController(text: animalDetails.notes);
-        _birthDayController = TextEditingController();
-        if (animalDetails.dateOfBirth != null) {
-          _birthDayController.text =
-              DateFormat('dd/MM/yyyy').format(animalDetails.dateOfBirth!);
-        }
-        _layingFrequencyController =
+        _notesController ??= TextEditingController(text: animalDetails.notes);
+        _birthDayController ??= TextEditingController(text: animalDetails
+            .dateOfBirth != null ? DateFormat('dd/MM/yyyy').format(animalDetails
+            .dateOfBirth!) : null);
+        _layingFrequencyController ??=
             TextEditingController(text: animalDetails.layingFrequency);
-        _eggsNumberController =
+        _eggsNumberController ??=
             TextEditingController(text: animalDetails.eggsPerMonth);
 
         // Initialize other variables directly
-        uploadedFiles = animalDetails.files;
-        selectedOviImage = animalDetails.selectedOviImage;
-        selectedAnimalType = animalDetails.selectedAnimalType;
-        selectedAnimalSpecies = animalDetails.selectedAnimalSpecies;
-        selectedAnimalBreed = animalDetails.selectedAnimalBreed;
-        selectedOviGender = animalDetails.selectedOviGender;
-        selectedBreedingStage = animalDetails.selectedBreedingStage;
-        selectedOviChips = animalDetails.selectedOviChips;
-        customFields = animalDetails.customFields;
-        selectedOviDates = animalDetails.selectedOviDates;
+        uploadedFiles ??= animalDetails.files;
+        selectedOviImage ??= animalDetails.selectedOviImage;
+        selectedAnimalType ??= animalDetails.selectedAnimalType;
+        selectedAnimalSpecies ??= animalDetails.selectedAnimalSpecies;
+        selectedAnimalBreed ??= animalDetails.selectedAnimalBreed;
+        selectedOviGender ??= animalDetails.selectedOviGender;
+        selectedBreedingStage ??= animalDetails.selectedBreedingStage;
+        selectedOviChips ??= animalDetails.selectedOviChips;
+        customFields ??= animalDetails.customFields;
+        selectedOviDates ??= animalDetails.selectedOviDates;
 
         return Scaffold(
           appBar: AppBar(
@@ -154,7 +152,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                 Container(
                   constraints: const BoxConstraints(maxWidth: 130),
                   child: Text(
-                    'editAnimal'.trParams({'name': _animalNameController.text}),
+                    'editAnimal'.trParams({'name': _animalNameController!.text}),
                     style: AppFonts.headline3(color: AppColors.grayscale90),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -235,7 +233,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                   PrimaryTextField(
                       labelText: 'Name'.tr,
                       hintText: 'Enter Name'.tr,
-                      controller: _animalNameController),
+                      controller: _animalNameController!),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.029),
                   GestureDetector(
                     onTap: () {
@@ -249,7 +247,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                         ),
                         const Spacer(),
                         Text(
-                          selectedAnimalType,
+                          selectedAnimalType!,
                           style: AppFonts.body2(color: AppColors.grayscale90),
                         ),
                         SizedBox(
@@ -279,7 +277,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                         ),
                         const Spacer(),
                         Text(
-                          selectedAnimalSpecies,
+                          selectedAnimalSpecies!,
                           style: AppFonts.body2(color: AppColors.grayscale90),
                         ),
                         SizedBox(
@@ -304,7 +302,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                         ),
                         const Spacer(),
                         Text(
-                          selectedAnimalBreed,
+                          selectedAnimalBreed!,
                           style: AppFonts.body2(color: AppColors.grayscale90),
                         ),
                         SizedBox(
@@ -747,10 +745,11 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                   SizedBox(
                     height: SizeConfig.heightMultiplier(context) * 16,
                   ),
+                  if(selectedOviChips?.isNotEmpty == true)
                   Wrap(
                     spacing: 8.0,
                     runSpacing: 8.0,
-                    children: selectedOviChips.map((chip) {
+                    children: selectedOviChips!.map((chip) {
                       return CustomTag(
                         label: chip,
                         selected: true, // Since these are selected chips
@@ -871,7 +870,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                   EditParagraphTextField(
                     hintText: 'Add Any Additional Notes if Needed'.tr,
                     maxLines: 8,
-                    notesController: _notesController,
+                    notesController: _notesController!,
                   ),
                   SizedBox(
                     height: SizeConfig.heightMultiplier(context) * 16,
@@ -923,14 +922,14 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
   void _showDatePicker(BuildContext context, String fieldName) async {
     final pickedDate = await showDatePicker(
       context: context,
-      initialDate: selectedOviDates[fieldName] ?? DateTime.now(),
+      initialDate: selectedOviDates![fieldName] ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
 
     if (pickedDate != null) {
       setState(() {
-        selectedOviDates[fieldName] = pickedDate;
+        selectedOviDates![fieldName] = pickedDate;
       });
     }
   }
@@ -938,16 +937,15 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
   void _showDOBPicker(BuildContext context) async {
     final pickedDate = await showDatePicker(
       context: context,
-      // ignore: unnecessary_null_comparison
-      initialDate: _birthDayController.text.isNotEmpty
-          ? DateFormat('dd/MM/yyyy').parse(_birthDayController.text)
+      initialDate: _birthDayController!.text.isNotEmpty
+          ? DateFormat('dd/MM/yyyy').parse(_birthDayController!.text)
           : DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
 
     if (pickedDate != null) {
-      _birthDayController.text = DateFormat('dd/MM/yyyy').format(pickedDate);
+      _birthDayController!.text = DateFormat('dd/MM/yyyy').format(pickedDate);
     }
   }
 
@@ -957,7 +955,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
     final dateFormatter =
         DateFormat('dd/MM/yyyy'); // Define your desired date format
 
-    selectedOviDates.forEach(
+    selectedOviDates!.forEach(
       (fieldName, selectedDate) {
         dateFields.add(
           Column(
@@ -1023,7 +1021,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
                   InkWell(
                     onTap: () {
                       setState(() {
-                        selectedOviDates[fieldName] = null;
+                        selectedOviDates![fieldName] = null;
                       });
                     },
                     child: const Icon(
@@ -1280,7 +1278,7 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
         context: context,
         isScrollControlled: true,
         showDragHandle: true,
-        builder: (context) => AnimalTagsModal(selectedTags: selectedOviChips));
+        builder: (context) => AnimalTagsModal(selectedTags: selectedOviChips ?? []));
     setState(() {
       selectedOviChips = result;
     });
@@ -1541,19 +1539,20 @@ class _EditAnimalGenInfoState extends ConsumerState<EditAnimalGenInfo> {
 
   void _saveChanges(OviVariables animalDetails) {
     ref.read(animalListProvider.notifier).updateAnimal(animalDetails.copyWith(
-        animalName: _animalNameController.text,
-        notes: _notesController.text,
-        dateOfBirth: _birthDayController.text.isNotEmpty
-            ? DateFormat('dd/MM/yyyy').parse(_birthDayController.text)
+        animalName: _animalNameController!.text,
+        notes: _notesController!.text,
+        dateOfBirth: _birthDayController!.text.isNotEmpty
+            ? DateFormat('dd/MM/yyyy').parse(_birthDayController!.text)
             : null,
-        files: uploadedFiles,
+        files: ref.read(uploadedFilesProvider).map((path) => File(path))
+            .toList(),
         selectedOviImage: selectedOviImage,
         selectedAnimalType: selectedAnimalType,
         selectedAnimalSpecies: selectedAnimalSpecies,
         selectedAnimalBreed: selectedAnimalBreed,
         selectedOviGender: selectedOviGender,
-        layingFrequency: _layingFrequencyController.text,
-        eggsPerMonth: _eggsNumberController.text,
+        layingFrequency: _layingFrequencyController!.text,
+        eggsPerMonth: _eggsNumberController!.text,
         selectedBreedingStage: selectedBreedingStage,
         selectedOviChips: selectedOviChips,
         customFields: customFields,

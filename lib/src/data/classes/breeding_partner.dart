@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BreedingPartner {
-  final String animalId;
+  final int animalId;
   final String animalName;
   final ImageProvider? selectedOviImage;
   final String selectedOviGender;

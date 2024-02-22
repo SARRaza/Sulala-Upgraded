@@ -18,7 +18,7 @@ import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/other/parents_item.dart';
 
 class ParentsPage extends ConsumerStatefulWidget {
-  final String animalId;
+  final int animalId;
 
   const ParentsPage({
     super.key,
@@ -86,7 +86,7 @@ class _ParentsPageState extends ConsumerState<ParentsPage> {
                     final father = animals.firstWhereOrNull((animal) =>
                         animal.id == selectedAnimal.selectedOviSire?.animalId);
                     final mother = animals.firstWhereOrNull((animal) =>
-                        animal.id == selectedAnimal.selectedOviDam?.animalName);
+                        animal.id == selectedAnimal.selectedOviDam?.animalId);
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

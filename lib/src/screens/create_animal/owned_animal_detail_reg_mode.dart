@@ -19,7 +19,7 @@ import '../medical/mammals_medical.dart';
 import 'edit_animal_details/edit_page.dart';
 
 class OwnedAnimalDetailsRegMode extends ConsumerStatefulWidget {
-  final String animalId;
+  final int animalId;
 
   const OwnedAnimalDetailsRegMode(
       {Key? key,

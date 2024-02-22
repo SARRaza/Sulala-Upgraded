@@ -23,44 +23,49 @@ class AnimalListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      focusColor: AppColors.grayscale10,
-      onTap: onPressed,
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: Colors.transparent,
-            radius: avatarRadius,
-            backgroundImage: AssetImage(imagePath),
-          ),
-          SizedBox(
-            width: SizeConfig.widthMultiplier(context) * 9,
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
-                  textHead,
-                  style: AppFonts.headline3(
-                    color: AppColors.grayscale90,
+    return SizedBox(
+      height: 68,
+      child: InkWell(
+        focusColor: AppColors.grayscale10,
+        onTap: onPressed,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircleAvatar(
+              backgroundColor: Colors.transparent,
+              radius: avatarRadius,
+              backgroundImage: AssetImage(imagePath),
+            ),
+            SizedBox(
+              width: SizeConfig.widthMultiplier(context) * 9,
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    textHead,
+                    style: AppFonts.headline3(
+                      color: AppColors.grayscale90,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              Expanded(
-                child: Text(
-                  textBody,
-                  style: AppFonts.body2(
-                    color: AppColors.grayscale70,
+                SizedBox(
+                  width: SizeConfig.widthMultiplier(context) * 275,
+                  child: Text(
+                    textBody,
+                    style: AppFonts.body2(
+                      color: AppColors.grayscale70,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

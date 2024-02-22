@@ -10,7 +10,7 @@ import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 
 class BreedingEventChildrenList extends ConsumerStatefulWidget {
-  final String animalId;
+  final int animalId;
 
   const BreedingEventChildrenList({
     Key? key,

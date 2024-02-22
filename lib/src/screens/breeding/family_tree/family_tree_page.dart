@@ -19,19 +19,18 @@ enum BranchType { parents, children }
 class FamilyTreePage extends ConsumerStatefulWidget {
   const FamilyTreePage({super.key, required this.selectedAnimalId});
 
-  final String selectedAnimalId;
+  final int selectedAnimalId;
 
   @override
   ConsumerState<FamilyTreePage> createState() => _FamilyTreePageState();
 }
 
 class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
-  late OviVariables selectedAnimal;
+  OviVariables? selectedAnimal;
   Widget? graph;
   GlobalKey stackKey = GlobalKey();
   late FamilyTreeNode root;
   late List<OviVariables> animals;
-  Set<String> addedChildIds = {};
 
   @override
   void initState() {
@@ -46,7 +45,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
       final father = animals.firstWhereOrNull(
           (animal) => animal.id == nodeAnimal.selectedOviSire?.animalId);
 
-      if (father != null || nodeAnimal.id == selectedAnimal.id) {
+      if (father != null || nodeAnimal.id == selectedAnimal?.id) {
         final fatherNode = _createTree(father, attachParents: true);
         parents.add(fatherNode);
       }
@@ -54,7 +53,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
       final mother = animals.firstWhereOrNull(
           (animal) => animal.id == nodeAnimal.selectedOviDam?.animalId);
 
-      if (mother != null || nodeAnimal.id == selectedAnimal.id) {
+      if (mother != null || nodeAnimal.id == selectedAnimal?.id) {
         final motherNode = _createTree(mother, attachParents: true);
         parents.add(motherNode);
       }
@@ -66,7 +65,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
               animal.selectedOviDam?.animalId == nodeAnimal.id)
           .map((animal) => _createTree(animal, attachChildren: true))
           .toList();
-      if (nodeAnimal.id == selectedAnimal.id) {
+      if (nodeAnimal.id == selectedAnimal?.id) {
         children.add(FamilyTreeNode(animal: null, parents: [], children: []));
       }
     }
@@ -78,154 +77,152 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
 
   @override
   Widget build(BuildContext context) {
-    for (var parent in root.parents) {
-      if (parent.animal != null) {
-        parent.expanded = true;
-      }
-    }
-
-    return Scaffold(
-      appBar: PreferredSize(
-          preferredSize: Size(MediaQuery.of(context).size.width, 52),
-          child: SafeArea(
-            child: Column(
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0x28D8D9DA),
-                        blurRadius: 8,
-                        offset: Offset(0, 4),
-                        spreadRadius: 0,
-                      )
-                    ],
-                  ),
-                  height: 52,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 6.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: ShapeDecoration(
-                          color: const Color(0xFFF7F6F6),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                  width: 24,
-                                  height: 24,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: const BoxDecoration(),
-                                  child: Image.asset(
-                                      'assets/avatars/48px/arrow-left.png')),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      SizedBox(
-                        width: 247,
-                        child: Text(
-                          'animalsFamilyTree'
-                              .trParams({'name': selectedAnimal.animalName}),
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Color(0xFF14181F),
-                            fontSize: 16,
-                            fontFamily: 'IBM Plex Sans',
-                            fontWeight: FontWeight.w500,
-                            height: 0.09,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          )),
-      body: InteractiveViewer(
-        boundaryMargin: const EdgeInsets.all(double.infinity),
-        child: Center(
-          child: FittedBox(
-            fit: BoxFit.cover,
-            child: Column(
-              children: [
-                _buildTree(),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTree() {
     return ref.watch(animalListProvider).when(
-        data: (animals) {
+        error: (error, stackTrace) => Text(error.toString()),
+        loading: () => const CircularProgressIndicator(),
+        data: (animalList) {
+          animals = animalList;
           selectedAnimal = animals
               .firstWhere((member) => member.id == widget.selectedAnimalId);
 
           root = _createTree(selectedAnimal,
               attachParents: true, attachChildren: true);
+          for (var parent in root.parents) {
+            if (parent.animal != null) {
+              parent.expanded = true;
+            }
+          }
 
-          return SingleChildScrollView(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Stack(
-                key: stackKey,
-                children: [
-                  Positioned.fill(
-                    child: CustomPaint(
-                      painter: GraphPainter(root, stackKey),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 23, horizontal: 20),
-                    constraints: BoxConstraints(
-                        minWidth: MediaQuery.of(context).size.width),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (root.parents.isNotEmpty)
-                          _buildParentsBranch(root.parents,
-                              itemMargin:
-                                  const EdgeInsets.symmetric(horizontal: 52)),
-                        FamilyTreeItem(
-                          node: root,
-                          selected: true,
-                          showGender: true,
-                          key: root.key,
+          return Scaffold(
+            appBar: PreferredSize(
+                preferredSize: Size(MediaQuery.of(context).size.width, 52),
+                child: SafeArea(
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0x28D8D9DA),
+                              blurRadius: 8,
+                              offset: Offset(0, 4),
+                              spreadRadius: 0,
+                            )
+                          ],
                         ),
-                        if (root.children.isNotEmpty)
-                          _buildChildrenBranch(root.children)
-                      ],
-                    ),
+                        height: 52,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 6.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: ShapeDecoration(
+                                color: const Color(0xFFF7F6F6),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                        width: 24,
+                                        height: 24,
+                                        clipBehavior: Clip.antiAlias,
+                                        decoration: const BoxDecoration(),
+                                        child: Image.asset(
+                                            'assets/avatars/48px/arrow-left.png')),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            SizedBox(
+                              width: 247,
+                              child: Text(
+                                'animalsFamilyTree'.trParams(
+                                    {'name': selectedAnimal!.animalName}),
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Color(0xFF14181F),
+                                  fontSize: 16,
+                                  fontFamily: 'IBM Plex Sans',
+                                  fontWeight: FontWeight.w500,
+                                  height: 0.09,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                )),
+            body: InteractiveViewer(
+              boundaryMargin: const EdgeInsets.all(double.infinity),
+              child: Center(
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: Column(
+                    children: [
+                      _buildTree(),
+                    ],
+                  ),
+                ),
               ),
             ),
           );
-        },
-        error: (error, stackTrace) => Text(error.toString()),
-        loading: () => const CircularProgressIndicator());
+        });
+  }
+
+  Widget _buildTree() {
+    return SingleChildScrollView(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Stack(
+          key: stackKey,
+          children: [
+            Positioned.fill(
+              child: CustomPaint(
+                painter: GraphPainter(root, stackKey),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 23, horizontal: 20),
+              constraints:
+                  BoxConstraints(minWidth: MediaQuery.of(context).size.width),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (root.parents.isNotEmpty)
+                    _buildParentsBranch(root.parents,
+                        itemMargin: const EdgeInsets.symmetric(horizontal: 52)),
+                  FamilyTreeItem(
+                    node: root,
+                    selected: true,
+                    showGender: true,
+                    key: root.key,
+                  ),
+                  if (root.children.isNotEmpty)
+                    _buildChildrenBranch(root.children)
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildParentsBranch(List<FamilyTreeNode> nodes,
@@ -309,7 +306,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
     }
   }
 
-  void _selectAnimal(String id) {
+  void _selectAnimal(int id) {
     setState(() {
       selectedAnimal = animals.firstWhere((member) => member.id == id);
       root = _createTree(selectedAnimal,
@@ -321,11 +318,10 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
     final animals = ref.read(animalListProvider).value ?? [];
 
     final selectedPersonIndex =
-        animals.indexWhere((animal) => animal.id == selectedAnimal.id);
+        animals.indexWhere((animal) => animal.id == selectedAnimal?.id);
 
-    final fatherDetails = animals.firstWhereOrNull((animal) =>
-        selectedAnimal.selectedOviSire != null &&
-        animal.id == selectedAnimal.selectedOviSire!.animalId);
+    final fatherDetails = animals.firstWhereOrNull(
+        (animal) => animal.id == selectedAnimal?.selectedOviSire?.animalId);
     var selectedFather = fatherDetails != null
         ? MainAnimalSire(
             animalId: fatherDetails.id!,
@@ -333,9 +329,8 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
             selectedOviImage: fatherDetails.selectedOviImage,
             selectedOviGender: 'Male')
         : null;
-    final motherDetails = animals.firstWhereOrNull((animal) =>
-        selectedAnimal.selectedOviDam != null &&
-        animal.id == selectedAnimal.selectedOviDam!.animalId);
+    final motherDetails = animals.firstWhereOrNull(
+        (animal) => animal.id == selectedAnimal?.selectedOviDam?.animalId);
     var selectedMother = motherDetails != null
         ? MainAnimalDam(
             animalId: motherDetails.id!,
@@ -363,7 +358,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
         isScrollControlled: true,
         builder: (BuildContext context) {
           return AnimalSireModal(
-            selectedAnimal: selectedAnimal,
+            selectedAnimal: selectedAnimal!,
             selectedFather: selectedFather,
             selectedMother: selectedMother,
             selectedChildren: selectedChildren,
@@ -384,7 +379,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
           return AnimalDamModal(
             selectedFather: selectedFather,
             selectedMother: selectedMother,
-            selectedAnimal: selectedAnimal,
+            selectedAnimal: selectedAnimal!,
             selectedChildren: selectedChildren,
           );
         },
@@ -395,7 +390,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
             .copyWith(selectedOviDam: selectedMother);
       }
     }
-    ref.read(animalListProvider.notifier).updateAnimal(selectedAnimal);
+    ref.read(animalListProvider.notifier).updateAnimal(selectedAnimal!);
   }
 
   void _addChildren() {
@@ -403,7 +398,7 @@ class _FamilyTreePageState extends ConsumerState<FamilyTreePage> {
         context,
         MaterialPageRoute(
             builder: (context) => CreateBreedingEvents(
-                  animalId: selectedAnimal.id!,
+                  animalId: selectedAnimal!.id!,
                 )));
   }
 }

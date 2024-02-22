@@ -6,12 +6,12 @@ import '../classes/breeding_event_variables.dart';
 import '../riverpod_globals.dart';
 
 final breedingEventListProvider =
-    AsyncNotifierProvider.family<BreedingEventList, List<BreedingEventVariables>, String>(
+    AsyncNotifierProvider.family<BreedingEventList, List<BreedingEventVariables>, int>(
         BreedingEventList.new);
 
-class BreedingEventList extends FamilyAsyncNotifier<List<BreedingEventVariables>, String> {
+class BreedingEventList extends FamilyAsyncNotifier<List<BreedingEventVariables>, int> {
   @override
-  FutureOr<List<BreedingEventVariables>> build(String arg) {
+  FutureOr<List<BreedingEventVariables>> build(int arg) {
     return [];
   }
 
@@ -40,7 +40,7 @@ class BreedingEventList extends FamilyAsyncNotifier<List<BreedingEventVariables>
     }
   }
 
-  Future<void> removeEvent(String id) async {
+  Future<void> removeEvent(int id) async {
     final events = List<BreedingEventVariables>.from(state.value!);
     final eventDetails = events.firstWhere((event) => event.id == id);
     final partnerId = eventDetails.partner?.animalId;

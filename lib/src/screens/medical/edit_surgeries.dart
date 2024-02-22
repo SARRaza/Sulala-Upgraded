@@ -17,8 +17,8 @@ import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
 
 class EditSurgeriesRecords extends ConsumerStatefulWidget {
-  final String surgeryId;
-  final String animalId;
+  final int surgeryId;
+  final int animalId;
 
   const EditSurgeriesRecords(
       {super.key,
