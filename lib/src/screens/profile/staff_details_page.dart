@@ -16,22 +16,10 @@ import 'manage_permissions.dart';
 
 class StaffDetailsPage extends ConsumerStatefulWidget {
   final int staffMemberId;
-  final ImageProvider image;
-  final String title;
-  final String subtitle;
-  final String email;
-  final String phoneNumber;
-  final String address;
 
   const StaffDetailsPage(
       {super.key,
-      required this.staffMemberId,
-      required this.image,
-      required this.title,
-      required this.subtitle,
-      required this.email,
-      required this.phoneNumber,
-      required this.address});
+      required this.staffMemberId});
 
   @override
   ConsumerState<StaffDetailsPage> createState() => _StaffDetailsPageState();
@@ -68,6 +56,9 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final staffMember = ref.watch(staffProvider).firstWhere((member) => member
+        .id == widget.staffMemberId);
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -134,7 +125,7 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
                                         color: AppColors.grayscale90),
                                   ),
                                   TextSpan(
-                                    text: widget.title,
+                                    text: staffMember.name,
                                     style: AppFonts.body1(
                                         color: AppColors.primary30),
                                   ),
@@ -211,19 +202,19 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
                 Center(
                   child: CircleAvatar(
                     radius: 60 * SizeConfig.widthMultiplier(context),
-                    backgroundImage: widget.image,
+                    backgroundImage: staffMember.image,
                   ),
                 ),
                 SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
                 Center(
                   child: Text(
-                    widget.title,
+                    staffMember.name,
                     style: AppFonts.title4(color: AppColors.grayscale90),
                   ),
                 ),
                 Center(
                   child: Text(
-                    widget.email,
+                    staffMember.email,
                     style: AppFonts.body2(color: AppColors.grayscale70),
                   ),
                 ),
@@ -247,7 +238,7 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
                         style: AppFonts.body2(color: AppColors.grayscale70),
                       ),
                       Text(
-                        widget.subtitle,
+                        staffMember.role,
                         style: AppFonts.body2(color: AppColors.grayscale90),
                       ),
                     ],
@@ -266,8 +257,8 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
                 TableClickableText(
                   iconPath: 'assets/icons/frame/24px/Outlined_Phone.png',
                   text1: 'Phone Number'.tr,
-                  url: "tel:${widget.phoneNumber}",
-                  urlText: widget.phoneNumber,
+                  url: "tel:${staffMember.phoneNumber}",
+                  urlText: staffMember.phoneNumber,
                 ),
                 SizedBox(
                   height: 20 * SizeConfig.heightMultiplier(context),
@@ -275,8 +266,8 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
                 TableClickableText(
                   iconPath: 'assets/icons/frame/24px/16_Mail.png',
                   text1: 'Email Address'.tr,
-                  url: "mailto:${widget.email}",
-                  urlText: widget.email,
+                  url: "mailto:${staffMember.email}",
+                  urlText: staffMember.email,
                 ),
                 SizedBox(
                   height: 35 * SizeConfig.heightMultiplier(context),
@@ -295,7 +286,7 @@ class _StaffDetailsPageState extends ConsumerState<StaffDetailsPage> {
                     style: AppFonts.body2(color: AppColors.grayscale70),
                   ),
                   trailing: Text(
-                    widget.address,
+                    staffMember.address,
                     style: AppFonts.body2(color: AppColors.grayscale90),
                   ),
                 )

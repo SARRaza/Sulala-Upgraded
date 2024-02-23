@@ -52,6 +52,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     final lastName = ref.watch(lastNameProvider);
     final profilePicture = ref.watch(profilePictureProvider);
     final phoneNumber = ref.read(phoneNumberProvider);
+    final farmName = ref.watch(whatIsTheNameOfYourFarmProvider);
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
@@ -145,7 +146,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         SizedBox(
                             height: 16 * SizeConfig.heightMultiplier(context)),
                         Text(
-                          'Head of Farm'.tr,
+                          farmName,
                           style: AppFonts.body2(color: AppColors.grayscale70),
                         ),
                         SizedBox(
@@ -204,7 +205,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         ),
                       ),
                       title: Text(
-                        'Accounts'.tr,
+                        'Account'.tr,
                         style: AppFonts.body2(color: AppColors.grayscale90),
                       ),
                       onTap: () {

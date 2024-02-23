@@ -9,7 +9,6 @@ import 'package:sulala_upgrade/src/data/providers/breeding_event_list_provider.d
 import 'package:sulala_upgrade/src/data/providers/medical_checkup_list_provider.dart';
 import 'package:sulala_upgrade/src/data/providers/surgery_list_provider.dart';
 import 'package:sulala_upgrade/src/data/providers/vaccination_list_provider.dart';
-import 'package:sulala_upgrade/src/screens/pdf/file_view_page.dart';
 import 'package:sulala_upgrade/src/widgets/dialogs/confirm_delete_dialog.dart';
 import 'package:sulala_upgrade/src/widgets/inputs/draw_ups/draw_up_widget.dart';
 import 'package:sulala_upgrade/src/widgets/inputs/text_fields/primary_text_field.dart';
@@ -26,7 +25,7 @@ import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
 import '../../widgets/inputs/paragraph_text_fields/medical_needs_paragraph.dart';
 import '../../widgets/other/one_information_block.dart';
 import '../../widgets/other/two_information_block.dart';
-import '../pdf/pdf_view_page.dart';
+import '../file/file_view_page.dart';
 import 'add_medical_checkup.dart';
 import 'add_surgeries.dart';
 import 'add_vaccination.dart';
@@ -38,9 +37,7 @@ import 'pregnant_status_draw_up.dart';
 
 class MammalsMedical extends ConsumerStatefulWidget {
   final OviVariables animal;
-  const MammalsMedical(
-      {super.key,
-      required this.animal});
+  const MammalsMedical({super.key, required this.animal});
 
   @override
   ConsumerState<MammalsMedical> createState() => _MammalsMedicalState();
@@ -51,88 +48,95 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
   late final TextEditingController _medicalNeedsController;
   late final TextEditingController _pregnanciesCountController;
   final _pregnanciesCountFormKey = GlobalKey<FormState>();
-  
+
   @override
   void initState() {
     super.initState();
-    _medicalNeedsController = TextEditingController(text: widget.animal.medicalNeeds);
-    _pregnanciesCountController = TextEditingController(text: widget.animal.pregnanciesCount?.toString() ?? '0');
+    _medicalNeedsController =
+        TextEditingController(text: widget.animal.medicalNeeds);
+    _pregnanciesCountController = TextEditingController(
+        text: widget.animal.pregnanciesCount?.toString() ?? '0');
   }
 
   @override
   Widget build(BuildContext context) {
-    final today = DateTime.now().copyWith(hour: 0, minute: 0,
-        second: 0, millisecond: 0, microsecond: 0);
+    final today = DateTime.now().copyWith(
+        hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0);
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Consumer(
-            builder: (context, ref, child) {
-              return ref.watch(vaccinationListProvider(widget.animal.id!)).when(
+          Consumer(builder: (context, ref, child) {
+            return ref.watch(vaccinationListProvider(widget.animal.id!)).when(
                 error: (error, trace) => Text('Error: $error'),
                 loading: () => const CircularProgressIndicator(),
                 data: (vaccinations) {
-                  final futureVaccinationDates = vaccinations.map(
-                          (vaccination) => vaccination.secondDoseDate).where(
-                          (date) => date?.isAfter(today
-                          ) == true || date?.isAtSameMomentAs(
-                              today) == true).toList();
-                  futureVaccinationDates.sort(
-                          (date1, date2) => date1!.compareTo(date2!));
-                  final DateTime? nextVaccinationDate = futureVaccinationDates.firstOrNull;
+                  final futureVaccinationDates = vaccinations
+                      .map((vaccination) => vaccination.secondDoseDate)
+                      .where((date) =>
+                          date?.isAfter(today) == true ||
+                          date?.isAtSameMomentAs(today) == true)
+                      .toList();
+                  futureVaccinationDates
+                      .sort((date1, date2) => date1!.compareTo(date2!));
+                  final DateTime? nextVaccinationDate =
+                      futureVaccinationDates.firstOrNull;
 
                   return SizedBox(
                     width: SizeConfig.widthMultiplier(context) * 343,
                     child: OneInformationBlock(
                         head1: nextVaccinationDate != null
-                            ? DateFormat('dd.MM.yyyy').format(nextVaccinationDate)
+                            ? DateFormat('dd.MM.yyyy')
+                                .format(nextVaccinationDate)
                             : 'N/A',
                         subtitle1: 'Next Vaccination'.tr),
                   );
-                }
-              );
-            }
-          ),
+                });
+          }),
           SizedBox(
             height: SizeConfig.heightMultiplier(context) * 8,
           ),
-          Consumer(
-            builder: (context, ref, child) {
-              return ref.watch(medicalCheckupListProvider(widget.animal.id!)).when(
-                  error: (error, trace) => Text('Error: $error'),
-                  loading: () => const CircularProgressIndicator(),
-                data: (checkups) {
-                    final pastCheckupDates = checkups.map(
-                            (checkup) => checkup.firstCheckUp).where((date) => date?.isBefore(today) == true).toList();
-                    pastCheckupDates.sort((date1, date2) => date1!.compareTo(date2!));
-                    final lastCheckupDate = pastCheckupDates.lastOrNull;
-              
-                    final futureCheckupDates = checkups.map((checkup) => checkup.secondCheckUp).where(
-                            (date) => date?.isAfter(today
-                        ) == true || date?.isAtSameMomentAs(
-                            today) == true).toList();
-                    futureCheckupDates.sort(
-                            (date1, date2) => date1!.compareTo(date2!));
-                    final DateTime? nextCheckupDate = futureCheckupDates.firstOrNull;
-                    
-                  return SizedBox(
-                    width: 343 * SizeConfig.widthMultiplier(context),
-                    child: TwoInformationBlock(
-                      head1: lastCheckupDate != null
-                          ? DateFormat('dd.MM.yyyy').format(lastCheckupDate)
-                          : 'N/A',
-                      head2: nextCheckupDate != null
-                          ? DateFormat('dd.MM.yyyy').format(nextCheckupDate)
-                          : 'N/A',
-                      subtitle1: "Last Check-up Date".tr,
-                      subtitle2: "Next Check-up Date".tr,
-                    ),
-                  );
-                }
-              );
-            }
-          ),
+          Consumer(builder: (context, ref, child) {
+            return ref
+                .watch(medicalCheckupListProvider(widget.animal.id!))
+                .when(
+                    error: (error, trace) => Text('Error: $error'),
+                    loading: () => const CircularProgressIndicator(),
+                    data: (checkups) {
+                      final pastCheckupDates = checkups
+                          .map((checkup) => checkup.firstCheckUp)
+                          .where((date) => date?.isBefore(today) == true)
+                          .toList();
+                      pastCheckupDates
+                          .sort((date1, date2) => date1!.compareTo(date2!));
+                      final lastCheckupDate = pastCheckupDates.lastOrNull;
+
+                      final futureCheckupDates = checkups
+                          .map((checkup) => checkup.secondCheckUp)
+                          .where((date) =>
+                              date?.isAfter(today) == true ||
+                              date?.isAtSameMomentAs(today) == true)
+                          .toList();
+                      futureCheckupDates
+                          .sort((date1, date2) => date1!.compareTo(date2!));
+                      final DateTime? nextCheckupDate =
+                          futureCheckupDates.firstOrNull;
+
+                      return SizedBox(
+                        width: 343 * SizeConfig.widthMultiplier(context),
+                        child: TwoInformationBlock(
+                          head1: lastCheckupDate != null
+                              ? DateFormat('dd.MM.yyyy').format(lastCheckupDate)
+                              : 'N/A',
+                          head2: nextCheckupDate != null
+                              ? DateFormat('dd.MM.yyyy').format(nextCheckupDate)
+                              : 'N/A',
+                          subtitle1: "Last Check-up Date".tr,
+                          subtitle2: "Next Check-up Date".tr,
+                        ),
+                      );
+                    });
+          }),
           SizedBox(
             height: SizeConfig.heightMultiplier(context) * 24,
           ),
@@ -149,9 +153,11 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                       text: 'Save'.tr,
                       onPressed: () async {
                         isMammalEditMode = false;
-                        final animal = ref.read(animalListProvider).requireValue
-                            .firstWhere((animal) => animal.id == widget.animal
-                            .id);
+                        final animal = ref
+                            .read(animalListProvider)
+                            .requireValue
+                            .firstWhere(
+                                (animal) => animal.id == widget.animal.id);
                         ref.read(animalListProvider.notifier).updateAnimal(
                             animal.copyWith(
                                 medicalNeeds: _medicalNeedsController.text));
@@ -185,12 +191,16 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                     ),
                     FileUploaderField(
                       onFileUploaded: (file) {
-                        final animal = ref.read(animalListProvider).requireValue
-                            .firstWhere((animal) => animal.id == widget.animal.id);
+                        final animal = ref
+                            .read(animalListProvider)
+                            .requireValue
+                            .firstWhere(
+                                (animal) => animal.id == widget.animal.id);
                         final files = animal.files ?? [];
                         files.add(file);
-                        ref.read(animalListProvider.notifier).updateAnimal(
-                            animal.copyWith(files: files));
+                        ref
+                            .read(animalListProvider.notifier)
+                            .updateAnimal(animal.copyWith(files: files));
                       },
                     ),
                   ],
@@ -198,9 +208,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    widget.animal.medicalNeeds
-                                ?.isNotEmpty !=
-                            null
+                    widget.animal.medicalNeeds?.isNotEmpty != null
                         ? Text(
                             widget.animal.medicalNeeds!,
                             // 'Be sure to include joint support medicine, antibiotics, anti-inflammatory medication, and topical antiseptics when packing your first-aid kit for your horses. If you have the essentials, you can keep your four-legged friends in the best condition possible.',
@@ -217,7 +225,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                       Column(
                         children: widget.animal.files!
                             .map((file) => GestureDetector(
-                                  onTap: () => _showFile(file),
+                                  onTap: () =>
+                                      _showFile(widget.animal.files!, 0),
                                   child: Row(
                                     children: [
                                       const Icon(
@@ -300,44 +309,47 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                     ],
                   ),
                 ),
-                Consumer(
-                  builder: (context, ref, child) {
-                    return ref.watch(breedingEventListProvider(widget.animal.id!)).when(
-                      error: (error, trace) => Text('Error: $error'),
-                      loading: () => const CircularProgressIndicator(),
-                      data: (events) {
-                        final lastEvent = events.lastOrNull;
-                        if(lastEvent == null) {
-                          return Container();
-                        }
+                Consumer(builder: (context, ref, child) {
+                  return ref
+                      .watch(breedingEventListProvider(widget.animal.id!))
+                      .when(
+                          error: (error, trace) => Text('Error: $error'),
+                          loading: () => const CircularProgressIndicator(),
+                          data: (events) {
+                            final lastEvent = events.lastOrNull;
+                            if (lastEvent == null) {
+                              return Container();
+                            }
 
-                        return ListTile(
-                          onTap: () {
-                            _showMatingDatePickerModalSheet(lastEvent);
-                          },
-                          contentPadding: const EdgeInsets.only(right: 0, left: 0),
-                          leading: Text(
-                            'Date of Mating',
-                            style: AppFonts.body2(color: AppColors.grayscale70),
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                lastEvent.breedingDate != null
-                                    ? DateFormat('dd.MM.yyyy').format(lastEvent.breedingDate!)
-                                    : 'N/A',
-                                style: AppFonts.body2(color: AppColors.grayscale90),
+                            return ListTile(
+                              onTap: () {
+                                _showMatingDatePickerModalSheet(lastEvent);
+                              },
+                              contentPadding:
+                                  const EdgeInsets.only(right: 0, left: 0),
+                              leading: Text(
+                                'Date of Mating',
+                                style: AppFonts.body2(
+                                    color: AppColors.grayscale70),
                               ),
-                              const Icon(Icons.chevron_right_rounded,
-                                  color: AppColors.primary40),
-                            ],
-                          ),
-                        );
-                      }
-                    );
-                  }
-                ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    lastEvent.breedingDate != null
+                                        ? DateFormat('dd.MM.yyyy')
+                                            .format(lastEvent.breedingDate!)
+                                        : 'N/A',
+                                    style: AppFonts.body2(
+                                        color: AppColors.grayscale90),
+                                  ),
+                                  const Icon(Icons.chevron_right_rounded,
+                                      color: AppColors.primary40),
+                                ],
+                              ),
+                            );
+                          });
+                }),
                 ListTile(
                   onTap: () {
                     _dateOfSonarDatePickerModalSheet();
@@ -352,7 +364,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                     children: [
                       widget.animal.dateOfSonar != null
                           ? Text(
-                              DateFormat('dd/MM/yyyy').format(widget.animal.dateOfSonar!),
+                              DateFormat('dd/MM/yyyy')
+                                  .format(widget.animal.dateOfSonar!),
                               style:
                                   AppFonts.body2(color: AppColors.grayscale90),
                             )
@@ -366,52 +379,54 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                     ],
                   ),
                 ),
-                Consumer(
-                  builder: (context, ref, child) {
-                    return ref.watch(breedingEventListProvider(widget.animal.id!)).when(
-                      error: (error, trace) => Text('Error: $error'),
-                      loading: () => const CircularProgressIndicator(),
-                      data: (events) {
-                        final deliveryDate = events.lastOrNull?.deliveryDate;
-                        return ListTile(
-                          onTap: () {
-                            _showExpDeliveryDatePickerModalSheet();
-                          },
-                          contentPadding: const EdgeInsets.only(right: 0, left: 0),
-                          leading: Text(
-                            'Exp. Delivery Date',
-                            style: AppFonts.body2(color: AppColors.grayscale70),
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              deliveryDate != null
-                                  ? Text(
-                                      DateFormat('dd/MM/yyyy').format(deliveryDate),
-                                      style:
-                                          AppFonts.body2(color: AppColors.grayscale90),
-                                    )
-                                  : Text(
-                                      'ADD',
-                                      style:
-                                          AppFonts.body2(color: AppColors.grayscale90),
-                                    ),
-                              const Icon(Icons.chevron_right_rounded,
-                                  color: AppColors.primary40),
-                            ],
-                          ),
-                        );
-                      }
-                    );
-                  }
-                ),
+                Consumer(builder: (context, ref, child) {
+                  return ref
+                      .watch(breedingEventListProvider(widget.animal.id!))
+                      .when(
+                          error: (error, trace) => Text('Error: $error'),
+                          loading: () => const CircularProgressIndicator(),
+                          data: (events) {
+                            final deliveryDate =
+                                events.lastOrNull?.deliveryDate;
+                            return ListTile(
+                              onTap: () {
+                                _showExpDeliveryDatePickerModalSheet();
+                              },
+                              contentPadding:
+                                  const EdgeInsets.only(right: 0, left: 0),
+                              leading: Text(
+                                'Exp. Delivery Date',
+                                style: AppFonts.body2(
+                                    color: AppColors.grayscale70),
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  deliveryDate != null
+                                      ? Text(
+                                          DateFormat('dd/MM/yyyy')
+                                              .format(deliveryDate),
+                                          style: AppFonts.body2(
+                                              color: AppColors.grayscale90),
+                                        )
+                                      : Text(
+                                          'ADD',
+                                          style: AppFonts.body2(
+                                              color: AppColors.grayscale90),
+                                        ),
+                                  const Icon(Icons.chevron_right_rounded,
+                                      color: AppColors.primary40),
+                                ],
+                              ),
+                            );
+                          });
+                }),
                 SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
               ],
             ),
           ),
-          Consumer(
-            builder: (context, ref, child) {
-              return ref.watch(breedingEventListProvider(widget.animal.id!)).when(
+          Consumer(builder: (context, ref, child) {
+            return ref.watch(breedingEventListProvider(widget.animal.id!)).when(
                 error: (error, trace) => Text('Error: $error'),
                 loading: () => const CircularProgressIndicator(),
                 data: (events) {
@@ -431,7 +446,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                           onTap: () {
                             _dateOfLayingEggsPickerModalSheet(lastEvent!);
                           },
-                          contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                          contentPadding:
+                              const EdgeInsets.only(right: 0, left: 0),
                           leading: Text(
                             'Date Of Laying Eggs',
                             style: AppFonts.body2(color: AppColors.grayscale70),
@@ -441,14 +457,15 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                             children: [
                               lastEvent?.layingEggsDate != null
                                   ? Text(
-                                      DateFormat('dd/MM/yyyy').format(lastEvent!.layingEggsDate!),
-                                      style:
-                                          AppFonts.body2(color: AppColors.grayscale90),
+                                      DateFormat('dd/MM/yyyy')
+                                          .format(lastEvent!.layingEggsDate!),
+                                      style: AppFonts.body2(
+                                          color: AppColors.grayscale90),
                                     )
                                   : Text(
                                       'ADD',
-                                      style:
-                                          AppFonts.body2(color: AppColors.grayscale90),
+                                      style: AppFonts.body2(
+                                          color: AppColors.grayscale90),
                                     ),
                               const Icon(Icons.chevron_right_rounded,
                                   color: AppColors.primary40),
@@ -459,7 +476,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                           onTap: () {
                             _showNumOfEggsModal(lastEvent!);
                           },
-                          contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                          contentPadding:
+                              const EdgeInsets.only(right: 0, left: 0),
                           leading: Text(
                             'Number Of Eggs',
                             style: AppFonts.body2(color: AppColors.grayscale70),
@@ -470,13 +488,13 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                               lastEvent?.eggsNumber != null
                                   ? Text(
                                       lastEvent!.eventNumber,
-                                      style:
-                                          AppFonts.body2(color: AppColors.grayscale90),
+                                      style: AppFonts.body2(
+                                          color: AppColors.grayscale90),
                                     )
                                   : Text(
                                       'ADD',
-                                      style:
-                                          AppFonts.body2(color: AppColors.grayscale90),
+                                      style: AppFonts.body2(
+                                          color: AppColors.grayscale90),
                                     ),
                               const Icon(Icons.chevron_right_rounded,
                                   color: AppColors.primary40),
@@ -487,7 +505,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                           onTap: () {
                             _showKeptInOvalSelection(context);
                           },
-                          contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                          contentPadding:
+                              const EdgeInsets.only(right: 0, left: 0),
                           leading: Text(
                             'Have You Kept Eggs In Oval?'.tr,
                             style: AppFonts.body2(color: AppColors.grayscale70),
@@ -497,14 +516,16 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                             children: [
                               widget.animal.keptInOval.isNotEmpty
                                   ? Text(
-                                widget.animal.keptInOval == 'No' ? 'No'.tr : 'Yes'.tr,
-                                      style:
-                                          AppFonts.body2(color: AppColors.grayscale90),
+                                      widget.animal.keptInOval == 'No'
+                                          ? 'No'.tr
+                                          : 'Yes'.tr,
+                                      style: AppFonts.body2(
+                                          color: AppColors.grayscale90),
                                     )
                                   : Text(
                                       'ADD',
-                                      style:
-                                          AppFonts.body2(color: AppColors.grayscale90),
+                                      style: AppFonts.body2(
+                                          color: AppColors.grayscale90),
                                     ),
                               const Icon(Icons.chevron_right_rounded,
                                   color: AppColors.primary40),
@@ -517,17 +538,20 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                             onTap: () {
                               _incubationDatePickerModalSheet(lastEvent!);
                             },
-                            contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                            contentPadding:
+                                const EdgeInsets.only(right: 0, left: 0),
                             leading: Text(
                               'Incubation Date',
-                              style: AppFonts.body2(color: AppColors.grayscale70),
+                              style:
+                                  AppFonts.body2(color: AppColors.grayscale70),
                             ),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 lastEvent?.incubationDate != null
                                     ? Text(
-                                        DateFormat('dd/MM/yyyy').format(lastEvent!.incubationDate!),
+                                        DateFormat('dd/MM/yyyy')
+                                            .format(lastEvent!.incubationDate!),
                                         style: AppFonts.body2(
                                             color: AppColors.grayscale90),
                                       )
@@ -542,14 +566,13 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
+                        SizedBox(
+                            height: 16 * SizeConfig.heightMultiplier(context)),
                       ],
                     ),
                   );
-                }
-              );
-            }
-          ),
+                });
+          }),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -562,104 +585,103 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
           SizedBox(
             height: 14 * SizeConfig.heightMultiplier(context),
           ),
-            Consumer(
-              builder: (context, ref, child) {
-                return ref.watch(vaccinationListProvider(widget.animal.id!)).when(
-                  error: (error, trace) => Text('Error: $error'),
-                  loading: () => const CircularProgressIndicator(),
-                  data: (vaccinations) {
-                    return ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: vaccinations.length,
-                      shrinkWrap:
-                          true, // This allows the ListView to take only necessary space
-                      itemBuilder: (BuildContext context, int index) {
-                        return StyledDismissible(
-                          confirmDismiss: _confirmDeletion,
-                          onDismissed: (direction) {
-                            ref.read(vaccinationListProvider(widget.animal.id!)
-                                .notifier).removeVaccination(vaccinations[index].id!
-                            );
-                          },
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.all(0),
-                            title: Text(
-                              vaccinations[index].vaccineName,
-                              style: AppFonts.headline3(color: AppColors.grayscale90),
-                            ),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (vaccinations[index].files != null &&
-                                    vaccinations[index].files!.isNotEmpty)
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => FileViewPage(
-                                                  files: vaccinations[index]
-                                                      .files!)));
-                                    },
-                                    icon: const Icon(
-                                      Icons.file_copy_outlined,
-                                      color: AppColors.primary40,
-                                    ),
-                                  ),
-                                Container(
-                                  margin: const EdgeInsets.only(left: 8),
-                                  child: const Icon(
-                                    Icons.chevron_right_rounded,
+          Consumer(builder: (context, ref, child) {
+            return ref.watch(vaccinationListProvider(widget.animal.id!)).when(
+                error: (error, trace) => Text('Error: $error'),
+                loading: () => const CircularProgressIndicator(),
+                data: (vaccinations) {
+                  return ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: vaccinations.length,
+                    shrinkWrap:
+                        true, // This allows the ListView to take only necessary space
+                    itemBuilder: (BuildContext context, int index) {
+                      return StyledDismissible(
+                        confirmDismiss: _confirmDeletion,
+                        onDismissed: (direction) {
+                          ref
+                              .read(vaccinationListProvider(widget.animal.id!)
+                                  .notifier)
+                              .removeVaccination(vaccinations[index].id!);
+                        },
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.all(0),
+                          title: Text(
+                            vaccinations[index].vaccineName,
+                            style: AppFonts.headline3(
+                                color: AppColors.grayscale90),
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (vaccinations[index].files != null &&
+                                  vaccinations[index].files!.isNotEmpty)
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => FileViewPage(
+                                                files: vaccinations[index]
+                                                    .files!)));
+                                  },
+                                  icon: const Icon(
+                                    Icons.file_copy_outlined,
                                     color: AppColors.primary40,
                                   ),
                                 ),
-                              ],
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => EditVaccination(
-                                    animalId: widget.animal.id!,
-                                    vaccinationId: vaccinations[index].id!,
-                                  ),
+                              Container(
+                                margin: const EdgeInsets.only(left: 8),
+                                child: const Icon(
+                                  Icons.chevron_right_rounded,
+                                  color: AppColors.primary40,
                                 ),
-                              );
-                            },
-                            subtitle: vaccinations[index].firstDoseDate != null ||
-                                vaccinations[index].secondDoseDate != null
-                                ? Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        vaccinations[index].firstDoseDate != null
-                                            ? DateFormat('yyyy-MM-dd').format(
-                                            vaccinations[index]
-                                                    .firstDoseDate!)
-                                            : '',
-                                        style: AppFonts.body2(
-                                            color: AppColors.grayscale70),
-                                      ),
-                                      Text(
-                                        vaccinations[index].secondDoseDate != null
-                                            ? DateFormat('yyyy-MM-dd').format(
-                                            vaccinations[index]
-                                                    .secondDoseDate!)
-                                            : '',
-                                        style: AppFonts.body2(
-                                            color: AppColors.grayscale70),
-                                      ),
-                                    ],
-                                  )
-                                : null,
+                              ),
+                            ],
                           ),
-                        );
-                      },
-                    );
-                  }
-                );
-              }
-            ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditVaccination(
+                                  animalId: widget.animal.id!,
+                                  vaccinationId: vaccinations[index].id!,
+                                ),
+                              ),
+                            );
+                          },
+                          subtitle: vaccinations[index].firstDoseDate != null ||
+                                  vaccinations[index].secondDoseDate != null
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      vaccinations[index].firstDoseDate != null
+                                          ? DateFormat('yyyy-MM-dd').format(
+                                              vaccinations[index]
+                                                  .firstDoseDate!)
+                                          : '',
+                                      style: AppFonts.body2(
+                                          color: AppColors.grayscale70),
+                                    ),
+                                    Text(
+                                      vaccinations[index].secondDoseDate != null
+                                          ? DateFormat('yyyy-MM-dd').format(
+                                              vaccinations[index]
+                                                  .secondDoseDate!)
+                                          : '',
+                                      style: AppFonts.body2(
+                                          color: AppColors.grayscale70),
+                                    ),
+                                  ],
+                                )
+                              : null,
+                        ),
+                      );
+                    },
+                  );
+                });
+          }),
           Row(
             children: [
               PrimaryTextButton(
@@ -667,8 +689,9 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                   await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AddVaccination(animalId: widget
-                          .animal.id!,),
+                      builder: (context) => AddVaccination(
+                        animalId: widget.animal.id!,
+                      ),
                     ),
                   );
                   setState(() {});
@@ -706,96 +729,101 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
           SizedBox(
             height: 14 * SizeConfig.heightMultiplier(context),
           ),
-            Consumer(
-              builder: (context, ref, child) {
-                return ref.watch(medicalCheckupListProvider(widget.animal.id!))
-                    .when(
-                  error: (error, trace) => Text('Error: $error'),
-                  loading: () => const CircularProgressIndicator(),
-                  data: (checkups) {
-                    return ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: checkups.length,
-                      shrinkWrap:
-                          true, // This allows the ListView to take only necessary space
-                      itemBuilder: (BuildContext context, int index) {
-                        return StyledDismissible(
-                          confirmDismiss: _confirmDeletion,
-                          onDismissed: (direction) {
-                            ref.read(medicalCheckupListProvider(widget.animal.id!).notifier).removeCheckup(checkups[index].id!);
-                          },
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.all(0),
-                            title: Text(
-                              checkups[index].checkupName,
-                              style: AppFonts.headline3(color: AppColors.grayscale90),
-                            ),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (checkups[index].files != null &&
-                                    checkups[index].files!.isNotEmpty)
+          Consumer(builder: (context, ref, child) {
+            return ref
+                .watch(medicalCheckupListProvider(widget.animal.id!))
+                .when(
+                    error: (error, trace) => Text('Error: $error'),
+                    loading: () => const CircularProgressIndicator(),
+                    data: (checkups) {
+                      return ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: checkups.length,
+                        shrinkWrap:
+                            true, // This allows the ListView to take only necessary space
+                        itemBuilder: (BuildContext context, int index) {
+                          return StyledDismissible(
+                            confirmDismiss: _confirmDeletion,
+                            onDismissed: (direction) {
+                              ref
+                                  .read(medicalCheckupListProvider(
+                                          widget.animal.id!)
+                                      .notifier)
+                                  .removeCheckup(checkups[index].id!);
+                            },
+                            child: ListTile(
+                              contentPadding: const EdgeInsets.all(0),
+                              title: Text(
+                                checkups[index].checkupName,
+                                style: AppFonts.headline3(
+                                    color: AppColors.grayscale90),
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (checkups[index].files != null &&
+                                      checkups[index].files!.isNotEmpty)
+                                    IconButton(
+                                      onPressed: () =>
+                                          _showFile(checkups[index].files!, 0),
+                                      icon: const Icon(
+                                        Icons.file_copy_outlined,
+                                        color: AppColors.primary40,
+                                      ),
+                                    ),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
                                   IconButton(
-                                    onPressed: () =>
-                                        _showFiles(checkups[index].files!),
+                                    onPressed: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            EditMedicalCheckUp(
+                                          checkUpId: checkups[index].id!,
+                                          animalId: widget.animal.id!,
+                                        ),
+                                      ),
+                                    ),
                                     icon: const Icon(
-                                      Icons.file_copy_outlined,
+                                      Icons.chevron_right_rounded,
                                       color: AppColors.primary40,
                                     ),
                                   ),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                IconButton(
-                                  onPressed: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => EditMedicalCheckUp(
-                                        checkUpId: checkups[index].id!,
-                                        animalId: widget.animal.id!,
-                                      ),
-                                    ),
-                                  ),
-                                  icon: const Icon(
-                                    Icons.chevron_right_rounded,
-                                    color: AppColors.primary40,
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
+                              subtitle: checkups[index].firstCheckUp != null ||
+                                      checkups[index].secondCheckUp != null
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          checkups[index].firstCheckUp != null
+                                              ? DateFormat('yyyy-MM-dd').format(
+                                                  checkups[index].firstCheckUp!)
+                                              : '',
+                                          style: AppFonts.body2(
+                                              color: AppColors.grayscale70),
+                                        ),
+                                        Text(
+                                          checkups[index].secondCheckUp != null
+                                              ? DateFormat('yyyy-MM-dd').format(
+                                                  checkups[index]
+                                                      .secondCheckUp!)
+                                              : '',
+                                          style: AppFonts.body2(
+                                              color: AppColors.grayscale70),
+                                        ),
+                                      ],
+                                    )
+                                  : null,
                             ),
-                            subtitle: checkups[index].firstCheckUp != null ||
-                                checkups[index].secondCheckUp != null
-                                ? Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        checkups[index].firstCheckUp != null
-                                            ? DateFormat('yyyy-MM-dd').format(
-                                            checkups[index].firstCheckUp!)
-                                            : '',
-                                        style: AppFonts.body2(
-                                            color: AppColors.grayscale70),
-                                      ),
-                                      Text(
-                                        checkups[index].secondCheckUp != null
-                                            ? DateFormat('yyyy-MM-dd').format(
-                                            checkups[index]
-                                                    .secondCheckUp!)
-                                            : '',
-                                        style: AppFonts.body2(
-                                            color: AppColors.grayscale70),
-                                      ),
-                                    ],
-                                  )
-                                : null,
-                          ),
-                        );
-                      },
-                    );
-                  }
-                );
-              }
-            ),
+                          );
+                        },
+                      );
+                    });
+          }),
           Row(
             children: [
               PrimaryTextButton(
@@ -803,7 +831,9 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AddMedicalCheckUp(animalId: widget.animal.id!,),
+                      builder: (context) => AddMedicalCheckUp(
+                        animalId: widget.animal.id!,
+                      ),
                     ),
                   );
                 },
@@ -835,95 +865,97 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
           SizedBox(
             height: 14 * SizeConfig.heightMultiplier(context),
           ),
-            Consumer(
-              builder: (context, ref, child) {
-                return ref.watch(surgeryListProvider(widget.animal.id!)).when(
-                  error: (error, trace) => Text('Error: $error'),
-                  loading: () => const CircularProgressIndicator(),
-                  data: (surgeries) {
-                    return ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: surgeries.length,
-                      shrinkWrap:
-                          true, // This allows the ListView to take only necessary space
-                      itemBuilder: (BuildContext context, int index) {
-                        return StyledDismissible(
-                          confirmDismiss: _confirmDeletion,
-                          onDismissed: (direction) {
-                            ref.read(surgeryListProvider(widget.animal.id!).notifier).removeSurgery(surgeries[index].id!);
-                          },
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.all(0),
-                            title: Text(
-                              surgeries[index].surgeryName,
-                              style: AppFonts.headline3(color: AppColors.grayscale90),
-                            ),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (surgeries[index].files != null &&
-                                    surgeries[index].files!.isNotEmpty)
-                                  IconButton(
-                                    onPressed: () =>
-                                        _showFiles(surgeries[index].files!),
-                                    icon: const Icon(
-                                      Icons.file_copy_outlined,
-                                      color: AppColors.primary40,
-                                    ),
-                                  ),
-                                const SizedBox(
-                                  width: 8,
-                                ),
+          Consumer(builder: (context, ref, child) {
+            return ref.watch(surgeryListProvider(widget.animal.id!)).when(
+                error: (error, trace) => Text('Error: $error'),
+                loading: () => const CircularProgressIndicator(),
+                data: (surgeries) {
+                  return ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: surgeries.length,
+                    shrinkWrap:
+                        true, // This allows the ListView to take only necessary space
+                    itemBuilder: (BuildContext context, int index) {
+                      return StyledDismissible(
+                        confirmDismiss: _confirmDeletion,
+                        onDismissed: (direction) {
+                          ref
+                              .read(surgeryListProvider(widget.animal.id!)
+                                  .notifier)
+                              .removeSurgery(surgeries[index].id!);
+                        },
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.all(0),
+                          title: Text(
+                            surgeries[index].surgeryName,
+                            style: AppFonts.headline3(
+                                color: AppColors.grayscale90),
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (surgeries[index].files != null &&
+                                  surgeries[index].files!.isNotEmpty)
                                 IconButton(
-                                  onPressed: () async {
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => EditSurgeriesRecords(
-                                          surgeryId: surgeries[index].id!,
-                                          animalId: widget.animal.id!,
-                                        ),
-                                      ),
-                                    );
-                                    setState(() {});
-                                  },
+                                  onPressed: () =>
+                                      _showFile(surgeries[index].files!, 0),
                                   icon: const Icon(
-                                    Icons.chevron_right_rounded,
+                                    Icons.file_copy_outlined,
                                     color: AppColors.primary40,
                                   ),
                                 ),
-                              ],
-                            ),
-                            subtitle: surgeries[index].firstSurgery != null ||
-                                surgeries[index].secondSurgery != null
-                                ? Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        DateFormat('yyyy-MM-dd').format(
-                                            surgeries[index].firstSurgery ??
-                                                DateTime.now()),
-                                        style: AppFonts.body2(
-                                            color: AppColors.grayscale70),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              IconButton(
+                                onPressed: () async {
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          EditSurgeriesRecords(
+                                        surgeryId: surgeries[index].id!,
+                                        animalId: widget.animal.id!,
                                       ),
-                                      Text(
-                                        DateFormat('yyyy-MM-dd').format(
-                                            surgeries[index].secondSurgery ??
-                                                DateTime.now()),
-                                        style: AppFonts.body2(
-                                            color: AppColors.grayscale70),
-                                      ),
-                                    ],
-                                  )
-                                : null,
+                                    ),
+                                  );
+                                  setState(() {});
+                                },
+                                icon: const Icon(
+                                  Icons.chevron_right_rounded,
+                                  color: AppColors.primary40,
+                                ),
+                              ),
+                            ],
                           ),
-                        );
-                      },
-                    );
-                  }
-                );
-              }
-            ),
+                          subtitle: surgeries[index].firstSurgery != null ||
+                                  surgeries[index].secondSurgery != null
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      DateFormat('yyyy-MM-dd').format(
+                                          surgeries[index].firstSurgery ??
+                                              DateTime.now()),
+                                      style: AppFonts.body2(
+                                          color: AppColors.grayscale70),
+                                    ),
+                                    Text(
+                                      DateFormat('yyyy-MM-dd').format(
+                                          surgeries[index].secondSurgery ??
+                                              DateTime.now()),
+                                      style: AppFonts.body2(
+                                          color: AppColors.grayscale70),
+                                    ),
+                                  ],
+                                )
+                              : null,
+                        ),
+                      );
+                    },
+                  );
+                });
+          }),
           Row(
             children: [
               PrimaryTextButton(
@@ -981,7 +1013,9 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
     );
 
     if (expDeliveryDate != null) {
-      ref.read(animalListProvider.notifier).updateAnimal(widget.animal.copyWith(expDlvDate: expDeliveryDate));
+      ref
+          .read(animalListProvider.notifier)
+          .updateAnimal(widget.animal.copyWith(expDlvDate: expDeliveryDate));
     }
   }
 
@@ -1008,7 +1042,9 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
     );
 
     if (dateOfSonar != null) {
-      ref.read(animalListProvider.notifier).updateAnimal(widget.animal.copyWith(dateOfSonar: dateOfSonar));
+      ref
+          .read(animalListProvider.notifier)
+          .updateAnimal(widget.animal.copyWith(dateOfSonar: dateOfSonar));
     }
   }
 
@@ -1033,9 +1069,9 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
         );
       },
     );
-    ref.read(breedingEventListProvider(widget.animal.id!).notifier).updateEvent(
-        event.copyWith(layingEggsDate: dateOfLayingEggs));
-      
+    ref
+        .read(breedingEventListProvider(widget.animal.id!).notifier)
+        .updateEvent(event.copyWith(layingEggsDate: dateOfLayingEggs));
   }
 
   void _incubationDatePickerModalSheet(BreedingEventVariables event) async {
@@ -1061,8 +1097,9 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
     );
 
     if (incubationDate != null) {
-        ref.read(breedingEventListProvider(widget.animal.id!).notifier)
-            .updateEvent(event.copyWith(incubationDate: incubationDate));
+      ref
+          .read(breedingEventListProvider(widget.animal.id!).notifier)
+          .updateEvent(event.copyWith(incubationDate: incubationDate));
     }
   }
 
@@ -1077,11 +1114,11 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
         );
       },
     );
-    if(newEggsNumber != null) {
-      ref.read(breedingEventListProvider(widget.animal.id!).notifier)
+    if (newEggsNumber != null) {
+      ref
+          .read(breedingEventListProvider(widget.animal.id!).notifier)
           .updateEvent(event.copyWith(eggsNumber: newEggsNumber));
     }
-    
   }
 
   void _showKeptInOvalSelection(BuildContext context) {
@@ -1112,7 +1149,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                 child: GestureDetector(
                   onTap: () {
                     const keptInOval = 'Yes, Kept In Oval';
-                    ref.read(animalListProvider.notifier).updateAnimal(widget.animal.copyWith(keptInOval: keptInOval));
+                    ref.read(animalListProvider.notifier).updateAnimal(
+                        widget.animal.copyWith(keptInOval: keptInOval));
                     Navigator.pop(context);
                   },
                   child: Row(
@@ -1129,10 +1167,14 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: widget.animal.keptInOval == 'Yes, Kept In Oval'
-                                ? AppColors.primary20
-                                : AppColors.grayscale30,
-                            width: widget.animal.keptInOval == 'Yes, Kept In Oval' ? 6.0 : 1.0,
+                            color:
+                                widget.animal.keptInOval == 'Yes, Kept In Oval'
+                                    ? AppColors.primary20
+                                    : AppColors.grayscale30,
+                            width:
+                                widget.animal.keptInOval == 'Yes, Kept In Oval'
+                                    ? 6.0
+                                    : 1.0,
                           ),
                         ),
                       ),
@@ -1147,7 +1189,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                 child: GestureDetector(
                   onTap: () {
                     const keptInOval = 'No';
-                    ref.read(animalListProvider.notifier).updateAnimal(widget.animal.copyWith(keptInOval: keptInOval));
+                    ref.read(animalListProvider.notifier).updateAnimal(
+                        widget.animal.copyWith(keptInOval: keptInOval));
                     Navigator.pop(context);
                   },
                   child: Row(
@@ -1200,38 +1243,23 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
       },
     ).then((newStatus) {
       if (currentPregnantStatus == false && newStatus == true) {
-        ref.read(animalListProvider.notifier).updateAnimal(widget.animal.copyWith(pregnant: true, pregnanciesCount: widget.animal.pregnanciesCount ?? 0 + 1));
+        ref.read(animalListProvider.notifier).updateAnimal(widget.animal
+            .copyWith(
+                pregnant: true,
+                pregnanciesCount: widget.animal.pregnanciesCount ?? 0 + 1));
       } else {
-        ref.read(animalListProvider.notifier).updateAnimal(widget.animal.copyWith(pregnant: true));
+        ref
+            .read(animalListProvider.notifier)
+            .updateAnimal(widget.animal.copyWith(pregnant: true));
       }
     });
   }
 
-  Future<void> _showFile(File file) async {
-    final fileName = file.path.split('/').last;
-    if (mounted) {
-      if (fileName.endsWith('.pdf')) {
-        // Open PDF
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => PDFViewPage(file: file)),
-        );
-      } else {
-        // Open Image in a new screen or dialog
-        showDialog(
-          context: context,
-          builder: (context) => Dialog(
-            child: Image.file(file),
-          ),
-        );
-      }
-    }
-  }
-
-
-  _showFiles(List<File> files) {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => FileViewPage(files: files)));
+  _showFile(List<File> files, int index) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => FileViewPage(files: files, index: index)));
   }
 
   Future<void> _showPregnanciesCountModal() async {
@@ -1291,7 +1319,9 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
           );
         });
     if (newCount != null) {
-      ref.read(animalListProvider.notifier).updateAnimal(widget.animal.copyWith(pregnanciesCount: newCount));
+      ref
+          .read(animalListProvider.notifier)
+          .updateAnimal(widget.animal.copyWith(pregnanciesCount: newCount));
     }
   }
 
@@ -1303,7 +1333,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                 'Are you sure you want to delete the details, files etc.?'.tr));
   }
 
-  Future<void> _showMatingDatePickerModalSheet(BreedingEventVariables event) async {
+  Future<void> _showMatingDatePickerModalSheet(
+      BreedingEventVariables event) async {
     final DateTime? newMatingDate = await showDatePicker(
       context: context,
       initialDate: event.breedingDate ?? DateTime.now(),
@@ -1316,7 +1347,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
             primaryColor: AppColors.primary30,
             colorScheme: const ColorScheme.light(primary: AppColors.primary20),
             buttonTheme:
-            const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+                const ButtonThemeData(textTheme: ButtonTextTheme.primary),
             // Here you can customize more colors if needed
             // For example, you can change the header color, selected day color, etc.
           ),
@@ -1326,7 +1357,8 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
     );
 
     if (newMatingDate != null) {
-      ref.read(breedingEventListProvider(widget.animal.id!).notifier)
+      ref
+          .read(breedingEventListProvider(widget.animal.id!).notifier)
           .updateEvent(event.copyWith(breedingDate: newMatingDate));
     }
   }

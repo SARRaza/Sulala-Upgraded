@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart';
-import 'package:sulala_upgrade/src/screens/reg_mode/image_view_page.dart';
 
 import '../../data/classes/ovi_variables.dart';
 import '../../data/providers/animal_list_provider.dart';
@@ -16,6 +15,7 @@ import '../../widgets/pages/owned_animal/general_info_animal_widget.dart';
 
 import '../medical/mammals_medical.dart';
 
+import '../reg_mode/image_view_page.dart';
 import 'edit_animal_details/edit_page.dart';
 
 class OwnedAnimalDetailsRegMode extends ConsumerStatefulWidget {
@@ -143,7 +143,7 @@ class _OwnedAnimalDetailsRegModeState
                       child: Column(
                         children: [
                           GestureDetector(
-                            onTap: () => _viewImage(oviDetails.selectedOviImage),
+                            onTap: () => _viewImage(oviDetails.selectedOviImage!),
                             child: CircleAvatar(
                               radius: MediaQuery.of(context).size.width * 0.16,
                               backgroundColor: Colors.grey[100],

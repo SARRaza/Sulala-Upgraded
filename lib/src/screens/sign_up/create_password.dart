@@ -115,9 +115,7 @@ class _CreatePasswordState extends ConsumerState<CreatePassword> {
                           ref.watch(passwordValidationProvider);
                       return PrimaryButton(
                         text: "Confirm".tr,
-                        status: isPasswordValid
-                            ? PrimaryButtonStatus.idle
-                            : PrimaryButtonStatus.disabled,
+                        status: buttonStatus,
                         onPressed: () =>
                             isPasswordValid ? _onConfirmPressed() : null,
                       );

@@ -5,10 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:sulala_upgrade/src/data/providers/animal_list_provider.dart';
-import 'package:sulala_upgrade/src/screens/reg_mode/image_view_page.dart';
+import 'package:sulala_upgrade/src/screens/file/file_view_page.dart';
 import 'package:sulala_upgrade/src/widgets/styled_dismissible.dart';
 import '../../../data/classes/ovi_variables.dart';
-import '../../../screens/pdf/pdf_view_page.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 import '../../dialogs/confirm_delete_dialog.dart';
@@ -219,7 +218,7 @@ class _GeneralInfoAnimalWidgetState
                       confirmDismiss: _confirmFileDeletion,
                       onDismissed: (direction) => _deleteFile(filePath),
                       child: GestureDetector(
-                        onTap: () => _showFile(filePath),
+                        onTap: () => _showFile(widget.oviDetails.files!, index),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Row(
@@ -268,23 +267,9 @@ class _GeneralInfoAnimalWidgetState
     );
   }
 
-  void _showFile(String filePath) {
-    final file = File(filePath);
-    if (mounted) {
-      if (filePath.endsWith('.pdf')) {
-        // Open PDF
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => PDFViewPage(file: file)),
-        );
-      } else {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    ImageViewPage(imageProvider: FileImage(file))));
-      }
-    }
+  void _showFile(List<File> files, int index) {
+    Navigator.push(context, MaterialPageRoute(
+        builder: (context) => FileViewPage(files: files, index: index,)));
   }
 
   Future<bool?> _confirmFileDeletion(DismissDirection direction) {

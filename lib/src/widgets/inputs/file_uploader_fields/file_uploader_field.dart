@@ -7,9 +7,9 @@ import 'package:dotted_border/dotted_border.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sulala_upgrade/src/screens/pdf/file_view_page.dart';
 
 import '../../../data/riverpod_globals.dart';
+import '../../../screens/file/file_view_page.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';
 

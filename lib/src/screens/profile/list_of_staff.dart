@@ -185,12 +185,6 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
                                     MaterialPageRoute(
                                       builder: (context) => StaffDetailsPage(
                                         staffMemberId: staff[index].id!,
-                                        image: staff[index].image,
-                                        title: staff[index].name,
-                                        subtitle: staff[index].role,
-                                        email: staff[index].email,
-                                        phoneNumber: staff[index].phoneNumber,
-                                        address: staff[index].address,
                                       ),
                                     ),
                                   );
