@@ -173,7 +173,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           head1:
                               ref.refresh(totalAnimalsCountProvider).toString(),
                           head2: '1',
-                          head3: ref.watch(totalStaffProvider).toString(),
+                          head3: ref.watch(countStaffProvider).when(
+                              data: (count) => count.toString(),
+                              error: (error, trace) => error.toString(),
+                              loading: () => ''
+                          ),
                         ),
                         SizedBox(
                             height: 24 * SizeConfig.heightMultiplier(context)),

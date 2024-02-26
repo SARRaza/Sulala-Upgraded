@@ -53,9 +53,9 @@ class StaffList extends AsyncNotifier<List<StaffMember>> {
 
 }
 
-final totalStaffProvider = Provider<int>((ref) {
-  final staff = ref.watch(staffProvider);
-  return staff.hasValue ? staff.value!.length : 0;
+final countStaffProvider = FutureProvider<int>((ref) async {
+  final staff = await ref.watch(staffProvider.future);
+  return staff.length;
 });
 
 final staffMemberProvider = FutureProvider.autoDispose.family<StaffMember, int>((ref, id) async {
