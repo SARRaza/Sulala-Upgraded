@@ -180,11 +180,8 @@ class _SearchPageAnimalsState extends State<SearchPageAnimals> {
               child: ButtonSearchBar(
                 onChange: _onSearchChanged,
                 hintText: "Search by name or ID".tr,
-                icon: Icons.filter_alt_outlined,
+                showFilterIcon: false,
                 controller: _searchController,
-                onIconPressed: () {
-                  // print("Filter Pressed");
-                },
               ),
             ),
             SizedBox(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:sulala_upgrade/src/data/providers/animal_list_provider.dart';
-import 'package:sulala_upgrade/src/data/providers/breeding_event_list_provider.dart';
+import 'package:sulala_upgrade/src/data/providers/animal_providers.dart';
+import 'package:sulala_upgrade/src/data/providers/breeding_event_providers.dart';
 
 import '../../../data/classes/ovi_variables.dart';
 import '../../../data/riverpod_globals.dart';

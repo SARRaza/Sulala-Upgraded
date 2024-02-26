@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
 import '../data/classes/ovi_variables.dart';
-import '../data/providers/animal_list_provider.dart';
+import '../data/providers/animal_providers.dart';
 
 class BreedingHelper {
   BreedingHelper(this.ref);

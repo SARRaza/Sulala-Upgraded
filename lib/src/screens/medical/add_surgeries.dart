@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/classes/surgery_details.dart';
-import 'package:sulala_upgrade/src/data/providers/surgery_list_provider.dart';
+import 'package:sulala_upgrade/src/data/providers/surgery_providers.dart';
 import '../../data/globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';

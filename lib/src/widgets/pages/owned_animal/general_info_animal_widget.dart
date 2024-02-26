@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:sulala_upgrade/src/data/providers/animal_list_provider.dart';
+import 'package:sulala_upgrade/src/data/providers/animal_providers.dart';
 import 'package:sulala_upgrade/src/screens/file/file_view_page.dart';
 import 'package:sulala_upgrade/src/widgets/styled_dismissible.dart';
 import '../../../data/classes/ovi_variables.dart';

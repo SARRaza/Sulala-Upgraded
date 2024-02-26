@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
+import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/apple_button.dart';
@@ -12,16 +14,16 @@ import '../../widgets/inputs/text_fields/primary_text_field.dart';
 import 'confirm_otp_page.dart';
 import 'enter_password.dart';
 
-class SignIn extends StatefulWidget {
+class SignIn extends ConsumerStatefulWidget {
   const SignIn({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<SignIn> createState() => _SignInState();
+  ConsumerState<SignIn> createState() => _SignInState();
 }
 
-class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
+class _SignInState extends ConsumerState<SignIn> with SingleTickerProviderStateMixin {
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
   PrimaryButtonStatus buttonStatus = PrimaryButtonStatus.idle;
@@ -50,9 +52,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ConfirmOTPPage(
-          phoneNumber: savedPhoneNumber.toString(),
-        ),
+        builder: (context) => const ConfirmOTPPage(),
       ),
     );
   }
@@ -62,7 +62,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
       context,
       MaterialPageRoute(
         builder: (context) => EnterPassword(
-          emailAddress: savedEmailAddress.toString(),
+          emailAddress: _emailController.text,
         ),
       ),
     );
@@ -161,6 +161,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                   _buildEmailFormField()
                                 else
                                   PhoneNumberField(
+                                    controller: _phoneController,
                                     onSave: (value) {
                                       setState(() {
                                         savedPhoneNumber = value;
@@ -258,6 +259,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
       // Proceed with submission logic
       buttonStatus = PrimaryButtonStatus.loading;
       if (showEmailField == false) {
+        ref.read(emailAddressProvider.notifier).update((state) => '');
         _navigateToPhoneOTPPage(
           {
             "phoneNumber": savedPhoneNumber,
@@ -265,6 +267,9 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
           },
         );
       } else {
+        ref.read(phoneNumberProvider.notifier).update((state) => '');
+        ref.read(emailAddressProvider.notifier).update(
+                (state) => _emailController.text);
         _navigateToEnterPasswordPage(
           {
             "emailAddress": savedEmailAddress,

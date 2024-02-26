@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import 'package:sulala_upgrade/src/screens/guest_mode/home_screen_guest_mode.dart';
 import '../../data/globals.dart';
+import '../../data/providers/user_providers.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/navigate_button.dart';

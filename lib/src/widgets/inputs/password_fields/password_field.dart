@@ -91,52 +91,50 @@ class _PasswordFieldState extends State<PasswordField> {
             ),
           ),
         const SizedBox(height: 8.0),
-        Container(
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(24.0),
-            border: Border.all(
-              color: borderColor,
-              width: 1.0,
+        TextFormField(
+          validator: widget.validator,
+          controller: _textEditingController,
+          onChanged: _onChanged,
+          focusNode: _focusNode,
+          obscureText:
+              _obscureText, // Use obscureText property for password field
+          onTap: () {
+            _focusNode.requestFocus();
+          },
+          onEditingComplete: () {
+            _focusNode.unfocus();
+          },
+          decoration: InputDecoration(
+            fillColor: backgroundColor,
+            filled: true,
+            hintText: widget.hintText,
+            hintStyle: AppFonts.body2(
+              color: hintTextColor,
             ),
-          ),
-          child: TextFormField(
-            validator: widget.validator,
-            controller: _textEditingController,
-            onChanged: _onChanged,
-            focusNode: _focusNode,
-            obscureText:
-                _obscureText, // Use obscureText property for password field
-            onTap: () {
-              _focusNode.requestFocus();
-            },
-            onEditingComplete: () {
-              _focusNode.unfocus();
-            },
-            decoration: InputDecoration(
-              hintText: widget.hintText,
-              hintStyle: AppFonts.body2(
-                color: hintTextColor,
+            border: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: borderColor,
+                width: 1.0,
               ),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-              border: InputBorder.none,
-              suffixIcon: isTyping
-                  ? IconButton(
-                      onPressed: _togglePasswordVisibility,
-                      icon: Icon(
-                        color: AppColors.grayscale90,
-                        _obscureText
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined,
-                      ),
-                    )
-                  : null,
+              borderRadius: BorderRadius.circular(24.0),
             ),
-            style: AppFonts.body2(
-              color: AppColors.grayscale90,
-            )
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            suffixIcon: isTyping
+                ? IconButton(
+                    onPressed: _togglePasswordVisibility,
+                    icon: Icon(
+                      color: AppColors.grayscale90,
+                      _obscureText
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
+                    ),
+                  )
+                : null,
           ),
+          style: AppFonts.body2(
+            color: AppColors.grayscale90,
+          )
         ),
         if (widget.errorMessage != null)
           Padding(

@@ -4,8 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
-import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
-import '../../data/classes/staff_member.dart';
+import 'package:sulala_upgrade/src/data/providers/user_providers.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
@@ -49,7 +48,6 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
 
   @override
   Widget build(BuildContext context) {
-    final staff = ref.watch(staffProvider);
     final requests = ref.watch(collaborationRequestsProvider);
 
     return SafeArea(
@@ -113,85 +111,91 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
                 ),
                 isLoading
                     ? const Center(child: ShimmerListOfStaff())
-                    : staff.isEmpty
-                        ? Center(
-                            child: Column(
-                            children: [
-                              SizedBox(
-                                  height: 120 *
-                                      SizeConfig.heightMultiplier(context)),
-                              Image.asset(
-                                'assets/illustrations/farmer.png',
-                                fit: BoxFit.cover,
-                              ),
-                              SizedBox(
-                                  height: 44 *
-                                      SizeConfig.heightMultiplier(context)),
-                              Text(
-                                'You have no staff'.tr,
-                                style: AppFonts.headline3(
-                                    color: AppColors.grayscale90),
-                              ),
-                              SizedBox(
-                                  height: 90 *
-                                      SizeConfig.heightMultiplier(context)),
-                              SizedBox(
-                                  width:
-                                      154 * SizeConfig.widthMultiplier(context),
-                                  height:
-                                      52 * SizeConfig.heightMultiplier(context),
-                                  child: PrimaryButton(
-                                      text: 'Invite a Member'.tr,
-                                      onPressed: () {
-                                        _showInviteDrawUp(
-                                            context,
-                                            SizeConfig.heightMultiplier(
-                                                context),
-                                            SizeConfig.widthMultiplier(
-                                                context));
-                                      }))
-                            ],
-                          ))
-                        : ListView.builder(
-                            primary: false,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: staff.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                leading: CircleAvatar(
-                                  backgroundColor: Colors.transparent,
-                                  radius:
-                                      24 * SizeConfig.widthMultiplier(context),
-                                  backgroundImage: staff[index].image,
-                                ),
-                                title: Text(
-                                  staff[index].name,
-                                  style: AppFonts.headline3(
-                                      color: AppColors.grayscale90),
-                                ),
-                                subtitle: Text(staff[index].role,
-                                    style: AppFonts.body2(
-                                        color: AppColors.grayscale70)),
-                                trailing: const Icon(
-                                  Icons.chevron_right_rounded,
-                                  color: AppColors.grayscale50,
-                                  size: 30,
-                                ),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => StaffDetailsPage(
-                                        staffMemberId: staff[index].id!,
-                                      ),
+                    :  ref.watch(staffProvider).when(
+                          error: (error, trace) => Text('Error: $error'),
+                          loading: () => const Center(child: ShimmerListOfStaff()),
+                          data: (staff) {
+                            return staff.isEmpty
+                                ? Center(
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                        height: 120 *
+                                            SizeConfig.heightMultiplier(context)),
+                                    Image.asset(
+                                      'assets/illustrations/farmer.png',
+                                      fit: BoxFit.cover,
                                     ),
+                                    SizedBox(
+                                        height: 44 *
+                                            SizeConfig.heightMultiplier(context)),
+                                    Text(
+                                      'You have no staff'.tr,
+                                      style: AppFonts.headline3(
+                                          color: AppColors.grayscale90),
+                                    ),
+                                    SizedBox(
+                                        height: 90 *
+                                            SizeConfig.heightMultiplier(context)),
+                                    SizedBox(
+                                        width:
+                                        154 * SizeConfig.widthMultiplier(context),
+                                        height:
+                                        52 * SizeConfig.heightMultiplier(context),
+                                        child: PrimaryButton(
+                                            text: 'Invite a Member'.tr,
+                                            onPressed: () {
+                                              _showInviteDrawUp(
+                                                  context,
+                                                  SizeConfig.heightMultiplier(
+                                                      context),
+                                                  SizeConfig.widthMultiplier(
+                                                      context));
+                                            }))
+                                  ],
+                                ))
+                                : ListView.builder(
+                                primary: false,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: staff.length,
+                                itemBuilder: (context, index) {
+                                  return ListTile(
+                                    contentPadding: EdgeInsets.zero,
+                                    leading: CircleAvatar(
+                                      backgroundColor: Colors.transparent,
+                                      radius:
+                                          24 * SizeConfig.widthMultiplier(context),
+                                      backgroundImage: staff[index].image,
+                                    ),
+                                    title: Text(
+                                      staff[index].name,
+                                      style: AppFonts.headline3(
+                                          color: AppColors.grayscale90),
+                                    ),
+                                    subtitle: Text(staff[index].role,
+                                        style: AppFonts.body2(
+                                            color: AppColors.grayscale70)),
+                                    trailing: const Icon(
+                                      Icons.chevron_right_rounded,
+                                      color: AppColors.grayscale50,
+                                      size: 30,
+                                    ),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => StaffDetailsPage(
+                                            staffMemberId: staff[index].id!,
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   );
                                 },
                               );
-                            },
-                          ),
+                          }
+                        ),
                 requests.isEmpty || isLoading
                     ? const SizedBox.shrink()
                     : Column(
@@ -234,10 +238,8 @@ class _ListOfStaffState extends ConsumerState<ListOfStaff> {
                                     ElevatedButton(
                                       onPressed: () {
                                         // Handle 'Yes' button click
-                                        ref.read(staffProvider.notifier).update(
-                                            (state) =>
-                                                List<StaffMember>.from(state)
-                                                  ..add(requests[index]));
+                                        ref.read(staffProvider.notifier).addMember(requests[index]);
+
                                         ref
                                             .read(collaborationRequestsProvider
                                                 .notifier)

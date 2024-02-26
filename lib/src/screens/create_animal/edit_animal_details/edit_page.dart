@@ -8,7 +8,7 @@ import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/widgets/animal_info_modal_sheets.dart/animal_tags_modal.dart';
 import '../../../data/classes/breeding_event_variables.dart';
 import '../../../data/classes/ovi_variables.dart';
-import '../../../data/providers/animal_list_provider.dart';
+import '../../../data/providers/animal_providers.dart';
 import '../../../data/riverpod_globals.dart';
 import '../../../theme/colors/colors.dart';
 import '../../../theme/fonts/fonts.dart';

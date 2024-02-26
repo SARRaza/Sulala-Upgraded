@@ -8,7 +8,7 @@ import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/screens/create_animal/sar_animal_filters.dart';
 import 'package:sulala_upgrade/src/widgets/pages/main_widgets/navigation_bar_reg_mode.dart';
 import 'package:sulala_upgrade/src/widgets/styled_dismissible.dart';
-import '../../data/providers/animal_list_provider.dart';
+import '../../data/providers/animal_providers.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
@@ -166,7 +166,7 @@ class _UserListOfAnimals extends ConsumerState<UserListOfAnimals> {
                   ButtonSearchBar(
                     onChange: _onSearchChanged,
                     hintText: "Search by name or ID".tr,
-                    icon: Icons.filter_alt_outlined,
+                    showFilterIcon: true,
                     // controller: _searchController,
                     onIconPressed: () {
                       Navigator.push(

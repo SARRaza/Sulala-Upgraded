@@ -7,7 +7,7 @@ import '../../../data/classes/breed_child_item.dart';
 import '../../../data/classes/main_animal_dam.dart';
 import '../../../data/classes/main_animal_sire.dart';
 import '../../../data/classes/ovi_variables.dart';
-import '../../../data/providers/animal_list_provider.dart';
+import '../../../data/providers/animal_providers.dart';
 import '../../../widgets/animal_info_modal_sheets.dart/animal_dam_modal.dart';
 import '../../../widgets/animal_info_modal_sheets.dart/animal_sire_modal.dart';
 import 'family_tree_item.dart';

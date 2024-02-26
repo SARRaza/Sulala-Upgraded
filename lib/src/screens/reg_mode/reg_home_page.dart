@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
-import 'package:sulala_upgrade/src/data/providers/animal_list_provider.dart';
+import 'package:sulala_upgrade/src/data/providers/animal_providers.dart';
 import 'package:sulala_upgrade/src/screens/create_animal/owned_animal_detail_reg_mode.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../data/classes/reminder_item.dart';

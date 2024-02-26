@@ -143,7 +143,7 @@ class _SearchPageHouseFarmState extends State<SearchPageHouseFarm> {
               child: ButtonSearchBar(
                 onChange: _onSearchChanged,
                 hintText: "Search by name or ID".tr,
-                icon: Icons.filter_alt_outlined,
+                showFilterIcon: false,
                 controller: _searchController,
               ),
             ),

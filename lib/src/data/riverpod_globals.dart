@@ -2,13 +2,12 @@ import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sulala_upgrade/src/data/providers/animal_list_provider.dart';
+import 'package:sulala_upgrade/src/data/providers/animal_providers.dart';
 import 'classes/breed_child_item.dart';
 import 'classes/breeding_partner.dart';
 import 'classes/main_animal_dam.dart';
 import 'classes/main_animal_sire.dart';
 import 'classes/reminder_item.dart';
-import 'classes/staff_member.dart';
 
 // Join Now Global Variables
 final whoOwnTheFarmProvider = StateProvider<String>((ref) => '');
@@ -352,55 +351,6 @@ final breedingChildrenDetailsProvider =
 final remindersProvider = StateProvider<List<ReminderItem>>((ref) => []);
 
 final breedingPartnerProvider = StateProvider<BreedingPartner?>((ref) => null);
-
-final staffProvider = StateProvider<List<StaffMember>>((ref) => [
-      StaffMember(
-          id: 1,
-          image: const AssetImage('assets/avatars/120px/Staff1.png'),
-          name: 'Paul Rivera',
-          role: 'Viewer',
-          email: 'paul@example.com',
-          phoneNumber: '+1 234 567 890',
-          address: 'United Arab Emirates'),
-      StaffMember(
-          id: 2,
-          image: const AssetImage('assets/avatars/120px/Staff2.png'),
-          name: 'Rebecca Wilson',
-          role: 'Helper',
-          email: 'paul@example.com',
-          phoneNumber: '+1 234 567 890',
-          address: 'United Arab Emirates'),
-    ]);
-final totalStaffProvider = Provider<int>((ref) {
-  return ref.watch(staffProvider).length;
-});
-final collaborationRequestsProvider =
-    StateProvider<List<StaffMember>>((ref) => [
-          StaffMember(
-              id: 3,
-              image: const AssetImage('assets/avatars/120px/Staff3.png'),
-              name: 'Patricia Williams',
-              role: 'Viewer',
-              email: 'paul@example.com',
-              phoneNumber: '+1 234 567 890',
-              address: 'United Arab Emirates'),
-          StaffMember(
-              id: 4,
-              image: const AssetImage('assets/avatars/120px/Staff1.png'),
-              name: 'Scott Simmons',
-              role: 'Viewer',
-              email: 'paul@example.com',
-              phoneNumber: '+1 234 567 890',
-              address: 'United Arab Emirates'),
-          StaffMember(
-              id: 5,
-              image: const AssetImage('assets/avatars/120px/Staff2.png'),
-              name: 'Lee Hall',
-              role: 'Viewer',
-              email: 'paul@example.com',
-              phoneNumber: '+1 234 567 890',
-              address: 'United Arab Emirates'),
-        ]);
 
 final passwordValidationProvider = Provider.autoDispose<bool>((ref) {
   final password = ref.watch(passwordProvider);

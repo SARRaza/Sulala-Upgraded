@@ -1,28 +1,27 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
+import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_text_button.dart';
 import '../../widgets/inputs/otp_fields/otp_field.dart';
+import '../../widgets/pages/main_widgets/navigation_bar_reg_mode.dart';
 
-class ConfirmOTPPage extends StatefulWidget {
-  final String? phoneNumber;
-  final String? emailAddress;
+class ConfirmOTPPage extends ConsumerStatefulWidget {
 
   const ConfirmOTPPage({
     Key? key,
-    this.phoneNumber,
-    this.emailAddress,
   }) : super(key: key);
 
   @override
-  State<ConfirmOTPPage> createState() => _ConfirmOTPPageState();
+  ConsumerState<ConfirmOTPPage> createState() => _ConfirmOTPPageState();
 }
 
-class _ConfirmOTPPageState extends State<ConfirmOTPPage> {
+class _ConfirmOTPPageState extends ConsumerState<ConfirmOTPPage> {
   late int _remainingSeconds;
   late Timer _timer;
   bool isResendButtonVisible = false;
@@ -117,6 +116,9 @@ class _ConfirmOTPPageState extends State<ConfirmOTPPage> {
   }
 
   Widget _buildContent() {
+    final phoneNumber = ref.watch(phoneNumberProvider);
+    final email = ref.watch(emailAddressProvider);
+    final countryCode = ref.watch(selectedCountryCodeProvider);
     return Padding(
       padding: EdgeInsets.only(
         left: SizeConfig.widthMultiplier(context) * 19,
@@ -137,17 +139,19 @@ class _ConfirmOTPPageState extends State<ConfirmOTPPage> {
             TextSpan(
               children: [
                 TextSpan(
-                  text: widget.phoneNumber != null
+                  text: phoneNumber.isNotEmpty
                       ? "We sent a verification code on the following\nPhone number: "
-                          .tr
+                      .tr
                       : "We sent a verification code on the following\nEmail address: "
-                          .tr,
+                      .tr,
                   style: AppFonts.body2(color: AppColors.grayscale70),
                 ),
                 TextSpan(
-                  text: widget.phoneNumber != null
-                      ? widget.phoneNumber!
-                      : widget.emailAddress,
+                  text: phoneNumber.isNotEmpty ? countryCode : null,
+                  style: AppFonts.body2(color: AppColors.primary50),
+                ),
+                TextSpan(
+                  text: phoneNumber.isNotEmpty ? phoneNumber : email,
                   style: AppFonts.body2(color: AppColors.primary50),
                 ),
               ],
@@ -230,9 +234,7 @@ class _ConfirmOTPPageState extends State<ConfirmOTPPage> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => ConfirmOTPPage(
-          phoneNumber: widget.phoneNumber,
-        ),
+        builder: (context) => const ConfirmOTPPage(),
       ),
     );
   }
@@ -246,7 +248,8 @@ class _ConfirmOTPPageState extends State<ConfirmOTPPage> {
     } else {
       setState(() {
         buttonStatus = PrimaryButtonStatus.loading;
-        Navigator.of(context).pushNamed('/');
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => const NavigationBarRegMode()));
       });
     }
   }

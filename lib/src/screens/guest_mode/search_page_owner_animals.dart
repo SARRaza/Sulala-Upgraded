@@ -201,7 +201,6 @@ class _SearchPageOwnerAnimalsState
               ButtonSearchBar(
                 onChange: _searchAnimals,
                 hintText: "Search by name or ID".tr,
-                icon: Icons.filter_alt_outlined,
                 controller: _searchController,
                 onIconPressed: () {
                   Navigator.push(

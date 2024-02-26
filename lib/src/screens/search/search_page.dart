@@ -60,54 +60,72 @@ class _SearchPageState extends State<SearchPage> {
   ];
   List<Map<String, dynamic>> animals = [
     {
+      'type': 'Mammal',
+      'diet': 'Herbivore',
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Horse',
       'genInfo':
           'The horse is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
+      'type': 'Mammal',
+      'diet': 'Herbivore',
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Cow',
       'genInfo':
           'The cow is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
+      'type': 'Mammal',
+      'diet': 'Herbivore',
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Ox',
       'genInfo':
           'The ox is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
+      'type': 'Mammal',
+      'diet': 'Herbivore',
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Sheep',
       'genInfo':
           'The sheep is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
+      'type': 'Mammal',
+      'diet': 'Herbivore',
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Bull',
       'genInfo':
           'The bull is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
+      'type': 'Mammal',
+      'diet': 'Herbivore',
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Bull',
       'genInfo':
           'The bull is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
+      'type': 'Mammal',
+      'diet': 'Herbivore',
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Bull',
       'genInfo':
           'The bull is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
+      'type': 'Mammal',
+      'diet': 'Herbivore',
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Bull',
       'genInfo':
           'The bull is a domesticated, one-toed, hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse has evolved over the past 45 to 55 million years from a small multi-toed creature, close to Eohippus, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BCE, and their domestication is believed to have been widespread by 3000 BC'
     },
     {
+      'type': 'Mammal',
+      'diet': 'Herbivore',
       'imagePath': 'assets/avatars/120px/Staff3.png',
       'title': 'Bull',
       'genInfo':
@@ -173,7 +191,7 @@ class _SearchPageState extends State<SearchPage> {
           title: option['title'],
           genInfo: option['genInfo'],
           animalType: option['type'],
-          animalDiet: option['animalDiet'],
+          animalDiet: option['diet'],
         ),
       ),
     );

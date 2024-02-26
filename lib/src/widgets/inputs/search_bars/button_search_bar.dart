@@ -6,7 +6,7 @@ import '../../../theme/fonts/fonts.dart';
 class ButtonSearchBar extends StatefulWidget {
   final ValueChanged<String> onChange;
   final String hintText;
-  final IconData icon;
+  final bool? showFilterIcon;
   final VoidCallback? onIconPressed;
   final TextEditingController? controller;
 
@@ -14,7 +14,7 @@ class ButtonSearchBar extends StatefulWidget {
     Key? key,
     required this.onChange,
     required this.hintText,
-    required this.icon,
+    this.showFilterIcon = true,
     this.onIconPressed,
     this.controller,
   }) : super(key: key);
@@ -101,19 +101,20 @@ class _ButtonSearchBarState extends State<ButtonSearchBar> {
               textAlignVertical: TextAlignVertical.center,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: InkWell(
-              onTap: widget.onIconPressed,
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              child: const Image(
-                image: AssetImage(
-                  'assets/icons/frame/24px/filter.png',
+          if (widget.showFilterIcon == true)
+            Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: InkWell(
+                onTap: widget.onIconPressed,
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                child: const Image(
+                  image: AssetImage(
+                    'assets/icons/frame/24px/filter.png',
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );

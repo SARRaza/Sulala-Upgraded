@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart';
 import '../../data/classes/breeding_partner.dart';
-import '../../data/providers/animal_list_provider.dart';
-import '../../data/providers/breeding_event_list_provider.dart';
+import '../../data/providers/animal_providers.dart';
+import '../../data/providers/breeding_event_providers.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';

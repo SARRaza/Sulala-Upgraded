@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:sulala_upgrade/src/data/classes/medical_checkup_details.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
-import 'package:sulala_upgrade/src/data/providers/medical_checkup_list_provider.dart';
+import 'package:sulala_upgrade/src/data/providers/medical_checkup_providers.dart';
 import 'package:sulala_upgrade/src/data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';

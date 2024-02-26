@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart';
 import 'package:sulala_upgrade/src/widgets/styled_dismissible.dart';
-import '../../data/providers/animal_list_provider.dart';
-import '../../data/providers/breeding_event_list_provider.dart';
+import '../../data/providers/animal_providers.dart';
+import '../../data/providers/breeding_event_providers.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';

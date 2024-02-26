@@ -236,7 +236,7 @@ class _OTPPageState extends ConsumerState<OTPPage> {
     );
   }
 
-  void _onConfirmButtonPressed() {
+  Future<void> _onConfirmButtonPressed() async {
     if (otpErrorState) {
       setState(() {
         buttonStatus = PrimaryButtonStatus.disabled;
@@ -245,8 +245,13 @@ class _OTPPageState extends ConsumerState<OTPPage> {
     } else {
       setState(() {
         buttonStatus = PrimaryButtonStatus.loading;
-        Navigator.of(context).pushNamed('/create_password');
       });
+      await Navigator.of(context).pushNamed('/create_password');
+      if(mounted) {
+        setState(() {
+          buttonStatus = PrimaryButtonStatus.idle;
+        });
+      }
     }
   }
 }

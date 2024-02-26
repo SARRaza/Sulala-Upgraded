@@ -14,7 +14,7 @@ import '../../data/classes/main_animal_sire.dart';
 import '../../data/classes/ovi_variables.dart';
 import '../../data/classes/reminder_item.dart';
 import '../../data/place_holders.dart';
-import '../../data/providers/animal_list_provider.dart';
+import '../../data/providers/animal_providers.dart';
 import '../../data/riverpod_globals.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';

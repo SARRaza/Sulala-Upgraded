@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:sulala_upgrade/src/data/providers/medical_checkup_list_provider.dart';
+import 'package:sulala_upgrade/src/data/providers/medical_checkup_providers.dart';
 import 'package:sulala_upgrade/src/widgets/dialogs/confirm_delete_dialog.dart';
 import '../../data/classes/medical_checkup_details.dart';
 import '../../data/globals.dart';

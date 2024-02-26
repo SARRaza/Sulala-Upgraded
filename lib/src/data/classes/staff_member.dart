@@ -8,6 +8,9 @@ class StaffMember {
   final String email;
   final String phoneNumber;
   final String address;
+  final bool? canEditGeneralInfo;
+  final bool? canEditBreedingInfo;
+  final bool? canEditMedicalInfo;
 
   StaffMember(
       {this.id,
@@ -16,7 +19,10 @@ class StaffMember {
       required this.role,
       required this.email,
       required this.phoneNumber,
-      required this.address});
+      required this.address,
+      this.canEditGeneralInfo,
+      this.canEditBreedingInfo,
+      this.canEditMedicalInfo});
 
   StaffMember copyWith({
     int? id,
@@ -25,7 +31,10 @@ class StaffMember {
     String? role,
     String? email,
     String? phoneNumber,
-    String? address
+    String? address,
+    bool? canEditGeneralInfo,
+    bool? canEditBreedingInfo,
+    bool? canEditMedicalInfo,
   }) {
     return StaffMember(
         id: id ?? this.id,
@@ -34,6 +43,10 @@ class StaffMember {
         role: role ?? this.role,
         email: email ?? this.email,
         phoneNumber: phoneNumber ?? this.phoneNumber,
-        address: address ?? this.address);
+        address: address ?? this.address,
+        canEditGeneralInfo: canEditGeneralInfo ?? this.canEditGeneralInfo,
+        canEditBreedingInfo: canEditBreedingInfo ?? this.canEditBreedingInfo,
+        canEditMedicalInfo: canEditMedicalInfo ?? this.canEditMedicalInfo
+    );
   }
 }

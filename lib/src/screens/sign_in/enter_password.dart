@@ -28,9 +28,7 @@ class _EnterPasswordState extends State<EnterPassword> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ConfirmOTPPage(
-          emailAddress: widget.emailAddress.toString(),
-        ),
+        builder: (context) => const ConfirmOTPPage(),
       ),
     );
   }
@@ -59,19 +57,22 @@ class _EnterPasswordState extends State<EnterPassword> {
             right: SizeConfig.widthMultiplier(context) * 19,
             top: SizeConfig.heightMultiplier(context) * 40,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Enter Password".tr,
-                style: AppFonts.title2(color: AppColors.grayscale90),
-              ),
-              SizedBox(
-                height: SizeConfig.heightMultiplier(context) * 40,
-              ),
-              _buildPasswordInputField(),
-              _buildConfirmPasswordInputField(),
-            ],
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Enter Password".tr,
+                  style: AppFonts.title2(color: AppColors.grayscale90),
+                ),
+                SizedBox(
+                  height: SizeConfig.heightMultiplier(context) * 40,
+                ),
+                _buildPasswordInputField(),
+                _buildConfirmPasswordInputField(),
+              ],
+            ),
           ),
         ),
         floatingActionButton: SizedBox(

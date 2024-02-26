@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:sulala_upgrade/src/data/providers/surgery_list_provider.dart';
+import 'package:sulala_upgrade/src/data/providers/surgery_providers.dart';
 import 'package:sulala_upgrade/src/widgets/dialogs/confirm_delete_dialog.dart';
 import '../../data/classes/surgery_details.dart';
 import '../../data/globals.dart';
