@@ -16,6 +16,7 @@ import '../../widgets/animal_info_modal_sheets.dart/animal_children_modal.dart';
 import '../../widgets/controls_and_buttons/buttons/navigate_button.dart';
 import '../../widgets/controls_and_buttons/buttons/primary_button.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_text_button.dart';
+import '../../widgets/dialogs/confirm_delete_dialog.dart';
 import '../../widgets/inputs/date_fields/primary_date_field.dart';
 import '../../widgets/inputs/paragraph_text_fields/paragraph_text_field.dart';
 import '../../widgets/inputs/text_fields/primary_text_field.dart';
@@ -613,11 +614,18 @@ class _EditBreedingEventDetailsState
     }
   }
 
-  void _deleteEvent(id) {
-    ref
+  Future<void> _deleteEvent(id) async {
+    final confirmed = await showDialog(
+        context: context,
+        builder: (context) => ConfirmDeleteDialog(
+            content: "Are you sure you want to delete the event".tr));
+    if(confirmed) {
+      ref
         .read(breedingEventListProvider(widget.animalId).notifier)
         .removeEvent(id);
-
-    Navigator.pop(context, {'eventDeleted': true});
+      if(mounted) {
+        Navigator.pop(context, {'eventDeleted': true});
+      }
+    }
   }
 }

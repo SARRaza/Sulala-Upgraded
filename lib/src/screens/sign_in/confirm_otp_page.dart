@@ -99,7 +99,7 @@ class _ConfirmOTPPageState extends ConsumerState<ConfirmOTPPage> {
           child: Column(
             children: [
               if (isResendButtonVisible) _buildResendButton(),
-              if (!isResendButtonVisible) _buildCountdown(),
+              if (!isResendButtonVisible && _timer.isActive) _buildCountdown(),
               SizedBox(
                 height: SizeConfig.heightMultiplier(context) * 16,
               ),

@@ -51,7 +51,13 @@ class _SignUpState extends ConsumerState<SignUp>
       MaterialPageRoute(
         builder: (context) => const OTPPage(),
       ),
-    );
+    ).then((value) {
+      if (mounted) {
+        setState(() {
+          buttonStatus = PrimaryButtonStatus.idle;
+        });
+      }
+    });
   }
 
   void _navigateToEmailOTPPage(Map<String, dynamic> option) {
@@ -60,7 +66,13 @@ class _SignUpState extends ConsumerState<SignUp>
       MaterialPageRoute(
         builder: (context) => const OTPPage(),
       ),
-    );
+    ).then((value) {
+      if (mounted) {
+        setState(() {
+          buttonStatus = PrimaryButtonStatus.idle;
+        });
+      }
+    });
   }
 
   @override

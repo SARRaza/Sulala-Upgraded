@@ -487,7 +487,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
                             children: [
                               lastEvent?.eggsNumber != null
                                   ? Text(
-                                      lastEvent!.eventNumber,
+                                      '${lastEvent!.eggsNumber}',
                                       style: AppFonts.body2(
                                           color: AppColors.grayscale90),
                                     )
@@ -1108,6 +1108,7 @@ class _MammalsMedicalState extends ConsumerState<MammalsMedical> {
       context: context,
       backgroundColor: Colors.white,
       showDragHandle: true,
+      isScrollControlled: true,
       builder: (BuildContext context) {
         return EggsNumberModal(
           eggsNumber: event.eggsNumber ?? 0,

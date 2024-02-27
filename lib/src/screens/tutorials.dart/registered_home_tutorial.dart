@@ -175,7 +175,7 @@ class _RegHomeScreenTutorial extends State<RegHomeScreenTutorial> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         SizedBox(
-                          width: 250, // Adjust the width of the chart
+                          width: 230, // Adjust the width of the chart
                           height: 250, // Adjust the height of the chart
                           child: SfCircularChart(
                             series: <CircularSeries>[
