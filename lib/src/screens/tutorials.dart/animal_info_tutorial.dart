@@ -1,23 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:intl/intl.dart';
 import 'package:showcaseview/showcaseview.dart';
+import 'package:sulala_upgrade/src/data/classes/breeding_event_variables.dart';
 
+import 'package:sulala_upgrade/src/data/globals.dart';
+
+import '../../data/classes/ovi_variables.dart';
+import '../../data/place_holders.dart';
+import '../../theme/colors/colors.dart';
+import '../../theme/fonts/fonts.dart';
+import '../../widgets/controls_and_buttons/buttons/tutorial_next_button.dart';
+import '../../widgets/controls_and_buttons/tags/custom_tags.dart';
+import '../../widgets/controls_and_buttons/text_buttons/primary_text_button.dart';
+import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
+import '../../widgets/inputs/paragraph_text_fields/medical_needs_paragraph.dart';
+import '../../widgets/other/one_information_block.dart';
+import '../../widgets/other/two_information_block.dart';
 import '../../widgets/pages/main_widgets/navigation_bar_guest_mode.dart';
+import '../../widgets/pages/owned_animal/breeding_info.dart';
+import '../../widgets/pages/owned_animal/general_info_animal_widget.dart';
 
 class AnimalInfoTutorialPage extends StatefulWidget {
-  const AnimalInfoTutorialPage({super.key});
+  const AnimalInfoTutorialPage({Key? key}) : super(key: key);
 
   @override
-  State<AnimalInfoTutorialPage> createState() => _AnimalInfoTutorialPage();
+  State<AnimalInfoTutorialPage> createState() => _AnimalInfoTutorialPageState();
 }
 
-class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
+class _AnimalInfoTutorialPageState extends State<AnimalInfoTutorialPage>
     with SingleTickerProviderStateMixin {
-  final TextEditingController _medicalNeedsController = TextEditingController();
-
   late final TabController _tabController;
-
+  bool editMode = false;
+  late final OviVariables oviDetails;
   final GlobalKey _generalOverview = GlobalKey();
   final GlobalKey _clickBreeding = GlobalKey();
   final GlobalKey _clickMedical = GlobalKey();
@@ -26,15 +41,18 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
   final GlobalKey _addMedicalNeeds = GlobalKey();
   final GlobalKey _editButton = GlobalKey();
   final GlobalKey _gotoHomepage = GlobalKey();
-  BuildContext? infoContext;
+
+  bool isMammalEditMode = false;
+
+  final _medicalNeedsController = TextEditingController();
+  BuildContext? showCaseContext;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    _medicalNeedsController.text = "";
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ShowCaseWidget.of(infoContext!).startShowCase([
+      ShowCaseWidget.of(showCaseContext!).startShowCase([
         _generalOverview,
         _clickBreeding,
         _breedingOverview,
@@ -45,979 +63,932 @@ class _AnimalInfoTutorialPage extends State<AnimalInfoTutorialPage>
         _gotoHomepage
       ]);
     });
+    oviDetails = OviVariables(
+        id: 25811,
+        selectedFilters: [],
+        animalName: 'Whispering Willow',
+        selectedOviSire: null,
+        selectedOviDam: null,
+        dateOfBirth: DateTime.now().subtract(const Duration(days: 200)),
+        dateOfSonar: null,
+        expDlvDate: null,
+        incubationDate: null,
+        selectedOviGender: 'Female',
+        keptInOval: '',
+        notes: '',
+        selectedOviDates: {},
+        selectedAnimalBreed: "Quarter Horse",
+        selectedAnimalSpecies: "Horse",
+        selectedAnimalType: "Mammal",
+        selectedOviChips: ["Adopted", "Donated"],
+        selectedOviImage: AssetImage(speciesImages['Horse']!),
+        layingFrequency: '',
+        eggsPerMonth: '',
+        selectedBreedingStage: 'Ready For Breeding',
+        shouldAddAnimal: false,
+        medicalNeeds: null,
+        breedingEventNumber: '',
+        breedSire: '',
+        breedDam: '',
+        breedChildren: [],
+        breedingDate: null,
+        breedDeliveryDate: null,
+        breedingNotes: '',
+        shouldAddEvent: false,
+        dateOfLayingEggs: null);
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
-    _medicalNeedsController.dispose();
     super.dispose();
+    _tabController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ShowCaseWidget(builder: Builder(
-      builder: ((context) {
-        infoContext = context;
-        return Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                "assets/graphic/Animal_p.png",
-              ),
-              fit: BoxFit.fill,
-            ),
-          ),
-          child: Scaffold(
-            backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              leading: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                  ),
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: Colors.black,
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      // Handle back button press
-                      // Add your code here
-                    },
-                  ),
-                ),
-              ),
-              actions: [
-                Showcase(
-                  key: _editButton,
-                  targetBorderRadius: const BorderRadius.all(
-                    Radius.circular(50),
-                  ),
-                  tooltipBackgroundColor:
-                      const Color.fromARGB(255, 251, 247, 206),
-                  descTextStyle: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                  description: 'Add & Edit Information To Your Animal'.tr,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                      ),
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.edit,
-                          color: Colors.black,
-                        ),
-                        onPressed: () {
-                          // Handle edit button press
-                          // Add your code here
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            body: SingleChildScrollView(
-              child: Container(
-                margin: const EdgeInsets.only(top: 100),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                  ),
-                ),
-                child: Column(
+    return ShowCaseWidget(
+      builder: Builder(
+        builder: (context) {
+          showCaseContext = context;
+          return SafeArea(
+            child: Scaffold(
+                resizeToAvoidBottomInset: false,
+                body: Stack(
                   children: [
-                    const SizedBox(height: 20),
                     Align(
                       alignment: Alignment.topCenter,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          FractionalTranslation(
-                            translation: const Offset(0.0, -0.6),
-                            child: CircleAvatar(
-                              radius: MediaQuery.of(context).size.width * 0.16,
-                              backgroundColor: Colors.grey[200],
-                              child: Image.asset(
-                                'assets/avatars/120px/Horse.png',
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                          ),
-                        ],
+                      child: SizedBox(
+                        width: SizeConfig.widthMultiplier(context) * 375,
+                        child: Image.asset(
+                          "assets/graphic/Animal_p.png",
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ),
-                    Transform.translate(
-                      offset: const Offset(0.0,
-                          -60.0), // Adjust the Y offset to move the text up
-                      child: Column(
-                        children: [
-                          const Text(
-                            'Suhail',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 25,
+                    Positioned(
+                      top: 8.0,
+                      left: 8.0,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                            color: AppColors.grayscale10, shape: BoxShape.circle),
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          icon: Icon(
+                            Icons.arrow_back_rounded,
+                            color: Colors.black,
+                            size: SizeConfig.widthMultiplier(context) * 24,
+                          ),
+                          onPressed: () {
+                            // Handle close button press
+                          },
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 8.0,
+                      right: 8.0,
+                      child: Container(
+                        width: SizeConfig.widthMultiplier(context) * 40,
+                        decoration: const BoxDecoration(
+                            color: AppColors.grayscale10, shape: BoxShape.circle),
+                        child: Showcase(
+                          key: _editButton,
+                          targetBorderRadius: const BorderRadius.all(
+                            Radius.circular(50),
+                          ),
+                          tooltipBackgroundColor:
+                          const Color.fromARGB(255, 251, 247, 206),
+                          descTextStyle: const TextStyle(
+                              fontSize: 18,
                               color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                          description: 'Add & Edit Information To Your Animal'.tr,
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            icon: Image.asset(
+                                'assets/icons/frame/24px/edit_icon_button.png'),
+                            onPressed: () {},
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: SizeConfig.heightMultiplier(context) * 185,
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(
+                              SizeConfig.heightMultiplier(context) * 32,
                             ),
+                            topRight: Radius.circular(
+                                SizeConfig.widthMultiplier(context) * 32),
                           ),
-                          const Text(
-                            'ID# 12345',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 16,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-
-                          const SizedBox(height: 10),
-                          IntrinsicWidth(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 255, 242, 122),
-                                borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: const SizedBox(), // Add your content here
+                      ),
+                    ),
+                    Center(
+                      child: FractionalTranslation(
+                        translation:
+                            Offset(0, SizeConfig.heightMultiplier(context) * 0.15),
+                        child: Expanded(
+                          child: Column(
+                            children: [
+                              GestureDetector(
+                                onTap: () {},
+                                child: CircleAvatar(
+                                  radius: MediaQuery.of(context).size.width * 0.16,
+                                  backgroundColor: Colors.grey[100],
+                                  backgroundImage: oviDetails.selectedOviImage,
+                                  child: oviDetails.selectedOviImage == null
+                                      ? const Icon(
+                                          Icons.camera_alt_outlined,
+                                          size: 50,
+                                          color: Colors.grey,
+                                        )
+                                      : null,
+                                ),
                               ),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
-                              child: Row(
-                                children: [
-                                  const Icon(Icons.home, color: Colors.black),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    'My Farm'.tr,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ],
+                              SizedBox(
+                                height: SizeConfig.heightMultiplier(context) * 16,
                               ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Container(
-                            width: double.infinity,
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 10),
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            child: TabBar(
-                              controller: _tabController,
-                              indicator: BoxDecoration(
-                                color: const Color.fromARGB(255, 36, 86, 38),
-                                borderRadius: BorderRadius.circular(50),
+                              if (editMode == true)
+                                Row(
+                                  children: [
+                                    Text(
+                                      oviDetails.animalName,
+                                      style: AppFonts.title4(
+                                          color: AppColors.grayscale90),
+                                    ),
+                                  ],
+                                ),
+                              Text(
+                                oviDetails.animalName,
+                                style: AppFonts.title4(color: AppColors.grayscale90),
                               ),
-                              indicatorSize: TabBarIndicatorSize.tab,
-                              indicatorColor: Colors.transparent,
-                              labelColor: Colors.white,
-                              unselectedLabelColor: Colors.grey,
-                              tabs: [
-                                Tab(
-                                  text: 'General'.tr,
-                                ),
-                                Showcase(
-                                  key: _clickBreeding,
-                                  targetBorderRadius: const BorderRadius.all(
-                                    Radius.circular(50),
-                                  ),
-                                  tooltipBackgroundColor:
-                                      const Color.fromARGB(255, 251, 247, 206),
-                                  descTextStyle: const TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                  description: 'Click Here'.tr,
-                                  child: SizedBox(
-                                    width: double
-                                        .infinity, // Make the container take the full width
-                                    child: Tab(
-                                      text: 'Breeding'.tr,
+                              Text(
+                                "ID #${oviDetails.id}",
+                                style: AppFonts.body2(color: AppColors.grayscale70),
+                              ),
+                              SizedBox(
+                                height: SizeConfig.heightMultiplier(context) * 16,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: SizeConfig.widthMultiplier(context) * 16,
+                                    right: SizeConfig.widthMultiplier(context) * 16),
+                                child: Column(
+                                  children: [
+                                    Wrap(
+                                      alignment: WrapAlignment.center,
+                                      spacing: 8.0,
+                                      runSpacing: 8.0,
+                                      children: oviDetails.selectedOviChips.isEmpty
+                                          ? [
+                                              CustomTag(
+                                                label: 'Add+'.tr,
+                                                selected:
+                                                    true, // Since these are selected chips
+                                                onTap: () {},
+                                              )
+                                            ]
+                                          : oviDetails.selectedOviChips
+                                              .take(2)
+                                              .map((chip) {
+                                              return CustomTag(
+                                                label: chip,
+                                                selected:
+                                                    true, // Since these are selected chips
+                                                onTap: () {},
+                                              );
+                                            }).toList(),
                                     ),
-                                  ),
-                                ),
-                                Showcase(
-                                  key: _clickMedical,
-                                  targetBorderRadius: const BorderRadius.all(
-                                    Radius.circular(50),
-                                  ),
-                                  tooltipBackgroundColor:
-                                      const Color.fromARGB(255, 251, 247, 206),
-                                  descTextStyle: const TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                  description: 'Click Here'.tr,
-                                  child: SizedBox(
-                                    width: double
-                                        .infinity, // Make the container take the full width
-                                    child: Tab(
-                                      text: 'Medical'.tr,
+                                    if (oviDetails.selectedOviChips.length > 2)
+                                      TextButton(
+                                          onPressed: () {},
+                                          child: Text(
+                                            'See more'.tr,
+                                            style: const TextStyle(
+                                                color: AppColors.primary50),
+                                          )),
+                                    SizedBox(
+                                      height:
+                                          SizeConfig.heightMultiplier(context) * 32,
                                     ),
-                                  ),
+                                    _buildTabBar(),
+                                    SizedBox(
+                                      height:
+                                          SizeConfig.heightMultiplier(context) * 24,
+                                    ),
+                                    _buildTabBarView(context, oviDetails),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                          // Tab Bar View
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height -
-                                190 -
-                                20 -
-                                50,
-                            child: TabBarView(
-                              controller: _tabController,
-                              children: [
-                                // General Tab bar Starts
-                                SingleChildScrollView(
-                                  child: Showcase(
-                                    key: _generalOverview,
-                                    targetBorderRadius: const BorderRadius.all(
-                                      Radius.circular(50),
-                                    ),
-                                    tooltipBackgroundColor:
-                                        const Color.fromARGB(
-                                            255, 251, 247, 206),
-                                    descTextStyle: const TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                    description:
-                                        'Here You Can Find All The General Info About The Animals'
-                                            .tr,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(
-                                            height:
-                                                15), // Add spacing between the boxes
-                                        Container(
-                                          width: double.infinity,
-                                          padding: const EdgeInsets.all(8),
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 10),
-                                          decoration: BoxDecoration(
-                                            color: const Color.fromARGB(
-                                                255, 251, 247, 206),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              Column(
-                                                children: [
-                                                  Text(
-                                                    'Mammal'.tr,
-                                                    style: const TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  Text(
-                                                    'Type'.tr,
-                                                    style: const TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Column(
-                                                children: [
-                                                  Text(
-                                                    'Horse'.tr,
-                                                    style: const TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  Text(
-                                                    'Species'.tr,
-                                                    style: const TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Column(
-                                                children: [
-                                                  Text(
-                                                    'Female'.tr,
-                                                    style: const TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  Text(
-                                                    'Sex'.tr,
-                                                    style: const TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            'General Information'.tr,
-                                            style: const TextStyle(
-                                                fontSize: 18,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 13),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16),
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                flex: 2,
-                                                child: Text(
-                                                  'Age'.tr,
-                                                  style: const TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                flex: 0,
-                                                child: Text(
-                                                  'ADD'.tr,
-                                                  style: const TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.black),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 12),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16),
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                flex: 2,
-                                                child: Text(
-                                                  'Breed'.tr,
-                                                  style: const TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.black),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                flex: 0,
-                                                child: Text(
-                                                  'African Horse'.tr,
-                                                  style: const TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.black),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 12),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16),
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                flex: 2,
-                                                child: Text(
-                                                  'Date Of Hatching'.tr,
-                                                  style: const TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                flex: 0,
-                                                child: Text(
-                                                  'ADD'.tr,
-                                                  style: const TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors
-                                                        .blue, // You can customize the button's color
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 12),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16),
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                flex: 2,
-                                                child: Text(
-                                                  'Date Of Death'.tr,
-                                                  style: const TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                flex: 0,
-                                                child: Text(
-                                                  'ADD'.tr,
-                                                  style: const TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors
-                                                        .blue, // You can customize the button's color
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 12),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16),
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                flex: 2,
-                                                child: Text(
-                                                  'Date Of Sale'.tr,
-                                                  style: const TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                flex: 0,
-                                                child: Text(
-                                                  'ADD'.tr,
-                                                  style: const TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors
-                                                        .blue, // You can customize the button's color
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 12),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            'Additional Notes'.tr,
-                                            style: const TextStyle(
-                                                fontSize: 18,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-
-                                        const SizedBox(height: 12),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16),
-                                          child: Text(
-                                            'Notes'.tr,
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 20),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            'Uploaded Files To Be Here'.tr,
-                                            style: const TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                // General Tab bar Ends
-                                //Breeding Tab bar View Starts
-                                SingleChildScrollView(
-                                  child: Showcase(
-                                    key: _breedingOverview,
-                                    targetBorderRadius: const BorderRadius.all(
-                                      Radius.circular(50),
-                                    ),
-                                    tooltipBackgroundColor:
-                                        const Color.fromARGB(
-                                            255, 251, 247, 206),
-                                    descTextStyle: const TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                    description:
-                                        'Here You Can Find All The Breeding Details Of The Animals'
-                                            .tr,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(height: 15),
-                                        // Add spacing between the boxes
-                                        Container(
-                                          width: double.infinity,
-                                          padding: const EdgeInsets.all(8),
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 10),
-                                          decoration: BoxDecoration(
-                                            color: const Color.fromARGB(
-                                                255, 251, 247, 206),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              Column(
-                                                children: [
-                                                  Text(
-                                                    'Pregnant'.tr,
-                                                    style: const TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  Text(
-                                                    'Current Status'.tr,
-                                                    style: const TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          width: double.infinity,
-                                          padding: const EdgeInsets.all(8),
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 10),
-                                          decoration: BoxDecoration(
-                                            color: const Color.fromARGB(
-                                                255, 251, 247, 206),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              Column(
-                                                children: [
-                                                  const Text(
-                                                    '12.02.2023',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  Text(
-                                                    'Last Hatching Date'.tr,
-                                                    style: const TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Column(
-                                                children: [
-                                                  const Text(
-                                                    '12.02.2023',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  Text(
-                                                    'Frequency Of Laying Eggs'
-                                                        .tr,
-                                                    style: const TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-
-                                        const SizedBox(height: 13),
-                                        ListTile(
-                                          leading: const CircleAvatar(
-                                            backgroundColor: Color.fromARGB(
-                                                164, 76, 175, 79),
-                                            child: Icon(Icons.history,
-                                                color: Colors.white),
-                                          ),
-                                          title: Text('Breeding History'.tr),
-                                          trailing: IconButton(
-                                            icon: const Icon(Icons.arrow_right),
-                                            onPressed: () {},
-                                          ),
-                                        ),
-                                        ListTile(
-                                          leading: const CircleAvatar(
-                                            backgroundColor: Color.fromARGB(
-                                                164, 76, 175, 79),
-                                            child: Icon(Icons.bedroom_parent,
-                                                color: Colors.white),
-                                          ),
-                                          title: Text('Parents'.tr),
-                                          trailing: IconButton(
-                                            icon: const Icon(Icons.arrow_right),
-                                            onPressed: () {},
-                                          ),
-                                        ),
-                                        ListTile(
-                                          leading: const CircleAvatar(
-                                            backgroundColor: Color.fromARGB(
-                                                164, 76, 175, 79),
-                                            child: Icon(Icons.route,
-                                                color: Colors.white),
-                                          ),
-                                          title: Text('Family Tree'.tr),
-                                          trailing: IconButton(
-                                            icon: const Icon(Icons.arrow_right),
-                                            onPressed: () {},
-                                          ),
-                                        ),
-                                        ListTile(
-                                          leading: const CircleAvatar(
-                                            backgroundColor: Color.fromARGB(
-                                                164, 76, 175, 79),
-                                            child: Icon(Icons.man_outlined,
-                                                color: Colors.white),
-                                          ),
-                                          title: Text('Male Mates'.tr),
-                                          trailing: IconButton(
-                                            icon: const Icon(Icons.arrow_right),
-                                            onPressed: () {},
-                                          ),
-                                        ),
-                                        ListTile(
-                                          leading: const CircleAvatar(
-                                            backgroundColor: Color.fromARGB(
-                                                164, 76, 175, 79),
-                                            child: Icon(Icons.child_friendly,
-                                                color: Colors.white),
-                                          ),
-                                          title: Text('Children'.tr),
-                                          trailing: IconButton(
-                                            icon: const Icon(Icons.arrow_right),
-                                            onPressed: () {},
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                //Breeding Tab bar View Ends
-
-                                // Medical Tab bar View Starts
-                                SingleChildScrollView(
-                                  child: Showcase(
-                                    key: _medicalOverview,
-                                    targetBorderRadius: const BorderRadius.all(
-                                      Radius.circular(50),
-                                    ),
-                                    tooltipBackgroundColor:
-                                        const Color.fromARGB(
-                                            255, 251, 247, 206),
-                                    descTextStyle: const TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                    description:
-                                        'Here You Can Find All The Medical Details Of The Animals'
-                                            .tr,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(height: 15),
-                                        Container(
-                                          width: double.infinity,
-                                          padding: const EdgeInsets.all(8),
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 10),
-                                          decoration: BoxDecoration(
-                                            color: const Color.fromARGB(
-                                                255, 251, 247, 206),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              Column(
-                                                children: [
-                                                  const Text(
-                                                    '01.01.2023',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  Text(
-                                                    'Next Vaccination'.tr,
-                                                    style: const TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          width: double.infinity,
-                                          padding: const EdgeInsets.all(8),
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 10),
-                                          decoration: BoxDecoration(
-                                            color: const Color.fromARGB(
-                                                255, 251, 247, 206),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              Column(
-                                                children: [
-                                                  const Text(
-                                                    '12.02.2023',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  Text(
-                                                    'Last Check Up'.tr,
-                                                    style: const TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Column(
-                                                children: [
-                                                  const Text(
-                                                    '02.08.2023',
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  Text(
-                                                    'Next Check Up'.tr,
-                                                    style: const TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 20),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Medical Needs'.tr,
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 25,
-                                                ),
-                                              ),
-                                              Showcase(
-                                                key: _addMedicalNeeds,
-                                                targetBorderRadius:
-                                                    const BorderRadius.all(
-                                                  Radius.circular(50),
-                                                ),
-                                                tooltipBackgroundColor:
-                                                    const Color.fromARGB(
-                                                        255, 251, 247, 206),
-                                                descTextStyle: const TextStyle(
-                                                    fontSize: 18,
-                                                    color: Colors.black,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                                description:
-                                                    'Add Medical Recommendations To The Custom Field'
-                                                        .tr,
-                                                child: IconButton(
-                                                  icon: const Icon(
-                                                    Icons.edit_square,
-                                                    color: Color.fromARGB(
-                                                        255, 36, 86, 38),
-                                                  ),
-                                                  onPressed: () {},
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16),
-                                          child: TextFormField(
-                                            maxLines:
-                                                6, // Set the maximum number of lines
-                                            decoration: InputDecoration(
-                                              hintText:
-                                                  'Add Additional Information If Needed'
-                                                      .tr, // Add your hint text here
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(15.0),
-                                              ),
-                                              contentPadding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 12.0,
-                                                      horizontal: 16.0),
-                                            ),
-                                            textInputAction: TextInputAction
-                                                .done, // Change the keyboard action
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Medical Tabbar View Ends
-                        ],
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ),
-
-              // Tab Bar
-            ),
-            floatingActionButton: Showcase(
-              key: _gotoHomepage,
-              targetPadding: const EdgeInsets.all(5),
-              targetBorderRadius: const BorderRadius.all(
-                Radius.circular(50),
-              ),
-              description: 'Click Here To Go To HomePage'.tr,
-              descTextStyle: const TextStyle(
-                  fontSize: 18,
-                  color: Color.fromARGB(255, 36, 86, 38),
-                  fontWeight: FontWeight.bold),
-              onTargetClick: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        const NavigationBarGuestMode(), // Replace with your desired page.
-                  ),
-                );
-              },
-              disposeOnTap: true,
-              child: SizedBox(
-                height: 70,
-                width: 100,
-                child: FloatingActionButton(
-                  onPressed: () {
+                floatingActionButton: TutorialTextButton(
+                  showcaseKey: _gotoHomepage,
+                  description: 'Click Here To Go To HomePage'.tr,
+                  onTargetClick: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) =>
-                            const NavigationBarGuestMode(), // Replace with your desired page.
+                        const NavigationBarGuestMode(), // Replace with your desired page.
                       ),
                     );
                   },
-                  backgroundColor: Colors.white,
-                  elevation: 10,
-                  shape: const CircleBorder(),
-                  child: const Icon(
-                    Icons.arrow_right_alt,
-                    size: 54,
-                  ),
-                ),
+                )
+            ),
+          );
+        }
+      ),
+    );
+  }
+
+  SizedBox _buildTabBarView(BuildContext context, OviVariables oviDetails) {
+    return SizedBox(
+      height: SizeConfig.heightMultiplier(context) * 325,
+      width: SizeConfig.widthMultiplier(context) * 341,
+      child: TabBarView(
+        controller: _tabController,
+        children: [
+          // Content for the 'General' tab
+          Showcase(
+            key: _generalOverview,
+            targetBorderRadius: const BorderRadius.all(
+              Radius.circular(50),
+            ),
+            tooltipBackgroundColor: const Color.fromARGB(255, 251, 247, 206),
+            descTextStyle: const TextStyle(
+                fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+            description:
+                'Here You Can Find All The General Info About The Animals'.tr,
+            child: GeneralInfoAnimalWidget(
+              onDateOfBirthPressed: () {},
+              onDateOfDeathPressed: () {
+                _updateDateField('Date Of Death', oviDetails);
+              },
+              onDateOfMatingPressed: () {
+                _updateDateField('Date Of Mating', oviDetails);
+              },
+              onDateOfSalePressed: () {
+                _updateDateField('Date Of Sale', oviDetails);
+              },
+              onDateOfWeaningPressed: () {
+                _updateDateField('Date Of Weaning', oviDetails);
+              },
+              onDateOfHatchingPressed: () {
+                _updateDateField('Date Of Hatching', oviDetails);
+              },
+              age: "3 years",
+              type: "Mammal",
+              sex: "Female",
+              oviDetails: oviDetails,
+              breed: '',
+              fieldName: '',
+              fieldContent: '',
+            ),
+          ),
+
+          // Content for the 'Breeding' tab
+          Showcase(
+            key: _breedingOverview,
+            targetBorderRadius: const BorderRadius.all(
+              Radius.circular(50),
+            ),
+            tooltipBackgroundColor: const Color.fromARGB(255, 251, 247, 206),
+            descTextStyle: const TextStyle(
+                fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+            description:
+                'Here You Can Find All The Breeding Details Of The Animals'.tr,
+            child: BreedingInfo(
+              oviDetails: oviDetails,
+            ),
+          ),
+
+          // Content for the 'Medical' tab
+          _buildMammalsMedical(),
+        ],
+      ),
+    );
+  }
+
+  Container _buildTabBar() {
+    return Container(
+      height: SizeConfig.heightMultiplier(context) * 44,
+      decoration: BoxDecoration(
+        color: AppColors.grayscale10,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: TabBar(
+        controller: _tabController,
+        indicator: BoxDecoration(
+          color: AppColors.primary50,
+          borderRadius: BorderRadius.circular(24),
+        ),
+        dividerColor: Colors.transparent,
+        indicatorSize: TabBarIndicatorSize.tab,
+        indicatorColor: Colors.transparent,
+        labelColor: AppColors.grayscale0,
+        unselectedLabelColor: AppColors.grayscale60,
+        labelStyle: AppFonts.body2(color: AppColors.grayscale0),
+        tabs: [
+          Tab(text: 'General'.tr),
+          Showcase(
+              key: _clickBreeding,
+              targetBorderRadius: const BorderRadius.all(
+                Radius.circular(50),
+              ),
+              tooltipBackgroundColor: const Color.fromARGB(255, 251, 247, 206),
+              descTextStyle: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
+              description: 'Click Here'.tr,
+              disposeOnTap: false,
+              onTargetClick: () {
+                _tabController.animateTo(1);
+                ShowCaseWidget.of(showCaseContext!).next();
+              },
+              child: Tab(text: 'Breeding'.tr)),
+          Showcase(
+              key: _clickMedical,
+              targetBorderRadius: const BorderRadius.all(
+                Radius.circular(50),
+              ),
+              tooltipBackgroundColor: const Color.fromARGB(255, 251, 247, 206),
+              descTextStyle: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
+              description: 'Click Here'.tr,
+              disposeOnTap: false,
+              onTargetClick: () {
+                _tabController.animateTo(2);
+                ShowCaseWidget.of(showCaseContext!).next();
+              },
+              child: Tab(text: 'Medical'.tr)),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _updateDateField(dateType, oviDetails) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: oviDetails.selectedOviDates[dateType] ?? DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2101),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            // Change the background color of the date picker
+            primaryColor: AppColors.primary30,
+            colorScheme: const ColorScheme.light(primary: AppColors.primary20),
+            buttonTheme:
+                const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            // Here you can customize more colors if needed
+            // For example, you can change the header color, selected day color, etc.
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (pickedDate != null) {
+      oviDetails.selectedOviDates[dateType] = pickedDate;
+    }
+  }
+
+
+  Widget _buildMammalsMedical() {
+    final animal = oviDetails;
+    final now = DateTime.now();
+    final nextVaccinationDate = now.add(const Duration(days: 2));
+    final lastCheckupDate = now.subtract(const Duration(days: 5));
+    final nextCheckupDate = now.add(const Duration(days: 8));
+
+    final lastEvent = BreedingEventVariables(
+        eventNumber: '2',
+        partner: null,
+        children: [],
+        breedingDate: now.subtract(const Duration(days: 11)),
+        notes: '',
+        shouldAddEvent: false);
+    final deliveryDate = now.add(const Duration(days: 2));
+
+    return Showcase(
+      key: _medicalOverview,
+      targetBorderRadius: const BorderRadius.all(
+        Radius.circular(50),
+      ),
+      tooltipBackgroundColor:
+      const Color.fromARGB(
+          255, 251, 247, 206),
+      descTextStyle: const TextStyle(
+          fontSize: 18,
+          color: Colors.black,
+          fontWeight: FontWeight.bold),
+      description:
+      'Here You Can Find All The Medical Details Of The Animals'
+          .tr,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: SizeConfig.widthMultiplier(context) * 343,
+              child: OneInformationBlock(
+                  head1: DateFormat('dd.MM.yyyy').format(nextVaccinationDate),
+                  subtitle1: 'Next Vaccination'.tr),
+            ),
+            SizedBox(
+              height: SizeConfig.heightMultiplier(context) * 8,
+            ),
+            SizedBox(
+              width: 343 * SizeConfig.widthMultiplier(context),
+              child: TwoInformationBlock(
+                head1: DateFormat('dd.MM.yyyy').format(lastCheckupDate),
+                head2: DateFormat('dd.MM.yyyy').format(nextCheckupDate),
+                subtitle1: "Last Check-up Date".tr,
+                subtitle2: "Next Check-up Date".tr,
               ),
             ),
-            // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-          ),
-        );
-      }),
-    ));
+            SizedBox(
+              height: SizeConfig.heightMultiplier(context) * 24,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Medical Needs'.tr,
+                  style: AppFonts.title5(color: AppColors.grayscale90),
+                ),
+                isMammalEditMode
+                    ? PrimaryTextButton(
+                        status: TextStatus.idle,
+                        text: 'Save'.tr,
+                        onPressed: () async {
+                          setState(() {
+                            isMammalEditMode = false;
+                          });
+                        })
+                    : Showcase(
+                        key: _addMedicalNeeds,
+                        targetBorderRadius: const BorderRadius.all(
+                          Radius.circular(50),
+                        ),
+                        tooltipBackgroundColor:
+                            const Color.fromARGB(255, 251, 247, 206),
+                        descTextStyle: const TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                        description:
+                            'Add Medical Recommendations To The Custom Field'.tr,
+                        child: IconButton(
+                          icon: Image.asset(
+                            'assets/icons/frame/24px/24_Edit.png',
+                          ),
+                          onPressed: () {
+                            // Enter edit mode
+                            setState(() {
+                              isMammalEditMode = true;
+                            });
+                          },
+                        ),
+                      ),
+              ],
+            ),
+            isMammalEditMode
+                ? Column(
+                    children: [
+                      SizedBox(
+                        child: MedicalNeedsParagraphTextField(
+                          maxLines: 6,
+                          hintText:
+                              'Be sure to include joint support medicine, antibiotics, anti-inflammatory medication, and topical antiseptics when packing your first-aid kit for your horses. If you have the essentials, you can keep your four-legged friends in the best condition possible.',
+                          controller: _medicalNeedsController,
+                        ),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.heightMultiplier(context) * 8,
+                      ),
+                      FileUploaderField(
+                        onFileUploaded: (file) {
+                          final files = animal.files ?? [];
+                          files.add(file);
+                        },
+                      ),
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      animal.medicalNeeds?.isNotEmpty != null
+                          ? Text(
+                              animal.medicalNeeds!,
+                              // 'Be sure to include joint support medicine, antibiotics, anti-inflammatory medication, and topical antiseptics when packing your first-aid kit for your horses. If you have the essentials, you can keep your four-legged friends in the best condition possible.',
+                              style: AppFonts.body2(color: AppColors.grayscale70),
+                            )
+                          : Text(
+                              'Be sure to include joint support medicine, antibiotics, anti-inflammatory medication, and topical antiseptics when packing your first-aid kit for your horses. If you have the essentials, you can keep your four-legged friends in the best condition possible.',
+                              style: AppFonts.body2(color: AppColors.grayscale70),
+                            ),
+                      SizedBox(
+                        height: SizeConfig.heightMultiplier(context) * 22,
+                      ),
+                      if (animal.files != null)
+                        Column(
+                          children: animal.files!
+                              .map((file) => GestureDetector(
+                                    onTap: () {},
+                                    child: Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.file_copy_outlined,
+                                          color: AppColors.primary30,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Text(
+                                            file.path.split('/').last,
+                                            style: AppFonts.body1(
+                                                color: AppColors.grayscale90),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                      ],
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
+                    ],
+                  ),
+            SizedBox(
+              height: 16 * SizeConfig.heightMultiplier(context),
+            ),
+            Visibility(
+              visible: animal.selectedOviGender == 'Female' &&
+                  animal.selectedAnimalType == 'Mammal',
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Pregnancy Check',
+                    style: AppFonts.title5(color: AppColors.grayscale90),
+                  ),
+                  ListTile(
+                    contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                    leading: Text(
+                      'Count of Pregnancies',
+                      style: AppFonts.body2(color: AppColors.grayscale70),
+                    ),
+                    trailing: GestureDetector(
+                      onTap: () {},
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '${animal.pregnanciesCount ?? 0}',
+                            style: AppFonts.body2(color: AppColors.grayscale90),
+                          ),
+                          const Icon(Icons.chevron_right_rounded,
+                              color: AppColors.primary40),
+                        ],
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {},
+                    contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                    leading: Text(
+                      'Pregnancy status'.tr,
+                      style: AppFonts.body2(color: AppColors.grayscale70),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          animal.pregnant == true
+                              ? 'Pregnant'.tr
+                              : 'Not Pregnant'.tr,
+                          style: AppFonts.body2(color: AppColors.grayscale90),
+                        ),
+                        const Icon(Icons.chevron_right_rounded,
+                            color: AppColors.primary40),
+                      ],
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {},
+                    contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                    leading: Text(
+                      'Date of Mating',
+                      style: AppFonts.body2(color: AppColors.grayscale70),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          lastEvent.breedingDate != null
+                              ? DateFormat('dd.MM.yyyy')
+                                  .format(lastEvent.breedingDate!)
+                              : 'N/A',
+                          style: AppFonts.body2(color: AppColors.grayscale90),
+                        ),
+                        const Icon(Icons.chevron_right_rounded,
+                            color: AppColors.primary40),
+                      ],
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {},
+                    contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                    leading: Text(
+                      'Date of sonar',
+                      style: AppFonts.body2(color: AppColors.grayscale70),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        animal.dateOfSonar != null
+                            ? Text(
+                                DateFormat('dd/MM/yyyy')
+                                    .format(animal.dateOfSonar!),
+                                style:
+                                    AppFonts.body2(color: AppColors.grayscale90),
+                              )
+                            : Text(
+                                'ADD',
+                                style:
+                                    AppFonts.body2(color: AppColors.grayscale90),
+                              ),
+                        const Icon(Icons.chevron_right_rounded,
+                            color: AppColors.primary40),
+                      ],
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {},
+                    contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                    leading: Text(
+                      'Exp. Delivery Date',
+                      style: AppFonts.body2(color: AppColors.grayscale70),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          DateFormat('dd/MM/yyyy').format(deliveryDate),
+                          style: AppFonts.body2(color: AppColors.grayscale90),
+                        ),
+                        const Icon(Icons.chevron_right_rounded,
+                            color: AppColors.primary40),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
+                ],
+              ),
+            ),
+            Visibility(
+              visible: animal.selectedOviGender == 'Female' &&
+                  animal.selectedAnimalType == 'Oviparous',
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Hatching Information',
+                    style: AppFonts.title5(color: AppColors.grayscale90),
+                  ),
+                  ListTile(
+                    onTap: () {},
+                    contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                    leading: Text(
+                      'Date Of Laying Eggs',
+                      style: AppFonts.body2(color: AppColors.grayscale70),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        lastEvent.layingEggsDate != null
+                            ? Text(
+                                DateFormat('dd/MM/yyyy')
+                                    .format(lastEvent.layingEggsDate!),
+                                style:
+                                    AppFonts.body2(color: AppColors.grayscale90),
+                              )
+                            : Text(
+                                'ADD',
+                                style:
+                                    AppFonts.body2(color: AppColors.grayscale90),
+                              ),
+                        const Icon(Icons.chevron_right_rounded,
+                            color: AppColors.primary40),
+                      ],
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {},
+                    contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                    leading: Text(
+                      'Number Of Eggs',
+                      style: AppFonts.body2(color: AppColors.grayscale70),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        lastEvent.eggsNumber != null
+                            ? Text(
+                                '${lastEvent.eggsNumber}',
+                                style:
+                                    AppFonts.body2(color: AppColors.grayscale90),
+                              )
+                            : Text(
+                                'ADD',
+                                style:
+                                    AppFonts.body2(color: AppColors.grayscale90),
+                              ),
+                        const Icon(Icons.chevron_right_rounded,
+                            color: AppColors.primary40),
+                      ],
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {},
+                    contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                    leading: Text(
+                      'Have You Kept Eggs In Oval?'.tr,
+                      style: AppFonts.body2(color: AppColors.grayscale70),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        animal.keptInOval.isNotEmpty
+                            ? Text(
+                                animal.keptInOval == 'No' ? 'No'.tr : 'Yes'.tr,
+                                style:
+                                    AppFonts.body2(color: AppColors.grayscale90),
+                              )
+                            : Text(
+                                'ADD',
+                                style:
+                                    AppFonts.body2(color: AppColors.grayscale90),
+                              ),
+                        const Icon(Icons.chevron_right_rounded,
+                            color: AppColors.primary40),
+                      ],
+                    ),
+                  ),
+                  Visibility(
+                    visible: animal.keptInOval != 'No',
+                    child: ListTile(
+                      onTap: () {},
+                      contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                      leading: Text(
+                        'Incubation Date',
+                        style: AppFonts.body2(color: AppColors.grayscale70),
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          lastEvent.incubationDate != null
+                              ? Text(
+                                  DateFormat('dd/MM/yyyy')
+                                      .format(lastEvent.incubationDate!),
+                                  style: AppFonts.body2(
+                                      color: AppColors.grayscale90),
+                                )
+                              : Text(
+                                  'ADD',
+                                  style: AppFonts.body2(
+                                      color: AppColors.grayscale90),
+                                ),
+                          const Icon(Icons.chevron_right_rounded,
+                              color: AppColors.primary40),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16 * SizeConfig.heightMultiplier(context)),
+                ],
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Vaccination',
+                  style: AppFonts.title5(color: AppColors.grayscale90),
+                )
+              ],
+            ),
+            SizedBox(
+              height: 14 * SizeConfig.heightMultiplier(context),
+            ),
+            Row(
+              children: [
+                PrimaryTextButton(
+                  onPressed: () {},
+                  text: 'Add Vaccination',
+                  status: TextStatus.idle,
+                ),
+                SizedBox(
+                  width: 8 * SizeConfig.widthMultiplier(context),
+                ),
+                Icon(
+                  Icons.add,
+                  color: AppColors.primary40,
+                  size: 16 * SizeConfig.widthMultiplier(context),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 16 * SizeConfig.heightMultiplier(context),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Medical Checkup',
+                  style: AppFonts.title5(color: AppColors.grayscale90),
+                ),
+                // PrimaryTextButton(
+                //   onPressed: () {},
+                //   status: TextStatus.idle,
+                //   text: 'View More',
+                // ),
+              ],
+            ),
+            SizedBox(
+              height: 14 * SizeConfig.heightMultiplier(context),
+            ),
+            Row(
+              children: [
+                PrimaryTextButton(
+                  onPressed: () {},
+                  text: 'Add Examination Results',
+                  status: TextStatus.idle,
+                ),
+                SizedBox(
+                  width: 8 * SizeConfig.widthMultiplier(context),
+                ),
+                Icon(
+                  Icons.add,
+                  color: AppColors.primary40,
+                  size: 16 * SizeConfig.widthMultiplier(context),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 16 * SizeConfig.heightMultiplier(context),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Surgeries Records',
+                  style: AppFonts.title5(color: AppColors.grayscale90),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 14 * SizeConfig.heightMultiplier(context),
+            ),
+            Row(
+              children: [
+                PrimaryTextButton(
+                  onPressed: () {},
+                  text: 'Add Surgeries Records',
+                  status: TextStatus.idle,
+                ),
+                SizedBox(
+                  width: 8 * SizeConfig.widthMultiplier(context),
+                ),
+                Icon(
+                  Icons.add,
+                  color: AppColors.primary40,
+                  size: 16 * SizeConfig.widthMultiplier(context),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 24 * SizeConfig.heightMultiplier(context),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

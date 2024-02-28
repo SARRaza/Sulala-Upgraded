@@ -1,297 +1,491 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:get/get.dart';
-
 import 'package:showcaseview/showcaseview.dart';
+import 'package:sulala_upgrade/src/data/globals.dart';
+import 'package:sulala_upgrade/src/widgets/controls_and_buttons/buttons/tutorial_next_button.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-
 import '../../theme/colors/colors.dart';
+import '../../theme/colors/pie_chart_colors.dart';
 import '../../theme/fonts/fonts.dart';
+import '../../widgets/controls_and_buttons/tags/tags.dart';
+import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
+import '../../widgets/pages/homepage_widgets/card.dart';
 import '../reg_mode/reg_home_page.dart';
+import '../reg_mode/show_filter_reg.dart';
+import '../reg_mode/small_card_widget.dart';
 import 'animal_info_tutorial.dart';
 
 class RegHomeScreenTutorial extends StatefulWidget {
   const RegHomeScreenTutorial({super.key});
 
   @override
-  State<RegHomeScreenTutorial> createState() => _RegHomeScreenTutorial();
+  State<RegHomeScreenTutorial> createState() => _RegHomeScreenTutorialState();
 }
 
-class _RegHomeScreenTutorial extends State<RegHomeScreenTutorial> {
+class _RegHomeScreenTutorialState extends State<RegHomeScreenTutorial> {
   final GlobalKey _animalOverview = GlobalKey();
   final GlobalKey _pieChart = GlobalKey();
   final GlobalKey _filter = GlobalKey();
   final GlobalKey _next2 = GlobalKey();
-  BuildContext? myContext;
+  BuildContext? showCaseContext;
+
+  @override
+  void initState() {
+    super.initState();
+    _chartData = _getChartData();
+    sumOfNextTwoCards = _chartData[0].quan + _chartData[1].quan;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ShowCaseWidget.of(showCaseContext!)
+          .startShowCase([_animalOverview, _pieChart, _filter, _next2]);
+    });
+  }
+
+  Future<void> _refreshData() async {
+    setState(() {
+      _chartData = _getChartData();
+      sumOfNextTwoCards = _chartData[0].quan + _chartData[1].quan;
+    });
+    await Future.delayed(const Duration(seconds: 1));
+  }
+
+  List<AnimalData> _getFilteredChartData() {
+    return _getChartData();
+  }
+
+  List<Tag> currentStateTags = [
+    Tag(name: 'Borrowed', status: TagStatus.notActive),
+    Tag(name: 'Adopted', status: TagStatus.notActive),
+    Tag(name: 'Donated', status: TagStatus.notActive),
+    Tag(name: 'Escaped', status: TagStatus.notActive),
+    Tag(name: 'Stolen', status: TagStatus.notActive),
+    Tag(name: 'Transferred', status: TagStatus.notActive),
+  ];
+  List<Tag> medicalStateTags = [
+    Tag(name: 'Injured', status: TagStatus.notActive),
+    Tag(name: 'Sick', status: TagStatus.notActive),
+    Tag(name: 'Quarantined', status: TagStatus.notActive),
+    Tag(name: 'Medication', status: TagStatus.notActive),
+    Tag(name: 'Testing', status: TagStatus.notActive),
+  ];
+
+  List<Tag> otherStateTags = [
+    Tag(name: 'Sold', status: TagStatus.notActive),
+    Tag(name: 'Dead', status: TagStatus.notActive),
+  ];
+
+  Map<String, Color> tagColors = {
+    'Borrowed':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Adopted':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Donated':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Escaped':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Stolen':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Transferred':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Injured':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Sick':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Quarantined':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Medication':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Testing':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Sold':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+    'Dead':
+        Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+  };
 
   late List<AnimalData> _chartData;
   int sumOfNextTwoCards = 0;
   List<EventData> events = [
     EventData(title: 'Horse Vaccination', subtitle: '09.01.2023'),
     EventData(title: 'Cow Health Checkup', subtitle: '01.09.2023'),
+    EventData(title: 'Cow Health Checkup', subtitle: '01.09.2023'),
+    EventData(title: 'Cow Health Checkup', subtitle: '01.09.2023'),
+    EventData(title: 'Cow Health Checkup', subtitle: '01.09.2023'),
   ];
+  int _selectedIndex = -1;
 
-  @override
-  void initState() {
-    _chartData = _getChartData();
-    sumOfNextTwoCards = _chartData[0].quan + _chartData[1].quan;
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ShowCaseWidget.of(myContext!)
-          .startShowCase([_animalOverview, _pieChart, _filter, _next2]);
+  void _updateCurrentTagStatus(String tagName, TagStatus updatedStatus) {
+    final tagIndex = currentStateTags.indexWhere((tag) => tag.name == tagName);
+    if (tagIndex != -1) {
+      currentStateTags[tagIndex].status = updatedStatus;
+    }
+  }
+
+  void _updateMedicalTagStatus(String tagName, TagStatus updatedStatus) {
+    final tagIndex = medicalStateTags.indexWhere((tag) => tag.name == tagName);
+    if (tagIndex != -1) {
+      medicalStateTags[tagIndex].status = updatedStatus;
+    }
+  }
+
+  void _updateOtherTagStatus(String tagName, TagStatus updatedStatus) {
+    final tagIndex = otherStateTags.indexWhere((tag) => tag.name == tagName);
+    if (tagIndex != -1) {
+      otherStateTags[tagIndex].status = updatedStatus;
+    }
+  }
+
+  void _updateChartData(int newQuan, String animalName) {
+    for (int i = 0; i < _chartData.length; i++) {
+      if (_chartData[i].animal == animalName) {
+        _chartData[i] = AnimalData(animalName, newQuan, _chartData[i].color);
+        break;
+      }
+    }
+    setState(() {
+      // Trigger a rebuild of the widget
+      _selectedIndex =
+          _chartData.indexWhere((data) => data.animal == animalName);
     });
+  }
+
+  Future<void> _showFilterModalSheet(BuildContext context) async {
+    await showModalBottomSheet(
+      showDragHandle: true,
+      backgroundColor: Colors.transparent,
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      builder: (BuildContext context) {
+        return Container(
+          color: Colors.transparent,
+          child: DrawUpWidget(
+            heightFactor: 0.73,
+            heading: "Tags".tr,
+            content: ShowFilterReg(
+              currentStateTags: currentStateTags,
+              medicalStateTags: medicalStateTags,
+              otherStateTags: otherStateTags,
+              updatedCurrentTagStatus: _updateCurrentTagStatus,
+              updatedMedicalTagStatus: _updateMedicalTagStatus,
+              updatedOtherTagStatus: _updateOtherTagStatus,
+            ),
+          ),
+        );
+      },
+    );
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return ShowCaseWidget(builder: Builder(
-      builder: ((context) {
-        myContext = context;
-        return Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            title: Text(
-              'Overview'.tr,
-              style: const TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(Icons.notifications),
-                onPressed: () {},
-              ),
-            ],
-          ),
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Animals'.tr,
-                        style: const TextStyle(
-                          fontSize: 24,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Showcase(
-                        key: _filter,
-                        description:
-                            'Use Filters To Create The Chart With More Inputs'
-                                .tr,
-                        descTextStyle: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                        targetBorderRadius: const BorderRadius.all(
-                          Radius.circular(50),
-                        ),
-                        child: const InkWell(
-                          child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(Icons.filter_alt_outlined),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Showcase(
-                  key: _animalOverview,
-                  targetBorderRadius: const BorderRadius.all(
-                    Radius.circular(30),
-                  ),
-                  targetPadding: const EdgeInsets.all(5),
-                  tooltipBackgroundColor:
-                      const Color.fromARGB(235, 255, 248, 214),
-                  description:
-                      'Here You Can Know The Number Of Animals In Your Farm'.tr,
-                  descTextStyle: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.192,
-                          width: MediaQuery.of(context).size.width * 0.282,
-                          child: SmallCardWidget(
-                            imageAsset:
-                                "assets/icons/frame/24px/cow_chicken.png",
-                            animalData: AnimalData('ALL'.tr, sumOfNextTwoCards,
-                                _chartData[0].color),
-                            quan: sumOfNextTwoCards.toString(),
-                            onPressed: () {},
-                            color: const Color.fromARGB(235, 255, 248,
-                                214), // Set the color for the first card
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: SmallCardWidget(
-                          imageAsset: "assets/icons/frame/24px/cow_framed.png",
-                          animalData: _chartData[0],
-                          quan: _chartData[0].quan.toString(),
-                          onPressed: () {},
-                          color: const Color.fromARGB(235, 255, 248, 214),
-                        ),
-                      ),
-                      Expanded(
-                        child: SmallCardWidget(
-                          imageAsset:
-                              "assets/icons/frame/24px/chicken_framed.png",
-                          animalData: _chartData[1],
-                          quan: _chartData[1].quan.toString(),
-                          onPressed: () {},
-                          color: const Color.fromARGB(235, 255, 248, 214),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Showcase(
-                  key: _pieChart,
-                  description:
-                      'This PieChart Will Help You Visualize Proportions'.tr,
-                  targetBorderRadius: const BorderRadius.all(
-                    Radius.circular(30),
-                  ),
-                  tooltipBackgroundColor:
-                      const Color.fromARGB(255, 197, 219, 158),
-                  descTextStyle: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return ShowCaseWidget(
+      builder: Builder(builder: (context) {
+        showCaseContext = context;
+        double totalWidth = MediaQuery.of(context).size.width;
+        double lineWidth = totalWidth / 3;
+        return SafeArea(
+          child: Scaffold(
+              appBar: AppBar(
+                scrolledUnderElevation: 0.0,
+                automaticallyImplyLeading: false,
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Overview'.tr,
+                      style: AppFonts.title3(color: AppColors.grayscale100),
+                    ),
+                    Row(
                       children: [
+                        InkWell(
+                          onTap: () {},
+                          child: const Image(
+                            image: AssetImage(
+                                'assets/icons/frame/24px/Icon-button.png'),
+                          ),
+                        ),
                         SizedBox(
-                          width: 230, // Adjust the width of the chart
-                          height: 250, // Adjust the height of the chart
-                          child: SfCircularChart(
-                            series: <CircularSeries>[
-                              DoughnutSeries<AnimalData, String>(
-                                dataSource: _chartData,
-                                xValueMapper: (AnimalData data, _) =>
-                                    data.animal,
-                                yValueMapper: (AnimalData data, _) => data.quan,
-                                pointColorMapper: (AnimalData data, _) =>
-                                    data.color,
-                              )
+                            width: SizeConfig.widthMultiplier(context) * 3.75),
+                        GestureDetector(
+                          onTap: () {},
+                          child: events.isNotEmpty
+                              ? badges.Badge(
+                                  badgeStyle: badges.BadgeStyle(
+                                    padding: EdgeInsets.all(8 *
+                                        SizeConfig.widthMultiplier(context)),
+                                  ),
+                                  badgeContent: Text(
+                                    events.length.toString(),
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                  badgeAnimation:
+                                      const badges.BadgeAnimation.slide(
+                                    disappearanceFadeAnimationDuration:
+                                        Duration(milliseconds: 50),
+                                    curve: Curves.easeInCubic,
+                                  ),
+                                  child: const Image(
+                                    image: AssetImage(
+                                        'assets/icons/frame/24px/Icon-button1.png'),
+                                  ),
+                                )
+                              : const Image(
+                                  image: AssetImage(
+                                      'assets/icons/frame/24px/Icon-button1.png'),
+                                ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                backgroundColor: Colors
+                    .transparent, // Set the appbar background color to transparent
+                elevation: 0, // Remove the appbar shadow
+              ),
+              body: RefreshIndicator(
+                color: AppColors.primary40,
+                onRefresh: _refreshData,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        left: SizeConfig.widthMultiplier(context) * 16,
+                        right: SizeConfig.widthMultiplier(context) * 16,
+                        top: SizeConfig.heightMultiplier(context) * 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text('Animals'.tr,
+                                style: AppFonts.title4(
+                                    color: AppColors.grayscale90)),
+                            const Spacer(),
+                            Showcase(
+                              key: _filter,
+                              targetPadding: const EdgeInsets.all(20),
+                              description:
+                                  'Use Filters To Create The Chart With More Inputs'
+                                      .tr,
+                              descTextStyle: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                              targetBorderRadius: const BorderRadius.all(
+                                Radius.circular(50),
+                              ),
+                              child: InkWell(
+                                onTap: () {
+                                  _showFilterModalSheet(context);
+                                },
+                                child: const Image(
+                                  image: AssetImage(
+                                      'assets/icons/frame/24px/filter1.png'),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                                width:
+                                    SizeConfig.widthMultiplier(context) * 22),
+                          ],
+                        ),
+                        SizedBox(
+                            height: SizeConfig.heightMultiplier(context) * 12),
+                        Showcase(
+                          key: _animalOverview,
+                          targetBorderRadius: const BorderRadius.all(
+                            Radius.circular(30),
+                          ),
+                          targetPadding: const EdgeInsets.all(5),
+                          tooltipBackgroundColor:
+                              const Color.fromARGB(235, 255, 248, 214),
+                          description:
+                              'Here You Can Know The Number Of Animals In Your Farm'
+                                  .tr,
+                          descTextStyle: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                height:
+                                    SizeConfig.heightMultiplier(context) * 148,
+                                width:
+                                    SizeConfig.widthMultiplier(context) * 106,
+                                child: SmallCardWidget(
+                                  icon: Image.asset(
+                                    "assets/icons/frame/24px/cow_chicken.png",
+                                    width: SizeConfig.widthMultiplier(context) *
+                                        48,
+                                  ),
+                                  animalData: AnimalData('ALL'.tr,
+                                      sumOfNextTwoCards, _chartData[0].color),
+                                  quan: sumOfNextTwoCards.toString(),
+                                  onPressed: () {
+                                    _updateChartData(
+                                        sumOfNextTwoCards, 'ALL'.tr);
+                                  },
+                                  isSelected: _selectedIndex == -1,
+                                ),
+                              ),
+                              SizedBox(
+                                height:
+                                    SizeConfig.heightMultiplier(context) * 148,
+                                width:
+                                    SizeConfig.widthMultiplier(context) * 106,
+                                child: SmallCardWidget(
+                                  icon: Image.asset(
+                                    "assets/icons/frame/24px/cow_framed.png",
+                                    width: SizeConfig.widthMultiplier(context) *
+                                        48,
+                                  ),
+                                  quan: _chartData[0].quan.toString(),
+                                  animalData: _chartData[0],
+                                  onPressed: () {
+                                    _updateChartData(
+                                        _chartData[0].quan, 'Mammals'.tr);
+                                  },
+                                  isSelected: _selectedIndex == 0,
+                                ),
+                              ),
+                              SizedBox(
+                                height:
+                                    SizeConfig.heightMultiplier(context) * 148,
+                                width:
+                                    SizeConfig.widthMultiplier(context) * 106,
+                                child: SmallCardWidget(
+                                  icon: Image.asset(
+                                    "assets/icons/frame/24px/chicken_framed.png",
+                                    width: SizeConfig.widthMultiplier(context) *
+                                        48,
+                                  ),
+                                  animalData: _chartData[1],
+                                  quan: _chartData[1].quan.toString(),
+                                  onPressed: () {
+                                    _updateChartData(
+                                        _chartData[1].quan, 'Oviparous'.tr);
+                                  },
+                                  isSelected: _selectedIndex == 1,
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: ListView(
-                            shrinkWrap: true,
-                            children: _buildLegendItems(),
+                        SizedBox(
+                            height: SizeConfig.heightMultiplier(context) * 16),
+                        Showcase(
+                          key: _pieChart,
+                          description:
+                              'This PieChart Will Help You Visualize Proportions'
+                                  .tr,
+                          targetBorderRadius: const BorderRadius.all(
+                            Radius.circular(30),
+                          ),
+                          tooltipBackgroundColor:
+                              const Color.fromARGB(255, 197, 219, 158),
+                          descTextStyle: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width:
+                                    SizeConfig.widthMultiplier(context) * 216,
+                                height:
+                                    SizeConfig.heightMultiplier(context) * 220,
+                                child: SfCircularChart(
+                                  margin: const EdgeInsets.all(0),
+                                  series: <CircularSeries>[
+                                    DoughnutSeries<AnimalData, String>(
+                                      dataSource: _getFilteredChartData(),
+                                      xValueMapper: (AnimalData data, _) =>
+                                          data.animal,
+                                      yValueMapper: (AnimalData data, _) =>
+                                          data.quan,
+                                      pointColorMapper: (AnimalData data, _) =>
+                                          data.quan == 0
+                                              ? Colors.grey
+                                              : speciesColorMap[data.animal] ??
+                                                  data.color,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: ListView(
+                                  shrinkWrap: true,
+                                  children: _buildLegendItems(),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
+                        Row(
+                          children: [
+                            Text(
+                              'Upcoming Events'.tr,
+                              style:
+                                  AppFonts.title4(color: AppColors.grayscale90),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                            height: SizeConfig.heightMultiplier(context) * 12),
+                        Center(
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                'assets/illustrations/calendar_x.png',
+                              ),
+                              SizedBox(
+                                  height: SizeConfig.heightMultiplier(context) *
+                                      12),
+                              Text(
+                                'You have no upcoming events so far'.tr,
+                                style: AppFonts.body2(
+                                    color: AppColors.grayscale70),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                            height: SizeConfig.heightMultiplier(context) * 32),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: CardWidget(
+                                  color: const Color.fromRGBO(225, 236, 185, 1),
+                                  iconPath:
+                                      'assets/icons/frame/24px/Cow_Icon.png',
+                                  title: 'Searching\nfor animals?'.tr,
+                                  buttonText: 'Find animals'.tr,
+                                  onPressed: () {}),
+                            ),
+                            SizedBox(
+                                width: SizeConfig.widthMultiplier(context) * 6),
+                            Expanded(
+                              child: CardWidget(
+                                  color: const Color.fromRGBO(246, 239, 205, 1),
+                                  iconPath:
+                                      'assets/icons/frame/24px/Farm_house.png',
+                                  title: 'Searching \nfor farm?'.tr,
+                                  buttonText: 'Find farms'.tr,
+                                  onPressed: () {}),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                            height: SizeConfig.heightMultiplier(context) * 24),
                       ],
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Upcoming Events'.tr,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: events.length,
-                  itemBuilder: (context, index) {
-                    EventData eventData = events[index];
-                    return ListTile(
-                      title: Text(
-                        eventData.title,
-                        style: const TextStyle(
-                          fontSize: 17,
-                          color: Colors.black,
-                        ),
-                      ),
-                      subtitle: Text(
-                        eventData.subtitle,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      trailing: const Icon(Icons.arrow_forward),
-                    );
-                  },
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CardWidget(
-                        imagePath: 'assets/icons/frame/24px/Cow_Icon.png',
-                        text: 'Searching For Animals'.tr,
-                        buttonText: 'Find Animals'.tr,
-                        onPressed: () {
-                          // Handle button 1 press
-                        },
-                        color: const Color.fromARGB(255, 197, 219,
-                            158), // Set the color for the first card
-                      ),
-                    ),
-                    Expanded(
-                      child: CardWidget(
-                        imagePath: 'assets/icons/frame/24px/Farm_house.png',
-                        text: 'Search For\nFarms'.tr,
-                        buttonText: 'Find Farms'.tr,
-                        onPressed: () {
-                          // Handle button 2 press
-                        },
-                        color: const Color.fromARGB(255, 254, 255,
-                            168), // Set the color for the second card
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          floatingActionButton: Showcase(
-            key: _next2,
-            targetPadding: const EdgeInsets.all(5),
-            targetBorderRadius: const BorderRadius.all(
-              Radius.circular(50),
-            ),
-            description: 'Click Here To Go To Next Page Tutorial'.tr,
-            descTextStyle: const TextStyle(
-                fontSize: 18,
-                color: Color.fromARGB(255, 36, 86, 38),
-                fontWeight: FontWeight.bold),
-            onTargetClick: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) =>
-                      const AnimalInfoTutorialPage(), // Replace with your desired page.
-                ),
-              );
-            },
-            disposeOnTap: true,
-            child: SizedBox(
-              height: 70,
-              width: 100,
-              child: FloatingActionButton(
-                onPressed: () {
+              ),
+              floatingActionButton: TutorialTextButton(
+                showcaseKey: _next2,
+                description: 'Click Here To Go To Next Page Tutorial'.tr,
+                onTargetClick: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) =>
@@ -299,25 +493,81 @@ class _RegHomeScreenTutorial extends State<RegHomeScreenTutorial> {
                     ),
                   );
                 },
-                backgroundColor: Colors.white,
-                elevation: 10,
-                shape: const CircleBorder(),
-                child: const Icon(
-                  Icons.arrow_right_alt,
-                  size: 54,
-                  color: Colors.black,
-                ),
               ),
-            ),
-          ),
-          // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+              bottomNavigationBar: Stack(
+                children: [
+                  Theme(
+                    data: Theme.of(context).copyWith(
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                    ),
+                    child: SizedBox(
+                      height: SizeConfig.heightMultiplier(context) * 60,
+                      child: BottomNavigationBar(
+                        iconSize: SizeConfig.widthMultiplier(context) * 24,
+                        currentIndex: 0,
+                        onTap: (index) {},
+                        items: <BottomNavigationBarItem>[
+                          BottomNavigationBarItem(
+                            icon: const Icon(Icons.home_outlined),
+                            activeIcon: const Icon(Icons.home),
+                            label: 'Home'.tr,
+                          ),
+                          BottomNavigationBarItem(
+                            icon: Image.asset(
+                              "assets/icons/frame/24px/Outlined_Cow_Icon.png",
+                              scale: 24 /
+                                  (SizeConfig.widthMultiplier(context) * 24),
+                            ),
+                            activeIcon: Image.asset(
+                              "assets/icons/frame/24px/Filled_Cow_Icon.png",
+                              scale: 24 /
+                                  (SizeConfig.widthMultiplier(context) * 24),
+                            ),
+                            label: 'Animals'.tr,
+                          ),
+                          BottomNavigationBarItem(
+                            icon: const Icon(Icons.account_circle_outlined),
+                            activeIcon: const Icon(Icons.account_circle),
+                            label: 'Profile'.tr,
+                          )
+                        ],
+                        selectedItemColor: AppColors.primary20,
+                        unselectedItemColor: AppColors.grayscale50,
+                        selectedLabelStyle:
+                            AppFonts.caption3(color: AppColors.primary20),
+                        unselectedLabelStyle:
+                            AppFonts.caption3(color: AppColors.grayscale50),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    child: Container(
+                      width: totalWidth,
+                      height: 1.0,
+                      color: AppColors.grayscale20,
+                    ),
+                  ),
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    child: Container(
+                      width: lineWidth,
+                      height: 2.0,
+                      color: AppColors.primary20,
+                    ),
+                  ),
+                ],
+              )),
         );
       }),
-    ));
+    );
   }
 
   List<AnimalData> _getChartData() {
-    final List<AnimalData> chartData = [
+    return [
       AnimalData(
         'Mammals'.tr,
         12,
@@ -329,11 +579,12 @@ class _RegHomeScreenTutorial extends State<RegHomeScreenTutorial> {
         const Color.fromARGB(255, 254, 255, 168),
       ),
     ];
-    return chartData;
   }
 
   List<Widget> _buildLegendItems() {
-    return _chartData.map((data) {
+    final filteredData = _getFilteredChartData();
+
+    return filteredData.map((data) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -343,159 +594,5 @@ class _RegHomeScreenTutorial extends State<RegHomeScreenTutorial> {
         ],
       );
     }).toList();
-  }
-}
-
-class SmallCardWidget extends StatefulWidget {
-  final String imageAsset; // Use an image asset path instead of an icon
-  final AnimalData animalData;
-  final String quan;
-  final VoidCallback onPressed;
-  final Color color;
-  final bool isSelected; // Added new isSelected property
-
-  const SmallCardWidget({
-    super.key,
-    required this.imageAsset, // Pass an image asset path
-    required this.animalData,
-    required this.quan,
-    required this.onPressed,
-    required this.color,
-    this.isSelected = false,
-  });
-
-  @override
-  State<SmallCardWidget> createState() => _SmallCardWidgetState();
-}
-
-class _SmallCardWidgetState extends State<SmallCardWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.passthrough,
-      children: [
-        if (widget
-            .isSelected) // Show the back card only when isSelected is true
-          Positioned.fill(
-            child: Material(
-              type: MaterialType.card,
-              color: const Color.fromRGBO(
-                  225, 219, 190, 1), // Change the color for the back card
-              borderRadius: BorderRadius.circular(
-                  MediaQuery.of(context).size.width * 0.037),
-            ),
-          ),
-        Padding(
-          padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).size.height * 0.0073),
-          child: Material(
-            type: MaterialType.card,
-            elevation:
-                widget.isSelected ? 10 : 0, // Set elevation based on isSelected
-            borderRadius: BorderRadius.circular(
-                MediaQuery.of(context).size.width * 0.037),
-            color: const Color.fromRGBO(249, 245, 236, 1),
-            child: InkWell(
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              onTap: () {
-                setState(() {
-                  widget.onPressed();
-                });
-              },
-              borderRadius: BorderRadius.circular(
-                  MediaQuery.of(context).size.width * 0.037),
-              child: Padding(
-                padding:
-                    EdgeInsets.all(MediaQuery.of(context).size.width * 0.042),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      widget.imageAsset, // Use the provided image asset path
-                      width: 50,
-                      height: 50,
-                    ),
-                    SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.014),
-                    Text(widget.animalData.animal,
-                        style: AppFonts.body2(color: AppColors.grayscale100)),
-                    SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.0034),
-                    Text(widget.animalData.quan.toString(),
-                        style:
-                            AppFonts.headline4(color: AppColors.grayscale100)),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class CardWidget extends StatelessWidget {
-  final String imagePath; // Image path for Image.asset
-  final String text;
-  final String buttonText;
-  final VoidCallback onPressed;
-  final Color color;
-
-  const CardWidget({
-    super.key,
-    required this.imagePath,
-    required this.text,
-    required this.buttonText,
-    required this.onPressed,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Card(
-        color: color, // Set the color of the card
-        child: Container(
-          width: 150,
-          height: 220,
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Image.asset(
-                imagePath, // Use Image.asset with the specified image path
-                width: 40, // Set the width of the image
-                height: 40, // Set the height of the image
-              ),
-              Text(
-                text,
-                style: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.black), // Set the color of the text
-              ),
-              Center(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 36, 86,
-                        38),
-                  ),
-                  onPressed: onPressed,
-                  child: Text(
-                    buttonText,
-                    style: const TextStyle(
-                        color:
-                            Colors.white), // Set the text color of the button
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }

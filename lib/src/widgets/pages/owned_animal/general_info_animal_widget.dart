@@ -56,7 +56,7 @@ class _GeneralInfoAnimalWidgetState
     extends ConsumerState<GeneralInfoAnimalWidget> {
   bool loading = false;
   double uploadProgress = 0.0;
-  
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -179,13 +179,14 @@ class _GeneralInfoAnimalWidgetState
                 Visibility(
                   visible: widget.oviDetails.customFields != null,
                   child: Column(
-                    children: widget.oviDetails.customFields!.keys
-                        .map((fieldName) => TableTextButton(
-                            onPressed: () {},
-                            textButton:
-                                widget.oviDetails.customFields![fieldName]!,
-                            textHead: fieldName))
-                        .toList(),
+                    children: widget.oviDetails.customFields?.keys
+                            .map((fieldName) => TableTextButton(
+                                onPressed: () {},
+                                textButton:
+                                    widget.oviDetails.customFields![fieldName]!,
+                                textHead: fieldName))
+                            .toList() ??
+                        [],
                   ),
                 ),
                 SizedBox(
@@ -207,55 +208,57 @@ class _GeneralInfoAnimalWidgetState
                       ),
                     ],
                   ),
-                ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: widget.oviDetails.files?.length,
-                  itemBuilder: (context, index) {
-                    final filePath = widget.oviDetails.files![index].path;
+                if (widget.oviDetails.files?.isNotEmpty == true)
+                  ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: widget.oviDetails.files?.length,
+                    itemBuilder: (context, index) {
+                      final filePath = widget.oviDetails.files![index].path;
 
-                    return StyledDismissible(
-                      confirmDismiss: _confirmFileDeletion,
-                      onDismissed: (direction) => _deleteFile(filePath),
-                      child: GestureDetector(
-                        onTap: () => _showFile(widget.oviDetails.files!, index),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.file_copy_outlined,
-                                color: AppColors.primary30,
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  filePath.split('/').last,
-                                  style: AppFonts.body1(
-                                      color: AppColors.grayscale90),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+                      return StyledDismissible(
+                        confirmDismiss: _confirmFileDeletion,
+                        onDismissed: (direction) => _deleteFile(filePath),
+                        child: GestureDetector(
+                          onTap: () =>
+                              _showFile(widget.oviDetails.files!, index),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.file_copy_outlined,
+                                  color: AppColors.primary30,
                                 ),
-                              ),
-                              const SizedBox(width: 8),
-                              if (loading)
+                                const SizedBox(width: 8),
                                 Expanded(
-                                  child: LinearProgressIndicator(
-                                    value: uploadProgress,
-                                    valueColor:
-                                        const AlwaysStoppedAnimation<Color>(
-                                      AppColors.primary30,
-                                    ),
-                                    backgroundColor: AppColors.grayscale10,
+                                  child: Text(
+                                    filePath.split('/').last,
+                                    style: AppFonts.body1(
+                                        color: AppColors.grayscale90),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                            ],
+                                const SizedBox(width: 8),
+                                if (loading)
+                                  Expanded(
+                                    child: LinearProgressIndicator(
+                                      value: uploadProgress,
+                                      valueColor:
+                                          const AlwaysStoppedAnimation<Color>(
+                                        AppColors.primary30,
+                                      ),
+                                      backgroundColor: AppColors.grayscale10,
+                                    ),
+                                  ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                ),
+                      );
+                    },
+                  ),
                 const SizedBox(
                   height: 111,
                 ),
@@ -268,8 +271,13 @@ class _GeneralInfoAnimalWidgetState
   }
 
   void _showFile(List<File> files, int index) {
-    Navigator.push(context, MaterialPageRoute(
-        builder: (context) => FileViewPage(files: files, index: index,)));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => FileViewPage(
+                  files: files,
+                  index: index,
+                )));
   }
 
   Future<bool?> _confirmFileDeletion(DismissDirection direction) {
@@ -286,8 +294,10 @@ class _GeneralInfoAnimalWidgetState
   _deleteFile(String filePath) {
     File(filePath).delete();
     ref.read(animalListProvider.notifier).updateAnimal(widget.oviDetails
-        .copyWith(files: widget.oviDetails.files!.where((file) => file.path !=
-        filePath).toList()));
+        .copyWith(
+            files: widget.oviDetails.files!
+                .where((file) => file.path != filePath)
+                .toList()));
   }
 
   String _calculateAge(DateTime? selectedDate) {

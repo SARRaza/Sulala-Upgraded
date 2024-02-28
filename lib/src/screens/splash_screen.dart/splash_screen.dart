@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:showcaseview/showcaseview.dart';
 
 import 'package:sulala_upgrade/src/data/globals.dart';
 
@@ -30,21 +29,8 @@ class _SplashScreenState extends State<SplashScreen> {
       });
 
       // After the delay, navigate to the Home Page Based on the user Auth
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => ShowCaseWidget(
-            builder: Builder(
-              builder: (context) => const GuestHomeScreenTutorial(),
-            ),
-            onFinish: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                    builder: (context) => const GuestHomeScreenTutorial()),
-              );
-            },
-          ),
-        ),
-      );
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const GuestHomeScreenTutorial()));
     });
   }
 
