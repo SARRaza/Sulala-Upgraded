@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sulala_upgrade/src/screens/splash_screen.dart/splash_screen.dart';
+import 'package:sulala_upgrade/src/widgets/pages/main_widgets/navigation_bar_guest_mode.dart';
 import 'src/data/locale_strings.dart';
 import 'src/screens/reg_mode/notifications_list.dart';
 import 'src/screens/reg_mode/reg_home_page.dart';

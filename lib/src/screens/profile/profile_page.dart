@@ -13,13 +13,16 @@ import '../../widgets/controls_and_buttons/buttons/secondary_button.dart';
 import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
 import '../../widgets/other/profile_three_information_block.dart';
 import 'about_app.dart';
+import 'accounts/authorization_methods.dart';
 import 'app_setting.dart';
 import 'customer_support.dart';
 import 'edit_profile_information.dart';
 import 'list_of_staff.dart';
 import 'notifications_pause.dart';
+import 'payment_methods/payment_page.dart';
 import 'privacy_security.dart';
 import 'shimmer_profile_page.dart';
+import 'subscription/subscription_page.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   final bool showEditIcon;
@@ -176,8 +179,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           head3: ref.watch(countStaffProvider).when(
                               data: (count) => count.toString(),
                               error: (error, trace) => error.toString(),
-                              loading: () => ''
-                          ),
+                              loading: () => ''),
                         ),
                         SizedBox(
                             height: 24 * SizeConfig.heightMultiplier(context)),
@@ -214,6 +216,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         style: AppFonts.body2(color: AppColors.grayscale90),
                       ),
                       onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const AuthorizationMethodsPage()),
+                        );
                       }),
                   ListTile(
                       contentPadding: EdgeInsets.zero,
@@ -234,6 +242,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         style: AppFonts.body2(color: AppColors.grayscale90),
                       ),
                       onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const PaymentPage()),
+                        );
                       }),
                   ListTile(
                       contentPadding: EdgeInsets.zero,
@@ -254,6 +267,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         style: AppFonts.body2(color: AppColors.grayscale90),
                       ),
                       onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SubscriptionPage()),
+                        );
                       }),
                 ],
               ),
