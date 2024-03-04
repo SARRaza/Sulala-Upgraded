@@ -5,7 +5,6 @@ import 'package:badges/badges.dart' as badges;
 import 'package:get/get.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
-import 'package:sulala_upgrade/src/widgets/controls_and_buttons/buttons/tutorial_next_button.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/colors/pie_chart_colors.dart';
@@ -13,10 +12,11 @@ import '../../theme/fonts/fonts.dart';
 import '../../widgets/controls_and_buttons/tags/tags.dart';
 import '../../widgets/inputs/draw_ups/draw_up_widget.dart';
 import '../../widgets/pages/homepage_widgets/card.dart';
+import '../../widgets/pages/main_widgets/navigation_bar_guest_mode.dart';
 import '../reg_mode/reg_home_page.dart';
 import '../reg_mode/show_filter_reg.dart';
 import '../reg_mode/small_card_widget.dart';
-import 'animal_info_tutorial.dart';
+import 'animal_management_tutorial.dart';
 
 class RegHomeScreenTutorial extends StatefulWidget {
   const RegHomeScreenTutorial({super.key});
@@ -27,9 +27,7 @@ class RegHomeScreenTutorial extends StatefulWidget {
 
 class _RegHomeScreenTutorialState extends State<RegHomeScreenTutorial> {
   final GlobalKey _animalOverview = GlobalKey();
-  final GlobalKey _pieChart = GlobalKey();
   final GlobalKey _filter = GlobalKey();
-  final GlobalKey _next2 = GlobalKey();
   BuildContext? showCaseContext;
 
   @override
@@ -39,7 +37,7 @@ class _RegHomeScreenTutorialState extends State<RegHomeScreenTutorial> {
     sumOfNextTwoCards = _chartData[0].quan + _chartData[1].quan;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ShowCaseWidget.of(showCaseContext!)
-          .startShowCase([_animalOverview, _pieChart, _filter, _next2]);
+          .startShowCase([_animalOverview, _filter]);
     });
   }
 
@@ -264,13 +262,17 @@ class _RegHomeScreenTutorialState extends State<RegHomeScreenTutorial> {
                                     color: AppColors.grayscale90)),
                             const Spacer(),
                             Showcase(
+                              disableBarrierInteraction: true,
+                              disableDefaultTargetGestures: true,
+                              actions: _buildShowcaseActions(),
+                              tooltipBackgroundColor: Colors.transparent,
+                              descTextStyle: AppFonts.headline1(
+                                  color: AppColors.grayscale00),
                               key: _filter,
                               targetPadding: const EdgeInsets.all(20),
                               description:
                                   'Use Filters To Create The Chart With More Inputs'
                                       .tr,
-                              descTextStyle: const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
                               targetBorderRadius: const BorderRadius.all(
                                 Radius.circular(50),
                               ),
@@ -292,130 +294,129 @@ class _RegHomeScreenTutorialState extends State<RegHomeScreenTutorial> {
                         SizedBox(
                             height: SizeConfig.heightMultiplier(context) * 12),
                         Showcase(
+                          disableBarrierInteraction: true,
+                          disableDefaultTargetGestures: true,
+                          actions: _buildShowcaseActions(),
+                          tooltipBackgroundColor: Colors.transparent,
+                          descTextStyle: AppFonts.headline1(
+                              color: AppColors.grayscale00),
                           key: _animalOverview,
-                          targetBorderRadius: const BorderRadius.all(
-                            Radius.circular(30),
+                          // targetBorderRadius: const BorderRadius.all(
+                          //   Radius.circular(30),
+                          // ),
+                          targetShapeBorder: const CircleBorder(),
+                          targetPadding: EdgeInsets.fromLTRB(
+                            50 * SizeConfig.widthMultiplier(context),
+                            120 * SizeConfig.heightMultiplier(context),
+                            20 * SizeConfig.widthMultiplier(context),
+                            0 * SizeConfig.heightMultiplier(context),
                           ),
-                          targetPadding: const EdgeInsets.all(5),
-                          tooltipBackgroundColor:
-                              const Color.fromARGB(235, 255, 248, 214),
                           description:
-                              'Here You Can Know The Number Of Animals In Your Farm'
-                                  .tr,
-                          descTextStyle: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          'Here you can see the number of animals on your farm. A pie chart will help visualize proportions'
+                              .tr,
+                          child: Column(
                             children: [
-                              SizedBox(
-                                height:
-                                    SizeConfig.heightMultiplier(context) * 148,
-                                width:
-                                    SizeConfig.widthMultiplier(context) * 106,
-                                child: SmallCardWidget(
-                                  icon: Image.asset(
-                                    "assets/icons/frame/24px/cow_chicken.png",
-                                    width: SizeConfig.widthMultiplier(context) *
-                                        48,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    height:
+                                        SizeConfig.heightMultiplier(context) * 148,
+                                    width:
+                                        SizeConfig.widthMultiplier(context) * 106,
+                                    child: SmallCardWidget(
+                                      icon: Image.asset(
+                                        "assets/icons/frame/24px/cow_chicken.png",
+                                        width: SizeConfig.widthMultiplier(context) *
+                                            48,
+                                      ),
+                                      animalData: AnimalData('ALL'.tr,
+                                          sumOfNextTwoCards, _chartData[0].color),
+                                      quan: sumOfNextTwoCards.toString(),
+                                      onPressed: () {
+                                        _updateChartData(
+                                            sumOfNextTwoCards, 'ALL'.tr);
+                                      },
+                                      isSelected: _selectedIndex == -1,
+                                    ),
                                   ),
-                                  animalData: AnimalData('ALL'.tr,
-                                      sumOfNextTwoCards, _chartData[0].color),
-                                  quan: sumOfNextTwoCards.toString(),
-                                  onPressed: () {
-                                    _updateChartData(
-                                        sumOfNextTwoCards, 'ALL'.tr);
-                                  },
-                                  isSelected: _selectedIndex == -1,
-                                ),
+                                  SizedBox(
+                                    height:
+                                        SizeConfig.heightMultiplier(context) * 148,
+                                    width:
+                                        SizeConfig.widthMultiplier(context) * 106,
+                                    child: SmallCardWidget(
+                                      icon: Image.asset(
+                                        "assets/icons/frame/24px/cow_framed.png",
+                                        width: SizeConfig.widthMultiplier(context) *
+                                            48,
+                                      ),
+                                      quan: _chartData[0].quan.toString(),
+                                      animalData: _chartData[0],
+                                      onPressed: () {
+                                        _updateChartData(
+                                            _chartData[0].quan, 'Mammals'.tr);
+                                      },
+                                      isSelected: _selectedIndex == 0,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height:
+                                        SizeConfig.heightMultiplier(context) * 148,
+                                    width:
+                                        SizeConfig.widthMultiplier(context) * 106,
+                                    child: SmallCardWidget(
+                                      icon: Image.asset(
+                                        "assets/icons/frame/24px/chicken_framed.png",
+                                        width: SizeConfig.widthMultiplier(context) *
+                                            48,
+                                      ),
+                                      animalData: _chartData[1],
+                                      quan: _chartData[1].quan.toString(),
+                                      onPressed: () {
+                                        _updateChartData(
+                                            _chartData[1].quan, 'Oviparous'.tr);
+                                      },
+                                      isSelected: _selectedIndex == 1,
+                                    ),
+                                  ),
+                                ],
                               ),
                               SizedBox(
-                                height:
-                                    SizeConfig.heightMultiplier(context) * 148,
-                                width:
-                                    SizeConfig.widthMultiplier(context) * 106,
-                                child: SmallCardWidget(
-                                  icon: Image.asset(
-                                    "assets/icons/frame/24px/cow_framed.png",
-                                    width: SizeConfig.widthMultiplier(context) *
-                                        48,
-                                  ),
-                                  quan: _chartData[0].quan.toString(),
-                                  animalData: _chartData[0],
-                                  onPressed: () {
-                                    _updateChartData(
-                                        _chartData[0].quan, 'Mammals'.tr);
-                                  },
-                                  isSelected: _selectedIndex == 0,
-                                ),
-                              ),
-                              SizedBox(
-                                height:
-                                    SizeConfig.heightMultiplier(context) * 148,
-                                width:
-                                    SizeConfig.widthMultiplier(context) * 106,
-                                child: SmallCardWidget(
-                                  icon: Image.asset(
-                                    "assets/icons/frame/24px/chicken_framed.png",
-                                    width: SizeConfig.widthMultiplier(context) *
-                                        48,
-                                  ),
-                                  animalData: _chartData[1],
-                                  quan: _chartData[1].quan.toString(),
-                                  onPressed: () {
-                                    _updateChartData(
-                                        _chartData[1].quan, 'Oviparous'.tr);
-                                  },
-                                  isSelected: _selectedIndex == 1,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                            height: SizeConfig.heightMultiplier(context) * 16),
-                        Showcase(
-                          key: _pieChart,
-                          description:
-                              'This PieChart Will Help You Visualize Proportions'
-                                  .tr,
-                          targetBorderRadius: const BorderRadius.all(
-                            Radius.circular(30),
-                          ),
-                          tooltipBackgroundColor:
-                              const Color.fromARGB(255, 197, 219, 158),
-                          descTextStyle: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width:
+                                  height: SizeConfig.heightMultiplier(context) * 16),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    width:
                                     SizeConfig.widthMultiplier(context) * 216,
-                                height:
+                                    height:
                                     SizeConfig.heightMultiplier(context) * 220,
-                                child: SfCircularChart(
-                                  margin: const EdgeInsets.all(0),
-                                  series: <CircularSeries>[
-                                    DoughnutSeries<AnimalData, String>(
-                                      dataSource: _getFilteredChartData(),
-                                      xValueMapper: (AnimalData data, _) =>
+                                    child: SfCircularChart(
+                                      margin: const EdgeInsets.all(0),
+                                      series: <CircularSeries>[
+                                        DoughnutSeries<AnimalData, String>(
+                                          dataSource: _getFilteredChartData(),
+                                          xValueMapper: (AnimalData data, _) =>
                                           data.animal,
-                                      yValueMapper: (AnimalData data, _) =>
+                                          yValueMapper: (AnimalData data, _) =>
                                           data.quan,
-                                      pointColorMapper: (AnimalData data, _) =>
+                                          pointColorMapper: (AnimalData data, _) =>
                                           data.quan == 0
                                               ? Colors.grey
                                               : speciesColorMap[data.animal] ??
-                                                  data.color,
+                                              data.color,
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                child: ListView(
-                                  shrinkWrap: true,
-                                  children: _buildLegendItems(),
-                                ),
+                                  ),
+                                  Expanded(
+                                    child: ListView(
+                                      shrinkWrap: true,
+                                      children: _buildLegendItems(),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -481,18 +482,6 @@ class _RegHomeScreenTutorialState extends State<RegHomeScreenTutorial> {
                     ),
                   ),
                 ),
-              ),
-              floatingActionButton: TutorialTextButton(
-                showcaseKey: _next2,
-                description: 'Click Here To Go To Next Page Tutorial'.tr,
-                onTargetClick: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          const AnimalInfoTutorialPage(), // Replace with your desired page.
-                    ),
-                  );
-                },
               ),
               bottomNavigationBar: Stack(
                 children: [
@@ -594,5 +583,69 @@ class _RegHomeScreenTutorialState extends State<RegHomeScreenTutorial> {
         ],
       );
     }).toList();
+  }
+
+  List<Widget> _buildShowcaseActions() {
+    return [
+      Positioned(
+        top: 51,
+        right: 16,
+        child: SizedBox(
+          width: 40,
+          height: 40,
+          child: FloatingActionButton(
+            onPressed: () {
+              ShowCaseWidget.of(showCaseContext!).dismiss();
+
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const NavigationBarGuestMode(),
+                ),
+              );
+            },
+            backgroundColor: Colors.white,
+            elevation: 10,
+            shape: const CircleBorder(),
+            child: const SizedBox(
+              width: 24,
+              height: 24,
+              child: Image(
+                image: AssetImage('assets/icons/frame/24px/24_Close.png'),
+              ),
+            ),
+          ),
+        ),
+      ),
+      Positioned(
+        right: 16,
+        bottom: 91,
+        child: SizedBox(
+          width: 40,
+          height: 40,
+          child: FloatingActionButton(
+            onPressed: () {
+              ShowCaseWidget.of(showCaseContext!).next();
+              if (ShowCaseWidget.of(showCaseContext!).activeWidgetId == null) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AnimalManagementTutorial())
+                );
+              }
+            },
+            backgroundColor: Colors.white,
+            elevation: 10,
+            shape: const CircleBorder(),
+            child: const SizedBox(
+              width: 24,
+              height: 24,
+              child: Image(
+                image: AssetImage('assets/icons/frame/24px/24_Arrow_right.png'),
+              ),
+            ),
+          ),
+        ),
+      )
+    ];
   }
 }

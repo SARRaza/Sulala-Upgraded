@@ -10,7 +10,6 @@ import '../../data/classes/ovi_variables.dart';
 import '../../data/place_holders.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/fonts/fonts.dart';
-import '../../widgets/controls_and_buttons/buttons/tutorial_next_button.dart';
 import '../../widgets/controls_and_buttons/tags/custom_tags.dart';
 import '../../widgets/controls_and_buttons/text_buttons/primary_text_button.dart';
 import '../../widgets/inputs/file_uploader_fields/file_uploader_field.dart';
@@ -40,7 +39,6 @@ class _AnimalInfoTutorialPageState extends State<AnimalInfoTutorialPage>
   final GlobalKey _medicalOverview = GlobalKey();
   final GlobalKey _addMedicalNeeds = GlobalKey();
   final GlobalKey _editButton = GlobalKey();
-  final GlobalKey _gotoHomepage = GlobalKey();
 
   bool isMammalEditMode = false;
 
@@ -60,7 +58,6 @@ class _AnimalInfoTutorialPageState extends State<AnimalInfoTutorialPage>
         _medicalOverview,
         _addMedicalNeeds,
         _editButton,
-        _gotoHomepage
       ]);
     });
     oviDetails = OviVariables(
@@ -152,16 +149,16 @@ class _AnimalInfoTutorialPageState extends State<AnimalInfoTutorialPage>
                         decoration: const BoxDecoration(
                             color: AppColors.grayscale10, shape: BoxShape.circle),
                         child: Showcase(
+                          disableBarrierInteraction: true,
+                          disableDefaultTargetGestures: true,
+                          actions: _buildShowcaseActions(),
+                          tooltipBackgroundColor: Colors.transparent,
+                          descTextStyle: AppFonts.headline1(
+                              color: AppColors.grayscale00),
                           key: _editButton,
                           targetBorderRadius: const BorderRadius.all(
                             Radius.circular(50),
                           ),
-                          tooltipBackgroundColor:
-                          const Color.fromARGB(255, 251, 247, 206),
-                          descTextStyle: const TextStyle(
-                              fontSize: 18,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
                           description: 'Add & Edit Information To Your Animal'.tr,
                           child: IconButton(
                             padding: EdgeInsets.zero,
@@ -295,18 +292,6 @@ class _AnimalInfoTutorialPageState extends State<AnimalInfoTutorialPage>
                     ),
                   ],
                 ),
-                floatingActionButton: TutorialTextButton(
-                  showcaseKey: _gotoHomepage,
-                  description: 'Click Here To Go To HomePage'.tr,
-                  onTargetClick: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                        const NavigationBarGuestMode(), // Replace with your desired page.
-                      ),
-                    );
-                  },
-                )
             ),
           );
         }
@@ -323,13 +308,16 @@ class _AnimalInfoTutorialPageState extends State<AnimalInfoTutorialPage>
         children: [
           // Content for the 'General' tab
           Showcase(
+            disableBarrierInteraction: true,
+            disableDefaultTargetGestures: true,
+            actions: _buildShowcaseActions(),
+            tooltipBackgroundColor: Colors.transparent,
+            descTextStyle: AppFonts.headline1(
+                color: AppColors.grayscale00),
             key: _generalOverview,
             targetBorderRadius: const BorderRadius.all(
               Radius.circular(50),
             ),
-            tooltipBackgroundColor: const Color.fromARGB(255, 251, 247, 206),
-            descTextStyle: const TextStyle(
-                fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
             description:
                 'Here You Can Find All The General Info About The Animals'.tr,
             child: GeneralInfoAnimalWidget(
@@ -361,13 +349,16 @@ class _AnimalInfoTutorialPageState extends State<AnimalInfoTutorialPage>
 
           // Content for the 'Breeding' tab
           Showcase(
+            disableBarrierInteraction: true,
+            disableDefaultTargetGestures: true,
+            actions: _buildShowcaseActions(),
+            tooltipBackgroundColor: Colors.transparent,
+            descTextStyle: AppFonts.headline1(
+                color: AppColors.grayscale00),
             key: _breedingOverview,
             targetBorderRadius: const BorderRadius.all(
               Radius.circular(50),
             ),
-            tooltipBackgroundColor: const Color.fromARGB(255, 251, 247, 206),
-            descTextStyle: const TextStyle(
-                fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
             description:
                 'Here You Can Find All The Breeding Details Of The Animals'.tr,
             child: BreedingInfo(
@@ -404,15 +395,17 @@ class _AnimalInfoTutorialPageState extends State<AnimalInfoTutorialPage>
         tabs: [
           Tab(text: 'General'.tr),
           Showcase(
+              disableBarrierInteraction: true,
+              //disableDefaultTargetGestures: true,
+              actions: _buildShowcaseActions(
+                  onNextClicked: () => _tabController.animateTo(1)),
+              tooltipBackgroundColor: Colors.transparent,
+              descTextStyle: AppFonts.headline1(
+                  color: AppColors.grayscale00),
               key: _clickBreeding,
               targetBorderRadius: const BorderRadius.all(
                 Radius.circular(50),
               ),
-              tooltipBackgroundColor: const Color.fromARGB(255, 251, 247, 206),
-              descTextStyle: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold),
               description: 'Click Here'.tr,
               disposeOnTap: false,
               onTargetClick: () {
@@ -421,15 +414,18 @@ class _AnimalInfoTutorialPageState extends State<AnimalInfoTutorialPage>
               },
               child: Tab(text: 'Breeding'.tr)),
           Showcase(
+              disableBarrierInteraction: true,
+              //disableDefaultTargetGestures: true,
+              actions: _buildShowcaseActions(
+                onNextClicked: () => _tabController.animateTo(2)
+              ),
+              tooltipBackgroundColor: Colors.transparent,
+              descTextStyle: AppFonts.headline1(
+                  color: AppColors.grayscale00),
               key: _clickMedical,
               targetBorderRadius: const BorderRadius.all(
                 Radius.circular(50),
               ),
-              tooltipBackgroundColor: const Color.fromARGB(255, 251, 247, 206),
-              descTextStyle: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold),
               description: 'Click Here'.tr,
               disposeOnTap: false,
               onTargetClick: () {
@@ -486,17 +482,16 @@ class _AnimalInfoTutorialPageState extends State<AnimalInfoTutorialPage>
     final deliveryDate = now.add(const Duration(days: 2));
 
     return Showcase(
+      disableBarrierInteraction: true,
+      disableDefaultTargetGestures: true,
+      actions: _buildShowcaseActions(),
+      tooltipBackgroundColor: Colors.transparent,
+      descTextStyle: AppFonts.headline1(
+          color: AppColors.grayscale00),
       key: _medicalOverview,
       targetBorderRadius: const BorderRadius.all(
         Radius.circular(50),
       ),
-      tooltipBackgroundColor:
-      const Color.fromARGB(
-          255, 251, 247, 206),
-      descTextStyle: const TextStyle(
-          fontSize: 18,
-          color: Colors.black,
-          fontWeight: FontWeight.bold),
       description:
       'Here You Can Find All The Medical Details Of The Animals'
           .tr,
@@ -542,16 +537,16 @@ class _AnimalInfoTutorialPageState extends State<AnimalInfoTutorialPage>
                           });
                         })
                     : Showcase(
+                      disableBarrierInteraction: true,
+                      disableDefaultTargetGestures: true,
+                      actions: _buildShowcaseActions(),
+                      tooltipBackgroundColor: Colors.transparent,
+                      descTextStyle: AppFonts.headline1(
+                      color: AppColors.grayscale00),
                         key: _addMedicalNeeds,
                         targetBorderRadius: const BorderRadius.all(
                           Radius.circular(50),
                         ),
-                        tooltipBackgroundColor:
-                            const Color.fromARGB(255, 251, 247, 206),
-                        descTextStyle: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
                         description:
                             'Add Medical Recommendations To The Custom Field'.tr,
                         child: IconButton(
@@ -991,4 +986,71 @@ class _AnimalInfoTutorialPageState extends State<AnimalInfoTutorialPage>
       ),
     );
   }
+
+  List<Widget> _buildShowcaseActions({Function? onNextClicked}) {
+    return [
+      Positioned(
+        top: 51,
+        left: 16,
+        child: SizedBox(
+          width: 40,
+          height: 40,
+          child: FloatingActionButton(
+            onPressed: () {
+              ShowCaseWidget.of(showCaseContext!).dismiss();
+
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const NavigationBarGuestMode(),
+                ),
+              );
+            },
+            backgroundColor: Colors.white,
+            elevation: 10,
+            shape: const CircleBorder(),
+            child: const SizedBox(
+              width: 24,
+              height: 24,
+              child: Image(
+                image: AssetImage('assets/icons/frame/24px/24_Close.png'),
+              ),
+            ),
+          ),
+        ),
+      ),
+      Positioned(
+        left: 16,
+        bottom: 91,
+        child: SizedBox(
+          width: 40,
+          height: 40,
+          child: FloatingActionButton(
+            onPressed: () {
+              if(onNextClicked != null) {
+                onNextClicked();
+              }
+              ShowCaseWidget.of(showCaseContext!).next();
+              if (ShowCaseWidget.of(showCaseContext!).activeWidgetId == null) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const NavigationBarGuestMode()));
+              }
+            },
+            backgroundColor: Colors.white,
+            elevation: 10,
+            shape: const CircleBorder(),
+            child: const SizedBox(
+              width: 24,
+              height: 24,
+              child: Image(
+                image: AssetImage('assets/icons/frame/24px/24_Arrow_right.png'),
+              ),
+            ),
+          ),
+        ),
+      )
+    ];
+  }
+
 }
