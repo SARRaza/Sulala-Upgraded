@@ -80,190 +80,185 @@ class _GeneralInfoAnimalWidgetState
           style: AppFonts.title5(color: AppColors.grayscale90),
         ),
         Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TableTextButton(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TableTextButton(
+                onPressed: widget.onDateOfBirthPressed,
+                textButton: _calculateAge(widget.oviDetails.dateOfBirth),
+                textHead: "Age".tr,
+              ),
+              Visibility(
+                visible: widget.oviDetails.dateOfBirth != null,
+                child: TableTextButton(
                   onPressed: widget.onDateOfBirthPressed,
-                  textButton: _calculateAge(widget.oviDetails.dateOfBirth),
-                  textHead: "Age".tr,
+                  textButton: DateFormat('dd/MM/yyyy').format(
+                      widget.oviDetails.dateOfBirth ?? DateTime.now()),
+                  textHead: "Date of Birth".tr,
                 ),
-                Visibility(
-                  visible: widget.oviDetails.dateOfBirth != null,
-                  child: TableTextButton(
-                    onPressed: widget.onDateOfBirthPressed,
-                    textButton: DateFormat('dd/MM/yyyy').format(
-                        widget.oviDetails.dateOfBirth ?? DateTime.now()),
-                    textHead: "Date of Birth".tr,
-                  ),
-                ),
-                TableTextButton(
-                  onPressed: () {},
-                  textButton: widget.oviDetails.selectedAnimalBreed,
-                  textHead: "Breed".tr,
-                ),
-                Visibility(
-                  visible: widget.oviDetails.selectedOviGender == 'Female' &&
-                      widget.oviDetails.selectedAnimalType == 'Mammal',
-                  child: TableTextButton(
-                    onPressed: widget.onDateOfWeaningPressed,
-                    textButton: widget.oviDetails.selectedOviDates
-                                .containsKey('Date Of Weaning') &&
-                            widget.oviDetails
-                                    .selectedOviDates['Date Of Weaning'] !=
-                                null
-                        ? DateFormat('dd/MM/yyyy').format(
-                            widget.oviDetails
-                                .selectedOviDates['Date Of Weaning']!,
-                          )
-                        : 'Add'.tr,
-                    textHead: "Date of Weaning".tr,
-                  ),
-                ),
-                Visibility(
-                  visible: widget.oviDetails.selectedOviGender == 'Female' &&
-                      widget.oviDetails.selectedAnimalType == 'Oviparous',
-                  child: TableTextButton(
-                    onPressed: widget.onDateOfHatchingPressed,
-                    textButton: widget.oviDetails.selectedOviDates
-                                .containsKey('Date Of Hatching') &&
-                            widget.oviDetails
-                                    .selectedOviDates['Date Of Hatching'] !=
-                                null
-                        ? DateFormat('dd/MM/yyyy').format(
-                            widget.oviDetails
-                                .selectedOviDates['Date Of Hatching']!,
-                          )
-                        : 'Add'.tr,
-                    textHead: "Date of Hatching".tr,
-                  ),
-                ),
-                TableTextButton(
-                  onPressed: widget.onDateOfMatingPressed,
+              ),
+              TableTextButton(
+                onPressed: () {},
+                textButton: widget.oviDetails.selectedAnimalBreed,
+                textHead: "Breed".tr,
+              ),
+              Visibility(
+                visible: widget.oviDetails.selectedOviGender == 'Female' &&
+                    widget.oviDetails.selectedAnimalType == 'Mammal',
+                child: TableTextButton(
+                  onPressed: widget.onDateOfWeaningPressed,
                   textButton: widget.oviDetails.selectedOviDates
-                              .containsKey('Date Of Mating') &&
+                              .containsKey('Date Of Weaning') &&
                           widget.oviDetails
-                                  .selectedOviDates['Date Of Mating'] !=
+                                  .selectedOviDates['Date Of Weaning'] !=
                               null
                       ? DateFormat('dd/MM/yyyy').format(
-                          widget.oviDetails.selectedOviDates['Date Of Mating']!,
+                          widget.oviDetails
+                              .selectedOviDates['Date Of Weaning']!,
                         )
                       : 'Add'.tr,
-                  textHead: "Date of Mating".tr,
+                  textHead: "Date of Weaning".tr,
                 ),
-                TableTextButton(
-                  onPressed: widget.onDateOfDeathPressed,
+              ),
+              Visibility(
+                visible: widget.oviDetails.selectedOviGender == 'Female' &&
+                    widget.oviDetails.selectedAnimalType == 'Oviparous',
+                child: TableTextButton(
+                  onPressed: widget.onDateOfHatchingPressed,
                   textButton: widget.oviDetails.selectedOviDates
-                              .containsKey('Date Of Death') &&
-                          widget.oviDetails.selectedOviDates['Date Of Death'] !=
+                              .containsKey('Date Of Hatching') &&
+                          widget.oviDetails
+                                  .selectedOviDates['Date Of Hatching'] !=
                               null
                       ? DateFormat('dd/MM/yyyy').format(
-                          widget.oviDetails.selectedOviDates['Date Of Death']!,
+                          widget.oviDetails
+                              .selectedOviDates['Date Of Hatching']!,
                         )
                       : 'Add'.tr,
-                  textHead: "Date of Death".tr,
+                  textHead: "Date of Hatching".tr,
                 ),
-                TableTextButton(
-                  onPressed: widget.onDateOfSalePressed,
-                  textButton: widget.oviDetails.selectedOviDates
-                              .containsKey('Date Of Sale') &&
-                          widget.oviDetails.selectedOviDates['Date Of Sale'] !=
-                              null
-                      ? DateFormat('dd/MM/yyyy').format(
-                          widget.oviDetails.selectedOviDates['Date Of Sale']!,
-                        )
-                      : 'Add'.tr,
-                  textHead: "Date of Sale".tr,
+              ),
+              TableTextButton(
+                onPressed: widget.onDateOfMatingPressed,
+                textButton: widget.oviDetails.selectedOviDates
+                            .containsKey('Date Of Mating') &&
+                        widget.oviDetails
+                                .selectedOviDates['Date Of Mating'] !=
+                            null
+                    ? DateFormat('dd/MM/yyyy').format(
+                        widget.oviDetails.selectedOviDates['Date Of Mating']!,
+                      )
+                    : 'Add'.tr,
+                textHead: "Date of Mating".tr,
+              ),
+              TableTextButton(
+                onPressed: widget.onDateOfDeathPressed,
+                textButton: widget.oviDetails.selectedOviDates
+                            .containsKey('Date Of Death') &&
+                        widget.oviDetails.selectedOviDates['Date Of Death'] !=
+                            null
+                    ? DateFormat('dd/MM/yyyy').format(
+                        widget.oviDetails.selectedOviDates['Date Of Death']!,
+                      )
+                    : 'Add'.tr,
+                textHead: "Date of Death".tr,
+              ),
+              TableTextButton(
+                onPressed: widget.onDateOfSalePressed,
+                textButton: widget.oviDetails.selectedOviDates
+                            .containsKey('Date Of Sale') &&
+                        widget.oviDetails.selectedOviDates['Date Of Sale'] !=
+                            null
+                    ? DateFormat('dd/MM/yyyy').format(
+                        widget.oviDetails.selectedOviDates['Date Of Sale']!,
+                      )
+                    : 'Add'.tr,
+                textHead: "Date of Sale".tr,
+              ),
+              Visibility(
+                visible: widget.oviDetails.customFields != null,
+                child: Column(
+                  children: widget.oviDetails.customFields?.keys
+                          .map((fieldName) => TableTextButton(
+                              onPressed: () {},
+                              textButton:
+                                  widget.oviDetails.customFields![fieldName]!,
+                              textHead: fieldName))
+                          .toList() ??
+                      [],
                 ),
-                Visibility(
-                  visible: widget.oviDetails.customFields != null,
-                  child: Column(
-                    children: widget.oviDetails.customFields?.keys
-                            .map((fieldName) => TableTextButton(
-                                onPressed: () {},
-                                textButton:
-                                    widget.oviDetails.customFields![fieldName]!,
-                                textHead: fieldName))
-                            .toList() ??
-                        [],
-                  ),
+              ),
+              SizedBox(
+                height: SizeConfig.heightMultiplier(context) * 24,
+              ),
+              if (widget.oviDetails.notes.isNotEmpty)
+                Column(
+                  children: [
+                    Text(
+                      "Additional Notes".tr,
+                      style: AppFonts.title5(color: AppColors.grayscale90),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.heightMultiplier(context) * 14,
+                    ),
+                    Text(
+                      widget.oviDetails.notes,
+                      style: AppFonts.body1(color: AppColors.grayscale90),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: SizeConfig.heightMultiplier(context) * 24,
-                ),
-                if (widget.oviDetails.notes.isNotEmpty)
-                  Column(
-                    children: [
-                      Text(
-                        "Additional Notes".tr,
-                        style: AppFonts.title5(color: AppColors.grayscale90),
-                      ),
-                      SizedBox(
-                        height: SizeConfig.heightMultiplier(context) * 14,
-                      ),
-                      Text(
-                        widget.oviDetails.notes,
-                        style: AppFonts.body1(color: AppColors.grayscale90),
-                      ),
-                    ],
-                  ),
-                if (widget.oviDetails.files?.isNotEmpty == true)
-                  ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: widget.oviDetails.files?.length,
-                    itemBuilder: (context, index) {
-                      final filePath = widget.oviDetails.files![index].path;
+              if (widget.oviDetails.files?.isNotEmpty == true)
+                ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: widget.oviDetails.files?.length,
+                  itemBuilder: (context, index) {
+                    final filePath = widget.oviDetails.files![index].path;
 
-                      return StyledDismissible(
-                        confirmDismiss: _confirmFileDeletion,
-                        onDismissed: (direction) => _deleteFile(filePath),
-                        child: GestureDetector(
-                          onTap: () =>
-                              _showFile(widget.oviDetails.files!, index),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.file_copy_outlined,
-                                  color: AppColors.primary30,
+                    return StyledDismissible(
+                      confirmDismiss: _confirmFileDeletion,
+                      onDismissed: (direction) => _deleteFile(filePath),
+                      child: GestureDetector(
+                        onTap: () =>
+                            _showFile(widget.oviDetails.files!, index),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.file_copy_outlined,
+                                color: AppColors.primary30,
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  filePath.split('/').last,
+                                  style: AppFonts.body1(
+                                      color: AppColors.grayscale90),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                const SizedBox(width: 8),
+                              ),
+                              const SizedBox(width: 8),
+                              if (loading)
                                 Expanded(
-                                  child: Text(
-                                    filePath.split('/').last,
-                                    style: AppFonts.body1(
-                                        color: AppColors.grayscale90),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                                  child: LinearProgressIndicator(
+                                    value: uploadProgress,
+                                    valueColor:
+                                        const AlwaysStoppedAnimation<Color>(
+                                      AppColors.primary30,
+                                    ),
+                                    backgroundColor: AppColors.grayscale10,
                                   ),
                                 ),
-                                const SizedBox(width: 8),
-                                if (loading)
-                                  Expanded(
-                                    child: LinearProgressIndicator(
-                                      value: uploadProgress,
-                                      valueColor:
-                                          const AlwaysStoppedAnimation<Color>(
-                                        AppColors.primary30,
-                                      ),
-                                      backgroundColor: AppColors.grayscale10,
-                                    ),
-                                  ),
-                              ],
-                            ),
+                            ],
                           ),
                         ),
-                      );
-                    },
-                  ),
-                const SizedBox(
-                  height: 111,
+                      ),
+                    );
+                  },
                 ),
-              ],
-            ),
+            ],
           ),
         ),
       ],

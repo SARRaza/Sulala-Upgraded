@@ -32,199 +32,197 @@ class BreedingInfo extends ConsumerStatefulWidget {
 class _BreedingInfoState extends ConsumerState<BreedingInfo> {
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: ref.watch(breedingEventListProvider(widget.oviDetails.id!)).when(
-        error: (error, trace) => Text('Error: $error'),
-        loading: () => const CircularProgressIndicator(),
-        data: (events) {
-          final lastBreedingDate = events.lastOrNull?.breedingDate;
-          final nextBreedingDate = lastBreedingDate?.add(Duration(
-              days: widget.oviDetails.selectedAnimalType == 'Mammal'
-                  ? gestationPeriods[widget.oviDetails.selectedAnimalSpecies]!
-                  : incubationPeriods[widget.oviDetails.selectedAnimalSpecies]!)
-          );
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (widget.oviDetails.selectedOviGender == 'Female')
-                SizedBox(
-                  width: SizeConfig.widthMultiplier(context) * 343,
-                  child: OneInformationBlock(
-                      head1: 'Pregnancy status',
-                      subtitle1: widget.oviDetails.pregnant == true
-                          ? 'Pregnant'
-                          : 'Not Pregnant'),
-                ),
-              if (widget.oviDetails.selectedOviGender == 'Male')
-                SizedBox(
-                  height: SizeConfig.heightMultiplier(context) * 8,
-                ),
-              if (widget.oviDetails.selectedOviGender == 'Female' &&
-                  widget.oviDetails.selectedAnimalType == 'Oviparous' &&
-                  (lastBreedingDate != null || nextBreedingDate != null))
-                SizedBox(
-                  width: 343 * SizeConfig.widthMultiplier(context),
-                  child: TwoInformationBlock(
-                    head1: lastBreedingDate != null
-                        ? DateFormat('dd.MM.yyyy').format(lastBreedingDate)
-                        : '',
-                    head2: nextBreedingDate != null
-                        ? DateFormat('dd.MM.yyyy').format(nextBreedingDate)
-                        : '',
-                    subtitle1: "Last Breeding Date",
-                    subtitle2: 'Next Breeding Date',
-                  ),
-                ),
-              if (widget.oviDetails.selectedOviGender == 'Male')
-                SizedBox(
-                  width: 343 * SizeConfig.widthMultiplier(context),
-                  child: TwoInformationBlock(
-                    head1: widget.oviDetails.selectedOviDates
-                            .containsKey('Date Of Mating')
-                        ? DateFormat('dd.MM.yyyy').format(
-                            widget.oviDetails.selectedOviDates['Date Of Mating']!)
-                        : '',
-                    head2: widget.oviDetails.selectedOviDates
-                            .containsKey('Next Date Of Mating')
-                        ? DateFormat('dd.MM.yyyy').format(widget
-                            .oviDetails.selectedOviDates['Next Date Of Mating']!)
-                        : 'Add',
-                    subtitle1: "Date Of Mating",
-                    subtitle2: 'Next Date Of Mating',
-                    onTap2: () => _updateDateField('Next Date Of Mating'),
-                  ),
-                ),
-              if (widget.oviDetails.selectedOviGender == 'Male')
-                SizedBox(
-                  height: SizeConfig.heightMultiplier(context) * 24,
-                ),
-              Column(
-                children: [
-                  ListTile(
-                    contentPadding: const EdgeInsets.only(right: 0, left: 0),
-                    leading:
-                        Image.asset('assets/icons/frame/24px/breeding_history.png'),
-                    title: Text(
-                      'Breeding History',
-                      style: AppFonts.headline3(color: AppColors.grayscale90),
-                    ),
-                    trailing: Icon(Icons.chevron_right_rounded,
-                        size: 24 * SizeConfig.widthMultiplier(context)),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return ListOfBreedingEvents(animalId: widget.oviDetails.id!,);
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    contentPadding: const EdgeInsets.only(right: 0, left: 0),
-                    leading: Image.asset('assets/icons/frame/24px/parents.png'),
-                    title: Text(
-                      'Parents',
-                      style: AppFonts.headline3(color: AppColors.grayscale90),
-                    ),
-                    trailing: Icon(Icons.chevron_right_rounded,
-                        size: 24 * SizeConfig.widthMultiplier(context)),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return ParentsPage(
-                              animalId: widget.oviDetails.id!,
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    contentPadding: const EdgeInsets.only(right: 0, left: 0),
-                    leading: Image.asset('assets/icons/frame/24px/family_tree.png'),
-                    title: Text(
-                      'Family Tree',
-                      style: AppFonts.headline3(color: AppColors.grayscale90),
-                    ),
-                    trailing: Icon(Icons.chevron_right_rounded,
-                        size: 24 * SizeConfig.widthMultiplier(context)),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return FamilyTreePage(
-                              selectedAnimalId: widget.oviDetails.id!,
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    contentPadding: const EdgeInsets.only(right: 0, left: 0),
-                    leading: widget.oviDetails.selectedOviGender == 'Male'
-                        ? Image.asset('assets/icons/frame/24px/male_mates.png')
-                        : Image.asset('assets/icons/frame/24px/female_mates.png'),
-                    title: widget.oviDetails.selectedOviGender == 'Male'
-                        ? Text(
-                            'Male Mates',
-                            style: AppFonts.headline3(color: AppColors.grayscale90),
-                          )
-                        : Text(
-                            'Female Mates',
-                            style: AppFonts.headline3(color: AppColors.grayscale90),
-                          ),
-                    trailing: Icon(Icons.chevron_right_rounded,
-                        size: 24 * SizeConfig.widthMultiplier(context)),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return ListOfBreedingMates(
-                              animalId: widget.oviDetails.id!,
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    contentPadding: EdgeInsets.only(
-                        right: 0,
-                        left: 0,
-                        bottom: 32 * SizeConfig.heightMultiplier(context)),
-                    leading: Image.asset('assets/icons/frame/24px/children.png'),
-                    title: Text(
-                      'Children',
-                      style: AppFonts.headline3(color: AppColors.grayscale90),
-                    ),
-                    trailing: Icon(Icons.chevron_right_rounded,
-                        size: 24 * SizeConfig.widthMultiplier(context)),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return BreedingEventChildrenList(
-                              animalId: widget.oviDetails.id!,
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                ],
+    return ref.watch(breedingEventListProvider(widget.oviDetails.id!)).when(
+      error: (error, trace) => Text('Error: $error'),
+      loading: () => const CircularProgressIndicator(),
+      data: (events) {
+        final lastBreedingDate = events.lastOrNull?.breedingDate;
+        final nextBreedingDate = lastBreedingDate?.add(Duration(
+            days: widget.oviDetails.selectedAnimalType == 'Mammal'
+                ? gestationPeriods[widget.oviDetails.selectedAnimalSpecies]!
+                : incubationPeriods[widget.oviDetails.selectedAnimalSpecies]!)
+        );
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (widget.oviDetails.selectedOviGender == 'Female')
+              SizedBox(
+                width: SizeConfig.widthMultiplier(context) * 343,
+                child: OneInformationBlock(
+                    head1: 'Pregnancy status',
+                    subtitle1: widget.oviDetails.pregnant == true
+                        ? 'Pregnant'
+                        : 'Not Pregnant'),
               ),
-            ],
-          );
-        }
-      ),
+            if (widget.oviDetails.selectedOviGender == 'Male')
+              SizedBox(
+                height: SizeConfig.heightMultiplier(context) * 8,
+              ),
+            if (widget.oviDetails.selectedOviGender == 'Female' &&
+                widget.oviDetails.selectedAnimalType == 'Oviparous' &&
+                (lastBreedingDate != null || nextBreedingDate != null))
+              SizedBox(
+                width: 343 * SizeConfig.widthMultiplier(context),
+                child: TwoInformationBlock(
+                  head1: lastBreedingDate != null
+                      ? DateFormat('dd.MM.yyyy').format(lastBreedingDate)
+                      : '',
+                  head2: nextBreedingDate != null
+                      ? DateFormat('dd.MM.yyyy').format(nextBreedingDate)
+                      : '',
+                  subtitle1: "Last Breeding Date",
+                  subtitle2: 'Next Breeding Date',
+                ),
+              ),
+            if (widget.oviDetails.selectedOviGender == 'Male')
+              SizedBox(
+                width: 343 * SizeConfig.widthMultiplier(context),
+                child: TwoInformationBlock(
+                  head1: widget.oviDetails.selectedOviDates
+                          .containsKey('Date Of Mating')
+                      ? DateFormat('dd.MM.yyyy').format(
+                          widget.oviDetails.selectedOviDates['Date Of Mating']!)
+                      : '',
+                  head2: widget.oviDetails.selectedOviDates
+                          .containsKey('Next Date Of Mating')
+                      ? DateFormat('dd.MM.yyyy').format(widget
+                          .oviDetails.selectedOviDates['Next Date Of Mating']!)
+                      : 'Add',
+                  subtitle1: "Date Of Mating",
+                  subtitle2: 'Next Date Of Mating',
+                  onTap2: () => _updateDateField('Next Date Of Mating'),
+                ),
+              ),
+            if (widget.oviDetails.selectedOviGender == 'Male')
+              SizedBox(
+                height: SizeConfig.heightMultiplier(context) * 24,
+              ),
+            Column(
+              children: [
+                ListTile(
+                  contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                  leading:
+                      Image.asset('assets/icons/frame/24px/breeding_history.png'),
+                  title: Text(
+                    'Breeding History',
+                    style: AppFonts.headline3(color: AppColors.grayscale90),
+                  ),
+                  trailing: Icon(Icons.chevron_right_rounded,
+                      size: 24 * SizeConfig.widthMultiplier(context)),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return ListOfBreedingEvents(animalId: widget.oviDetails.id!,);
+                        },
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                  leading: Image.asset('assets/icons/frame/24px/parents.png'),
+                  title: Text(
+                    'Parents',
+                    style: AppFonts.headline3(color: AppColors.grayscale90),
+                  ),
+                  trailing: Icon(Icons.chevron_right_rounded,
+                      size: 24 * SizeConfig.widthMultiplier(context)),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return ParentsPage(
+                            animalId: widget.oviDetails.id!,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                  leading: Image.asset('assets/icons/frame/24px/family_tree.png'),
+                  title: Text(
+                    'Family Tree',
+                    style: AppFonts.headline3(color: AppColors.grayscale90),
+                  ),
+                  trailing: Icon(Icons.chevron_right_rounded,
+                      size: 24 * SizeConfig.widthMultiplier(context)),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return FamilyTreePage(
+                            selectedAnimalId: widget.oviDetails.id!,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  contentPadding: const EdgeInsets.only(right: 0, left: 0),
+                  leading: widget.oviDetails.selectedOviGender == 'Male'
+                      ? Image.asset('assets/icons/frame/24px/male_mates.png')
+                      : Image.asset('assets/icons/frame/24px/female_mates.png'),
+                  title: widget.oviDetails.selectedOviGender == 'Male'
+                      ? Text(
+                          'Male Mates',
+                          style: AppFonts.headline3(color: AppColors.grayscale90),
+                        )
+                      : Text(
+                          'Female Mates',
+                          style: AppFonts.headline3(color: AppColors.grayscale90),
+                        ),
+                  trailing: Icon(Icons.chevron_right_rounded,
+                      size: 24 * SizeConfig.widthMultiplier(context)),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return ListOfBreedingMates(
+                            animalId: widget.oviDetails.id!,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.only(
+                      right: 0,
+                      left: 0,
+                      bottom: 32 * SizeConfig.heightMultiplier(context)),
+                  leading: Image.asset('assets/icons/frame/24px/children.png'),
+                  title: Text(
+                    'Children',
+                    style: AppFonts.headline3(color: AppColors.grayscale90),
+                  ),
+                  trailing: Icon(Icons.chevron_right_rounded,
+                      size: 24 * SizeConfig.widthMultiplier(context)),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return BreedingEventChildrenList(
+                            animalId: widget.oviDetails.id!,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ],
+        );
+      }
     );
   }
 

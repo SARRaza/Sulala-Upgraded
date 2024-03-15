@@ -18,15 +18,22 @@ class NavigationBarGuestMode extends StatefulWidget {
 
 class _NavigationBarGuestModeState extends State<NavigationBarGuestMode> {
   int _currentIndex = 0;
-  final List<Widget> _pages = [
-    const HomeScreenGuestMode(),
-    const GuestModeUserListOfAnimals(
-      selectedFilters: [],
-    ),
-    const ProfilePage(
-      showEditIcon: false,
-    ),
-  ];
+
+  late final List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      const HomeScreenGuestMode(),
+      const GuestModeUserListOfAnimals(
+        selectedFilters: [],
+      ),
+      const ProfilePage(
+        showEditIcon: false,
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {

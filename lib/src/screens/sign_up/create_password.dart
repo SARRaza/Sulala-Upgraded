@@ -20,10 +20,9 @@ class CreatePassword extends ConsumerStatefulWidget {
 }
 
 class _CreatePasswordState extends ConsumerState<CreatePassword> {
-  String errorMessage = "";
-  bool isPasswordValid = false;
-  bool doesPasswordMatch = false;
   PrimaryButtonStatus buttonStatus = PrimaryButtonStatus.idle;
+  final _formKey = GlobalKey<FormState>();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -48,58 +47,58 @@ class _CreatePasswordState extends ConsumerState<CreatePassword> {
               left: SizeConfig.widthMultiplier(context) * 19,
               right: SizeConfig.widthMultiplier(context) * 19,
               top: SizeConfig.heightMultiplier(context) * 40),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Create Password".tr,
-                style: AppFonts.title2(color: AppColors.grayscale90),
-              ),
-              SizedBox(
-                height: SizeConfig.heightMultiplier(context) * 40,
-              ),
-              PasswordField(
-                hintText: 'Password'.tr,
-                errorMessage: doesPasswordMatch
-                    ? 'Passwords do not match'.tr
-                    : isPasswordValid
-                        ? 'Password should be at least 8 characters long and contain at least one number'
-                            .tr
-                        : null,
-                onChanged: (value) {
-                  ref.read(passwordProvider.notifier).update((state) => value);
-                  setState(() {
-                    // enteredPassword = value;
-                    isPasswordValid = false;
-                    doesPasswordMatch = false;
-                  });
-                },
-              ),
-              PasswordField(
-                hintText: 'Confirm Password'.tr,
-                errorMessage: doesPasswordMatch
-                    ? 'Passwords do not match'.tr
-                    : isPasswordValid
-                        ? 'Password should be at least 8 characters long and contain at least one number'
-                            .tr
-                        : null,
-                onChanged: (value) {
-                  ref
-                      .read(passwordConfirmProvider.notifier)
-                      .update((state) => value);
-                  setState(() {
-                    // enteredConfirmPassword = value;
-                    isPasswordValid = false;
-                    doesPasswordMatch = false;
-                  });
-                },
-                onErrorChanged: (hasError) {
-                  setState(() {
-                    isPasswordValid = hasError; // Update the error state
-                  });
-                },
-              ),
-            ],
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Create Password".tr,
+                  style: AppFonts.title2(color: AppColors.grayscale90),
+                ),
+                SizedBox(
+                  height: SizeConfig.heightMultiplier(context) * 40,
+                ),
+                PasswordField(
+                  controller: _passwordController,
+                  validator: (value) {
+                    final password = value ?? '';
+                    if(password.length < 8) {
+                      return 'Password should be at least 8 characters long';
+                    }
+                    if (!password.contains(RegExp(r'[0-9]'))) {
+                      return 'Password should contain at least one number'
+                          .tr;
+                    }
+                    return null;
+                  },
+                  hintText: 'Password'.tr,
+                  onChanged: (value) {
+                    ref
+                        .read(passwordProvider.notifier)
+                        .update((state) => value);
+                  },
+                ),
+                PasswordField(
+                  validator: (value) {
+                    if(value == null || value.isEmpty) {
+                      return 'This field is required';
+                    }
+                    if (_passwordController.text.isNotEmpty &&
+                        _passwordController.text != value) {
+                      return 'Passwords do not match'.tr;
+                    }
+                    return null;
+                  },
+                  hintText: 'Confirm Password'.tr,
+                  onChanged: (value) {
+                    ref
+                        .read(passwordConfirmProvider.notifier)
+                        .update((state) => value);
+                  },
+                ),
+              ],
+            ),
           ),
         ),
         floatingActionButton: SizedBox(
@@ -111,13 +110,12 @@ class _CreatePasswordState extends ConsumerState<CreatePassword> {
                   width: SizeConfig.widthMultiplier(context) * 343,
                   child: Consumer(
                     builder: (context, ref, _) {
-                      final isPasswordValid =
-                          ref.watch(passwordValidationProvider);
                       return PrimaryButton(
                         text: "Confirm".tr,
                         status: buttonStatus,
-                        onPressed: () =>
-                            isPasswordValid ? _onConfirmPressed() : null,
+                        onPressed: () => _formKey.currentState!.validate()
+                            ? _onConfirmPressed()
+                            : null,
                       );
                     },
                   )),

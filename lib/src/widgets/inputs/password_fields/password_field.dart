@@ -10,6 +10,7 @@ class PasswordField extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final ValueChanged<bool>? onErrorChanged;
   final String? Function(String?)? validator;
+  final TextEditingController? controller;
 
   const PasswordField({
     Key? key,
@@ -18,7 +19,8 @@ class PasswordField extends StatefulWidget {
     this.errorMessage,
     this.onChanged,
     this.onErrorChanged,
-    this.validator
+    this.validator,
+    this.controller
   }) : super(key: key);
 
   @override
@@ -26,7 +28,7 @@ class PasswordField extends StatefulWidget {
 }
 
 class _PasswordFieldState extends State<PasswordField> {
-  final TextEditingController _textEditingController = TextEditingController();
+  late TextEditingController _textEditingController;
   late FocusNode _focusNode;
   bool isFocused = false;
   bool _obscureText = true;
@@ -36,6 +38,7 @@ class _PasswordFieldState extends State<PasswordField> {
     super.initState();
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
+    _textEditingController = widget.controller ?? TextEditingController();
   }
 
   @override

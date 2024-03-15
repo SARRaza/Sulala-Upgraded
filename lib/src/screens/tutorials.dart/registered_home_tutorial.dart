@@ -3,8 +3,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:get/get.dart';
-import 'package:showcaseview/showcaseview.dart';
 import 'package:sulala_upgrade/src/data/globals.dart';
+import 'package:sulala_upgrade/src/widgets/other/tutorial_overlay.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../theme/colors/colors.dart';
 import '../../theme/colors/pie_chart_colors.dart';
@@ -35,10 +35,6 @@ class _RegHomeScreenTutorialState extends State<RegHomeScreenTutorial> {
     super.initState();
     _chartData = _getChartData();
     sumOfNextTwoCards = _chartData[0].quan + _chartData[1].quan;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ShowCaseWidget.of(showCaseContext!)
-          .startShowCase([_animalOverview, _filter]);
-    });
   }
 
   Future<void> _refreshData() async {
@@ -179,104 +175,92 @@ class _RegHomeScreenTutorialState extends State<RegHomeScreenTutorial> {
 
   @override
   Widget build(BuildContext context) {
-    return ShowCaseWidget(
-      builder: Builder(builder: (context) {
-        showCaseContext = context;
-        double totalWidth = MediaQuery.of(context).size.width;
-        double lineWidth = totalWidth / 3;
-        return SafeArea(
-          child: Scaffold(
-              appBar: AppBar(
-                scrolledUnderElevation: 0.0,
-                automaticallyImplyLeading: false,
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Overview'.tr,
-                      style: AppFonts.title3(color: AppColors.grayscale100),
-                    ),
-                    Row(
-                      children: [
-                        InkWell(
-                          onTap: () {},
+    double totalWidth = MediaQuery.of(context).size.width;
+    double lineWidth = totalWidth / 3;
+
+    return Stack(
+      children: [
+        Scaffold(
+            appBar: AppBar(
+              scrolledUnderElevation: 0.0,
+              automaticallyImplyLeading: false,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Overview'.tr,
+                    style: AppFonts.title3(color: AppColors.grayscale100),
+                  ),
+                  Row(
+                    children: [
+                      InkWell(
+                        onTap: () {},
+                        child: const Image(
+                          image: AssetImage(
+                              'assets/icons/frame/24px/Icon-button.png'),
+                        ),
+                      ),
+                      SizedBox(
+                          width: SizeConfig.widthMultiplier(context) * 3.75),
+                      GestureDetector(
+                        onTap: () {},
+                        child: events.isNotEmpty
+                            ? badges.Badge(
+                          badgeStyle: badges.BadgeStyle(
+                            padding: EdgeInsets.all(8 *
+                                SizeConfig.widthMultiplier(context)),
+                          ),
+                          badgeContent: Text(
+                            events.length.toString(),
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          badgeAnimation:
+                          const badges.BadgeAnimation.slide(
+                            disappearanceFadeAnimationDuration:
+                            Duration(milliseconds: 50),
+                            curve: Curves.easeInCubic,
+                          ),
                           child: const Image(
                             image: AssetImage(
-                                'assets/icons/frame/24px/Icon-button.png'),
+                                'assets/icons/frame/24px/Icon-button1.png'),
                           ),
+                        )
+                            : const Image(
+                          image: AssetImage(
+                              'assets/icons/frame/24px/Icon-button1.png'),
                         ),
-                        SizedBox(
-                            width: SizeConfig.widthMultiplier(context) * 3.75),
-                        GestureDetector(
-                          onTap: () {},
-                          child: events.isNotEmpty
-                              ? badges.Badge(
-                                  badgeStyle: badges.BadgeStyle(
-                                    padding: EdgeInsets.all(8 *
-                                        SizeConfig.widthMultiplier(context)),
-                                  ),
-                                  badgeContent: Text(
-                                    events.length.toString(),
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                  badgeAnimation:
-                                      const badges.BadgeAnimation.slide(
-                                    disappearanceFadeAnimationDuration:
-                                        Duration(milliseconds: 50),
-                                    curve: Curves.easeInCubic,
-                                  ),
-                                  child: const Image(
-                                    image: AssetImage(
-                                        'assets/icons/frame/24px/Icon-button1.png'),
-                                  ),
-                                )
-                              : const Image(
-                                  image: AssetImage(
-                                      'assets/icons/frame/24px/Icon-button1.png'),
-                                ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                backgroundColor: Colors
-                    .transparent, // Set the appbar background color to transparent
-                elevation: 0, // Remove the appbar shadow
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              body: RefreshIndicator(
-                color: AppColors.primary40,
-                onRefresh: _refreshData,
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                        left: SizeConfig.widthMultiplier(context) * 16,
-                        right: SizeConfig.widthMultiplier(context) * 16,
-                        top: SizeConfig.heightMultiplier(context) * 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text('Animals'.tr,
-                                style: AppFonts.title4(
-                                    color: AppColors.grayscale90)),
-                            const Spacer(),
-                            Showcase(
-                              disableBarrierInteraction: true,
-                              disableDefaultTargetGestures: true,
-                              actions: _buildShowcaseActions(),
-                              tooltipBackgroundColor: Colors.transparent,
-                              descTextStyle: AppFonts.headline1(
-                                  color: AppColors.grayscale00),
-                              key: _filter,
-                              targetPadding: const EdgeInsets.all(20),
-                              description:
-                                  'Use Filters To Create The Chart With More Inputs'
-                                      .tr,
-                              targetBorderRadius: const BorderRadius.all(
-                                Radius.circular(50),
-                              ),
-                              child: InkWell(
+              backgroundColor: Colors
+                  .transparent, // Set the appbar background color to transparent
+              elevation: 0, // Remove the appbar shadow
+            ),
+            body: RefreshIndicator(
+              color: AppColors.primary40,
+              onRefresh: _refreshData,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: SizeConfig.widthMultiplier(context) * 16,
+                      right: SizeConfig.widthMultiplier(context) * 16,
+                      top: SizeConfig.heightMultiplier(context) * 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        key: _animalOverview,
+                        children: [
+                          Row(
+                            children: [
+                              Text('Animals'.tr,
+                                  style: AppFonts.title4(
+                                      color: AppColors.grayscale90)),
+                              const Spacer(),
+                              InkWell(
+                                key: _filter,
                                 onTap: () {
                                   _showFilterModalSheet(context);
                                 },
@@ -285,45 +269,23 @@ class _RegHomeScreenTutorialState extends State<RegHomeScreenTutorial> {
                                       'assets/icons/frame/24px/filter1.png'),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                                width:
-                                    SizeConfig.widthMultiplier(context) * 22),
-                          ],
-                        ),
-                        SizedBox(
-                            height: SizeConfig.heightMultiplier(context) * 12),
-                        Showcase(
-                          disableBarrierInteraction: true,
-                          disableDefaultTargetGestures: true,
-                          actions: _buildShowcaseActions(),
-                          tooltipBackgroundColor: Colors.transparent,
-                          descTextStyle: AppFonts.headline1(
-                              color: AppColors.grayscale00),
-                          key: _animalOverview,
-                          // targetBorderRadius: const BorderRadius.all(
-                          //   Radius.circular(30),
-                          // ),
-                          targetShapeBorder: const CircleBorder(),
-                          targetPadding: EdgeInsets.fromLTRB(
-                            50 * SizeConfig.widthMultiplier(context),
-                            120 * SizeConfig.heightMultiplier(context),
-                            20 * SizeConfig.widthMultiplier(context),
-                            0 * SizeConfig.heightMultiplier(context),
+                              SizedBox(
+                                  width:
+                                  SizeConfig.widthMultiplier(context) * 22),
+                            ],
                           ),
-                          description:
-                          'Here you can see the number of animals on your farm. A pie chart will help visualize proportions'
-                              .tr,
-                          child: Column(
+                          SizedBox(
+                              height: SizeConfig.heightMultiplier(context) * 12),
+                          Column(
                             children: [
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   SizedBox(
                                     height:
-                                        SizeConfig.heightMultiplier(context) * 148,
+                                    SizeConfig.heightMultiplier(context) * 148,
                                     width:
-                                        SizeConfig.widthMultiplier(context) * 106,
+                                    SizeConfig.widthMultiplier(context) * 106,
                                     child: SmallCardWidget(
                                       icon: Image.asset(
                                         "assets/icons/frame/24px/cow_chicken.png",
@@ -342,9 +304,9 @@ class _RegHomeScreenTutorialState extends State<RegHomeScreenTutorial> {
                                   ),
                                   SizedBox(
                                     height:
-                                        SizeConfig.heightMultiplier(context) * 148,
+                                    SizeConfig.heightMultiplier(context) * 148,
                                     width:
-                                        SizeConfig.widthMultiplier(context) * 106,
+                                    SizeConfig.widthMultiplier(context) * 106,
                                     child: SmallCardWidget(
                                       icon: Image.asset(
                                         "assets/icons/frame/24px/cow_framed.png",
@@ -362,9 +324,9 @@ class _RegHomeScreenTutorialState extends State<RegHomeScreenTutorial> {
                                   ),
                                   SizedBox(
                                     height:
-                                        SizeConfig.heightMultiplier(context) * 148,
+                                    SizeConfig.heightMultiplier(context) * 148,
                                     width:
-                                        SizeConfig.widthMultiplier(context) * 106,
+                                    SizeConfig.widthMultiplier(context) * 106,
                                     child: SmallCardWidget(
                                       icon: Image.asset(
                                         "assets/icons/frame/24px/chicken_framed.png",
@@ -420,138 +382,147 @@ class _RegHomeScreenTutorialState extends State<RegHomeScreenTutorial> {
                               ),
                             ],
                           ),
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              'Upcoming Events'.tr,
-                              style:
-                                  AppFonts.title4(color: AppColors.grayscale90),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                            height: SizeConfig.heightMultiplier(context) * 12),
-                        Center(
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                'assets/illustrations/calendar_x.png',
-                              ),
-                              SizedBox(
-                                  height: SizeConfig.heightMultiplier(context) *
-                                      12),
-                              Text(
-                                'You have no upcoming events so far'.tr,
-                                style: AppFonts.body2(
-                                    color: AppColors.grayscale70),
-                              ),
-                            ],
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            'Upcoming Events'.tr,
+                            style:
+                            AppFonts.title4(color: AppColors.grayscale90),
                           ),
-                        ),
-                        SizedBox(
-                            height: SizeConfig.heightMultiplier(context) * 32),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        ],
+                      ),
+                      SizedBox(
+                          height: SizeConfig.heightMultiplier(context) * 12),
+                      Center(
+                        child: Column(
                           children: [
-                            Expanded(
-                              child: CardWidget(
-                                  color: const Color.fromRGBO(225, 236, 185, 1),
-                                  iconPath:
-                                      'assets/icons/frame/24px/Cow_Icon.png',
-                                  title: 'Searching\nfor animals?'.tr,
-                                  buttonText: 'Find animals'.tr,
-                                  onPressed: () {}),
+                            Image.asset(
+                              'assets/illustrations/calendar_x.png',
                             ),
                             SizedBox(
-                                width: SizeConfig.widthMultiplier(context) * 6),
-                            Expanded(
-                              child: CardWidget(
-                                  color: const Color.fromRGBO(246, 239, 205, 1),
-                                  iconPath:
-                                      'assets/icons/frame/24px/Farm_house.png',
-                                  title: 'Searching \nfor farm?'.tr,
-                                  buttonText: 'Find farms'.tr,
-                                  onPressed: () {}),
+                                height: SizeConfig.heightMultiplier(context) *
+                                    12),
+                            Text(
+                              'You have no upcoming events so far'.tr,
+                              style: AppFonts.body2(
+                                  color: AppColors.grayscale70),
                             ),
                           ],
                         ),
-                        SizedBox(
-                            height: SizeConfig.heightMultiplier(context) * 24),
-                      ],
-                    ),
+                      ),
+                      SizedBox(
+                          height: SizeConfig.heightMultiplier(context) * 32),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: CardWidget(
+                                color: const Color.fromRGBO(225, 236, 185, 1),
+                                iconPath:
+                                'assets/icons/frame/24px/Cow_Icon.png',
+                                title: 'Searching\nfor animals?'.tr,
+                                buttonText: 'Find animals'.tr,
+                                onPressed: () {}),
+                          ),
+                          SizedBox(
+                              width: SizeConfig.widthMultiplier(context) * 6),
+                          Expanded(
+                            child: CardWidget(
+                                color: const Color.fromRGBO(246, 239, 205, 1),
+                                iconPath:
+                                'assets/icons/frame/24px/Farm_house.png',
+                                title: 'Searching \nfor farm?'.tr,
+                                buttonText: 'Find farms'.tr,
+                                onPressed: () {}),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                          height: SizeConfig.heightMultiplier(context) * 24),
+                    ],
                   ),
                 ),
               ),
-              bottomNavigationBar: Stack(
-                children: [
-                  Theme(
-                    data: Theme.of(context).copyWith(
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                    ),
-                    child: SizedBox(
-                      height: SizeConfig.heightMultiplier(context) * 60,
-                      child: BottomNavigationBar(
-                        iconSize: SizeConfig.widthMultiplier(context) * 24,
-                        currentIndex: 0,
-                        onTap: (index) {},
-                        items: <BottomNavigationBarItem>[
-                          BottomNavigationBarItem(
-                            icon: const Icon(Icons.home_outlined),
-                            activeIcon: const Icon(Icons.home),
-                            label: 'Home'.tr,
+            ),
+            bottomNavigationBar: Stack(
+              children: [
+                Theme(
+                  data: Theme.of(context).copyWith(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                  ),
+                  child: SizedBox(
+                    height: SizeConfig.heightMultiplier(context) * 60,
+                    child: BottomNavigationBar(
+                      iconSize: SizeConfig.widthMultiplier(context) * 24,
+                      currentIndex: 0,
+                      onTap: (index) {},
+                      items: <BottomNavigationBarItem>[
+                        BottomNavigationBarItem(
+                          icon: const Icon(Icons.home_outlined),
+                          activeIcon: const Icon(Icons.home),
+                          label: 'Home'.tr,
+                        ),
+                        BottomNavigationBarItem(
+                          icon: Image.asset(
+                            "assets/icons/frame/24px/Outlined_Cow_Icon.png",
+                            scale: 24 /
+                                (SizeConfig.widthMultiplier(context) * 24),
                           ),
-                          BottomNavigationBarItem(
-                            icon: Image.asset(
-                              "assets/icons/frame/24px/Outlined_Cow_Icon.png",
-                              scale: 24 /
-                                  (SizeConfig.widthMultiplier(context) * 24),
-                            ),
-                            activeIcon: Image.asset(
-                              "assets/icons/frame/24px/Filled_Cow_Icon.png",
-                              scale: 24 /
-                                  (SizeConfig.widthMultiplier(context) * 24),
-                            ),
-                            label: 'Animals'.tr,
+                          activeIcon: Image.asset(
+                            "assets/icons/frame/24px/Filled_Cow_Icon.png",
+                            scale: 24 /
+                                (SizeConfig.widthMultiplier(context) * 24),
                           ),
-                          BottomNavigationBarItem(
-                            icon: const Icon(Icons.account_circle_outlined),
-                            activeIcon: const Icon(Icons.account_circle),
-                            label: 'Profile'.tr,
-                          )
-                        ],
-                        selectedItemColor: AppColors.primary20,
-                        unselectedItemColor: AppColors.grayscale50,
-                        selectedLabelStyle:
-                            AppFonts.caption3(color: AppColors.primary20),
-                        unselectedLabelStyle:
-                            AppFonts.caption3(color: AppColors.grayscale50),
-                      ),
+                          label: 'Animals'.tr,
+                        ),
+                        BottomNavigationBarItem(
+                          icon: const Icon(Icons.account_circle_outlined),
+                          activeIcon: const Icon(Icons.account_circle),
+                          label: 'Profile'.tr,
+                        )
+                      ],
+                      selectedItemColor: AppColors.primary20,
+                      unselectedItemColor: AppColors.grayscale50,
+                      selectedLabelStyle:
+                      AppFonts.caption3(color: AppColors.primary20),
+                      unselectedLabelStyle:
+                      AppFonts.caption3(color: AppColors.grayscale50),
                     ),
                   ),
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    child: Container(
-                      width: totalWidth,
-                      height: 1.0,
-                      color: AppColors.grayscale20,
-                    ),
+                ),
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  child: Container(
+                    width: totalWidth,
+                    height: 1.0,
+                    color: AppColors.grayscale20,
                   ),
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    child: Container(
-                      width: lineWidth,
-                      height: 2.0,
-                      color: AppColors.primary20,
-                    ),
+                ),
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  child: Container(
+                    width: lineWidth,
+                    height: 2.0,
+                    color: AppColors.primary20,
                   ),
-                ],
-              )),
-        );
-      }),
+                ),
+              ],
+            )),
+        TutorialOverlay(
+            steps: [_animalOverview, _filter],
+            hints: const [
+              'Here you can see the number of animals on your farm. A pie chart will help visualize proportions',
+              'Use filters to create a chart with more input'
+            ],
+            onFinished: () => Navigator.push(context, MaterialPageRoute(
+                builder: (context) => const AnimalManagementTutorial()))
+        )
+      ],
     );
   }
 
@@ -595,7 +566,6 @@ class _RegHomeScreenTutorialState extends State<RegHomeScreenTutorial> {
           height: 40,
           child: FloatingActionButton(
             onPressed: () {
-              ShowCaseWidget.of(showCaseContext!).dismiss();
 
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -624,14 +594,7 @@ class _RegHomeScreenTutorialState extends State<RegHomeScreenTutorial> {
           height: 40,
           child: FloatingActionButton(
             onPressed: () {
-              ShowCaseWidget.of(showCaseContext!).next();
-              if (ShowCaseWidget.of(showCaseContext!).activeWidgetId == null) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AnimalManagementTutorial())
-                );
-              }
+
             },
             backgroundColor: Colors.white,
             elevation: 10,

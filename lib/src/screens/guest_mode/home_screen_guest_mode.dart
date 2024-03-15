@@ -17,7 +17,8 @@ import '../search/search_page_house_farm.dart';
 import 'shimmer_home_screen.dart';
 
 class HomeScreenGuestMode extends StatefulWidget {
-  const HomeScreenGuestMode({Key? key}) : super(key: key);
+  const HomeScreenGuestMode({Key? key})
+      : super(key: key);
 
   @override
   State<HomeScreenGuestMode> createState() => _HomeScreenGuestModeState();
