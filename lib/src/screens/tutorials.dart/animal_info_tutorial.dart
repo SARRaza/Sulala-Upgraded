@@ -298,9 +298,7 @@ class _AnimalInfoTutorialPageState extends State<AnimalInfoTutorialPage>
           postFrameCallback: (duration) async {
             Future.delayed(const Duration(milliseconds: 300), () async {
               await Scrollable.ensureVisible(_sizedBoxKey.currentContext!);
-              _tutorialController.disabled = true;
               _tutorialController.stepIndex = 1;
-              _tutorialController.disabled = false;
             });
           },
         )

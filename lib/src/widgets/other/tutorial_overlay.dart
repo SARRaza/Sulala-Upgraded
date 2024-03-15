@@ -42,8 +42,24 @@ class _TutorialOverlayState extends State<TutorialOverlay> {
     _tutorialController = widget.controller ?? TutorialController();
     _tutorialController.addListener(() {
       if (currentStepIndex != _tutorialController.stepIndex) {
-        currentStepIndex = _tutorialController.stepIndex;
-        _calculatePositions();
+        final nextStep = widget.steps[_tutorialController.stepIndex];
+        bool recalculateNeeded = false;
+        if(nextStep is GlobalKey && boxes[nextStep] == null) {
+          recalculateNeeded = true;
+        }
+        if(nextStep is List<GlobalKey> && boxes[nextStep.first] == null) {
+          recalculateNeeded = true;
+        }
+        if(recalculateNeeded) {
+          currentStepIndex = _tutorialController.stepIndex;
+          _calculatePositions();
+        } else {
+          setState(() {
+            currentStepIndex = _tutorialController.stepIndex;
+          });
+        }
+
+
       }
       if(disabled != _tutorialController.disabled) {
         setState(() {
@@ -181,7 +197,6 @@ class _TutorialOverlayState extends State<TutorialOverlay> {
           currentBox.size.height +
           43;
     } else if (currentStep is List<GlobalKey>) {
-      print(boxes);
       currentBox = boxes[currentStep.first];
       top = currentBox!.localToGlobal(Offset.zero).dy +
           currentBox.size.height +
